@@ -370,3 +370,11 @@
 **Context**: CONSTRUCTION - U3 Rec / Functional Design（Part 1 計画作成・承認待ち）
 
 ---
+
+## Construction U3 Rec Functional Design Part1 承認 → Part2 生成
+**Timestamp**: 2026-07-15T22:22:00+09:00
+**User Input**: "done"
+**AI Response**: U3 Functional Design 計画の明確化質問に回答を確認（Q1〜Q7＝すべて A・推奨）。矛盾なし。Part 2 として設計成果物を生成：domain-entities.md（録音状態/AudioBuffer/SoundEffectSettingsData/SavedSound・旧SoundEffectSettings対応）、business-logic-model.md（録音→加工プレビュー→保存フロー・マイク権限フェイルセーフ・非破壊再適用）、business-rules.md（BR-REC 群）、frontend-components.md（Rec 画面構成・S さんハンドオフ）。要件 FR-05〜08/NFR-03/06/08/SECURITY-15・US-REC/US-TECH-03 トレース整合。
+**Context**: CONSTRUCTION - U3 Rec / Functional Design（Part 2 生成・完了ゲート待ち）
+
+---

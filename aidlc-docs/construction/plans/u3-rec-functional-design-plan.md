@@ -12,11 +12,13 @@
 ---
 
 ## A. 実行チェックリスト（Part 2 で実行）
-- [ ] `../u3-rec/functional-design/domain-entities.md`（U3 で扱うモデル：録音状態・録音バッファ・加工設定・保存音／U1 の `AudioBuffer`・`SoundEffectSettingsData`・`SoundClipMeta`・`SavedSound` を再利用し、既存 `SoundEffectSettings` との対応関係を定義）
-- [ ] `../u3-rec/functional-design/business-logic-model.md`（録音→加工プレビュー→保存のふるまいとデータフロー、マイク権限フロー、加工の再適用モデル）
-- [ ] `../u3-rec/functional-design/business-rules.md`（3秒固定録音・自動停止、加工パラメータ範囲、バイパス、保存の対保存・フェイルセーフ、録音実装一本化）
-- [ ] `../u3-rec/functional-design/frontend-components.md`（Rec 画面：録音/再生/加工パネル/保存プロンプトの構造・状態・操作フロー・S さんハンドオフ点）
-- [ ] 要件（FR-05〜08 / NFR-03/06/08 / SECURITY-15）・ストーリー（US-REC/US-TECH-03）とのトレース整合確認
+- [x] `../u3-rec/functional-design/domain-entities.md`（U3 で扱うモデル：録音状態・録音バッファ・加工設定・保存音／U1 の `AudioBuffer`・`SoundEffectSettingsData`・`SoundClipMeta`・`SavedSound` を再利用し、既存 `SoundEffectSettings` との対応関係を定義）
+- [x] `../u3-rec/functional-design/business-logic-model.md`（録音→加工プレビュー→保存のふるまいとデータフロー、マイク権限フロー、加工の再適用モデル）
+- [x] `../u3-rec/functional-design/business-rules.md`（3秒固定録音・自動停止、加工パラメータ範囲、バイパス、保存の対保存・フェイルセーフ、録音実装一本化）
+- [x] `../u3-rec/functional-design/frontend-components.md`（Rec 画面：録音/再生/加工パネル/保存プロンプトの構造・状態・操作フロー・S さんハンドオフ点）
+- [x] 要件（FR-05〜08 / NFR-03/06/08 / SECURITY-15）・ストーリー（US-REC/US-TECH-03）とのトレース整合確認
+
+> **回答**: Q1〜Q7＝すべて A（推奨）。矛盾なし。Part 2 実行済み（2026-07-15）。
 
 ## B. スコープ（U3 で確定する対象）
 - **画面コントローラ（ふるまい）**: `RecScreenController`（U1 `ScreenRootBase` 継承）/ `RecordingController`（録音制御）/ `EffectPanelController`（加工 UI）/ `SavePromptController`（保存確認）
@@ -46,7 +48,7 @@ B) 3秒を基本とするが、**上限3秒の手動停止も許可**（早く�
 
 C) Other（[Answer]: の後に記述）
 
-[Answer]:
+[Answer]:A
 
 ## Question 2（加工モデル：正準データと UI マッピング）
 保存・UI で扱う加工設定の「正準モデル」は？（US-REC-02／既存 `SoundEffectSettings` と U1 `SoundEffectSettingsData` の差を吸収）
@@ -57,7 +59,7 @@ B) 既存 `SoundEffectSettings`（cents・echo・distortion 等を含む詳細�
 
 C) Other（[Answer]: の後に記述）
 
-[Answer]:
+[Answer]:A
 
 ## Question 3（加工の適用方式：非破壊プレビュー vs 焼き込み保存）
 加工音の「保存」の意味は？（US-REC-03「加工した音を保存／加工設定が音声と対で保存」）
@@ -68,7 +70,7 @@ B) **焼き込み**：加工結果をレンダリングして WAV 自体に反�
 
 C) Other（[Answer]: の後に記述）
 
-[Answer]:
+[Answer]:A
 
 ## Question 4（マイク権限・フェイルセーフのふるまい）
 マイク権限・デバイス不在時のふるまいは？（US-REC-01 AC3／SECURITY-15）
@@ -79,7 +81,7 @@ B) 起動/画面表示時に先回りで権限要求してから録音可否を�
 
 C) Other（[Answer]: の後に記述）
 
-[Answer]:
+[Answer]:A
 
 ## Question 5（保存 IF：`IStorageService` 拡張 vs U3 ローカル保存）
 録音物の保存経路は？（U1 `IStorageService` に保存メソッドが未定義）
@@ -90,7 +92,7 @@ B) `IStorageService` は変更せず、U3 内に保存ヘルパーを持たせ�
 
 C) Other（[Answer]: の後に記述）
 
-[Answer]:
+[Answer]:A
 
 ## Question 6（録音実装の一本化と配置：US-TECH-03）
 録音・加工実装の統合方針と `IAudioService` 実装の置き場所は？
@@ -101,7 +103,7 @@ B) 既存 `VoiceRecordingSection` を**そのまま中核**として残し、そ
 
 C) Other（[Answer]: の後に記述）
 
-[Answer]:
+[Answer]:A
 
 ## Question 7（Rec 画面の構成・保存フロー・エッジケース）
 Rec 画面の画面構成と保存フローは？
@@ -112,7 +114,7 @@ B) 録音画面と加工画面を分割（録音→次へ→加工/保存）。�
 
 C) Other（[Answer]: の後に記述）
 
-[Answer]:
+[Answer]:A
 
 ---
 
