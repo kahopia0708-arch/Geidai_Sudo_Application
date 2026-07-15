@@ -546,3 +546,11 @@
 **Context**: CONSTRUCTION - U5 weekly theme / NFR Design（Part 1: Planning）
 
 ---
+
+## Construction U5 NFR Design Part1 回答 → Part2 生成
+**Timestamp**: 2026-07-16T00:56:00+09:00
+**User Input**: "done"
+**AI Response**: U5 NFR Design Plan の Q1〜Q5 を全て推奨（A）で確定。Q1=ThemeSelector.SelectIndex 純粋関数(Common・時刻注入・O(1)・PBT)／Q2=ContentService.GetCurrentTheme に空/無効フォールバック集約・UI emptyState／Q3=ThemeContext 保持→GoTo(Rec)・失敗 ErrorPresenter・未設定でも通常録音・非永続／Q4=新 Geidai.Theme(UI)・ThemeItem/ThemeCatalog/ThemeSelector は Common・IContentService 後方互換拡張(GetCurrentTheme)・一方向依存／Q5=再利用 WeeklyThemeController＋WeeklyThemeScreenController 両対応・意匠 Sさん・旧 WeeklyTextController 差替後削除。矛盾なし。Part 2 で nfr-design-patterns.md / logical-components.md を生成（今回 plan 回答は個別置換で誤置換回避）。
+**Context**: CONSTRUCTION - U5 weekly theme / NFR Design（Part 2 生成）
+
+---

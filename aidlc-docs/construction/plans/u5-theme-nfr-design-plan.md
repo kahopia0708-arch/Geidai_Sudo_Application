@@ -11,9 +11,11 @@
 ---
 
 ## A. 実行チェックリスト（Part 2 で実行）
-- [ ] `../u5-theme/nfr-design/nfr-design-patterns.md` を生成（各 NFR の実現パターン）
-- [ ] `../u5-theme/nfr-design/logical-components.md` を生成（論理コンポーネント・責務・連携）
-- [ ] NFR Requirements / Functional Design とのトレース整合を確認
+- [x] `../u5-theme/nfr-design/nfr-design-patterns.md` を生成（各 NFR の実現パターン）
+- [x] `../u5-theme/nfr-design/logical-components.md` を生成（論理コンポーネント・責務・連携）
+- [x] NFR Requirements / Functional Design とのトレース整合を確認
+
+> **回答**: Q1〜Q5＝すべて A（推奨）。矛盾なし。Part 2 実行済み（2026-07-16）。
 
 ## B. カテゴリ適用性（このユニットでの判断）
 - **Resilience（耐障害）**: 適用（空/無効カタログのフォールバック・遷移失敗の安全処理）。ネットワーク/永続化再試行系は N/A（お題は同梱アセット・書込ほぼ無し）。
@@ -47,7 +49,7 @@ B) 週選択を `ContentService` 内にインライン実装（純粋分離な�
 
 C) Other（[Answer]: の後に記述）
 
-[Answer]:
+[Answer]:A
 
 ### Question 2（Resilience — 空/無効カタログのフォールバック）
 カタログ未設定・0 件・全項目無効時の安全パターンは？
@@ -58,7 +60,7 @@ B) UI 側で null/空を都度チェック（集約なし）。
 
 C) Other（[Answer]: の後に記述）
 
-[Answer]:
+[Answer]:A
 
 ### Question 3（Resilience — お題→Rec 遷移と受け渡しの安全パターン）
 お題タップから Rec への遷移をどう安全に実現するか？
@@ -69,7 +71,7 @@ B) お題テキストを `PlayerPrefs` 等に一時保存して受け渡す。
 
 C) Other（[Answer]: の後に記述）
 
-[Answer]:
+[Answer]:A
 
 ### Question 4（Maintainability — アセンブリ配置・IContentService 拡張・データ型）
 U5 の論理コンポーネント配置と `IContentService` 拡張の設計は？
@@ -80,7 +82,7 @@ B) `Geidai.Theme` を作らず `Geidai.Foundation` に相乗り（アセンブ�
 
 C) Other（[Answer]: の後に記述）
 
-[Answer]:
+[Answer]:A
 
 ### Question 5（Usability/UI — 表示 UI と両対応・旧 Controller 差替）
 お題表示 UI の構成と既存 `WeeklyTextController` の扱いは？
@@ -91,7 +93,7 @@ B) 専用画面のみ（再利用部品にしない）。
 
 C) Other（[Answer]: の後に記述）
 
-[Answer]:
+[Answer]:A
 
 ---
 
