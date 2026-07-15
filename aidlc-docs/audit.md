@@ -191,3 +191,62 @@
 **Context**: INCEPTION - Units Generation（Part 2 生成完了：承認ゲート・ユーザー確認待ち）
 
 ---
+
+## Units Generation — Approved / CONSTRUCTION Phase Started
+**Timestamp**: 2026-07-15T19:16:00+09:00
+**User Input**: "CONSTRUCTIONに入りましょう"
+**AI Response**: unit-of-work 一式をユーザーが承認し CONSTRUCTION フェーズへ移行。Units Generation ステージ完了、INCEPTION フェーズ全ステージ完了。aidlc-state.md 更新（フェーズ=CONSTRUCTION、U1 開始）。per-unit ループを U1 基盤 から開始。最初のステージ Functional Design（U1 は新規データモデル/複雑ロジックを含むため EXECUTE）に着手し、functional-design.md ルール詳細をロード。
+**Context**: INCEPTION 完了 → CONSTRUCTION（U1 基盤）開始
+
+---
+
+## Construction U1 — Functional Design Plan Created
+**Timestamp**: 2026-07-15T19:16:30+09:00
+**User Input**: （前ステップ "CONSTRUCTIONに入りましょう" に基づき自動継続）
+**AI Response**: U1 基盤 の Functional Design 計画 `construction/plans/u1-foundation-functional-design-plan.md` を作成（実行チェックリスト、必須成果物 business-logic-model/business-rules/domain-entities、UI基盤ありのため frontend-components も対象、埋め込み質問 Q1〜Q6 を [Answer]: タグで記載）。質問は UserProfile検証、保存ID/レイアウト、SoundEffectSettings範囲、WAV/録音仕様、SceneId/初期遷移、エラー提示方針に焦点。UI技術パラメータ（参照解像度/Match）は NFR Design で扱う旨を明記。ユーザー回答待ち。
+**Context**: CONSTRUCTION - U1 Functional Design（計画：質問回答待ち）
+
+---
+
+## Construction U1 — Functional Design Artifacts Generated (Part 2)
+**Timestamp**: 2026-07-15T19:23:00+09:00
+**User Input**: "done"（Q1=B, Q2=A, Q3=A, Q4=A, Q5=A, Q6=A＋補足「過度なフォールバック禁止・フォールバック時は警告」）
+**AI Response**: 回答受領。矛盾なし。Q6 補足を BR-18/BR-19 に反映。機能設計成果物を生成: domain-entities.md（UserProfile[生年選択式/ニックネーム1〜8], SoundClipMeta, SoundEffectSettings[±12半音等], AudioBuffer[44100/mono/16bit/132300], SavedSound, SceneId 他）、business-rules.md（BR-01〜22: 検証/永続化/WAV/ナビ/エラー・フォールバック/UI基盤）、business-logic-model.md（起動/遷移/永続化最小/WavCodec/PitchMath/ContentService器/データフロー）、frontend-components.md（UI基盤階層/ライフサイクル/ハンドオフ点）。plan チェックリスト全 [x]、aidlc-state 更新。承認ゲート提示。
+**AI Response（承認プロンプト）**: "U1 Functional Design 完了。construction/u1-foundation/functional-design/ をご確認ください。Request Changes または Continue to Next Stage（NFR Requirements）を選択してください。"
+**Context**: CONSTRUCTION - U1 Functional Design（生成完了：承認ゲート・ユーザー確認待ち）
+
+---
+
+## Construction U1 — Functional Design Approved / NFR Requirements Plan Created
+**Timestamp**: 2026-07-15T20:21:00+09:00
+**User Input**: "続けて"
+**AI Response**: U1 Functional Design をユーザーが承認（「続けて」）。aidlc-state 更新（U1 Functional Design=完了）。次ステージ NFR Requirements を開始（U1 は性能/プライバシー/レスポンシブ/堅牢性/PBT・技術選定を含むため EXECUTE）。nfr-requirements.md ルール詳細をロードし、u1-foundation-nfr-requirements-plan.md を作成（実行チェックリスト、必須成果物 nfr-requirements.md / tech-stack-decisions.md、埋め込み質問 Q1〜Q7 を [Answer]: タグで記載）。質問は性能目標/レスポンシブ数値/SafeArea方式/堅牢性/PBTフレームワーク/対象OS・最小バージョン/保守・テストに焦点。ユーザー回答待ち。
+**Context**: CONSTRUCTION - U1 NFR Requirements（計画：質問回答待ち）
+
+---
+
+## Construction U1 — NFR Requirements Artifacts Generated (Part 2)
+**Timestamp**: 2026-07-15T20:25:00+09:00
+**User Input**: "done"（Q1〜Q7＝すべて A）
+**AI Response**: 回答受領。矛盾・曖昧さなし（全問=推奨A）。NFR成果物を生成: nfr-requirements.md（対象OS iOS15+/Android8+、レスポンシブ 1080×1920/Match0.5、SafeAreaFitter再計算、性能 遷移<0.3s/保存<0.5s/60fps・最低30fps、堅牢性はU1最小・U4本実装＋警告、PII非送信、PBT=FsCheck、保守=AsmDef/JsonUtility、可用性/DR=N/A）、tech-stack-decisions.md（Unity6/URP/uGUI/C#, AsmDep分割, JsonUtility＋制約留意, VoiceRecordingSection一本化, UITheme, FsCheck+UTF, MCP/Git, iOS15/Android8, 追加パッケージ想定）。plan チェックリスト全 [x]、aidlc-state 更新。承認ゲート提示。
+**AI Response（承認プロンプト）**: "U1 NFR Requirements 完了。construction/u1-foundation/nfr-requirements/ をご確認ください。Request Changes または Continue to Next Stage（NFR Design）を選択してください。"
+**Context**: CONSTRUCTION - U1 NFR Requirements（生成完了：承認ゲート・ユーザー確認待ち）
+
+---
+
+## Construction U1 — NFR Requirements Approved / NFR Design Plan Created
+**Timestamp**: 2026-07-15T20:27:00+09:00
+**User Input**: "Continue to Next Stage"
+**AI Response**: U1 NFR Requirements をユーザーが承認。aidlc-state 更新（U1 NFR Requirements=完了）。次ステージ NFR Design を開始（NFR Requirements 実行済みのため EXECUTE）。nfr-design.md ルール詳細をロードし、u1-foundation-nfr-design-plan.md を作成（実行チェックリスト、必須成果物 nfr-design-patterns.md / logical-components.md、埋め込み質問 Q1〜Q6 を [Answer]: タグで記載）。質問はレスポンシブ/SafeArea実装パターン、性能パターン（読込/GC/フレーム）、堅牢性パターン（整合チェック/例外境界）、PBT/テスト配置、AsmDef 依存境界、UITheme/ハンドオフのパターンに焦点。ユーザー回答待ち。
+**Context**: CONSTRUCTION - U1 NFR Design（計画：質問回答待ち）
+
+---
+
+## Construction U1 — NFR Design Artifacts Generated (Part 2)
+**Timestamp**: 2026-07-15T20:31:00+09:00
+**User Input**: "done"（Q1〜Q6＝すべて A）
+**AI Response**: 回答受領。矛盾・曖昧さなし（全問=推奨A）。NFR Design 成果物を生成: nfr-design-patterns.md（Result型エラー伝搬＋理由コード、破損データ整合チェック/スキップ/警告[U1最小・U4本実装]、性能=同期基本＋重処理のみ非同期/GC削減/キャッシュ、Security=検証集約/PII非ログ[SafeLogger]/本番エラー秘匿、Responsive/SafeArea=ScreenRootテンプレ強制＋ライフサイクル、Scalability=N/A、PBT=純粋関数化、DI=軽量ServiceRegistry/手動DI）、logical-components.md（Result/ServiceRegistry/AppManager/IStorageService/ValidationUtil/SafeLogger/WavCodec/PitchMath/Responsive/SafeArea/ScreenRootBase/UITheme/ErrorPresenter とAsmDef配置・連携フロー）。plan チェックリスト全 [x]、aidlc-state 更新。承認ゲート提示。
+**AI Response（承認プロンプト）**: "U1 NFR Design 完了。construction/u1-foundation/nfr-design/ をご確認ください。Request Changes または Continue to Next Stage（Infrastructure Design は SKIP のため Code Generation）を選択してください。"
+**Context**: CONSTRUCTION - U1 NFR Design（生成完了：承認ゲート・ユーザー確認待ち）
+
+---
