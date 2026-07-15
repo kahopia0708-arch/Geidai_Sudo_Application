@@ -158,3 +158,19 @@
 **Context**: INCEPTION - Application Design（Part 2 生成完了：承認ゲート・ユーザー確認待ち）
 
 ---
+
+## Application Design — Approved
+**Timestamp**: 2026-07-15T18:02:00+09:00
+**User Input**: "Approve & Continue"
+**AI Response**: application-design/ 配下（components/component-methods/services/component-dependency/application-design）をユーザーが承認。Application Design ステージ完了。aidlc-state.md 更新。Units Generation ステージ（Part 1: Planning）を開始（units-generation.md ルール詳細をロード）。
+**Context**: INCEPTION - Application Design（承認完了）→ Units Generation 開始
+
+---
+
+## Units Generation — Plan Created (Part 1)
+**Timestamp**: 2026-07-15T18:02:30+09:00
+**User Input**: （前ステップ "Approve & Continue" に基づき自動継続）
+**AI Response**: unit-of-work-plan.md を作成（実行チェックリスト、必須成果物 unit-of-work.md / unit-of-work-dependency.md / unit-of-work-story-map.md、埋め込み質問 Q1〜Q5 を [Answer]: タグで記載）。質問はユニット境界(U1〜U5)、Common/Services の所属、実装順序、チーム/オーナーシップ、デプロイ/ドメイン境界に焦点。ユーザー回答待ち。
+**Context**: INCEPTION - Units Generation（Part 1 計画：質問回答待ち）
+
+---
