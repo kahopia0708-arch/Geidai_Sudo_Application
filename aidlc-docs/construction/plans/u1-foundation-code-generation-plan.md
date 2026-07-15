@@ -26,13 +26,19 @@
 - **要件**: Unity 6.0 以降（本プロジェクト 6000.4.2f1＝Unity 6.4.2 で充足、6.0.66f2+ 推奨）／ `com.unity.ai.assistant` 導入 ／ Unity AI サブスク（Personal は無料トライアル、Pro/Enterprise 同梱。MCP は Unity AI クレジットを消費しない）／ Unity Cloud 連携。
 - **仕組み**: Unity 本体が MCP サーバーになり、リレーバイナリ（`~/.unity/relay/`）経由で Cursor が MCP クライアントとして接続。接続後、Cursor に新 MCP サーバー（例: `unity-mcp`）として出現。
 - **現状**: 未接続（未セットアップ）。現行環境の `user-*-unityMCP` は別系統（サードパーティ）で本方針では不使用。**Step 0 で公式サーバーをセットアップ・接続**してから生成・検証に進む。
-- **スクリプト生成**: 公式 MCP のスクリプト系ツール（または本ツールで `Assets/` に直接生成）で `.cs` を作成。
-- **コンパイル確認**: 各生成ステップ後にコンソール読み取りツールでコンパイルエラーを確認（ドメインリロード完了を待つ）。※コンパイルエラーがあると MCP ブリッジが起動しない点に注意。
-- **アセット生成**: `UITheme`（ScriptableObject）等の `.asset` はアセット管理ツールで生成/確認。
-- **テスト実行**: PBT はテスト実行ツール（EditMode）でスモーク実行を試行（本実行は Build & Test）。
-- **シーン/GameObject/プレハブ**: 実シーンへの適用は本ステージ対象外（U2 以降）。
+**接続後に確認した公式ツール（`user-unity-mcp`）**
+- `Unity_GetConsoleLogs` — コンソール（Error/Warning/Log）読み取り
+- `Unity_RunCommand` — C# をコンパイル＆実行（`IRunCommand`）。AssetDatabase 更新・アセット/AsmDef 生成・ProjectSettings・パッケージ管理など万能
+- `Unity_AssetGeneration_GenerateAsset` / `GetModels` — AI アセット生成（スプライト/画像/3D/音）
+- `Unity_Camera_Capture` / `Unity_SceneView_Capture2DScene` / `CaptureMultiAngleSceneView` — 画面キャプチャ
+- ※ サードパーティ版のような専用 `create_script`/`run_tests`/`manage_scene` は無い → 下記の使い分けで代替
 
-> 注: 公式ツールの正確なツール名/引数は接続後に `GetMcpTools` で確認して用いる（本プランではツールの役割ベースで記述）。
+**本ユニットでの使い分け**
+- **スクリプト生成**: 本ツール（Write）で `Assets/` に `.cs`/`.asmdef` を直接生成 → `Unity_RunCommand` で `AssetDatabase.Refresh()` を呼びインポート/コンパイル誘発。
+- **コンパイル確認**: 生成後に `Unity_GetConsoleLogs`（Error 0 を確認）。※コンパイルエラーがあると以降の型が使えない/ブリッジ不調のため必ず解消。
+- **アセット生成**: `UITheme`（ScriptableObject）等の `.asset` は `Unity_RunCommand`（`ScriptableObject.CreateInstance`＋`AssetDatabase.CreateAsset`）で生成。UI 用のモチーフ画像/音は必要に応じ `Unity_AssetGeneration_GenerateAsset`（Sさん 調整前提のプレースホルダ）。
+- **テスト実行**: 公式に専用ツールが無いため、`Unity_RunCommand`＋`TestRunnerApi` でのスモーク実行を試行（本実行は Build & Test ステージ）。
+- **シーン/GameObject/プレハブ**: 実シーンへの適用は本ステージ対象外（U2 以降）。
 
 ### 生成先フォルダ構成（新規）
 ```
@@ -81,12 +87,12 @@ Assets/Scripts/
 - [ ] 初回接続時、Unity の Unity MCP Server 画面で **Pending Connection を承認**
 
 **エージェント側（接続後）**
-- [ ] `GetMcpTools` で公式 Unity MCP サーバーのツール一覧・スキーマを取得
-- [ ] 接続確認（エディタ状態取得ツール）＋ 現状ベースライン（コンソール読み取りで既存 Error/Warning 把握、プロジェクト情報取得）
+- [x] `GetMcpTools` で公式 Unity MCP サーバー（`user-unity-mcp`）のツール一覧・スキーマを取得
+- [x] 接続確認＋ベースライン（`Unity_GetConsoleLogs`＝Error 0 / Warning 1[AI Assistant アカウントAPI 待ち]）
 - [ ] FsCheck 導入方針の確定（NuGetForUnity or DLL 取り込み or UPM）。Step 1 の Tests asmdef と整合
 
 **前提/注意**
-- [ ] コンパイルエラーが無いこと（あると MCP ブリッジが起動しない）
+- [x] コンパイルエラーが無いこと（ベースライン Error 0 を確認）
 - [ ] 未接続のまま進める場合は §5 フォールバック（直接ファイル生成→後で公式 MCP 接続時に一括検証）
 - _トレース: US-TECH-05 / NFR-10（変更管理）_
 

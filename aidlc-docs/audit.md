@@ -274,3 +274,11 @@
 **Context**: CONSTRUCTION - U1 Code Generation（Part 1 計画：公式MCP方針・再承認待ち）
 
 ---
+
+## Construction U1 — Official Unity MCP Connected / Step 0 Verified
+**Timestamp**: 2026-07-15T20:53:00+09:00
+**User Input**: "接続できた"
+**AI Response**: 公式 Unity MCP サーバーが Cursor に `user-unity-mcp`（serverStatus=ready）として接続されたことを確認。GetMcpTools でツール一覧取得: Unity_GetConsoleLogs / Unity_RunCommand（C#コンパイル実行・IRunCommand）/ Unity_AssetGeneration_GenerateAsset・GetModels / Unity_Camera_Capture / Unity_SceneView_Capture2DScene・CaptureMultiAngleSceneView。専用の create_script/run_tests/manage_scene は無いため RunCommand＋GetConsoleLogs で代替する方針に更新。接続検証: Unity_GetConsoleLogs 実行成功（Error 0 / Warning 1＝AI Assistant アカウントAPI 30秒到達待ちの警告のみ、コンパイル正常）。Unity_RunCommand の環境プローブは Auto-review によりブロック（環境パス出力が承認範囲外）→ 本質的でないためスキップ。プランの MCP 活用方針/Step 0 を実測ツールに更新（Step 0 の接続確認・ベースラインを [x]）。残: FsCheck 導入方針（パッケージ追加を伴うためユーザー確認）。
+**Context**: CONSTRUCTION - U1 Code Generation（Step 0 接続確認済み・FsCheck方針＋Part2開始の確認待ち）
+
+---
