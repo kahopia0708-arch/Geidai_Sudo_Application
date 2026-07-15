@@ -5,7 +5,7 @@
 - **Project Type**: Brownfield
 - **Start Date**: 2026-07-15T16:48:08+09:00
 - **Current Phase**: CONSTRUCTION
-- **Current Stage**: U1 基盤 — Code Generation（Part 2 生成完了・完了ゲート）
+- **Current Stage**: U2 Foundation — Functional Design（Part 1: 計画・回答待ち）
 
 ## Workspace State
 - **Existing Code**: Yes（Unity 6000.4.2f1 / URP / uGUI）
@@ -51,9 +51,13 @@
 - [x] NFR Requirements — 承認済み（2026-07-15）
 - [x] NFR Design — 承認済み（2026-07-15）
 - [x] Infrastructure Design — SKIP（オフライン・インフラ無し）
-- [x] Code Generation — Part2 生成完了（2026-07-15）。Common/Services/UI基盤＋PBT を `Geidai.*` で生成。公式 Unity MCP（`user-unity-mcp`）で Error0＋スモーク PASS。code-summary.md 作成。完了ゲート待ち。
+- [x] Code Generation — Part2 生成完了・承認（2026-07-15）。Common/Services/UI基盤＋PBT を `Geidai.*` で生成。公式 Unity MCP（`user-unity-mcp`）で Error0＋スモーク PASS。code-summary.md 作成。
 
-#### U2〜U6（未着手）
+#### U2 Foundation（進行中）
+- [~] Functional Design — Part1 計画作成・回答待ち（2026-07-15）
+- [ ] NFR Requirements / NFR Design / Infrastructure Design / Code Generation
+
+#### U3〜U6（未着手）
 - [ ] 各ユニットの per-unit ループ
 
 ### 🟢 Build and Test（全ユニット完了後）

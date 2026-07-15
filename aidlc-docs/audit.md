@@ -290,3 +290,11 @@
 **Context**: CONSTRUCTION - U1 Code Generation（Part 2 完了・2択完了ゲート待ち）
 
 ---
+
+## Construction U1 Code Generation 承認 → U2 Foundation 開始
+**Timestamp**: 2026-07-15T21:27:00+09:00
+**User Input**: "Continue to Next Stage"
+**AI Response**: U1 基盤 Code Generation を承認。U1 per-unit ループ完了。次ユニット U2 Foundation の per-unit ループに進む。Functional Design ルール（.aidlc-rule-details/construction/functional-design.md）と U2 スコープ（unit-of-work.md：責務=メイン→ホーム→各モジュール導線＋初回登録/編集/検証、Place除外、含むストーリー US-NAV-01/02・US-REG-01/02、主コンポーネント Boot/Home/UserRegistration Controller、依存 U1）、story-map、gap 分析（初回登録は未実装/❌、既存は per-button SceneSwitcher/GoTo* によるシーン遷移）を読込。U2 Functional Design Part1（計画＋明確化質問）を作成開始。
+**Context**: CONSTRUCTION - U2 Foundation / Functional Design（Part 1 計画作成）
+
+---
