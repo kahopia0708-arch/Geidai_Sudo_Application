@@ -362,3 +362,11 @@
 **Context**: CONSTRUCTION - U2 Foundation / Code Generation（Part 2 完了・2択完了ゲート待ち）
 
 ---
+
+## Construction U2 Code Generation 承認 → U3 Rec 開始
+**Timestamp**: 2026-07-15T22:16:00+09:00
+**User Input**: "Continue to Next Stage"
+**AI Response**: U2 Foundation Code Generation を承認。U2 per-unit ループ完了。次ユニット U3 Rec の per-unit ループへ進む。unit-of-work / story-map / REC ストーリー / 既存録音実装（VoiceRecordingSection/RecorderWithEffects/WavUtility/SoundEffectSettings/MySoundCollectionStorage/SoundSavePaths）と U1 資産（IAudioService 器/AudioBuffer/SoundEffectSettingsData/SavedSound/WavCodec/StorageService）を読込。設計ギャップ検出＝IStorageService に保存メソッド（SaveSound）が未定義。u3-rec-functional-design-plan.md（Part1 計画＋明確化質問 Q1〜Q7）を作成。aidlc-state.md を U2 CodeGen 承認済み・U3 Functional Design 進行中に更新。承認待ち。
+**Context**: CONSTRUCTION - U3 Rec / Functional Design（Part 1 計画作成・承認待ち）
+
+---
