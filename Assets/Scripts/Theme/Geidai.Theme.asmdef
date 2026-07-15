@@ -1,0 +1,18 @@
+{
+    "name": "Geidai.Theme",
+    "rootNamespace": "Geidai.Theme",
+    "references": [
+        "Geidai.Common",
+        "Geidai.Services",
+        "UnityEngine.UI"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

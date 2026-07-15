@@ -562,3 +562,11 @@
 **Context**: CONSTRUCTION - U5 weekly theme / Code Generation（Part 1: Planning）
 
 ---
+
+## Construction U5 Code Generation Part1 承認 → Part2 実行完了
+**Timestamp**: 2026-07-16T01:10:00+09:00
+**User Input**: "Continue"
+**AI Response**: U5 Code Generation Plan（Part 1・Step0〜13）を承認（"Continue"）。Part 2 を実行し全 Step 完了。新規：ThemeItem/ThemeCatalog(SO)/ThemeSelector(純粋)＝Geidai.Common.Content、ThemeContext＝Geidai.Services.Content、Geidai.Theme.asmdef＋ThemeBootstrap＋WeeklyThemeController＋WeeklyThemeScreenController、EditMode テスト2種。変更：IContentService 後方互換拡張（GetCurrentTheme/SetCatalog）、ContentService 本実装、Geidai.Tests.asmdef に Geidai.Theme 追加。公式 Unity MCP（user-unity-mcp）でコンパイル Error 0/Warning 0、ThemeSelector（i0=0/i1=1/neg=-1）・ContentService（empty=NotFound/cur=DonDon/unknown=NotImplemented）スモーク PASS、既定 ThemeCatalog.asset（13 オノマトペ）を Assets/Settings に生成。code-summary.md 生成、stories.md（US-THEME-01/02/03）に実装状況追記。commit 予定。完了ゲート提示（Request Changes / Continue to Next Stage）。
+**Context**: CONSTRUCTION - U5 weekly theme / Code Generation（Part 2 完了・完了ゲート）
+
+---

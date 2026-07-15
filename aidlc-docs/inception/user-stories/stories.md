@@ -180,6 +180,8 @@ _トレース: FR-12 / NFR-07（データ堅牢性）_
 
 _トレース: FR-13 / NFR-05_
 
+_実装状況（U5, 2026-07-16）: コード実装済み。`WeeklyThemeController`（再利用部品）＋`WeeklyThemeScreenController`（専用画面）が `IContentService.GetCurrentTheme()` で今週のお題を取得・表示。選択は純粋関数 `ThemeSelector.SelectIndex(date,count)`（`Geidai.Common.Content`・PBT）で決定的。空/無効カタログは `emptyState` フォールバック。既定 `ThemeCatalog`（`Assets/Settings/ThemeCatalog.asset`・13 オノマトペ移行済）を MCP 生成。実シーン配線・意匠は Sさん（US-TECH-07）＝MCP フォローアップ。_
+
 ## US-THEME-02 お題からRecへ
 **P1**
 こども/学習者として、お題をタップしたらそのまま録音に進みたい。なぜなら、思い立った流れで録りたいから。
@@ -190,6 +192,8 @@ _トレース: FR-13 / NFR-05_
 
 _トレース: FR-13_
 
+_実装状況（U5, 2026-07-16）: コード実装済み。お題タップ→`ThemeContext.Set(item)`（`Geidai.Services.Content`・実行時セッション・非永続）→`INavigationService.GoTo(Rec)`（失敗は `ErrorPresenter`）。Rec 側のお題ラベル表示は任意（`ThemeContext.Current` 参照・未設定でも通常録音）。Rec お題ラベルの実配置は MCP フォローアップ。_
+
 ## US-THEME-03 お題の差し替え可能な構成
 **P2**
 企画・運用者として、お題テキストを自分で用意した内容に差し替えたい。なぜなら、研究や季節に合わせて更新したいから。
@@ -199,6 +203,8 @@ _トレース: FR-13_
 - Given 差し替え後, When 利用者が表示する, Then 更新後のお題が表示される。
 
 _トレース: FR-14 / 前提（暫定・更新前提）_
+
+_実装状況（U5, 2026-07-16）: コード実装済み。`ThemeCatalog`（ScriptableObject・`[CreateAssetMenu] Geidai/Theme Catalog`）の `items`（`ThemeItem`: text/reading/hint）を Sさん がインスペクタで追加/編集/並べ替え可能＝再ビルド不要。`ThemeItem.IsValid`（text 非空）で無効項目は選択対象外。旧 `WeeklyTextController`（Assembly-CSharp・固定配列）は当面残置し、シーン差し替え後に削除（BR-THEME-52・MCP フォローアップ）。_
 
 ---
 

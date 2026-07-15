@@ -7,6 +7,7 @@
         "Geidai.Foundation",
         "Geidai.Rec",
         "Geidai.Collection",
+        "Geidai.Theme",
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner"
     ],

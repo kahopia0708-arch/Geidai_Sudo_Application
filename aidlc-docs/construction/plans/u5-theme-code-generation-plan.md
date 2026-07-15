@@ -24,26 +24,26 @@
 ## 1. 実装ステップ（Part 2 で実行）
 
 ### コード生成
-- [ ] **Step0** MCP 接続確認・コンソール ベースライン（Error/Warning 現況）
-- [ ] **Step1** `Assets/Scripts/Common/Content/ThemeItem.cs`（`Geidai.Common.Content`・Serializable：`id`/`text`/`reading`/`hint`＋`IsValid`＝`text` 非空）
-- [ ] **Step2** `Assets/Scripts/Common/Content/ThemeCatalog.cs`（`ScriptableObject`・`List<ThemeItem> items`＋`ValidItems()`/`ValidCount`。`[CreateAssetMenu]` で S さん がアセット作成可）
-- [ ] **Step3** `Assets/Scripts/Common/Content/ThemeSelector.cs`（static 純粋：`SelectIndex(DateTime date, int count)`＝週番号→剰余・`count<=0`→`-1`。既存 `WeeklyTextController` の週番号ロジックを純粋移植）
-- [ ] **Step4** `IContentService` 拡張（`Geidai.Services.Content`）：`Result<ThemeItem> GetCurrentTheme()` 追加＋`void SetCatalog(ThemeCatalog)`（DI 用）。既存 `GetText(key)` は不変（後方互換）
-- [ ] **Step5** `ContentService` 実装（`Geidai.Services.Content`）：`ThemeCatalog` 保持、`GetCurrentTheme()`＝有効項目抽出→`ThemeSelector.SelectIndex(now, validCount)`→`ThemeItem`／空・無効は `Fail(NotFound)`。`GetText("theme.current")` は本文/フォールバック、他キーは `NotImplemented`。時刻は注入可能（`Func<DateTime>` 既定 `DateTime.Now`）
-- [ ] **Step6** `Assets/Scripts/Services/Content/ThemeContext.cs`（`Geidai.Services.Content`・セッション：`ThemeItem Current`/`HasValue`/`Set`/`Clear`。非永続）
-- [ ] **Step7** `Assets/Scripts/Theme/Geidai.Theme.asmdef`（参照＝`Geidai.Common`/`Geidai.Services`/`UnityEngine.UI`・autoReferenced=true・**Rec 非依存**）
-- [ ] **Step8** `Assets/Scripts/Theme/ThemeBootstrap.cs`（static：`IContentService` を解決/未登録なら `ContentService` 登録、`ThemeCatalog` を注入。`RecBootstrap`/`CollectionBootstrap` と同パターン）
-- [ ] **Step9** `Assets/Scripts/Theme/WeeklyThemeController.cs`（MonoBehaviour 再利用：`themeText`/`readingText`/`hintText`/`recordButton`/`emptyState`。`Refresh()`＝`GetCurrentTheme()`→反映/`emptyState`。`recordButton`→`ThemeContext.Set`→`GoTo(Rec)`＋失敗 `ErrorPresenter`）
-- [ ] **Step10** `Assets/Scripts/Theme/WeeklyThemeScreenController.cs`（`ScreenRootBase`：`WeeklyThemeController`＋`BackToHomeButton` を内包、`OnBackPressed`→ホーム。`OnShow` で `Refresh()`）
+- [x] **Step0** MCP 接続確認・コンソール ベースライン（Error 0/Warning 0）
+- [x] **Step1** `Assets/Scripts/Common/Content/ThemeItem.cs`（`Geidai.Common.Content`・Serializable：`id`/`text`/`reading`/`hint`＋`IsValid`＝`text` 非空）
+- [x] **Step2** `Assets/Scripts/Common/Content/ThemeCatalog.cs`（`ScriptableObject`・`List<ThemeItem> items`＋`ValidItems()`/`ValidCount`/`SetItems`。`[CreateAssetMenu]`）
+- [x] **Step3** `Assets/Scripts/Common/Content/ThemeSelector.cs`（static 純粋：`SelectIndex(DateTime date, int count)`＝週番号→剰余・`count<=0`→`-1`。既存週番号ロジックを純粋移植）
+- [x] **Step4** `IContentService` 拡張：`Result<ThemeItem> GetCurrentTheme()`＋`void SetCatalog(ThemeCatalog)`。既存 `GetText(key)` は不変（後方互換）
+- [x] **Step5** `ContentService` 実装：`ThemeCatalog`＋`ThemeSelector` で今週のお題導出／空・無効は `Fail(NotFound)`。`GetText("theme.current")` 実装・他キー `NotImplemented`。時刻注入（`Func<DateTime>`）
+- [x] **Step6** `Assets/Scripts/Services/Content/ThemeContext.cs`（セッション：`Current`/`HasValue`/`Set`/`Clear`・非永続）
+- [x] **Step7** `Assets/Scripts/Theme/Geidai.Theme.asmdef`（`Geidai.Common`/`Geidai.Services`/`UnityEngine.UI`・**Rec 非依存**）
+- [x] **Step8** `Assets/Scripts/Theme/ThemeBootstrap.cs`（`IContentService`/`ThemeContext` 確保・カタログ注入）
+- [x] **Step9** `Assets/Scripts/Theme/WeeklyThemeController.cs`（再利用部品：`Refresh()`→反映/`emptyState`・`recordButton`→`ThemeContext.Set`→`GoTo(Rec)`＋失敗 `ErrorPresenter`）
+- [x] **Step10** `Assets/Scripts/Theme/WeeklyThemeScreenController.cs`（`ScreenRootBase`・`OnShow` で `Refresh()`・`OnBackPressed`→ホーム。`BackToHomeButton` はシーン配置で併用）
 
 ### テスト
-- [ ] **Step11** EditMode テスト（`Geidai.Tests` に `Geidai.Theme` 参照追加）
-  - `ThemeSelectorTests.cs`（PBT：戻り値 `-1`[count<=0] or `0..count-1`／決定的／剰余一致／年境界代表日付）
-  - `ContentServiceThemeTests.cs`（空カタログ→`NotFound`／有効カタログ→現在お題取得／`GetText("theme.current")`／`text` 空除外）
+- [x] **Step11** EditMode テスト（`Geidai.Tests` に `Geidai.Theme` 参照追加）
+  - `ThemeSelectorTests.cs`（PBT：`-1`[count<=0]/`0..count-1`／決定的／剰余一致／週回転／代表日付）
+  - `ContentServiceThemeTests.cs`（空/無効カタログ→`NotFound`／有効→現在お題／`GetText("theme.current")`／`text` 空除外／`SetCatalog`）
 
 ### 検証・記録
-- [ ] **Step12** MCP 検証：`AssetDatabase.Refresh`→コンパイル Error 0 目標、`ThemeSelector`/`ContentService` の純粋スモーク（可能な範囲）。既定 `ThemeCatalog` アセット生成（既存オノマトペ移行）を試行（不可なら MCP フォローアップに記載）
-- [ ] **Step13** `../u5-theme/code/code-summary.md` 生成＋`stories.md` の US-THEME-01/02/03・US-TECH-07 に実装状況追記＋commit
+- [x] **Step12** MCP 検証：`AssetDatabase.Refresh`→**コンパイル Error 0/Warning 0**、`ThemeSelector`/`ContentService` 純粋スモーク PASS、既定 `ThemeCatalog.asset`（13 オノマトペ）生成
+- [x] **Step13** `../u5-theme/code/code-summary.md` 生成＋`stories.md`（US-THEME-01/02/03）実装状況追記＋commit
 
 ---
 
