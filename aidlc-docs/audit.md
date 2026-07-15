@@ -378,3 +378,11 @@
 **Context**: CONSTRUCTION - U3 Rec / Functional Design（Part 2 生成・完了ゲート待ち）
 
 ---
+
+## Construction U3 Rec Functional Design 承認 → NFR Requirements 開始
+**Timestamp**: 2026-07-15T22:27:00+09:00
+**User Input**: "Continue to Next Stage"
+**AI Response**: U3 Functional Design を承認。次ステージ U3 NFR Requirements（Part 1: 計画＋明確化質問）へ進む。U1/U2 の NFR 資産（クロスカッティング＝Result/フェイルセーフ/レスポンシブ/SafeArea/PBT・命名等）を継承し、U3 固有の性能（録音/加工リアルタイム/保存レイテンシ）・信頼性（権限フェイルセーフ・保存失敗安全）・テスト戦略（PitchMath/WavCodec は U1 PBT 済／U3 は再適用の整合・境界）を扱う予定。aidlc-state.md 更新。
+**Context**: CONSTRUCTION - U3 Rec / NFR Requirements（Part 1 計画作成）
+
+---
