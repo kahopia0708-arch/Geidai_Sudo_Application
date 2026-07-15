@@ -5,7 +5,7 @@
 - **Project Type**: Brownfield
 - **Start Date**: 2026-07-15T16:48:08+09:00
 - **Current Phase**: CONSTRUCTION
-- **Current Stage**: U3 Rec — NFR Design（Part 1 計画作成・承認待ち）
+- **Current Stage**: U3 Rec — NFR Design（Part 2 生成完了・完了ゲート／承認待ち）
 
 ## Workspace State
 - **Existing Code**: Yes（Unity 6000.4.2f1 / URP / uGUI）
@@ -63,7 +63,7 @@
 #### U3 Rec（進行中）
 - [x] Functional Design — Part2 生成完了・承認済み（2026-07-15、Q1〜Q7=全A）。domain-entities/business-logic-model/business-rules/frontend-components 作成。設計ギャップ＝IStorageService に SaveSound を U3 で追加方針（Q5=A・U4で堅牢化）。commit b570aaf
 - [x] NFR Requirements — Part2 生成完了・承認済み（2026-07-15、Q1〜Q6=全A）。nfr-requirements/tech-stack-decisions 作成（性能・リアルタイム加工=標準AudioFilter・権限/保存フェイルセーフ・プライバシー・換算PBT・Geidai.Rec＋SaveSound拡張）。commit 2cf113b
-- [~] NFR Design — Part1（計画＋明確化質問 Q1〜Q6）作成・承認待ち（2026-07-15）
+- [~] NFR Design — Part2 生成完了（Q1〜Q6=全A）。nfr-design-patterns/logical-components 作成（EffectChain/RecordingClock/MicPermissionGate/SaveSound最小原子性/SoundEffectMapper=PBT/DI・一本化）。完了ゲート・承認待ち（2026-07-15）
 - [ ] Infrastructure Design — SKIP 予定（完全オフライン）
 - [ ] Code Generation
 

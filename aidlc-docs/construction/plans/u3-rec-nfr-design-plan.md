@@ -11,9 +11,11 @@
 ---
 
 ## A. 実行チェックリスト（Part 2 で実行）
-- [ ] `../u3-rec/nfr-design/nfr-design-patterns.md` を生成（各 NFR の実現パターン）
-- [ ] `../u3-rec/nfr-design/logical-components.md` を生成（論理コンポーネント・責務・連携）
-- [ ] NFR Requirements / Functional Design とのトレース整合を確認
+- [x] `../u3-rec/nfr-design/nfr-design-patterns.md` を生成（各 NFR の実現パターン）
+- [x] `../u3-rec/nfr-design/logical-components.md` を生成（論理コンポーネント・責務・連携）
+- [x] NFR Requirements / Functional Design とのトレース整合を確認
+
+> **回答**: Q1〜Q6＝すべて A（推奨）。矛盾なし。Part 2 実行済み（2026-07-15）。
 
 ## B. カテゴリ適用性（このユニットでの判断）
 - **Resilience（耐障害）**: 適用（マイク権限フェイルセーフ・保存失敗の非破壊・対ファイル整合）。ネットワーク再試行系は N/A。
@@ -46,7 +48,7 @@ B) 各加工を個別コンポーネントが直接フィルタ操作（束ね�
 
 C) Other（[Answer]: の後に記述）
 
-[Answer]:
+[Answer]:A
 
 ### Question 2（Performance/Resilience — 録音クロックとバッファ）
 3秒固定・自動停止と録音バッファの設計は？
@@ -57,7 +59,7 @@ B) `Microphone` の録音長のみに任せ、明示的クロックを持たな�
 
 C) Other（[Answer]: の後に記述）
 
-[Answer]:
+[Answer]:A
 
 ### Question 3（Resilience — マイク権限ゲート）
 マイク権限のプラットフォーム差異と失敗処理の設計は？
@@ -68,7 +70,7 @@ B) 各コントローラが直接プラットフォーム API を叩く（Gate �
 
 C) Other（[Answer]: の後に記述）
 
-[Answer]:
+[Answer]:A
 
 ### Question 4（Resilience — SaveSound の最小原子性）
 保存（wav＋meta の対）の失敗耐性の設計は？（U3 最小・U4 で本格原子化）
@@ -79,7 +81,7 @@ B) 書き込み順のみ保証し、失敗時のクリーンアップはしな�
 
 C) Other（[Answer]: の後に記述）
 
-[Answer]:
+[Answer]:A
 
 ### Question 5（Testability — 換算 Mapper の純粋関数化）
 加工設定の換算（旧→新・離散化・正規化）の設計は？
@@ -90,7 +92,7 @@ B) 換算はコントローラ内にインラインで実装（Mapper 分離な�
 
 C) Other（[Answer]: の後に記述）
 
-[Answer]:
+[Answer]:A
 
 ### Question 6（DI/Logical Components — Rec 構成と一本化）
 Rec の論理コンポーネント構成とサービス登録・一本化の設計は？
@@ -101,7 +103,7 @@ B) `RecScreenController` に録音/加工/保存を集約（サブコンポー�
 
 C) Other（[Answer]: の後に記述）
 
-[Answer]:
+[Answer]:A
 
 ---
 
