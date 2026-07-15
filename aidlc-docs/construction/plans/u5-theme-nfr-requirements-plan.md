@@ -12,9 +12,11 @@
 ---
 
 ## A. 実行チェックリスト（Part 2 で実行）
-- [ ] `../u5-theme/nfr-requirements/nfr-requirements.md` を生成（U5 の NFR 目標・受入可能値）
-- [ ] `../u5-theme/nfr-requirements/tech-stack-decisions.md` を生成（U5 の技術選定差分・根拠）
-- [ ] 要件（NFR-04/05/06/07/08/09/11/12 / FR-13/14）・ストーリー（US-THEME-01/02/03 / US-TECH-07）とのトレース整合を確認
+- [x] `../u5-theme/nfr-requirements/nfr-requirements.md` を生成（U5 の NFR 目標・受入可能値）
+- [x] `../u5-theme/nfr-requirements/tech-stack-decisions.md` を生成（U5 の技術選定差分・根拠）
+- [x] 要件（NFR-04/05/06/07/08/09/11/12 / FR-13/14）・ストーリー（US-THEME-01/02/03 / US-TECH-07）とのトレース整合を確認
+
+> **回答**: Q1〜Q6＝すべて A（推奨）。矛盾なし。Part 2 実行済み（2026-07-16）。
 
 ## B. 前提（U1〜U4 で確定済み・U5 も踏襲。原則 再質問しない）
 - **プラットフォーム**（NFR-01）: iOS 15+ / Android 8.0(API26)+、スマホ〜タブレット、縦横両対応。
@@ -50,7 +52,7 @@ B) 具体数値は設定せず「体感で引っかからない」を定性目�
 
 C) Other（[Answer]: の後に記述）
 
-[Answer]:
+[Answer]:A
 
 ## Question 2（信頼性・堅牢性の受入基準 / NFR-07）
 空/無効カタログ・遷移失敗時の受入基準は？
@@ -61,7 +63,7 @@ B) 空カタログは想定外として最低限のガードのみ（詳細フ�
 
 C) Other（[Answer]: の後に記述）
 
-[Answer]:
+[Answer]:A
 
 ## Question 3（ユーザビリティ / NFR-05）
 子ども向け表示の基準は？
@@ -72,7 +74,7 @@ B) 既定の最小 UI のみ（読み/ヒントは出さない）。
 
 C) Other（[Answer]: の後に記述）
 
-[Answer]:
+[Answer]:A
 
 ## Question 4（テスト容易性 / NFR-09・PBT）
 U5 の検証方針は？
@@ -83,7 +85,7 @@ B) PBT は行わず、単体テストと手動確認のみ。
 
 C) Other（[Answer]: の後に記述）
 
-[Answer]:
+[Answer]:A
 
 ## Question 5（保守性・アセンブリ/データ配置 / NFR-08・NFR-10）
 U5 の実装配置と `IContentService` 拡張の方針は？
@@ -94,7 +96,7 @@ B) `Geidai.Theme` を作らず `Geidai.Foundation` に相乗り（アセンブ�
 
 C) Other（[Answer]: の後に記述）
 
-[Answer]:
+[Answer]:A
 
 ## Question 6（お題データのプライバシー / NFR-04）
 お題データ（`ThemeCatalog`）と `ThemeContext` の扱いは？
@@ -103,7 +105,7 @@ A) (推奨) お題は**制作側コンテンツ＝PII を含まない**（NFR-04
 
 B) Other（[Answer]: の後に記述）
 
-[Answer]:
+[Answer]:A
 
 ---
 

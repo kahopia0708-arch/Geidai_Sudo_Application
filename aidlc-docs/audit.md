@@ -530,3 +530,11 @@
 **Context**: CONSTRUCTION - U5 weekly theme / NFR Requirements（Part 1: Planning）
 
 ---
+
+## Construction U5 NFR Requirements Part1 回答 → Part2 生成
+**Timestamp**: 2026-07-16T00:22:00+09:00
+**User Input**: "done"
+**AI Response**: U5 NFR Requirements Plan の Q1〜Q6 を全て推奨（A）で確定。Q1=お題表示 体感即時(<0.1s)・ThemeSelector O(1)・Rec 遷移は U2 同期基準／Q2=空カタログ フォールバック＋遷移失敗 ErrorPresenter・ThemeContext 未設定でも Rec 通常録音／Q3=大きく平易＋読み/ヒント・意匠は Sさん／Q4=ThemeSelector PBT＋ContentService/ThemeCatalog 単体／Q5=`Geidai.Theme`(UI)＋純粋 ThemeSelector・ThemeItem/ThemeCatalog は Common・IContentService 後方互換拡張・旧 WeeklyTextController は差替後削除／Q6=お題は PII なし(NFR-04 は N/A)・ThemeContext 非永続・外部送信なし。矛盾なし。Part 2 で nfr-requirements.md / tech-stack-decisions.md を生成。（注: plan の replace_all で説明文中の [Answer]: も一時的に誤置換したため修正済み）
+**Context**: CONSTRUCTION - U5 weekly theme / NFR Requirements（Part 2 生成）
+
+---
