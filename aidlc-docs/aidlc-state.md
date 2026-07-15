@@ -5,7 +5,7 @@
 - **Project Type**: Brownfield
 - **Start Date**: 2026-07-15T16:48:08+09:00
 - **Current Phase**: INCEPTION
-- **Current Stage**: Units Generation（Part 1 計画：unit-of-work-plan.md 質問回答待ち）
+- **Current Stage**: Units Generation（Part 1 計画：明確化 unit-of-work-clarification-questions.md 回答待ち）
 
 ## Workspace State
 - **Existing Code**: Yes（Unity 6000.4.2f1 / URP / uGUI）

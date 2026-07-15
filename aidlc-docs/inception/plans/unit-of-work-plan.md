@@ -38,7 +38,7 @@ C) 統合: U2 Rec と U3 Persistence/Collection を 1 ユニットに統合（�
 
 D) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: B
 
 ## Question 2
 横断的な Common / Services（StorageService 等）の所属（Dependencies）はどうしますか？
@@ -51,7 +51,7 @@ C) 各サービスを利用側ユニットで都度実装（U1 に器を置か�
 
 D) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: A
 
 ## Question 3
 実装順序（依存順）はどうしますか？
@@ -64,7 +64,7 @@ C) 別の順序（Other に記述）
 
 D) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: A
 
 ## Question 4
 チーム/オーナーシップと作業モデル（Team Alignment）はどうしますか？
@@ -75,7 +75,7 @@ B) 複数人での並行作業を前提にユニットを分割（インター�
 
 D) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: A
 
 ## Question 5
 デプロイ/ドメイン境界（Technical / Business Domain）の確認です。
@@ -86,4 +86,4 @@ B) 一部を将来的に独立パッケージ化する前提で、より疎結�
 
 D) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: A
