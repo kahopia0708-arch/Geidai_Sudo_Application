@@ -322,3 +322,11 @@
 **Context**: CONSTRUCTION - U2 Foundation / NFR Requirements（Part 2 完了・2択完了ゲート待ち）
 
 ---
+
+## Construction U2 NFR Requirements 承認 → NFR Design 開始
+**Timestamp**: 2026-07-15T21:48:00+09:00
+**User Input**: "Continue to Next Stage"
+**AI Response**: U2 Foundation NFR Requirements を承認。次ステージ NFR Design（per-unit）へ進む。NFR Design ルール（.aidlc-rule-details/construction/nfr-design.md）と U1 NFR Design 計画（Result型・破損データ耐性・性能パターン・ScreenRoot テンプレート・軽量サービスロケータ）を読込。U1 のパターンは U2 も踏襲（B-2 節で前提化・再質問なし）。U2 固有論点に絞った Part1 計画＋質問（Q1〜Q6：起動判定状態機械/ナビ NotFound 安全処理/戻る・終了(BackHandler・ConfirmDialog)/ホームメニュー データ駆動(HomeMenuConfig)/性能(同期LoadScene基本)/登録コントローラ(検証・保存委譲)）を `plans/u2-foundation-nfr-design-plan.md` に作成。カテゴリ適用性：Resilience/Performance/Security/LogicalComponents=適用、Scalability=N/A。aidlc-state.md 更新（Current Stage=U2 NFR Design Part1・回答待ち）。回答ゲート提示予定。
+**Context**: CONSTRUCTION - U2 Foundation / NFR Design（Part 1 計画作成・回答待ち）
+
+---
