@@ -12,9 +12,11 @@
 ---
 
 ## A. 実行チェックリスト（Part 2 で実行）
-- [ ] `../u4-collection/nfr-requirements/nfr-requirements.md` を生成（U4 の NFR 目標・受入可能値）
-- [ ] `../u4-collection/nfr-requirements/tech-stack-decisions.md` を生成（U4 の技術選定差分・根拠）
-- [ ] 要件（NFR-04/05/06/07/08/09/11/12 / RESILIENCY-01）・ストーリー（US-COL/US-TECH-06）とのトレース整合を確認
+- [x] `../u4-collection/nfr-requirements/nfr-requirements.md` を生成（U4 の NFR 目標・受入可能値）
+- [x] `../u4-collection/nfr-requirements/tech-stack-decisions.md` を生成（U4 の技術選定差分・根拠）
+- [x] 要件（NFR-04/05/06/07/08/09/11/12 / RESILIENCY-01）・ストーリー（US-COL/US-TECH-06）とのトレース整合を確認
+
+> **回答**: Q1〜Q6＝すべて A（推奨）。矛盾なし。Part 2 実行済み（2026-07-15）。
 
 ## B. 前提（U1〜U3 で確定済み・U4 も踏襲。原則 再質問しない）
 - **プラットフォーム**（NFR-01）: iOS 15+ / Android 8.0(API26)+、スマホ〜タブレット、縦横両対応。
@@ -52,7 +54,7 @@ C) 具体数値は設定せず「体感で引っかからない」を定性目�
 
 D) Other（[Answer]: の後に記述）
 
-[Answer]:
+[Answer]:A
 
 ## Question 2（信頼性・堅牢性の受入基準 / NFR-07・US-TECH-06 — U4 の主眼）
 永続化の原子性・破損耐性の受入基準は？
@@ -63,7 +65,7 @@ B) 原子性は meta/profile のみ（小容量テキスト）。wav/写真は�
 
 C) Other（[Answer]: の後に記述）
 
-[Answer]:
+[Answer]:A
 
 ## Question 3（プライバシー / NFR-04・SECURITY-03）
 拡張メタ（写真/メモ/ニックネーム）と音声の扱いは？
@@ -72,7 +74,7 @@ A) (推奨) 写真・メモ・ニックネーム・音声・設定は**端末内
 
 B) Other（[Answer]: の後に記述）
 
-[Answer]:
+[Answer]:A
 
 ## Question 4（テスト容易性 / NFR-09・PBT）
 U4 の検証方針は？
@@ -83,7 +85,7 @@ B) PBT は行わず、統合テストと手動確認のみ。
 
 C) Other（[Answer]: の後に記述）
 
-[Answer]:
+[Answer]:A
 
 ## Question 5（保守性・アセンブリ/IF 拡張 / NFR-08・NFR-10）
 U4 の実装配置と `IStorageService` 拡張の方針は？
@@ -94,7 +96,7 @@ B) `Geidai.Collection` を作らず `Geidai.Foundation` などに相乗り（ア
 
 C) Other（[Answer]: の後に記述）
 
-[Answer]:
+[Answer]:A
 
 ## Question 6（視聴の再生忠実度・技術配置 / Q7=A の技術決定）
 コレクションの「視聴」で保存エフェクトを再適用するための配置は？（Collection→Rec の依存を作らない）
@@ -107,7 +109,7 @@ C) 共有せず、Collection から U3 `EffectChain` を参照（`Geidai.Collect
 
 D) Other（[Answer]: の後に記述）
 
-[Answer]:
+[Answer]:A
 
 ---
 

@@ -458,3 +458,11 @@
 **Context**: CONSTRUCTION - U4 Persistence/Collection / NFR Requirements（Part 1 計画作成）
 
 ---
+
+## Construction U4 NFR Requirements Part1 承認 → Part2 生成
+**Timestamp**: 2026-07-15T23:24:00+09:00
+**User Input**: "done"（Q1〜Q6＝すべて A）
+**AI Response**: U4 NFR Requirements 計画（Part 1）の回答を確認（Q1=A 性能=数十〜数百件・一覧/スクロール/視聴/書込は体感即時目標／Q2=A 原子的置換[temp→置換]・破損スキップ・空フォールバック=U4 の主眼[RESILIENCY-01 Critical]／Q3=A PII は端末内のみ・端末外送信なし・ログ非出力／Q4=A 絞込検索とメタ JSON 往復を PBT・原子性/破損/削除は統合テスト／Q5=A 新規 `Geidai.Collection`＋`IStorageService` 後方互換拡張[DeleteSound/SaveMeta・SaveSound/SaveProfile 原子化]＋`IPhotoPicker` 抽象／Q6=A 共有再生を Services 層へ[`IAudioService.Play(buffer,settings)` 拡張・EffectChain を Services 共有化・`Collection→Rec` 非依存]）。矛盾・曖昧なし。Part 2 を実行し nfr-requirements.md（NFR-COL-P/R/U/Priv/T/M/UI・受入サマリ）／tech-stack-decisions.md（アセンブリ・原子的置換・IStorageService/IAudioService 拡張・IPhotoPicker・メタ拡張・純粋フィルタ）を生成。plan チェック更新、aidlc-state.md 更新。承認ゲート提示。
+**Context**: CONSTRUCTION - U4 Persistence/Collection / NFR Requirements（Part 2 生成完了・承認待ち）
+
+---
