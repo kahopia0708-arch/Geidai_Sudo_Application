@@ -506,3 +506,19 @@
 **Context**: CONSTRUCTION - U4 Persistence/Collection / Code Generation（Part 2 完了・完了ゲート承認待ち）
 
 ---
+
+## Construction U4 完了ゲート承認 → U5 weekly theme 着手
+**Timestamp**: 2026-07-16T00:09:00+09:00
+**User Input**: "Continue to Next Stage"
+**AI Response**: U4 Persistence/Collection の per-unit ループ（Functional Design→NFR Requirements→NFR Design→Infrastructure Design[SKIP]→Code Generation）完了を承認。commit c9d0233。実装順（U1→U2→U3→U4→U5→U6）に従い次ユニット U5 weekly theme（お題）に着手。Functional Design（Part 1: 計画＋明確化質問）を開始。参照: US-THEME-01/02/03・FR-13/14・企画資料（ウィークリーテーマ＝音のお題・タップで Rec へ・ホーム上部配置想定・Sさんが内容差し替え）・既存 `WeeklyTextController`（固定オノマトペ配列＋週番号選択）・`IContentService`（未実装）・ModuleRouter（WeeklyTheme→Theme 配線済）。aidlc-state.md を U4 完了ゲート・U5 Functional Design Part1 へ更新。
+**Context**: CONSTRUCTION - U5 weekly theme / Functional Design（Part 1 計画作成・回答待ち）
+
+---
+
+## Construction U5 Functional Design Part1 回答 → Part2 生成
+**Timestamp**: 2026-07-16T00:14:00+09:00
+**User Input**: "done"
+**AI Response**: U5 Functional Design Plan の Q1〜Q7 を全て推奨（A）で確定。Q1=ThemeCatalog(SO)＋ThemeItem／Q2=純粋 ThemeSelector.SelectIndex(date,count)／Q3=ThemeContext セッション保持・保存メタ非記録／Q4=旧 WeeklyTextController は差し替え後削除（当面残置）／Q5=IContentService を ThemeCatalog ベース実装＋GetCurrentTheme 追加／Q6=専用 Theme 画面＋再利用 WeeklyThemeController 両対応／Q7=ThemeSelector PBT＋ContentService/ThemeCatalog 単体。矛盾・曖昧なし。Part 2 で domain-entities/business-logic-model/business-rules/frontend-components を生成。plan チェック更新、aidlc-state.md 更新、commit。
+**Context**: CONSTRUCTION - U5 weekly theme / Functional Design（Part 2 生成）
+
+---

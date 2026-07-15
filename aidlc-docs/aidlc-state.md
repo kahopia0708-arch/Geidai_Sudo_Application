@@ -5,7 +5,7 @@
 - **Project Type**: Brownfield
 - **Start Date**: 2026-07-15T16:48:08+09:00
 - **Current Phase**: CONSTRUCTION
-- **Current Stage**: U4 Persistence/Collection — Code Generation（Part 2 生成完了・完了ゲート承認待ち）
+- **Current Stage**: U5 weekly theme — Functional Design（Part 1 計画作成・回答待ち）
 
 ## Workspace State
 - **Existing Code**: Yes（Unity 6000.4.2f1 / URP / uGUI）
@@ -82,8 +82,19 @@
 - [x] Code Generation — Part1（詳細計画 Step0〜20）作成・承認済み（2026-07-15、"Continue"）。commit 9888534
 - [x] Code Generation — Part2 生成完了（Step0〜20 全 [x]）・完了ゲート（2026-07-15）。新 `Geidai.Collection`（CollectionScreenController/SoundListView/SoundListItemView/FilterSearchController/SoundDetailController/CollectionSprites/SoundItemViewModel/CollectionState/CollectionBootstrap）＋`Geidai.Common.Collection`（CollectionQuery/CollectionFilter[純粋]/LoadOutcome）＋`Geidai.Services.IO.AtomicFile`＋`Geidai.Services.Audio`（EffectChain 移設・共有 AudioService）＋`Geidai.Services.Media`（IPhotoPicker/StubPhotoPicker）。`SoundClipMeta`/`IStorageService`/`IAudioService` を後方互換拡張、`StorageService` を AtomicFile 統一＋破損スキップ強化。`RecAudioService` 削除・Rec を共有実装へ切替（録音側不変）。EditMode テスト4種（CollectionFilter PBT/SavedSound JSON PBT/AtomicFile/StorageCollection）。公式 Unity MCP でコンパイル Error 0/Warning 0（NoiseLevel.Mid タイポ修正後）・CollectionFilter/meta JSON スモーク PASS・全アセンブリロード確認（Collection は Rec 非依存）。実シーン配線・実機写真ピッカーは MCP フォローアップ（code-summary §6）。
 
-#### U5〜U6（未着手）
-- [ ] 各ユニットの per-unit ループ
+#### U4 Persistence/Collection — 完了ゲート
+- [x] Code Generation 完了ゲート承認（2026-07-16、"Continue to Next Stage"）。commit c9d0233。per-unit ループ完了。
+
+#### U5 weekly theme（進行中）
+- [x] Functional Design — Part1 計画作成・承認済み（2026-07-16、"done"＝全て推奨A）。`Geidai.Theme` 新設方針（ThemeCatalog[SO]＋ThemeItem＋純粋 ThemeSelector＋WeeklyThemeController/WeeklyThemeScreenController）＋`IContentService` お題ベース実装。旧 `WeeklyTextController` は差し替え後に削除（MCP フォローアップ）。
+- [x] Functional Design — Part2 生成完了（2026-07-16）。domain-entities（ThemeItem/ThemeCatalog[SO]/ThemeContext）／business-logic-model（週選択→表示→タップ→Rec 遷移・Mermaid・ContentService 取得経路）／business-rules（BR-THEME-01〜52：週選択純粋関数・空カタログ フォールバック・差し替え反映・遷移安全・一方向依存・旧 Controller 削除）／frontend-components（WeeklyThemeController 再利用＋WeeklyThemeScreenController・Home 上部バナー両対応・Sさん ハンドオフ・MCP フォローアップ）。**承認ゲート提示中**。
+- [ ] NFR Requirements
+- [ ] NFR Design
+- [ ] Infrastructure Design（SKIP 予定・完全オフライン）
+- [ ] Code Generation
+
+#### U6（未着手）
+- [ ] per-unit ループ
 
 ### 🟢 Build and Test（全ユニット完了後）
 - [ ] Build and Test — EXECUTE
