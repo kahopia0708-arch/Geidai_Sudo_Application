@@ -5,7 +5,7 @@
 - **Project Type**: Brownfield
 - **Start Date**: 2026-07-15T16:48:08+09:00
 - **Current Phase**: INCEPTION
-- **Current Stage**: Requirements Analysis（矛盾検出→明確化質問への回答待ち）
+- **Current Stage**: Requirements Analysis（Resiliency拡張のRTO/RPO・変更管理の回答待ち）
 
 ## Workspace State
 - **Existing Code**: Yes（Unity 6000.4.2f1 / URP / uGUI）
@@ -26,11 +26,11 @@
 - **Documentation**: aidlc-docs/ のみ
 
 ## Extension Configuration
-| Extension | Enabled | Decided At |
-|---|---|---|
-| Security Baseline | 未定 | Requirements Analysis で確認予定 |
-| Resiliency Baseline | 未定 | Requirements Analysis で確認予定 |
-| Property-Based Testing | 未定 | Requirements Analysis で確認予定 |
+| Extension | Enabled | Mode | Decided At |
+|---|---|---|---|
+| Security Baseline | Yes | Blocking（全ルール） | Requirements Analysis 2026-07-15 |
+| Resiliency Baseline | Yes | Blocking（RTO/RPO・変更管理はユーザー確認待ち） | Requirements Analysis 2026-07-15 |
+| Property-Based Testing | Yes | Full（全PBTルール） | Requirements Analysis 2026-07-15 |
 
 ## Stage Progress
 

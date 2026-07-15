@@ -25,7 +25,7 @@ C) 一体型 — 最初から Rec＋Collection＋①音合わせ＋ユーザー�
 
 X) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: A
 
 ---
 
@@ -43,7 +43,7 @@ B) 後続フェーズに回す（Q2 の「最小」を優先。まず録音・�
 
 X) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: A
 
 ---
 
