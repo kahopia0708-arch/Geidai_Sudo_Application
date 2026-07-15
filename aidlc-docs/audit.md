@@ -306,3 +306,11 @@
 **Context**: CONSTRUCTION - U2 Foundation / Functional Design（Part 2 完了・2択完了ゲート待ち）
 
 ---
+
+## Construction U2 Functional Design 承認 → NFR Requirements 開始
+**Timestamp**: 2026-07-15T21:39:00+09:00
+**User Input**: "Continue to Next Stage"
+**AI Response**: U2 Foundation Functional Design を承認。次ステージ NFR Requirements（per-unit）へ進む。NFR Requirements ルール（.aidlc-rule-details/construction/nfr-requirements.md）と U1 NFR 成果物（nfr-requirements.md / tech-stack-decisions.md：プラットフォーム iOS15+/Android8+、CanvasScaler 1080×1920/Match0.5、SafeAreaFitter、JsonUtility、FsCheck、公式 Unity MCP、完全オフラインは U2 以降も踏襲）を読込。U2 は UI/フロー主体のため横断決定は再質問せず前提として明記し、U2 固有 NFR に絞った Part1 計画＋質問（Q1〜Q6：性能目標/登録UX・アクセシビリティ/ホーム識別性・終了確認/信頼性・堅牢性/テスト方針(PBT N/A 見込み)/保守性・ナビ統合）を `plans/u2-foundation-nfr-requirements-plan.md` に作成。aidlc-state.md 更新（Current Stage=U2 NFR Requirements Part1・回答待ち）。回答ゲート提示予定。
+**Context**: CONSTRUCTION - U2 Foundation / NFR Requirements（Part 1 計画作成・回答待ち）
+
+---
