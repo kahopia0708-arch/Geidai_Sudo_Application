@@ -216,3 +216,11 @@
 **Context**: CONSTRUCTION - U1 Functional Design（生成完了：承認ゲート・ユーザー確認待ち）
 
 ---
+
+## Construction U1 — Functional Design Approved / NFR Requirements Plan Created
+**Timestamp**: 2026-07-15T20:21:00+09:00
+**User Input**: "続けて"
+**AI Response**: U1 Functional Design をユーザーが承認（「続けて」）。aidlc-state 更新（U1 Functional Design=完了）。次ステージ NFR Requirements を開始（U1 は性能/プライバシー/レスポンシブ/堅牢性/PBT・技術選定を含むため EXECUTE）。nfr-requirements.md ルール詳細をロードし、u1-foundation-nfr-requirements-plan.md を作成（実行チェックリスト、必須成果物 nfr-requirements.md / tech-stack-decisions.md、埋め込み質問 Q1〜Q7 を [Answer]: タグで記載）。質問は性能目標/レスポンシブ数値/SafeArea方式/堅牢性/PBTフレームワーク/対象OS・最小バージョン/保守・テストに焦点。ユーザー回答待ち。
+**Context**: CONSTRUCTION - U1 NFR Requirements（計画：質問回答待ち）
+
+---
