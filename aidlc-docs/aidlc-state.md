@@ -5,7 +5,7 @@
 - **Project Type**: Brownfield
 - **Start Date**: 2026-07-15T16:48:08+09:00
 - **Current Phase**: INCEPTION
-- **Current Stage**: User Stories（Part 2 生成：stories.md / personas.md 生成済み・承認待ち）
+- **Current Stage**: Workflow Planning（execution-plan.md 生成済み・承認待ち）
 
 ## Workspace State
 - **Existing Code**: Yes（Unity 6000.4.2f1 / URP / uGUI）
@@ -38,13 +38,27 @@
 - [x] Workspace Detection — 2026-07-15
 - [x] Reverse Engineering（概要把握レベル）— 2026-07-15（承認済み）
 - [x] Requirements Analysis — requirements.md 承認済み（2026-07-15）
-- [~] User Stories — Part 2 生成（stories.md / personas.md）承認待ち（2026-07-15）
-- [ ] Workflow Planning
-- [ ] Application Design（条件付き・未定）
-- [ ] Units Generation（条件付き・未定）
+- [x] User Stories — stories.md / personas.md 承認済み（2026-07-15）
+- [~] Workflow Planning — execution-plan.md 生成済み、承認待ち（2026-07-15）
+- [ ] Application Design — EXECUTE（予定）
+- [ ] Units Generation — EXECUTE（予定）
 
-### 🟢 CONSTRUCTION PHASE
-- [ ] （未着手）
+### 🟢 CONSTRUCTION PHASE（各ユニットで実施）
+- [ ] Functional Design — EXECUTE（予定）
+- [ ] NFR Requirements — EXECUTE（予定）
+- [ ] NFR Design — EXECUTE（予定）
+- [ ] Infrastructure Design — SKIP（オフライン・インフラ無し）
+- [ ] Code Generation — EXECUTE
+- [ ] Build and Test — EXECUTE
+
+### 🟡 OPERATIONS PHASE
+- [ ] Operations — PLACEHOLDER
+
+## Execution Plan Summary
+- **Stages to Execute**: Application Design, Units Generation, Functional Design, NFR Requirements, NFR Design, Code Generation, Build and Test
+- **Stages to Skip**: Infrastructure Design（完全オフライン・サーバー/クラウド無し）
+- **想定ユニット**: U1 Foundation/UI基盤 → U2 Rec → U3 Persistence/Collection → U4 weekly theme → U5 Game①音合わせ
+- **Risk Level**: Medium
 
 ## Reverse Engineering Status
 - [x] Reverse Engineering - Completed on 2026-07-15T16:48:08+09:00（概要把握レベル）
