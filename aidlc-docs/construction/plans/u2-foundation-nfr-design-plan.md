@@ -11,9 +11,11 @@
 ---
 
 ## A. 実行チェックリスト（Part 2 で実行）
-- [ ] `../u2-foundation/nfr-design/nfr-design-patterns.md` を生成（各 NFR の実現パターン）
-- [ ] `../u2-foundation/nfr-design/logical-components.md` を生成（論理コンポーネント・責務・連携）
-- [ ] NFR Requirements / Functional Design / Application Design とのトレース整合を確認
+- [x] `../u2-foundation/nfr-design/nfr-design-patterns.md` を生成（各 NFR の実現パターン）
+- [x] `../u2-foundation/nfr-design/logical-components.md` を生成（論理コンポーネント・責務・連携）
+- [x] NFR Requirements / Functional Design / Application Design とのトレース整合を確認
+
+> **回答**: Q1〜Q6＝すべて A（推奨）。矛盾なし。Part 2 実行済み（2026-07-15）。
 
 ## B. カテゴリ適用性（このユニットでの判断）
 - **Resilience（耐障害）**: 適用（起動判定の破損耐性・遷移 NotFound の安全処理・保存失敗の再試行）。ネットワーク再試行系は N/A。
@@ -44,7 +46,7 @@ B) Boot に判定ロジックを直接記述（サービス委譲なし・最短
 
 C) Other (please describe after [Answer]: tag below)
 
-[Answer]:
+[Answer]:A
 
 ### Question 2（Resilience — ナビゲーションの安全処理）
 遷移失敗（未整備シーン等）の設計パターンは？
@@ -55,7 +57,7 @@ B) 遷移失敗は例外を投げ、共通ハンドラ（try/catch 境界）で�
 
 C) Other (please describe after [Answer]: tag below)
 
-[Answer]:
+[Answer]:A
 
 ### Question 3（Logical Component — 戻る/終了の設計・誤操作防止）
 端末バック（Android）と「もどる/ホーム」の設計は？
@@ -66,7 +68,7 @@ B) 各画面が個別に端末バックを監視・処理（共通部品なし�
 
 C) Other (please describe after [Answer]: tag below)
 
-[Answer]:
+[Answer]:A
 
 ### Question 4（Logical Component — ホームメニューのデータ駆動）
 ホーム導線の構成データと描画の設計は？
@@ -77,7 +79,7 @@ B) ホーム項目をコードにハードコード（データ分離なし・�
 
 C) Other (please describe after [Answer]: tag below)
 
-[Answer]:
+[Answer]:A
 
 ### Question 5（Performance — 遷移/保存の実現パターン）
 性能目標（遷移<0.3s / 起動 数秒 / 保存<0.1s / 60fps）の設計は？
@@ -88,7 +90,7 @@ B) 全遷移を非同期 `LoadSceneAsync` ＋ローディング画面で統一�
 
 C) Other (please describe after [Answer]: tag below)
 
-[Answer]:
+[Answer]:A
 
 ### Question 6（Security/Resilience — 登録コントローラの設計）
 登録/編集の検証・保存の設計パターンは？
@@ -99,7 +101,7 @@ B) 検証を画面内に実装（`ValidationUtil` を使わない）。
 
 C) Other (please describe after [Answer]: tag below)
 
-[Answer]:
+[Answer]:A
 
 ---
 

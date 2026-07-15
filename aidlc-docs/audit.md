@@ -330,3 +330,11 @@
 **Context**: CONSTRUCTION - U2 Foundation / NFR Design（Part 1 計画作成・回答待ち）
 
 ---
+
+## Construction U2 — NFR Design Part 2 完了
+**Timestamp**: 2026-07-15T21:52:00+09:00
+**User Input**: "done"
+**AI Response**: U2 NFR Design Plan の Q1〜Q6 回答（すべて A＝推奨）を確認、矛盾なし。Part 2 を実行。生成: `aidlc-docs/construction/u2-foundation/nfr-design/` に nfr-design-patterns.md（U1 継承パターン再掲＋U2 固有：§1 起動判定状態機械 Idle→Checking→Route/Error（LoadProfile Result 分岐・破損時 警告＋登録誘導）、§2 ナビ安全処理（Result・NotFound→準備中通知・GoBack ホームフォールバック・直接 SceneManager 禁止）、§3 戻る/終了（BackHandler・OnBackRequested override・ConfirmDialog 既定いいえ）、§4 性能（同期 LoadScene 基本・保存<0.1s・キャッシュ・GC 抑制）、§5 セキュリティ（検証集約→保存ゲート・PII 秘匿・本番エラー非表示）、§6 保守性（ナビ統一・SceneId 拡張・データ駆動）、§7 Scalability/Availability/DR=N/A）、logical-components.md（再利用 U1 部品＋新規：BootScreenController/HomeScreenController/UserRegistrationScreenController/HomeMenuConfig・HomeMenuItem/ConfirmDialog(Common.UI)/BackHandler(ScreenRootBase.OnBackRequested)/SceneId 拡張(Register・GameSelect)、連携図、アセンブリ配置 Geidai.Foundation 新規・循環依存なし）。plan チェックリスト全 [x]・回答記録追記。aidlc-state.md 更新（Current Stage=U2 NFR Design Part2 完了・完了ゲート）。トレース NFR-04〜10・US-NAV/REG。2択完了ゲート提示予定。
+**Context**: CONSTRUCTION - U2 Foundation / NFR Design（Part 2 完了・2択完了ゲート待ち）
+
+---
