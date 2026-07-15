@@ -191,3 +191,19 @@
 **Context**: INCEPTION - Units Generation（Part 2 生成完了：承認ゲート・ユーザー確認待ち）
 
 ---
+
+## Units Generation — Approved / CONSTRUCTION Phase Started
+**Timestamp**: 2026-07-15T19:16:00+09:00
+**User Input**: "CONSTRUCTIONに入りましょう"
+**AI Response**: unit-of-work 一式をユーザーが承認し CONSTRUCTION フェーズへ移行。Units Generation ステージ完了、INCEPTION フェーズ全ステージ完了。aidlc-state.md 更新（フェーズ=CONSTRUCTION、U1 開始）。per-unit ループを U1 基盤 から開始。最初のステージ Functional Design（U1 は新規データモデル/複雑ロジックを含むため EXECUTE）に着手し、functional-design.md ルール詳細をロード。
+**Context**: INCEPTION 完了 → CONSTRUCTION（U1 基盤）開始
+
+---
+
+## Construction U1 — Functional Design Plan Created
+**Timestamp**: 2026-07-15T19:16:30+09:00
+**User Input**: （前ステップ "CONSTRUCTIONに入りましょう" に基づき自動継続）
+**AI Response**: U1 基盤 の Functional Design 計画 `construction/plans/u1-foundation-functional-design-plan.md` を作成（実行チェックリスト、必須成果物 business-logic-model/business-rules/domain-entities、UI基盤ありのため frontend-components も対象、埋め込み質問 Q1〜Q6 を [Answer]: タグで記載）。質問は UserProfile検証、保存ID/レイアウト、SoundEffectSettings範囲、WAV/録音仕様、SceneId/初期遷移、エラー提示方針に焦点。UI技術パラメータ（参照解像度/Match）は NFR Design で扱う旨を明記。ユーザー回答待ち。
+**Context**: CONSTRUCTION - U1 Functional Design（計画：質問回答待ち）
+
+---

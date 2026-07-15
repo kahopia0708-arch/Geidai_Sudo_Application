@@ -4,8 +4,8 @@
 - **Project Name**: 藝大 須藤さんアプリ（「音」から始まる、耳のためのアプリケーション）
 - **Project Type**: Brownfield
 - **Start Date**: 2026-07-15T16:48:08+09:00
-- **Current Phase**: INCEPTION
-- **Current Stage**: Units Generation（Part 2 生成：unit-of-work 一式 生成済み・承認待ち）
+- **Current Phase**: CONSTRUCTION
+- **Current Stage**: U1 基盤 — Functional Design（計画：質問回答待ち）
 
 ## Workspace State
 - **Existing Code**: Yes（Unity 6000.4.2f1 / URP / uGUI）
@@ -41,14 +41,22 @@
 - [x] User Stories — stories.md / personas.md 承認済み（2026-07-15）
 - [x] Workflow Planning — execution-plan.md 承認済み（2026-07-15）
 - [x] Application Design — 設計成果物（components/methods/services/dependency/統合）承認済み（2026-07-15）
-- [~] Units Generation — Part 2 生成（unit-of-work / -dependency / -story-map）承認待ち（2026-07-15）
+- [x] Units Generation — unit-of-work 一式 承認済み（2026-07-15）
 
-### 🟢 CONSTRUCTION PHASE（各ユニットで実施）
-- [ ] Functional Design — EXECUTE（予定）
-- [ ] NFR Requirements — EXECUTE（予定）
-- [ ] NFR Design — EXECUTE（予定）
+### 🟢 CONSTRUCTION PHASE（各ユニットで per-unit ループ）
+順序: U1 基盤 → U2 Foundation → U3 Rec → U4 Persistence/Collection → U5 weekly theme → U6 Game①
+
+#### U1 基盤（進行中）
+- [~] Functional Design — 計画作成・質問回答待ち（2026-07-15）
+- [ ] NFR Requirements
+- [ ] NFR Design
 - [ ] Infrastructure Design — SKIP（オフライン・インフラ無し）
-- [ ] Code Generation — EXECUTE
+- [ ] Code Generation
+
+#### U2〜U6（未着手）
+- [ ] 各ユニットの per-unit ループ
+
+### 🟢 Build and Test（全ユニット完了後）
 - [ ] Build and Test — EXECUTE
 
 ### 🟡 OPERATIONS PHASE
