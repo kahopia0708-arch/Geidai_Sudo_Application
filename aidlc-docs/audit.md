@@ -394,3 +394,11 @@
 **Context**: CONSTRUCTION - U3 Rec / NFR Requirements（Part 2 生成・完了ゲート待ち）
 
 ---
+
+## Construction U3 Rec NFR Requirements 承認 → NFR Design 開始
+**Timestamp**: 2026-07-15T22:34:00+09:00
+**User Input**: "Continue to Next Stage"
+**AI Response**: U3 NFR Requirements を承認。次ステージ U3 NFR Design（Part 1: 計画＋明確化質問）へ進む。U1/U2 の NFR Design パターン（Result/フェイルセーフ/async/GC削減/ScreenRoot/ServiceLocator）を継承し、U3 固有のリアルタイム加工パイプライン・録音バッファ/GC・保存の最小原子性・権限フェイルセーフの設計パターンと論理コンポーネント（AudioService 実装/EffectChain/RecordingClock/SaveSound 経路/換算 Mapper）を扱う予定。aidlc-state.md 更新。
+**Context**: CONSTRUCTION - U3 Rec / NFR Design（Part 1 計画作成）
+
+---
