@@ -482,3 +482,11 @@
 **Context**: CONSTRUCTION - U4 Persistence/Collection / NFR Design（Part 2 生成完了・承認待ち）
 
 ---
+
+## Construction U4 NFR Design 承認 → Code Generation 開始（Part1 計画）
+**Timestamp**: 2026-07-15T23:36:00+09:00
+**User Input**: "Continue to Next Stage"
+**AI Response**: U4 NFR Design を承認。Infrastructure Design は完全オフラインのため SKIP。次ステージ U4 Code Generation（Part 1: 詳細計画）へ進む。u4-collection-code-generation-plan.md（Step 0〜20）を作成：Step1 SoundClipMeta 後方互換拡張／Step2 純粋 CollectionQuery/CollectionFilter/LoadOutcome（Common.Collection）／Step3 AtomicFile（Services/IO）／Step4 IStorageService 拡張[DeleteSound/SaveMeta/SavePhoto/RemovePhoto]＋StorageService を AtomicFile 統一・破損スキップ強化／Step5 IAudioService 拡張[Play(buffer,settings)/ApplyEffects]／Step6 EffectChain を Rec→Services.Audio へ移設／Step7 AudioService 共有実装（録音移設＋加工再生・自前AudioSource・DontDestroyOnLoad）／Step8 AppManager で登録／Step9 Rec 切替[RecAudioService 削除・RecBootstrap/RecordingController/EffectPanelController 更新・録音側不変]／Step10 IPhotoPicker＋StubPhotoPicker／Step11 Geidai.Collection asmdef[Rec 非依存]／Step12〜16 Collection 列挙/VM/一覧/絞込検索/詳細編集/画面統括／Step17 EditMode テスト4種[CollectionFilter PBT・SavedSound JSON PBT・AtomicFile・StorageCollection]／Step18 MCP 検証／Step19 code-summary／Step20 stories 更新。生成方針＝Brownfield 非破壊・一方向依存（Collection→Services→Common）・後方互換拡張・共有 Audio 集約・PII 端末内。承認ゲート提示（Part 2 開始前に確認）。aidlc-state.md 更新（NFR Design 承認・Infra SKIP・Code Generation Part1）。
+**Context**: CONSTRUCTION - U4 Persistence/Collection / Code Generation（Part 1 計画作成・承認待ち）
+
+---
