@@ -19,14 +19,20 @@
 - **シーン変更は行わない**（Unity MCP 経由が規約 / US-TECH-05）。本ステージはスクリプト/アセット雛形と AsmDef の生成に限定。実シーンへの適用は別途 MCP で。
 - **テストは生成のみ**（実行は Build & Test ステージ。ただし本ステージでも MCP `run_tests` でスモーク実行を試みる）。
 
-### Unity MCP 活用方針（US-TECH-05）
-本ステージのコード生成・検証は Unity 純正 MCP サーバー（`user-unityMCP`）を活用する。
-- **前提条件（重要）**: Unity エディタが起動し MCP ブリッジに接続していること。**現時点では未接続**（`manage_editor get_state`＝"No Unity Editor instances found"）。Step 0 で接続を確立してから生成に進む。
-- **スクリプト生成**: MCP 接続時は `create_script`/`manage_script`（＋`validate_script`）で `.cs` を生成。未接続時は本ツールで `Assets/` に直接ファイル生成し、後で Unity 起動時に取り込み＆`read_console` で確認。
-- **コンパイル確認**: 各生成ステップ後に MCP `read_console`（Error/Warning）でコンパイルエラーを確認（`editor_state.isCompiling` が false になるまで待つ）。
-- **アセット生成**: `UITheme`（ScriptableObject）等の `.asset` は MCP `manage_asset` で生成/確認。
-- **テスト実行**: PBT は MCP `run_tests`（EditMode）でスモーク実行を試行（本実行は Build & Test）。
-- **シーン/GameObject/プレハブ**: 実シーンへの適用は本ステージ対象外（U2 以降で MCP `manage_scene`/`manage_gameobject`/`manage_prefabs`）。
+### Unity MCP 活用方針（US-TECH-05）— Unity 純正 AI Assistant パッケージを使用
+本ステージのコード生成・検証は **Unity 公式 AI Assistant パッケージ（`com.unity.ai.assistant`）が提供する「Unity MCP Server」** を活用する（サードパーティの "MCP for Unity" ブリッジは使用しない）。
+
+- **採用理由**: Unity 純正・公式サポート、Unity Core Standards 準拠、性能面が有利（US-TECH-05 の「Unity 標準の MCP サーバー」＝公式）。
+- **要件**: Unity 6.0 以降（本プロジェクト 6000.4.2f1＝Unity 6.4.2 で充足、6.0.66f2+ 推奨）／ `com.unity.ai.assistant` 導入 ／ Unity AI サブスク（Personal は無料トライアル、Pro/Enterprise 同梱。MCP は Unity AI クレジットを消費しない）／ Unity Cloud 連携。
+- **仕組み**: Unity 本体が MCP サーバーになり、リレーバイナリ（`~/.unity/relay/`）経由で Cursor が MCP クライアントとして接続。接続後、Cursor に新 MCP サーバー（例: `unity-mcp`）として出現。
+- **現状**: 未接続（未セットアップ）。現行環境の `user-*-unityMCP` は別系統（サードパーティ）で本方針では不使用。**Step 0 で公式サーバーをセットアップ・接続**してから生成・検証に進む。
+- **スクリプト生成**: 公式 MCP のスクリプト系ツール（または本ツールで `Assets/` に直接生成）で `.cs` を作成。
+- **コンパイル確認**: 各生成ステップ後にコンソール読み取りツールでコンパイルエラーを確認（ドメインリロード完了を待つ）。※コンパイルエラーがあると MCP ブリッジが起動しない点に注意。
+- **アセット生成**: `UITheme`（ScriptableObject）等の `.asset` はアセット管理ツールで生成/確認。
+- **テスト実行**: PBT はテスト実行ツール（EditMode）でスモーク実行を試行（本実行は Build & Test）。
+- **シーン/GameObject/プレハブ**: 実シーンへの適用は本ステージ対象外（U2 以降）。
+
+> 注: 公式ツールの正確なツール名/引数は接続後に `GetMcpTools` で確認して用いる（本プランではツールの役割ベースで記述）。
 
 ### 生成先フォルダ構成（新規）
 ```
@@ -66,12 +72,22 @@ Assets/Scripts/
 
 ## 実行ステップ（Part 2 でこの順に実行）
 
-### Step 0: Unity MCP 開発準備・接続確認（US-TECH-05）
-- [ ] Unity エディタを起動し、MCP for Unity ブリッジに接続（ユーザー操作）。※未起動だと以降の MCP 検証が不可
-- [ ] MCP 接続確認: `manage_editor get_state`（成功＝接続OK）、`debug_request_context` でプロジェクトルート確認
-- [ ] 現状ベースライン: `read_console`（既存 Error/Warning を把握）、`list_resources`/`read_resource(project_info)` でプロジェクト情報取得
-- [ ] FsCheck 導入方針の確定（NuGetForUnity or DLL 取り込み or UPM）。導入は Step 1 の Tests asmdef と整合
-- [ ] MCP 未接続で進める場合の代替（本ツールで直接ファイル生成→後で Unity 取り込み）を確認
+### Step 0: Unity 純正 AI Assistant（Unity MCP Server）セットアップ・接続（US-TECH-05）
+**ユーザー操作（Unity 側）**
+- [ ] Unity エディタで `com.unity.ai.assistant`（AI Assistant）パッケージを導入（Editor の AI ボタン or Package Manager）
+- [ ] Unity AI サブスク（Personal は無料トライアル）を有効化し、プロジェクトを Unity Cloud に連携
+- [ ] `Edit > Project Settings > AI > Unity MCP Server` で **ブリッジを Start**
+- [ ] Integrations で Cursor を自動設定（または relay バイナリのパスを Cursor の MCP 設定に手動登録：`~/.unity/relay/relay_mac_arm64.app/Contents/MacOS/relay_mac_arm64 --mcp`）
+- [ ] 初回接続時、Unity の Unity MCP Server 画面で **Pending Connection を承認**
+
+**エージェント側（接続後）**
+- [ ] `GetMcpTools` で公式 Unity MCP サーバーのツール一覧・スキーマを取得
+- [ ] 接続確認（エディタ状態取得ツール）＋ 現状ベースライン（コンソール読み取りで既存 Error/Warning 把握、プロジェクト情報取得）
+- [ ] FsCheck 導入方針の確定（NuGetForUnity or DLL 取り込み or UPM）。Step 1 の Tests asmdef と整合
+
+**前提/注意**
+- [ ] コンパイルエラーが無いこと（あると MCP ブリッジが起動しない）
+- [ ] 未接続のまま進める場合は §5 フォールバック（直接ファイル生成→後で公式 MCP 接続時に一括検証）
 - _トレース: US-TECH-05 / NFR-10（変更管理）_
 
 ### Step 1: AsmDef とフォルダ基盤

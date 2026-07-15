@@ -266,3 +266,11 @@
 **Context**: CONSTRUCTION - U1 Code Generation（Part 1 計画：MCP準備反映・再承認待ち）
 
 ---
+
+## Construction U1 — Code Gen Plan: Official Unity AI Assistant MCP Server adopted
+**Timestamp**: 2026-07-15T20:44:00+09:00
+**User Input**: "Aですが MCP for Unity ではなく、Unity純正の AI Assistantパッケージ を使って"
+**AI Response**: ユーザーは進め方=A（先に Unity 起動→接続→生成）を選択。ただし使用する MCP はサードパーティ "MCP for Unity" ではなく Unity 公式 AI Assistant パッケージ（com.unity.ai.assistant）の Unity MCP Server を指定。Web で公式仕様を確認（Unity 6.0+/6.0.66f2+推奨、com.unity.ai.assistant、Unity AI サブスク＋Unity Cloud 連携、relay バイナリ ~/.unity/relay/ 経由で Cursor 接続、Edit>Project Settings>AI>Unity MCP Server で開始＋保留接続承認、クレジット非消費）。本プロジェクトは 6000.4.2f1=6.4.2 で要件充足。プランを更新: 「Unity MCP 活用方針」を公式パッケージ前提に書き換え（サードパーティ不使用を明記）、Step 0 を公式セットアップ手順（パッケージ導入/サブスク/Cloud連携/ブリッジStart/Cursor relay 接続/Pending承認/GetMcpToolsでツール確認）に更新。technology-stack.md の開発規約も公式明記に更新。現行環境の user-*-unityMCP は別系統のため本方針では不使用。再承認待ち。
+**Context**: CONSTRUCTION - U1 Code Generation（Part 1 計画：公式MCP方針・再承認待ち）
+
+---
