@@ -5,7 +5,7 @@
 - **Project Type**: Brownfield
 - **Start Date**: 2026-07-15T16:48:08+09:00
 - **Current Phase**: CONSTRUCTION
-- **Current Stage**: U1 基盤 — NFR Design（計画：質問回答待ち）
+- **Current Stage**: U1 基盤 — NFR Design（成果物 生成済み・承認待ち）
 
 ## Workspace State
 - **Existing Code**: Yes（Unity 6000.4.2f1 / URP / uGUI）
@@ -49,7 +49,7 @@
 #### U1 基盤（進行中）
 - [x] Functional Design — 承認済み（2026-07-15）
 - [x] NFR Requirements — 承認済み（2026-07-15）
-- [~] NFR Design — 計画作成・質問回答待ち（2026-07-15）
+- [~] NFR Design — 成果物生成済み・承認待ち（2026-07-15）
 - [ ] Infrastructure Design — SKIP（オフライン・インフラ無し）
 - [ ] Code Generation
 

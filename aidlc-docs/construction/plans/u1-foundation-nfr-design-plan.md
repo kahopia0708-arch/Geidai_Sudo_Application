@@ -9,9 +9,9 @@
 ---
 
 ## A. 実行チェックリスト（Part 2 で実行）
-- [ ] `../u1-foundation/nfr-design/nfr-design-patterns.md` を生成（各NFRの実現パターン）
-- [ ] `../u1-foundation/nfr-design/logical-components.md` を生成（論理コンポーネント・責務・連携）
-- [ ] NFR Requirements / Functional Design / Application Design とのトレース整合を確認
+- [x] `../u1-foundation/nfr-design/nfr-design-patterns.md` を生成（各NFRの実現パターン）
+- [x] `../u1-foundation/nfr-design/logical-components.md` を生成（論理コンポーネント・責務・連携）
+- [x] NFR Requirements / Functional Design / Application Design とのトレース整合を確認
 
 ## B. カテゴリ適用性（このユニットでの判断）
 - **Resilience（耐障害）**: 適用（ローカルI/Oの失敗・破損データ耐性）。※ネットワーク再試行系は N/A。
