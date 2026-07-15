@@ -32,6 +32,11 @@
 - Git（本リポジトリ）
 - `com.unity.collab-proxy` 2.12.4
 
+## 開発規約 / ツール方針（Development Conventions）
+- **Unity MCP（unityMCP）**: Unity のシーン／GameObject／プレハブ／アセット操作、コンソール読み取り、テスト実行は Unity 標準 MCP サーバー経由で行う。AI/自動化からのシーン変更は MCP を通し、変更内容は PR・変更メモに残す（NFR-10 変更管理と整合）。手作業のシーン編集と併用可。
+- **UI レスポンシブ方針（NFR-11/NFR-12）**: 全 Canvas で CanvasScaler = Scale With Screen Size を採用。縦・横 両対応。SafeArea 追従コンポーネントを各画面ルートに新設。参照解像度・Match 値は両対応向けに設計段階で統一（現状は 1920×1080・Match 0.5 の横基準）。固定ピクセルレイアウト（`ScrollRectSnapLoop` の itemWidth 等）は相対指定へ見直し。
+- 関連 ProjectSettings: `defaultScreenOrientation: 4`（AutoRotation・4方向許可）、`androidRenderOutsideSafeArea: 1`。
+
 ## 未確定（NFR/Construction で決定予定）
 - 対象OS（iOS / Android / 両方）、最小OSバージョン
 - ビルドターゲット・解像度/向き（縦/横）方針
