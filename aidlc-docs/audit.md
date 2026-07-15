@@ -258,3 +258,11 @@
 **Context**: CONSTRUCTION - U1 Code Generation（Part 1 計画：承認待ち）
 
 ---
+
+## Construction U1 — Code Generation Plan Updated (MCP dev prep added)
+**Timestamp**: 2026-07-15T20:40:00+09:00
+**User Input**: "Unity 純正 MCP サーバーを使った開発準備はステップに含まれてますか？"
+**AI Response**: 現状プランは MCP を規約として言及するのみで、開発準備・検証の明示ステップが欠落していた点を確認。MCP サーバー状態を確認（user-unityMCP serverStatus=ready だが Unity エディタ未接続: manage_editor get_state="No Unity Editor instances found"）。プランを更新: (1) 生成方針に「Unity MCP 活用方針」節を追加（前提=Unity起動/接続、create_script・validate_script・read_console・run_tests・manage_asset の使い分け）、(2) Step 0「Unity MCP 開発準備・接続確認」を新設（接続確認/ベースライン/FsCheck導入方針/フォールバック）、(3) Step6/Step10 にコンパイル確認(read_console)追加、Step6 に UITheme アセット作成(manage_asset)追加、Step11 に run_tests スモーク追加、(4) 完了条件・「MCP未接続時フォールバック(§5)」を追記。再承認待ち。
+**Context**: CONSTRUCTION - U1 Code Generation（Part 1 計画：MCP準備反映・再承認待ち）
+
+---
