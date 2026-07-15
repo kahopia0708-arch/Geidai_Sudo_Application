@@ -450,3 +450,11 @@
 **Context**: CONSTRUCTION - U4 Persistence/Collection / Functional Design（Part 2 生成完了・承認待ち）
 
 ---
+
+## Construction U4 Functional Design 承認 → NFR Requirements 開始（Part1）
+**Timestamp**: 2026-07-15T23:25:00+09:00
+**User Input**: "Continue to Next Stage"
+**AI Response**: U4 Functional Design を承認。次ステージ U4 NFR Requirements（Part 1: 計画）へ進む。対象＝パフォーマンス/スケーラビリティ（一覧読込・スクロール・視聴・原子的書込コスト／NFR-06）、信頼性/堅牢性（原子的置換・破損スキップ・空フォールバック／NFR-07・US-TECH-06=U4 の主眼）、プライバシー（写真/メモ/ニックネーム PII／NFR-04）、テスト容易性（純粋フィルタ/検索・メタ JSON 往復・原子的書込の PBT／NFR-09）、保守性（新 Geidai.Collection・IStorageService 拡張[DeleteSound/SaveMeta/原子的 SaveSound]・IPhotoPicker 抽象／NFR-08）、視聴の再生忠実度の技術配置（保存エフェクト再適用・Collection→Rec 依存回避）。U1/U2/U3 の横断決定を踏襲。u4-collection-nfr-requirements-plan.md（Q1〜Q6）を作成予定。aidlc-state.md 更新（Functional Design 承認・NFR Requirements Part1）。
+**Context**: CONSTRUCTION - U4 Persistence/Collection / NFR Requirements（Part 1 計画作成）
+
+---
