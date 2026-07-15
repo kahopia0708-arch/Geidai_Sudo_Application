@@ -5,7 +5,7 @@
 - **Project Type**: Brownfield
 - **Start Date**: 2026-07-15T16:48:08+09:00
 - **Current Phase**: CONSTRUCTION
-- **Current Stage**: U1 基盤 — Code Generation（Part 1: 計画・承認待ち）
+- **Current Stage**: U1 基盤 — Code Generation（Part 2 生成完了・完了ゲート）
 
 ## Workspace State
 - **Existing Code**: Yes（Unity 6000.4.2f1 / URP / uGUI）
@@ -46,12 +46,12 @@
 ### 🟢 CONSTRUCTION PHASE（各ユニットで per-unit ループ）
 順序: U1 基盤 → U2 Foundation → U3 Rec → U4 Persistence/Collection → U5 weekly theme → U6 Game①
 
-#### U1 基盤（進行中）
+#### U1 基盤（コード生成完了・完了ゲート）
 - [x] Functional Design — 承認済み（2026-07-15）
 - [x] NFR Requirements — 承認済み（2026-07-15）
 - [x] NFR Design — 承認済み（2026-07-15）
 - [x] Infrastructure Design — SKIP（オフライン・インフラ無し）
-- [~] Code Generation — Part1 計画作成・承認待ち（2026-07-15）
+- [x] Code Generation — Part2 生成完了（2026-07-15）。Common/Services/UI基盤＋PBT を `Geidai.*` で生成。公式 Unity MCP（`user-unity-mcp`）で Error0＋スモーク PASS。code-summary.md 作成。完了ゲート待ち。
 
 #### U2〜U6（未着手）
 - [ ] 各ユニットの per-unit ループ

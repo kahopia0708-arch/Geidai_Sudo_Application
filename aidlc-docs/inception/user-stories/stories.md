@@ -257,6 +257,8 @@ _トレース: FR-19 / NFR-03, NFR-06_
 
 _トレース: NFR-11_
 
+**U1 実装状況（基盤）**: ✅ 済 — `Geidai.Common.UI.ResponsiveCanvasConfigurator`（1080×1920/Match0.5）・`ScreenRootBase` 生成。実シーンへの付与は U2 以降（Unity MCP）。
+
 ## US-TECH-02 SafeArea への追従
 **P1 / P3**
 利用者として、ノッチや角丸でボタンが隠れないでほしい。（実装者として、SafeArea 追従を全画面で担保したい。）なぜなら、どの端末でも確実に操作できるようにしたいから。
@@ -267,6 +269,8 @@ _トレース: NFR-11_
 - Given 縦・横いずれの向き, When 切り替える, Then SafeArea が追従し操作要素がシステムUIに隠れない。
 
 _トレース: NFR-12（ProjectSettings: androidRenderOutsideSafeArea=1 と整合）_
+
+**U1 実装状況（基盤）**: ✅ 済 — `Geidai.Common.UI.SafeAreaFitter`（向き/解像度変更で再適用・差分間引き）生成。実シーンへの付与は U2 以降（Unity MCP）。
 
 ## US-TECH-03 録音実装の一本化
 **P3**
@@ -290,6 +294,8 @@ _トレース: FR-07, NFR-08_
 
 _トレース: FR-02_
 
+**U1 実装状況（基盤）**: ✅ 済 — `SceneId`（Place 除外）＋ `INavigationService`/`NavigationService`（未定義シーンは `NotFound` 返却でクラッシュ回避）生成。シーン登録の追加は U2/U5。
+
 ## US-TECH-05 Unity MCP 経由のシーン操作を規約化
 **P3 / P2**
 実装者として、シーン/GameObject/プレハブ操作を Unity 標準 MCP（unityMCP）経由で行いたい。なぜなら、再現性のある変更と軽量な変更管理を両立したいから。
@@ -300,6 +306,8 @@ _トレース: FR-02_
 - Given 変更後, When 検証する, Then コンソールのコンパイルエラーがないことを確認する。
 
 _トレース: NFR-10（変更管理）/ technology-stack.md 開発規約_
+
+**U1 実装状況（規約運用開始）**: ✅ 運用中 — Unity 公式 AI Assistant パッケージの Unity MCP Server（Cursor 上 `user-unity-mcp`）で U1 のコンパイル確認・アセット生成・スモーク検証を実施。実シーン操作は U2 以降で本格活用。
 
 ## US-TECH-06 ローカルデータの堅牢性
 **P3**
@@ -323,6 +331,8 @@ _トレース: NFR-07（Resiliency R1）, RESILIENCY-01_
 - Given 調整対象と手順, When ハンドオフする, Then 「前本＝枠組み / Sさん＝詳細調整」の分担と調整箇所が明確になっている。
 
 _トレース: 要件 §7 UI開発フロー・役割分担 / NFR-05, NFR-11, NFR-12_
+
+**U1 実装状況（基盤・調整余地）**: ✅ 済 — `UITheme`（ScriptableObject／既定アセット `Assets/Settings/UITheme_Default.asset`）＋ `ErrorPresenter` の差し替え可能フィールドを用意（Sさん 調整点）。コンテンツ差し替え（お題/パラメータ）は U5/U6。
 
 > **テスト方針（NFR-09 / PBT）**: WAV エンコード/デコード、cents↔pitch 変換、設定JSONのシリアライズ等のプロパティベーステスト（ラウンドトリップ/不変条件）は Construction フェーズ（Functional Design〜Code Generation）で具体化する。ここではストーリー化しない。
 

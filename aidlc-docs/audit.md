@@ -282,3 +282,11 @@
 **Context**: CONSTRUCTION - U1 Code Generation（Step 0 接続確認済み・FsCheck方針＋Part2開始の確認待ち）
 
 ---
+
+## Construction U1 — Code Generation Part 2 完了
+**Timestamp**: 2026-07-15T21:20:00+09:00
+**User Input**: fscheck=NuGetForUnity 導入 / start_part2=はい、開始する（承認）
+**AI Response**: FsCheck 導入方針=NuGetForUnity、Part2 開始を承認。Part2（コード生成）を実行し完了。生成: Geidai.Common（Models/Results/Audio 純粋関数/Utils/UI基盤 全17ファイル・asmdef refs UnityEngine.UI）、Geidai.Services（ServiceRegistry/AppManager/Navigation・Storage・Audio・Content IF＋実装）、Geidai.Tests（EditMode/FsCheck）。UITheme_Default.asset を MCP `Unity_RunCommand` で生成。NuGetForUnity(UPM git) 導入→packages.config で FsCheck 2.16.6 + FSharp.Core 4.7.2 を Restore（Assets/Packages にコミット）。MCP 検証: `Unity_GetConsoleLogs` で本体・テスト共に Error 0（残警告は AI Assistant アカウントAPI 待ちのみ）。`Unity_RunCommand` スモーク: WavCodec ラウンドトリップ maxErr=1.53e-05、PitchMath 逆変換一致、UITheme 生成成功。プロパティ同期スモーク（各500ケース）WavCodec/PitchMath/Serialization すべて PASS。TestRunnerApi 実行は非同期＋ドメインリロードでコールバック取得不可のため、正式 NUnit 実行は Build & Test に委譲（同期スモークで代替検証）。Brownfield 非破壊（既存コード未変更）。code-summary.md 作成、plan チェックボックス全 [x]、stories.md に US-TECH-01/02/04/05/07 の U1 実装状況を追記、aidlc-state.md 更新。コミット: d120084(接続確認)/0c9c961(Step1-10)/9109bac(Step11 PBT)。完了ゲート提示予定。
+**Context**: CONSTRUCTION - U1 Code Generation（Part 2 完了・2択完了ゲート待ち）
+
+---
