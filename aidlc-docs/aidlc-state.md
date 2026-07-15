@@ -5,7 +5,7 @@
 - **Project Type**: Brownfield
 - **Start Date**: 2026-07-15T16:48:08+09:00
 - **Current Phase**: INCEPTION
-- **Current Stage**: Application Design（application-design-plan.md 質問回答待ち）
+- **Current Stage**: Application Design（設計成果物 生成済み・承認待ち）
 
 ## Workspace State
 - **Existing Code**: Yes（Unity 6000.4.2f1 / URP / uGUI）
@@ -40,7 +40,7 @@
 - [x] Requirements Analysis — requirements.md 承認済み（2026-07-15）
 - [x] User Stories — stories.md / personas.md 承認済み（2026-07-15）
 - [x] Workflow Planning — execution-plan.md 承認済み（2026-07-15）
-- [~] Application Design — Part 1 計画（application-design-plan.md）質問回答待ち（2026-07-15）
+- [~] Application Design — 設計成果物（components/methods/services/dependency/統合）生成済み、承認待ち（2026-07-15）
 - [ ] Units Generation — EXECUTE（予定）
 
 ### 🟢 CONSTRUCTION PHASE（各ユニットで実施）
