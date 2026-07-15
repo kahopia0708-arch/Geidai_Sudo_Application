@@ -5,7 +5,7 @@
 - **Project Type**: Brownfield
 - **Start Date**: 2026-07-15T16:48:08+09:00
 - **Current Phase**: INCEPTION
-- **Current Stage**: Requirements Analysis（Resiliency拡張のRTO/RPO・変更管理の回答待ち）
+- **Current Stage**: Requirements Analysis（requirements.md 生成済み・承認待ち）
 
 ## Workspace State
 - **Existing Code**: Yes（Unity 6000.4.2f1 / URP / uGUI）
@@ -37,7 +37,7 @@
 ### 🔵 INCEPTION PHASE
 - [x] Workspace Detection — 2026-07-15
 - [x] Reverse Engineering（概要把握レベル）— 2026-07-15（承認済み）
-- [~] Requirements Analysis — 確認質問作成済み、回答待ち（2026-07-15）
+- [~] Requirements Analysis — requirements.md 生成済み、承認待ち（2026-07-15）
 - [ ] User Stories
 - [ ] Workflow Planning
 - [ ] Application Design（条件付き・未定）

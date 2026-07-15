@@ -18,7 +18,7 @@ C) 将来クラウド同期を見据える — 今はローカルだが、後日
 
 X) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: A
 
 ---
 
@@ -33,7 +33,7 @@ C) N/A — 正式な変更管理は対象外（少人数の実験的開発とし
 
 X) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: A
 
 ---
 
