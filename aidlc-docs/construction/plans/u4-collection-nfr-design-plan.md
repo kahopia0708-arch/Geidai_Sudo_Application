@@ -11,9 +11,11 @@
 ---
 
 ## A. 実行チェックリスト（Part 2 で実行）
-- [ ] `../u4-collection/nfr-design/nfr-design-patterns.md` を生成（各 NFR の実現パターン）
-- [ ] `../u4-collection/nfr-design/logical-components.md` を生成（論理コンポーネント・責務・連携）
-- [ ] NFR Requirements / Functional Design とのトレース整合を確認
+- [x] `../u4-collection/nfr-design/nfr-design-patterns.md` を生成（各 NFR の実現パターン）
+- [x] `../u4-collection/nfr-design/logical-components.md` を生成（論理コンポーネント・責務・連携）
+- [x] NFR Requirements / Functional Design とのトレース整合を確認
+
+> **回答**: Q1〜Q6＝すべて A（推奨）。矛盾なし。Part 2 実行済み（2026-07-15）。
 
 ## B. カテゴリ適用性（このユニットでの判断）
 - **Resilience（耐障害）**: 適用（**U4 の主眼**＝原子的置換・破損スキップ・空フォールバック・対ファイル整合）。ネットワーク再試行系は N/A。
@@ -47,7 +49,7 @@ B) 各書込箇所で個別に temp→置換を実装（ヘルパー集約なし
 
 C) Other（[Answer]: の後に記述）
 
-[Answer]:
+[Answer]:A
 
 ### Question 2（Resilience — 読込の破損スキップ／空フォールバック）
 一覧読込の「破損は飛ばす・空は空状態」の集約パターンは？
@@ -58,7 +60,7 @@ B) コントローラ側で各 meta を個別に読み、失敗を都度ハン�
 
 C) Other（[Answer]: の後に記述）
 
-[Answer]:
+[Answer]:A
 
 ### Question 3（Performance/Scalability — 一覧描画・スクロール・サムネ）
 数十〜数百件の一覧を体感即時＆60fps で出す実現パターンは？
@@ -69,7 +71,7 @@ B) 全項目を一括生成（仮想化なし）。数百件で重ければ後�
 
 C) Other（[Answer]: の後に記述）
 
-[Answer]:
+[Answer]:A
 
 ### Question 4（Performance/Maintainability — 共有再生・エフェクト再適用の配置）
 視聴で保存エフェクトを再適用する実現パターンは？（Collection→Rec 依存を作らない／NFR-COL-M4）
@@ -82,7 +84,7 @@ C) 共有せず `Geidai.Collection → Geidai.Rec` 依存を許可して `Effect
 
 D) Other（[Answer]: の後に記述）
 
-[Answer]:
+[Answer]:A
 
 ### Question 5（Testability/Security — 純粋フィルタと写真 I/O 抽象）
 絞込/検索の純粋関数化と写真取得の抽象パターンは？
@@ -93,7 +95,7 @@ B) フィルタはコントローラ内にインライン（純粋分離なし�
 
 C) Other（[Answer]: の後に記述）
 
-[Answer]:
+[Answer]:A
 
 ### Question 6（DI/Logical Components — Geidai.Collection 構成と IStorageService 拡張）
 コレクションの論理コンポーネント構成と永続化 IF 拡張の設計は？
@@ -104,7 +106,7 @@ B) `Geidai.Collection` を作らず既存アセンブリに相乗り／`IStorage
 
 C) Other（[Answer]: の後に記述）
 
-[Answer]:
+[Answer]:A
 
 ---
 

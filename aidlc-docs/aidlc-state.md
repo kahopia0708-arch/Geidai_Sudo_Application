@@ -5,7 +5,7 @@
 - **Project Type**: Brownfield
 - **Start Date**: 2026-07-15T16:48:08+09:00
 - **Current Phase**: CONSTRUCTION
-- **Current Stage**: U4 Persistence/Collection — NFR Design（Part 1 計画作成・承認待ち）
+- **Current Stage**: U4 Persistence/Collection — NFR Design（Part 2 生成完了・承認待ち）
 
 ## Workspace State
 - **Existing Code**: Yes（Unity 6000.4.2f1 / URP / uGUI）
@@ -76,7 +76,8 @@
 - [x] Functional Design — Part2 生成完了・承認済み（2026-07-15、"Continue to Next Stage"）。domain-entities/business-logic-model/business-rules/frontend-components 作成（新形式のみ・SoundClipMeta 後方互換拡張[title/photo/memo/nickname]・原子的書込/破損スキップ/空フォールバック・写真ローカル参照＋ピッカー抽象・純粋な絞込/検索・確認削除・1画面＋保存エフェクト再適用再生）。commit 223f374
 - [x] NFR Requirements — Part1（計画＋Q1〜Q6）承認済み（2026-07-15、Q1〜Q6=全A）
 - [x] NFR Requirements — Part2 生成完了・承認済み（2026-07-15、"Continue to Next Stage"）。nfr-requirements/tech-stack-decisions 作成（性能=数十〜数百件・体感即時／原子的置換・破損スキップ・空フォールバック=U4主眼／PII端末内のみ／絞込検索・メタ往復PBT／新規 `Geidai.Collection`＋`IStorageService` 拡張[DeleteSound/SaveMeta・SaveSound原子化]／共有再生を Services 層へ[`IAudioService.Play(buffer,settings)`・Collection→Rec 非依存]／写真=`IPhotoPicker` 抽象）。commit d13ef9f
-- [~] NFR Design — Part1（計画＋Q1〜Q6）作成・承認待ち（2026-07-15）。原子的置換 `AtomicFile` ／破損スキップ集約 `ListSounds`／一覧仮想化・サムネ遅延読み／共有 Audio 再生[`IAudioService.Play(buffer,settings)`・EffectChain 移設]／純粋 `CollectionFilter`＋`IPhotoPicker` スタブ／`Geidai.Collection`＋`IStorageService` 拡張
+- [x] NFR Design — Part1（計画＋Q1〜Q6）承認済み（2026-07-15、Q1〜Q6=全A）
+- [~] NFR Design — Part2 生成完了・承認待ち（2026-07-15）。nfr-design-patterns/logical-components 作成（`AtomicFile` 原子的置換／`ListSounds` 破損スキップ・空フォールバック／一覧=相対レイアウト＋サムネ遅延＋仮想化可能／共有 Audio 再生[`IAudioService.Play(buffer,settings)`・EffectChain を `Geidai.Services.Audio` へ移設]／純粋 `CollectionFilter`(PBT)＋`IPhotoPicker` スタブ／`Geidai.Collection` 画面群＋`IStorageService` 拡張[DeleteSound/SaveMeta]）
 - [ ] Infrastructure Design（想定 SKIP：完全オフライン）
 - [ ] Code Generation
 

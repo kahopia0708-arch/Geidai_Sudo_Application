@@ -474,3 +474,11 @@
 **Context**: CONSTRUCTION - U4 Persistence/Collection / NFR Design（Part 1 計画作成）
 
 ---
+
+## Construction U4 NFR Design Part1 承認 → Part2 生成
+**Timestamp**: 2026-07-15T23:32:00+09:00
+**User Input**: "done"（Q1〜Q6＝すべて A）
+**AI Response**: U4 NFR Design 計画（Part 1）の回答を確認（Q1=A 原子的置換 `AtomicFile` ヘルパー集約[temp→File.Replace/Move・例外時 tmp 破棄]／Q2=A 読込を `ListSounds` に集約・破損/対 wav 欠損スキップ・空リストフォールバック／Q3=A 相対レイアウト＋サムネ遅延読み＋`SoundListView` 仮想化可能＋表示VMキャッシュ／Q4=A 共有 Audio を Services 層へ[`IAudioService.Play(buffer,settings)` 追加・EffectChain 相当を `Geidai.Services.Audio` へ移設・自前 AudioSource でシーンまたぎ発音・RecAudioService 委譲/移設・録音側不変]／Q5=A 純粋 `CollectionFilter`(PBT: 結果⊆入力・条件空→全件・冪等・AND)＋メタ JSON 往復 PBT＋`IPhotoPicker` 抽象[AtomicFile 原子的コピー・PII 非送信/非ログ]／Q6=A 新規 `Geidai.Collection`[Collection→Services→Common 一方向]＋`IStorageService` 後方互換拡張[DeleteSound/SaveMeta・全書込 AtomicFile 統一]・画面群[CollectionScreenController/SoundListView/SoundDetailController/FilterSearchController]・旧 MySoundCollectionStorage/SoundSavePaths 集約[物理削除は MCP フォローアップ]）。矛盾・曖昧なし。Part 2 を実行し nfr-design-patterns.md／logical-components.md を生成。plan チェック更新、aidlc-state.md 更新。承認ゲート提示。
+**Context**: CONSTRUCTION - U4 Persistence/Collection / NFR Design（Part 2 生成完了・承認待ち）
+
+---
