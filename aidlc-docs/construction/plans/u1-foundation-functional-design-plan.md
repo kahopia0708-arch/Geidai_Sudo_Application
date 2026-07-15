@@ -12,11 +12,11 @@
 ---
 
 ## A. 実行チェックリスト（Part 2 で実行）
-- [ ] `../u1-foundation/functional-design/domain-entities.md` を生成（Common のドメインモデル定義）
-- [ ] `../u1-foundation/functional-design/business-logic-model.md` を生成（サービス器の振る舞い・データフロー）
-- [ ] `../u1-foundation/functional-design/business-rules.md` を生成（検証・制約・エラー方針）
-- [ ] `../u1-foundation/functional-design/frontend-components.md` を生成（UI基盤の構造・ライフサイクル・ハンドオフ）
-- [ ] 要件（FR/NFR）・ストーリーとのトレース整合を確認
+- [x] `../u1-foundation/functional-design/domain-entities.md` を生成（Common のドメインモデル定義）
+- [x] `../u1-foundation/functional-design/business-logic-model.md` を生成（サービス器の振る舞い・データフロー）
+- [x] `../u1-foundation/functional-design/business-rules.md` を生成（検証・制約・エラー方針）
+- [x] `../u1-foundation/functional-design/frontend-components.md` を生成（UI基盤の構造・ライフサイクル・ハンドオフ）
+- [x] 要件（FR/NFR）・ストーリーとのトレース整合を確認
 
 ## B. スコープ（U1 で確定する対象）
 - **ドメインモデル**: UserProfile / SoundClipMeta / SoundEffectSettings / SavedSound / AudioBuffer
@@ -39,7 +39,7 @@ C) 子ども配慮で生年の代わりに「年齢帯」を選択（未就学/�
 
 D) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: B
 
 ## Question 2
 保存の ID 採番とファイルレイアウトは？
@@ -52,7 +52,7 @@ C) メタを単一インデックス（collection.json）に集約し、WAV は�
 
 D) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: A
 
 ## Question 3
 SoundEffectSettings の保持値・範囲・既定は？
@@ -65,7 +65,7 @@ C) 具体値は研究会後に確定するため、当面は上記を「暫定�
 
 D) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: A
 
 ## Question 4
 録音/WAV 仕様（WavCodec の前提）は？
@@ -78,7 +78,7 @@ C) 端末デフォルトのサンプルレートに追従し、メタに実サ�
 
 D) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: A
 
 ## Question 5
 SceneId 列挙と初期遷移フローは？
@@ -89,7 +89,7 @@ B) 登録を専用 SceneId（Registration）として分離し、初回=Main→R
 
 D) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: A
 
 ## Question 6
 エラー/失敗時のユーザー提示方針（子ども配慮 / SECURITY-15）は？
@@ -100,4 +100,4 @@ B) テキストダイアログ主体で明示的に通知
 
 D) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: A ただし誤動作を正常と間違うような過度のフォールバックは行わず、フォールバックした時は警告を出す。

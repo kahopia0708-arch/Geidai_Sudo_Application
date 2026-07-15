@@ -207,3 +207,12 @@
 **Context**: CONSTRUCTION - U1 Functional Design（計画：質問回答待ち）
 
 ---
+
+## Construction U1 — Functional Design Artifacts Generated (Part 2)
+**Timestamp**: 2026-07-15T19:23:00+09:00
+**User Input**: "done"（Q1=B, Q2=A, Q3=A, Q4=A, Q5=A, Q6=A＋補足「過度なフォールバック禁止・フォールバック時は警告」）
+**AI Response**: 回答受領。矛盾なし。Q6 補足を BR-18/BR-19 に反映。機能設計成果物を生成: domain-entities.md（UserProfile[生年選択式/ニックネーム1〜8], SoundClipMeta, SoundEffectSettings[±12半音等], AudioBuffer[44100/mono/16bit/132300], SavedSound, SceneId 他）、business-rules.md（BR-01〜22: 検証/永続化/WAV/ナビ/エラー・フォールバック/UI基盤）、business-logic-model.md（起動/遷移/永続化最小/WavCodec/PitchMath/ContentService器/データフロー）、frontend-components.md（UI基盤階層/ライフサイクル/ハンドオフ点）。plan チェックリスト全 [x]、aidlc-state 更新。承認ゲート提示。
+**AI Response（承認プロンプト）**: "U1 Functional Design 完了。construction/u1-foundation/functional-design/ をご確認ください。Request Changes または Continue to Next Stage（NFR Requirements）を選択してください。"
+**Context**: CONSTRUCTION - U1 Functional Design（生成完了：承認ゲート・ユーザー確認待ち）
+
+---
