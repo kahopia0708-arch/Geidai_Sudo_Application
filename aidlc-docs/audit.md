@@ -298,3 +298,11 @@
 **Context**: CONSTRUCTION - U2 Foundation / Functional Design（Part 1 計画作成）
 
 ---
+
+## Construction U2 — Functional Design Part 2 完了
+**Timestamp**: 2026-07-15T21:33:00+09:00
+**User Input**: "done"
+**AI Response**: U2 Functional Design Plan の Q1〜Q7 回答（すべて A＝推奨）を確認、矛盾なし。Part 2（設計成果物生成）を実行。生成: `aidlc-docs/construction/u2-foundation/functional-design/` に domain-entities.md（AppLaunchState/ModuleId/HomeMenuItem/RegistrationMode/RegistrationDraft、UserProfile/SceneId/Result は U1 再利用、SceneId に GameSelect 追加・NavigationService に Register/GameSelect 登録の拡張明記）、business-logic-model.md（起動判定→登録/ホーム、登録・編集、ホーム導線、サービス連携、非目標）、business-rules.md（U2-BR-01〜16：初回判定＝profile.json 有無、Boot タップ起点、破損時は非クラッシュ＋警告＋登録誘導、検証は U1 ValidationUtil 再利用、PII 非送信/非ログ、Place/テスト導線除外＋GoToPlace 削除、NavigationService 経由統一・NotFound 安全通知、ホーム端末バック→終了確認、per-button スクリプト置換）、frontend-components.md（Boot/Home/Registration の構造・状態・共通UI＝ResponsiveCanvasConfigurator/SafeAreaFitter/UITheme/ErrorPresenter、UI ハンドオフ点 US-TECH-07、brownfield 移行）。plan チェックリスト全 [x]・回答記録追記。aidlc-state.md 更新（Current Stage=U2 FD Part2 完了・完了ゲート）。トレース: US-NAV-01/02・US-REG-01/02 / FR-01〜04・SECURITY-05・NFR-05/11/12。2択完了ゲート提示予定。
+**Context**: CONSTRUCTION - U2 Foundation / Functional Design（Part 2 完了・2択完了ゲート待ち）
+
+---
