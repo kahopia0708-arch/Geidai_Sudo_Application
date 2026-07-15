@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using Geidai.Common.Audio;
 using Geidai.Common.Models;
 using Geidai.Common.Results;
 using Geidai.Common.Utils;
@@ -107,6 +108,48 @@ namespace Geidai.Services.Storage
             {
                 SafeLogger.Error("[Storage] ListSounds failed: " + e.Message);
                 return Result<List<SavedSound>>.Fail(ResultCode.IOError, "一覧の取得に失敗しました。");
+            }
+        }
+
+        public Result SaveSound(SavedSound sound, AudioBuffer buffer)
+        {
+            if (sound == null || sound.meta == null || sound.settings == null)
+                return Result.Fail(ResultCode.ValidationError, "保存データが空です。");
+            if (buffer == null || buffer.Samples == null)
+                return Result.Fail(ResultCode.ValidationError, "録音データが空です。");
+            if (string.IsNullOrEmpty(sound.meta.id))
+                return Result.Fail(ResultCode.ValidationError, "id が空です。");
+
+            string wavName = string.IsNullOrEmpty(sound.meta.wavFileName)
+                ? sound.meta.id + ".wav"
+                : sound.meta.wavFileName;
+            string wavPath = Path.Combine(SoundsPath, wavName);
+            string metaPath = Path.Combine(SoundsPath, sound.meta.id + MetaSuffix);
+
+            bool wavWritten = false;
+            try
+            {
+                Directory.CreateDirectory(SoundsPath);
+
+                byte[] wav = WavCodec.Encode(buffer.Samples, AudioBuffer.SampleRate, AudioBuffer.Channels);
+                File.WriteAllBytes(wavPath, wav); // U3: 単純書込。原子的置換は U4。
+                wavWritten = true;
+
+                string json = JsonUtility.ToJson(sound);
+                File.WriteAllText(metaPath, json);
+
+                return Result.Ok();
+            }
+            catch (Exception e)
+            {
+                SafeLogger.Error("[Storage] SaveSound failed: " + e.Message);
+                // meta 失敗時に中途半端な wav を残さない（ベストエフォート原子性 / BR-REC-30）
+                if (wavWritten)
+                {
+                    try { if (File.Exists(wavPath)) File.Delete(wavPath); }
+                    catch (Exception cleanup) { SafeLogger.Warn("[Storage] wav cleanup failed: " + cleanup.Message); }
+                }
+                return Result.Fail(ResultCode.IOError, "保存に失敗しました。");
             }
         }
 

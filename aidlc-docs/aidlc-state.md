@@ -5,7 +5,7 @@
 - **Project Type**: Brownfield
 - **Start Date**: 2026-07-15T16:48:08+09:00
 - **Current Phase**: CONSTRUCTION
-- **Current Stage**: U3 Rec — Code Generation（Part 1 計画作成・承認待ち）
+- **Current Stage**: U3 Rec — Code Generation（Part 2 生成完了・完了ゲート／承認待ち）
 
 ## Workspace State
 - **Existing Code**: Yes（Unity 6000.4.2f1 / URP / uGUI）
@@ -65,7 +65,8 @@
 - [x] NFR Requirements — Part2 生成完了・承認済み（2026-07-15、Q1〜Q6=全A）。nfr-requirements/tech-stack-decisions 作成（性能・リアルタイム加工=標準AudioFilter・権限/保存フェイルセーフ・プライバシー・換算PBT・Geidai.Rec＋SaveSound拡張）。commit 2cf113b
 - [x] NFR Design — Part2 生成完了・承認済み（2026-07-15、Q1〜Q6=全A）。nfr-design-patterns/logical-components 作成（EffectChain/RecordingClock/MicPermissionGate/SaveSound最小原子性/SoundEffectMapper=PBT/DI・一本化）。commit 7d3a00d
 - [x] Infrastructure Design — SKIP（完全オフライン・サーバー/クラウド無し／実行計画と整合）
-- [~] Code Generation — Part1（詳細計画 Step0〜17）作成・承認待ち（2026-07-15）
+- [x] Code Generation — Part1（詳細計画 Step0〜17）作成・承認済み（2026-07-15）
+- [x] Code Generation — Part2 生成完了（Step0〜17 全 [x]）・完了ゲート（2026-07-15）。新 `Geidai.Rec`（RecordingState/MicPermissionStatus/EffectKind・MicPermissionGate・RecordingClock・EffectChain・RecAudioService＋RecBootstrap・RecordingController・EffectPanelController・SavePromptController・RecScreenController）＋`SoundEffectMapper`（Common.Audio・PBT）＋`IStorageService.SaveSound`／StorageService 最小実装。`RecorderWithEffects.cs`・`Scean.cs`（＋.meta）削除（参照なし確認済）。EditMode テスト3種生成。公式 Unity MCP でコンパイル Error 0・全アセンブリロード確認・Mapper/RecordingClock スモーク PASS（SaveSound はファイル書込ガードのため EditMode で担保）。実シーン配線は MCP フォローアップ（code-summary §6）。
 
 #### U4〜U6（未着手）
 - [ ] 各ユニットの per-unit ループ

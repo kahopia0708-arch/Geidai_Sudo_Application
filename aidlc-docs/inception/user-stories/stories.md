@@ -82,6 +82,8 @@ _実装状況（U2 Code Generation 2026-07-15）: コード実装済み（UserRe
 
 _トレース: FR-05 / NFR-03, NFR-06, SECURITY-15（フェイルセーフ）_
 
+_実装状況（U3, 2026-07-15）: コード実装済み。`RecordingController`＋`RecAudioService`（Unity `Microphone`）で 3秒録音、`RecordingClock` で自動停止、`MicPermissionGate` で権限フェイルセーフ。実シーン配線は MCP フォローアップ（code-summary §6）。_
+
 ## US-REC-02 録音音の加工
 **P1**
 こども/学習者として、録った音にリバーブ・ノイズリダクション・ピッチ・音色の変化を付けたい。なぜなら、音が変わる面白さを楽しみたいから。
@@ -93,6 +95,8 @@ _トレース: FR-05 / NFR-03, NFR-06, SECURITY-15（フェイルセーフ）_
 
 _トレース: FR-06 / NFR-06_
 
+_実装状況（U3, 2026-07-15）: コード実装済み。`EffectPanelController`＋`EffectChain`（Unity 標準 AudioFilter）で非破壊プレビュー、`SoundEffectMapper`（純粋・PBT）で数値換算。UI 見た目/ラベルは Sさん調整（US-TECH-07）。実シーン配線は MCP フォローアップ。_
+
 ## US-REC-03 加工音の保存
 **P1 / P3**
 こども/学習者として、加工した音を保存して後から使いたい。なぜなら、自分の音コレクションを増やしたいから。
@@ -103,6 +107,8 @@ _トレース: FR-06 / NFR-06_
 - Given 保存処理中の失敗（I/Oエラー等）, When 発生する, Then データを破損させず安全に失敗を通知する。
 
 _トレース: FR-08 / NFR-03, NFR-07, SECURITY-15_
+
+_実装状況（U3, 2026-07-15）: コード実装済み。`SavePromptController`＋`IStorageService.SaveSound`／`StorageService`（wav→meta 対保存・失敗時 wav 削除）。WAV は既存 `WavCodec`（16bit PCM）。原子的置換・破損復旧の本実装は U4。EditMode `SaveSoundTests` で担保。_
 
 ---
 
@@ -286,6 +292,8 @@ _トレース: NFR-12（ProjectSettings: androidRenderOutsideSafeArea=1 と整�
 - Given 統合後, When Rec の録音/加工/保存を実行する, Then 既存の受入基準（US-REC-01〜03）を満たす。
 
 _トレース: FR-07, NFR-08_
+
+_実装状況（U3, 2026-07-15）: コード実装済み（統合先は当初想定の `VoiceRecordingSection` ではなく、新 `Geidai.Rec` の `IAudioService` 実装＝`RecAudioService` に一本化。加工は Unity 標準 AudioFilter を `EffectChain` で適用）。重複 DSP の `RecorderWithEffects.cs` と空の `Scean.cs`（＋`.meta`）を削除（参照なしを確認済み・ビルド影響なし＝Error 0）。旧録音一式（`VoiceRecordingSection`/`WavUtility`/`MySoundCollectionStorage`/`SoundSavePaths`/`SoundEffectSettings`）は現行 Rec シーンが参照中のため、シーン再配線（MCP フォローアップ）と同時に物理削除予定。_
 
 ## US-TECH-04 Place導線の除外と遷移不具合の解消
 **P1 / P3**

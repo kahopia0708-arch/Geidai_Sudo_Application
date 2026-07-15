@@ -81,22 +81,22 @@ Assets/Scripts/Tests/EditMode/ (Geidai.Tests) ※追記（refs に Geidai.Rec �
 ## 実行ステップ（Part 2 でこの順に実行）
 
 ### Step 0: MCP 接続確認・ベースライン（US-TECH-05）
-- [ ] `Unity_GetConsoleLogs` でベースライン取得（Error 0 を確認）
-- [ ] `user-unity-mcp` serverStatus=ready を確認（未接続時は §5 フォールバック）
+- [x] `Unity_GetConsoleLogs` でベースライン取得（Error 0 を確認）
+- [x] `user-unity-mcp` serverStatus=ready を確認（未接続時は §5 フォールバック）
 - _トレース: US-TECH-05 / NFR-10_
 
 ### Step 1: Geidai.Rec asmdef とフォルダ
-- [ ] `Assets/Scripts/Rec/Geidai.Rec.asmdef`（references: Geidai.Common, Geidai.Services, UnityEngine.UI；autoReferenced=true）
+- [x] `Assets/Scripts/Rec/Geidai.Rec.asmdef`（references: Geidai.Common, Geidai.Services, UnityEngine.UI；autoReferenced=true）
 - _トレース: NFR-08 / logical §3_
 
 ### Step 2: Rec 列挙（Geidai.Rec）
-- [ ] `Rec/RecordingState.cs`（Idle/NoMic/Recording/Recorded/Playing/Saving/Saved）
-- [ ] `Rec/MicPermissionStatus.cs`（Unknown/Granted/Denied/NoDevice）
-- [ ] `Rec/EffectKind.cs`（Pitch/NoiseReduction/Timbre/Reverb）
+- [x] `Rec/RecordingState.cs`（Idle/NoMic/Recording/Recorded/Playing/Saving/Saved）
+- [x] `Rec/MicPermissionStatus.cs`（Unknown/Granted/Denied/NoDevice）
+- [x] `Rec/EffectKind.cs`（Pitch/NoiseReduction/Timbre/Reverb）
 - _トレース: domain-entities §2 / NFR-06/07_
 
 ### Step 3: SoundEffectMapper（純粋・Common.Audio）
-- [ ] `Common/Audio/SoundEffectMapper.cs`（静的純粋関数）
+- [x] `Common/Audio/SoundEffectMapper.cs`（静的純粋関数）
   - `int CentsToSemitones(double cents)`（100=1半音・最寄り丸め・±12 クランプ）／`double SemitonesToCents(int)`
   - `NoiseLevel ContinuousToNoiseLevel(float v01)`（0/～0.33/～0.66/1→None/Low/Medium/High）／`float NoiseLevelToContinuous(NoiseLevel)`
   - `float NormalizeReverb(float mB)`（-10000〜0→0〜1）／`float DenormalizeReverb(float v01)`
@@ -104,69 +104,70 @@ Assets/Scripts/Tests/EditMode/ (Geidai.Tests) ※追記（refs に Geidai.Rec �
 - _トレース: nfr-design §5 / NFR-09 / US-TECH-03_
 
 ### Step 4: 保存契約拡張（Services 修正）
-- [ ] `Services/Storage/IStorageService.cs` に `Result SaveSound(SavedSound sound, AudioBuffer buffer)` を追加
-- [ ] `Services/Storage/StorageService.cs` に `SaveSound` 最小実装（`sounds/` 作成→`WavCodec.Encode`→`{id}.wav`→`JsonUtility`→`{id}.meta.json`。meta 失敗時は wav 削除＝ベストエフォート原子性。成功は両立時のみ `Result.Ok`、失敗は `Result(IOError)`。例外捕捉・`SafeLogger`）
+- [x] `Services/Storage/IStorageService.cs` に `Result SaveSound(SavedSound sound, AudioBuffer buffer)` を追加
+- [x] `Services/Storage/StorageService.cs` に `SaveSound` 最小実装（`sounds/` 作成→`WavCodec.Encode`→`{id}.wav`→`JsonUtility`→`{id}.meta.json`。meta 失敗時は wav 削除＝ベストエフォート原子性。成功は両立時のみ `Result.Ok`、失敗は `Result(IOError)`。例外捕捉・`SafeLogger`）
 - _トレース: US-REC-03 / BR-REC-30〜34 / nfr-design §4_
 
 ### Step 5: RecAudioService（IAudioService 実装・Geidai.Rec）
-- [ ] `Rec/RecAudioService.cs`（`IAudioService`：`StartRecording`＝`Microphone.Start`（3秒・44100・mono）／`StopRecording`＝データを固定長 `AudioBuffer`(132300) へコピー→`Result<AudioBuffer>`／`Play(buffer)`＝AudioBuffer→AudioClip 変換して AudioSource 再生／`Stop`。AudioSource は外部注入（EffectChain 共有）。例外は `Result` 化）
-- [ ] `Rec/RecBootstrap.cs`（Rec 初期化時に `ServiceRegistry.Register<IAudioService>(new RecAudioService(...))`。既登録ならスキップ）
+- [x] `Rec/RecAudioService.cs`（`IAudioService`：`StartRecording`＝`Microphone.Start`（3秒・44100・mono）／`StopRecording`＝データを固定長 `AudioBuffer`(132300) へコピー→`Result<AudioBuffer>`／`Play(buffer)`＝AudioBuffer→AudioClip 変換して AudioSource 再生／`Stop`。AudioSource は外部注入（EffectChain 共有）。例外は `Result` 化）
+- [x] `Rec/RecBootstrap.cs`（Rec 初期化時に `ServiceRegistry.Register<IAudioService>(new RecAudioService(...))`。既登録ならスキップ）
 - _トレース: US-REC-01 / NFR-03/07 / logical §1_
 
 ### Step 6: RecordingClock（POCO・Geidai.Rec）
-- [ ] `Rec/RecordingClock.cs`（`Start()`／`Tick(deltaTime)`→残り時間更新／`RemainingSeconds`／`Elapsed`／`IsDone`（>=3.0s）。純粋寄りでテスト可能）
+- [x] `Rec/RecordingClock.cs`（`Start()`／`Tick(deltaTime)`→残り時間更新／`RemainingSeconds`／`Elapsed`／`IsDone`（>=3.0s）。純粋寄りでテスト可能）
 - _トレース: US-REC-01 / NFR-03 / nfr-design §2_
 
 ### Step 7: MicPermissionGate（静的・Geidai.Rec）
-- [ ] `Rec/MicPermissionGate.cs`（`MicPermissionStatus Check()`／`RequestAsync`（コールバック）。iOS=`Application.RequestUserAuthorization(Microphone)`、Android=`Permission.RequestUserPermission`、デバイス有無=`Microphone.devices`。プラットフォーム分岐を内包）
+- [x] `Rec/MicPermissionGate.cs`（`MicPermissionStatus Check()`／`RequestAsync`（コールバック）。iOS=`Application.RequestUserAuthorization(Microphone)`、Android=`Permission.RequestUserPermission`、デバイス有無=`Microphone.devices`。プラットフォーム分岐を内包）
 - _トレース: US-REC-01(AC3) / SECURITY-15 / nfr-design §3_
 
 ### Step 8: EffectChain（MonoBehaviour・Geidai.Rec）
-- [ ] `Rec/EffectChain.cs`（AudioSource＋AudioLowPass/HighPass/Reverb/Distortion を保持・初期化キャッシュ。`Apply(SoundEffectSettingsData)`：pitch=`PitchMath.SemitonesToRatio`、音色=プリセット、reverb=換算、ノイズ=フィルタ、`EffectKind` バイパスは中立化。AudioSource を公開）
+- [x] `Rec/EffectChain.cs`（AudioSource＋AudioLowPass/HighPass/Reverb/Distortion を保持・初期化キャッシュ。`Apply(SoundEffectSettingsData)`：pitch=`PitchMath.SemitonesToRatio`、音色=プリセット、reverb=換算、ノイズ=フィルタ、`EffectKind` バイパスは中立化。AudioSource を公開）
 - _トレース: US-REC-02 / NFR-06 / nfr-design §1_
 
 ### Step 9: RecordingController（MonoBehaviour・Geidai.Rec）
-- [ ] `Rec/RecordingController.cs`（`MicPermissionGate`→権限確認、OK で `IAudioService.StartRecording`、コルーチンで `RecordingClock` を回し 3秒で `StopRecording`→`AudioBuffer` 保持、残り時間表示連携、`Denied/NoDevice` は `ErrorPresenter`＋録音無効。`Result` で失敗表現）
+- [x] `Rec/RecordingController.cs`（`MicPermissionGate`→権限確認、OK で `IAudioService.StartRecording`、コルーチンで `RecordingClock` を回し 3秒で `StopRecording`→`AudioBuffer` 保持、残り時間表示連携、`Denied/NoDevice` は `ErrorPresenter`＋録音無効。`Result` で失敗表現）
 - _トレース: US-REC-01 / NFR-03/07 / SECURITY-15_
 
 ### Step 10: EffectPanelController（MonoBehaviour・Geidai.Rec）
-- [ ] `Rec/EffectPanelController.cs`（ピッチ/ノイズ/音色/リバーブ UI と各バイパス、全体一括を `SoundEffectSettingsData` にバインド、変更で `EffectChain.Apply`。UI 値↔モデルは `SoundEffectMapper` で換算）
+- [x] `Rec/EffectPanelController.cs`（ピッチ/ノイズ/音色/リバーブ UI と各バイパス、全体一括を `SoundEffectSettingsData` にバインド、変更で `EffectChain.Apply`。UI 値↔モデルは `SoundEffectMapper` で換算）
 - _トレース: US-REC-02 / NFR-06_
 
 ### Step 11: SavePromptController（MonoBehaviour・Geidai.Rec）
-- [ ] `Rec/SavePromptController.cs`（タイトル入力（任意・未入力は既定名）→`SoundClipMeta.CreateNew`→`SavedSound(meta,settings)`→`IStorageService.SaveSound(saved, buffer)`→成功「保存できたよ」/失敗 `ErrorPresenter(IOError)`）
+- [x] `Rec/SavePromptController.cs`（タイトル入力（任意・未入力は既定名）→`SoundClipMeta.CreateNew`→`SavedSound(meta,settings)`→`IStorageService.SaveSound(saved, buffer)`→成功「保存できたよ」/失敗 `ErrorPresenter(IOError)`）
 - _トレース: US-REC-03 / BR-REC-30〜34 / NFR-07_
 
 ### Step 12: RecScreenController（ScreenRootBase・Geidai.Rec）
-- [ ] `Rec/RecScreenController.cs`（`ScreenRootBase` 継承。`RecBootstrap` でサービス登録、`RecordingState` 統括、`RecordingController`/`EffectPanelController`/`SavePromptController`/`EffectChain` を調停。状態別 UI 活性、`OnBackPressed`→未保存あれば `ConfirmDialog`（破棄確認）→`NavigationService.GoTo(Home)`）
+- [x] `Rec/RecScreenController.cs`（`ScreenRootBase` 継承。`RecBootstrap` でサービス登録、`RecordingState` 統括、`RecordingController`/`EffectPanelController`/`SavePromptController`/`EffectChain` を調停。状態別 UI 活性、`OnBackPressed`→未保存あれば `ConfirmDialog`（破棄確認）→`NavigationService.GoTo(Home)`）
 - _トレース: US-REC-01〜03 / frontend-components / NFR-05/07_
 
 ### Step 13: 重複削除（US-TECH-03）
-- [ ] `Assets/Scripts/RecorderWithEffects.cs`（＋`.meta`）を削除（重複DSP・`WavUtility` 依存）
-- [ ] `Assets/Scripts/Scean.cs`（＋`.meta`）を削除（空クラス）
-- [ ] 旧録音一式（`VoiceRecordingSection`/`WavUtility`/`MySoundCollectionStorage`/`SoundSavePaths`/`SoundEffectSettings`）は **据置**（Rec シーン再配線＝MCP フォローアップで最終整理。code-summary に明記）
+- [x] `Assets/Scripts/RecorderWithEffects.cs`（＋`.meta`）を削除（重複DSP・`WavUtility` 依存）
+- [x] `Assets/Scripts/Scean.cs`（＋`.meta`）を削除（空クラス）
+- [x] 旧録音一式（`VoiceRecordingSection`/`WavUtility`/`MySoundCollectionStorage`/`SoundSavePaths`/`SoundEffectSettings`）は **据置**（Rec シーン再配線＝MCP フォローアップで最終整理。code-summary に明記）
 - _トレース: US-TECH-03 / NFR-08_
 
 ### Step 14: テスト生成（EditMode）
-- [ ] `Tests/EditMode/Geidai.Tests.asmdef` の references に `Geidai.Rec` を追加
-- [ ] `Tests/EditMode/SoundEffectMapperTests.cs`（PBT：半音↔セント往復、ノイズ4段の境界/単調性、reverb 正規化の範囲/往復）
-- [ ] `Tests/EditMode/RecordingClockTests.cs`（累積 Tick で 3.0s 到達・残り時間・`IsDone`）
-- [ ] `Tests/EditMode/SaveSoundTests.cs`（`SaveSound`→`LoadSound` で対生成・値一致、meta 失敗注入で wav が残らない、後始末）
+- [x] `Tests/EditMode/Geidai.Tests.asmdef` の references に `Geidai.Rec` を追加
+- [x] `Tests/EditMode/SoundEffectMapperTests.cs`（PBT：半音↔セント往復、ノイズ4段の境界/単調性、reverb 正規化の範囲/往復）
+- [x] `Tests/EditMode/RecordingClockTests.cs`（累積 Tick で 3.0s 到達・残り時間・`IsDone`）
+- [x] `Tests/EditMode/SaveSoundTests.cs`（`SaveSound`→`LoadSound` で対生成・値一致、meta 失敗注入で wav が残らない、後始末）
 - _トレース: NFR-09 / nfr-requirements §6_
 
 ### Step 15: MCP 検証・スモーク（best-effort）
-- [ ] `Unity_RunCommand` で `AssetDatabase.Refresh()`→`Unity_GetConsoleLogs`（**Error 0** 確認）
-- [ ] `Unity_RunCommand` で `SoundEffectMapper`/`RecordingClock` 同期スモーク（全 PASS）
-- [ ] `Unity_RunCommand` で `SaveSound` スモーク（ダミー `AudioBuffer`→保存→`LoadSound`/`ListSounds` 確認→後始末）
-- [ ] （best-effort）`Rec` シーンの新コンポーネント配線・旧差し替えは破壊回避のため **MCP フォローアップ**（§5・code-summary に手順明記）
+- [x] `Unity_RunCommand` で `AssetDatabase.Refresh()`→`Unity_GetConsoleLogs`（**Error 0** 確認）
+- [x] `Unity_RunCommand` で `SoundEffectMapper`/`RecordingClock` 同期スモーク（全 PASS）
+- [x] `Unity_RunCommand` で `SaveSound` スモーク → **AI Assistant Run Command のファイル書込承認ガード**（"User interactions are not supported"）でブロック。コード不具合ではないため **EditMode `SaveSoundTests` で担保**（Test Runner 実行）に切替。
+- [x] （best-effort）`Rec` シーンの新コンポーネント配線・旧差し替えは破壊回避のため **MCP フォローアップ**（§5・code-summary に手順明記）
+- _実施結果: 取込後コンパイル Error 0（Geidai.Rec/Geidai.Tests 含む全5アセンブリのロード確認）。`SoundEffectMapper`（clamp+12=12・半音往復=5）／`RecordingClock`（done=True/ticks=31/elapsed=3・超過丸め）スモーク PASS。float 累積誤差の境界（30tick で 3.0 未達→31tick 完了）を確認し `RecordingClockTests` を堅牢化。_
 - _トレース: US-TECH-05 / NFR-10_
 
 ### Step 16: コード生成サマリ（ドキュメント）
-- [ ] `aidlc-docs/construction/u3-rec/code/code-summary.md`（生成/修正/削除/据置ファイル一覧、名前空間・依存、MCP 検証結果、Rec シーン配線 MCP 手順、旧録音の最終整理 TODO、S さんハンドオフ点）
+- [x] `aidlc-docs/construction/u3-rec/code/code-summary.md`（生成/修正/削除/据置ファイル一覧、名前空間・依存、MCP 検証結果、Rec シーン配線 MCP 手順、旧録音の最終整理 TODO、S さんハンドオフ点）
 - _注: サマリのみ aidlc-docs 配下。コードは Assets 配下。_
 
 ### Step 17: ストーリー完了マーク
-- [ ] `stories.md` の US-REC-01/02/03・US-TECH-03 に U3 実装分の実装状況を注記（実シーン配線・旧最終整理の残タスクを明記）
+- [x] `stories.md` の US-REC-01/02/03・US-TECH-03 に U3 実装分の実装状況を注記（実シーン配線・旧最終整理の残タスクを明記）
 - _トレース: US-REC / US-TECH-03_
 
 ---
