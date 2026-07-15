@@ -10,7 +10,8 @@ namespace Geidai.Services.Navigation
     /// <summary>
     /// SceneId → 実シーン名のマップで型安全に遷移する（FR-02）。
     /// Place は列挙に含めない＝導線から除外（BR-15）。
-    /// Register/Theme は後続ユニットでシーンを整備するため未登録（NotFound を返す）。
+    /// U2 で Register（登録シーン）・GameSelect（既存 game_Home）を登録。
+    /// Theme（weekly theme 専用画面）は U5 でシーン整備するまで未登録（NotFound を返す＝安全処理 / BR-14）。
     /// </summary>
     public class NavigationService : INavigationService
     {
@@ -18,9 +19,11 @@ namespace Geidai.Services.Navigation
         {
             { SceneId.Boot, "Main画面" },
             { SceneId.Home, "Home" },
+            { SceneId.Register, "Register" },
             { SceneId.Rec, "Rec" },
             { SceneId.Collection, "MySoundCollection" },
-            { SceneId.Game1, "Game01" }
+            { SceneId.Game1, "Game01" },
+            { SceneId.GameSelect, "game_Home" }
         };
 
         private readonly Stack<SceneId> _history = new Stack<SceneId>();

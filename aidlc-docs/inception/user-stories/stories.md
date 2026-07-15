@@ -26,6 +26,7 @@
 - Given 縦・横いずれの向き, When 画面遷移する, Then レイアウトが破綻せずボタンが操作可能である。
 
 _トレース: FR-01 / NFR-11_
+_実装状況（U2 Code Generation 2026-07-15）: コード実装済み（BootScreenController/StartupRouter/HomeScreenController/NavigationService＋BackToHomeButton）。実シーンの GameObject 配線は MCP フォローアップ（code-summary §5）。_
 
 ## US-NAV-02 迷わないホーム導線
 **P1**
@@ -36,6 +37,7 @@ _トレース: FR-01 / NFR-11_
 - Given MVPでスコープ外のモジュール（共有/Place 等）, When ホームを表示する, Then それらは非表示または導線から除外されている。
 
 _トレース: FR-01, FR-02 / NFR-05_
+_実装状況（U2 Code Generation 2026-07-15）: コード実装済み（HomeScreenController＋HomeMenuConfig データ駆動／Place・テスト除外、モチーフはアイコンキーで識別）。見た目・シーン配線は Sさん/MCP フォローアップ。_
 
 ---
 
@@ -51,6 +53,7 @@ _トレース: FR-01, FR-02 / NFR-05_
 - Given 登録情報, When 保存する, Then その情報は端末外へ送信されない。
 
 _トレース: FR-03 / NFR-02, NFR-04_
+_実装状況（U2 Code Generation 2026-07-15）: コード実装済み（UserRegistrationScreenController[New]＋U1 ValidationUtil/StorageService、初回判定は StartupRouter、端末外送信なし）。実シーン配線は MCP フォローアップ。_
 
 ## US-REG-02 登録情報の編集と入力検証
 **P1**
@@ -62,6 +65,7 @@ _トレース: FR-03 / NFR-02, NFR-04_
 - Given 入力値, When 検証する, Then 妥当性（年の範囲・ニックネーム長）を満たす場合のみ確定する。
 
 _トレース: FR-04 / SECURITY-05（入力検証）_
+_実装状況（U2 Code Generation 2026-07-15）: コード実装済み（UserRegistrationScreenController[Edit]＝既存値ロード→検証→上書き保存、キャンセルで破棄）。実シーン配線は MCP フォローアップ。_
 
 ---
 

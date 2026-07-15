@@ -14,6 +14,9 @@ namespace Geidai.Common.UI
         [SerializeField] protected ResponsiveCanvasConfigurator responsiveConfigurator;
         [SerializeField] protected SafeAreaFitter safeAreaFitter;
 
+        [Tooltip("端末バック（Android の戻る＝Escape）を購読し OnBackPressed を呼ぶ")]
+        [SerializeField] protected bool listenForSystemBack = true;
+
         public bool IsVisible { get; private set; }
 
         /// <summary>戻る操作が要求されたことを通知する（上位が購読して遷移する）。</summary>
@@ -51,7 +54,19 @@ namespace Geidai.Common.UI
         /// <summary>画面固有の後始末（派生クラスで実装）。</summary>
         protected virtual void OnHide() { }
 
-        /// <summary>戻る/システムバック押下時の既定挙動。</summary>
+        /// <summary>
+        /// 端末バック（Android の戻るは KeyCode.Escape に対応）を統一的に受ける（nfr-design §3）。
+        /// 表示中かつ購読有効なときのみ OnBackPressed を呼ぶ。各画面は OnBackPressed を override して分岐する。
+        /// </summary>
+        protected virtual void Update()
+        {
+            if (IsVisible && listenForSystemBack && Input.GetKeyDown(KeyCode.Escape))
+            {
+                OnBackPressed();
+            }
+        }
+
+        /// <summary>戻る/システムバック押下時の既定挙動。派生クラスで override して画面別に分岐する。</summary>
         public virtual void OnBackPressed()
         {
             BackRequested?.Invoke();

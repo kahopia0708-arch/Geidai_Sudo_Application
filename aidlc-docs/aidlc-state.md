@@ -5,7 +5,7 @@
 - **Project Type**: Brownfield
 - **Start Date**: 2026-07-15T16:48:08+09:00
 - **Current Phase**: CONSTRUCTION
-- **Current Stage**: U2 Foundation — Code Generation（Part 1: 計画・承認待ち）
+- **Current Stage**: U2 Foundation — Code Generation（Part 2 生成完了・完了ゲート／承認待ち）
 
 ## Workspace State
 - **Existing Code**: Yes（Unity 6000.4.2f1 / URP / uGUI）
@@ -58,7 +58,7 @@
 - [x] NFR Requirements — 承認済み（2026-07-15、Q1〜Q6=全A）。nfr-requirements/tech-stack-decisions 作成
 - [x] NFR Design — 承認済み（2026-07-15、Q1〜Q6=全A）。nfr-design-patterns/logical-components 作成
 - [x] Infrastructure Design — SKIP（完全オフライン・インフラ無し／実行計画と整合）
-- [~] Code Generation — Part1 計画作成・承認待ち（2026-07-15、全15ステップ Step0〜14）。Geidai.Foundation 新規＋SceneId/Navigation 拡張＋Boot/Home/Registration＋ConfirmDialog＋データ駆動メニュー＋EditMode テスト
+- [~] Code Generation — Part2 生成完了（Step0〜14 全 [x]）。Geidai.Foundation（Boot/Home/Registration/StartupRouter/ModuleRouter/HomeMenuConfig/BackToHomeButton）＋ConfirmDialog＋SceneId/Navigation 後方互換拡張＋EditMode テスト生成。公式 Unity MCP でコンパイル Error 0・スモーク全 PASS・HomeMenuConfig_Default.asset 生成。実シーン配線は MCP フォローアップ（code-summary §5）。完了ゲート・承認待ち（2026-07-15）
 
 #### U3〜U6（未着手）
 - [ ] 各ユニットの per-unit ループ

@@ -346,3 +346,19 @@
 **Context**: CONSTRUCTION - U2 Foundation / Code Generation（Part 1 計画作成・承認待ち）
 
 ---
+
+## Construction U2 — Code Generation Part 1 承認 → Part 2 開始
+**Timestamp**: 2026-07-15T22:03:00+09:00
+**User Input**: "Continue"
+**AI Response**: U2 Code Generation Plan（全15ステップ）を承認。Part 2（コード生成）を開始。Step 0（MCP 接続確認）から順に実行し、各ステップ完了ごとに `[x]` マーク＋コミット、Unity 公式 MCP（user-unity-mcp）でコンパイル/スモーク検証を行う。
+**Context**: CONSTRUCTION - U2 Foundation / Code Generation（Part 2 実行開始）
+
+---
+
+## Construction U2 — Code Generation Part 2 完了
+**Timestamp**: 2026-07-15T22:10:00+09:00
+**User Input**: （Part 2 実行・ユーザー入力なし）
+**AI Response**: U2 Code Generation Part2 を Step0〜14 まで実行し完了。生成（Geidai.Foundation 新規 asmdef）：ModuleId/RegistrationMode/ModuleRouter/StartupRouter(純粋)/HomeMenuItem/HomeMenuConfig(SO)/BootScreenController(状態機械)/HomeScreenController(データ駆動＋終了確認)/UserRegistrationScreenController(New/Edit・検証・保存)/BackToHomeButton。新規（Common.UI）：ConfirmDialog。修正（後方互換）：SceneId に GameSelect 追加、ScreenRootBase に端末バック入力(Update/listenForSystemBack)、NavigationService に Register/GameSelect マップ追加、Geidai.Tests.asmdef に Foundation 参照追加。削除：GoToPlace.cs（＋meta、Place 除外・大文字小文字バグ解消 BR-11）。テスト（EditMode）：StartupRouterTests/NavigationRoutingTests/HomeMenuConfigTests。公式 Unity MCP（user-unity-mcp）検証：ベースライン Error0、取り込み後コンパイル Error0/Warning0（isCompilationSuccessful=true）、同期スモーク=StartupRouter 3分岐/ModuleRouter 全 True、HomeMenuConfig_Default.asset（5項目・Place/テスト無し）生成、Build Settings 既存シーン登録確認。実シーン UI 配線（Register.unity 作成・Boot/Home/module 結線・起動シーン設定・per-button 除去）は破壊回避のため MCP フォローアップとして code-summary §5 に明記。code-summary.md 作成、plan Step0〜14 全 [x]、stories.md に US-NAV-01/02・US-REG-01/02 の U2 実装状況を追記、aidlc-state.md 更新。ステップ毎コミット実施。2択完了ゲート提示予定。
+**Context**: CONSTRUCTION - U2 Foundation / Code Generation（Part 2 完了・2択完了ゲート待ち）
+
+---
