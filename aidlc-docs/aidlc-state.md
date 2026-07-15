@@ -89,7 +89,7 @@
 - [x] Functional Design — Part1 計画作成・承認済み（2026-07-16、"done"＝全て推奨A）。`Geidai.Theme` 新設方針（ThemeCatalog[SO]＋ThemeItem＋純粋 ThemeSelector＋WeeklyThemeController/WeeklyThemeScreenController）＋`IContentService` お題ベース実装。旧 `WeeklyTextController` は差し替え後に削除（MCP フォローアップ）。
 - [x] Functional Design — Part2 生成完了・承認済み（2026-07-16、"Continue to Next Stage"）。domain-entities（ThemeItem/ThemeCatalog[SO]/ThemeContext）／business-logic-model（週選択→表示→タップ→Rec 遷移・Mermaid・ContentService 取得経路）／business-rules（BR-THEME-01〜52）／frontend-components（WeeklyThemeController 再利用＋WeeklyThemeScreenController・Home 上部バナー両対応・Sさん ハンドオフ・MCP フォローアップ）。commit 1e100ed
 - [x] NFR Requirements — Part1 計画作成・承認済み（2026-07-16、"done"＝全て推奨A）＋Part2 生成完了。nfr-requirements（NFR-U5-01 表示体感即時/ThemeSelector O(1)・02 空カタログ フォールバック＋遷移失敗 ErrorPresenter・03 大きく平易＋読み/ヒント・04 ThemeSelector PBT＋ContentService 単体・05 `Geidai.Theme`/純粋 ThemeSelector・ThemeItem/ThemeCatalog は Common／IContentService 後方互換拡張・06 お題 PII なし[N/A]・ThemeContext 非永続）／tech-stack-decisions（ThemeCatalog[SO]・純粋 ThemeSelector・ThemeContext セッション・GetCurrentTheme 追加・新 Geidai.Theme・両対応表示）。**承認ゲート提示中**。
-- [ ] NFR Design
+- [~] NFR Design — Part1 計画作成・回答待ち（2026-07-16）。U1〜U4 設計パターンを踏襲し U5 固有部品（純粋 ThemeSelector 配置・ThemeCatalog/ThemeItem・ContentService/ThemeContext・WeeklyTheme UI・旧 Controller 差替）へ落とし込む予定。
 - [ ] Infrastructure Design（SKIP 予定・完全オフライン）
 - [ ] Code Generation
 

@@ -538,3 +538,11 @@
 **Context**: CONSTRUCTION - U5 weekly theme / NFR Requirements（Part 2 生成）
 
 ---
+
+## Construction U5 NFR Requirements 完了ゲート → NFR Design Part1
+**Timestamp**: 2026-07-16T00:54:00+09:00
+**User Input**: "Continue to Next Stage"
+**AI Response**: U5 NFR Requirements（Part 2）完了を承認（commit a5bbe30）。nfr-requirements / tech-stack-decisions を確定。次段階 U5 NFR Design（Part 1: 計画・質問）へ移行。aidlc-state.md 更新、u5-theme-nfr-design-plan.md を作成し Q1〜Q5 を提示（推奨A）。U1〜U4 の設計パターンを踏襲し U5 固有部品（純粋 ThemeSelector・ThemeCatalog/ThemeItem・ContentService/ThemeContext・WeeklyTheme UI）へ落とし込む方針。
+**Context**: CONSTRUCTION - U5 weekly theme / NFR Design（Part 1: Planning）
+
+---
