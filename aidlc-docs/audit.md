@@ -338,3 +338,11 @@
 **Context**: CONSTRUCTION - U2 Foundation / NFR Design（Part 2 完了・2択完了ゲート待ち）
 
 ---
+
+## Construction U2 NFR Design 承認 → Infrastructure Design SKIP → Code Generation Part1 開始
+**Timestamp**: 2026-07-15T21:56:00+09:00
+**User Input**: "Continue to Next Stage"
+**AI Response**: U2 Foundation NFR Design を承認。Infrastructure Design は SKIP（完全オフライン・サーバー/クラウド無し／execution-plan と整合）。Code Generation ルール（.aidlc-rule-details/construction/code-generation.md）を読込。U1 生成コードの実 API を確認（SceneId 列挙=Boot/Home/Register/Rec/Collection/Theme/Game1、NavigationService.SceneMap は Register/Theme 未登録、ScreenRootBase=Show/Configure/ApplySafeArea/OnBackPressed+BackRequested、AppManager.ResolveInitialScene、ServiceRegistry、IStorageService.LoadProfile/SaveProfile、ValidationUtil、ErrorPresenter、UserProfile）。置換対象 brownfield（SceneSwitcher/GoToRec/GoToSoundCollection/ReturnHomeButton/StartGameButton/GoToPlace["place"バグ]）を確認。U2 Code Generation Part1 計画を `plans/u2-foundation-code-generation-plan.md` に作成（全15ステップ Step0〜14）。方針: Geidai.Foundation 新規 asmdef（Foundation→Services→Common 一方向）、UI 枠は uGUI、SceneId に GameSelect 追加＋NavigationService に Register/GameSelect マップ追加（後方互換）、ScreenRootBase に端末バック入力追加、ConfirmDialog を Common.UI 新規、StartupRouter(純粋)/Boot/Home/UserRegistration Controller/HomeMenuConfig(SO)/ModuleRouter/BackToHomeButton 生成、GoToPlace.cs 削除、EditMode テスト（StartupRouter/Navigation NotFound/HomeMenuConfig）、MCP で Error0＋HomeMenuConfig 既定アセット＋スモーク＋best-effort シーン配線、code-summary 作成、ストーリー完了マーク。aidlc-state.md 更新（Infrastructure=SKIP、Code Generation Part1・承認待ち）。承認ゲート提示予定。
+**Context**: CONSTRUCTION - U2 Foundation / Code Generation（Part 1 計画作成・承認待ち）
+
+---

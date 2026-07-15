@@ -5,7 +5,7 @@
 - **Project Type**: Brownfield
 - **Start Date**: 2026-07-15T16:48:08+09:00
 - **Current Phase**: CONSTRUCTION
-- **Current Stage**: U2 Foundation — NFR Design（Part 2 生成完了・完了ゲート／承認待ち）
+- **Current Stage**: U2 Foundation — Code Generation（Part 1: 計画・承認待ち）
 
 ## Workspace State
 - **Existing Code**: Yes（Unity 6000.4.2f1 / URP / uGUI）
@@ -56,8 +56,9 @@
 #### U2 Foundation（進行中）
 - [x] Functional Design — 承認済み（2026-07-15、Q1〜Q7=全A）。domain-entities/business-logic-model/business-rules/frontend-components 作成
 - [x] NFR Requirements — 承認済み（2026-07-15、Q1〜Q6=全A）。nfr-requirements/tech-stack-decisions 作成
-- [~] NFR Design — Part2 生成完了（Q1〜Q6=全A）。nfr-design-patterns/logical-components 作成。完了ゲート・承認待ち（2026-07-15）
-- [ ] Infrastructure Design / Code Generation
+- [x] NFR Design — 承認済み（2026-07-15、Q1〜Q6=全A）。nfr-design-patterns/logical-components 作成
+- [x] Infrastructure Design — SKIP（完全オフライン・インフラ無し／実行計画と整合）
+- [~] Code Generation — Part1 計画作成・承認待ち（2026-07-15、全15ステップ Step0〜14）。Geidai.Foundation 新規＋SceneId/Navigation 拡張＋Boot/Home/Registration＋ConfirmDialog＋データ駆動メニュー＋EditMode テスト
 
 #### U3〜U6（未着手）
 - [ ] 各ユニットの per-unit ループ
