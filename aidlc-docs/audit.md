@@ -314,3 +314,11 @@
 **Context**: CONSTRUCTION - U2 Foundation / NFR Requirements（Part 1 計画作成・回答待ち）
 
 ---
+
+## Construction U2 — NFR Requirements Part 2 完了
+**Timestamp**: 2026-07-15T21:45:00+09:00
+**User Input**: "done"
+**AI Response**: U2 NFR Requirements Plan の Q1〜Q6 回答（すべて A＝推奨）を確認、矛盾なし。Part 2 を実行。生成: `aidlc-docs/construction/u2-foundation/nfr-requirements/` に nfr-requirements.md（U1 継承の再掲＋U2 固有：性能=遷移<0.3s/起動 数秒/プロフィール保存<0.1s/60fps・最低30fps、登録UX・アクセシビリティ=ドロップダウン/1〜8字/最小~44ptタップ領域/平易エラー、ホーム識別性・端末バック終了確認、信頼性=NotFound安全通知/破損時 非クラッシュ＋警告＋登録誘導/保存失敗はフォーム維持、セキュリティ=PII非送信/非ログ、テスト=PBT N/A＋PlayMode/統合、保守性=NavigationService統一/SceneId拡張(Register/GameSelect)/ホームデータ駆動/per-button置換、レスポンシブ/SafeArea 継承、可用性/スケーラビリティ/DR N/A）、tech-stack-decisions.md（U1継承＋U2差分：Geidai.Foundation 新規アセンブリ、ナビ統一・SceneId拡張、ホームデータ駆動、登録UI=TMP_Dropdown/InputField＋U1 ValidationUtil再利用、終了確認ダイアログ=自前軽量、PlayModeテスト、追加パッケージなし）。plan チェックリスト全 [x]・回答記録追記。aidlc-state.md 更新（Current Stage=U2 NFR Requirements Part2 完了・完了ゲート）。トレース NFR-04/05/06/07/08/09/10/11/12・SECURITY-05・US-NAV/REG。2択完了ゲート提示予定。
+**Context**: CONSTRUCTION - U2 Foundation / NFR Requirements（Part 2 完了・2択完了ゲート待ち）
+
+---

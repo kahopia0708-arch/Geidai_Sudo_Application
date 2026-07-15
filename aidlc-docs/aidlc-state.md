@@ -5,7 +5,7 @@
 - **Project Type**: Brownfield
 - **Start Date**: 2026-07-15T16:48:08+09:00
 - **Current Phase**: CONSTRUCTION
-- **Current Stage**: U2 Foundation — NFR Requirements（Part 1: 計画・回答待ち）
+- **Current Stage**: U2 Foundation — NFR Requirements（Part 2 生成完了・完了ゲート／承認待ち）
 
 ## Workspace State
 - **Existing Code**: Yes（Unity 6000.4.2f1 / URP / uGUI）
@@ -55,7 +55,7 @@
 
 #### U2 Foundation（進行中）
 - [x] Functional Design — 承認済み（2026-07-15、Q1〜Q7=全A）。domain-entities/business-logic-model/business-rules/frontend-components 作成
-- [~] NFR Requirements — Part1 計画作成・回答待ち（2026-07-15、Q1〜Q6）。U1 横断決定を踏襲し U2 固有差分に集中
+- [~] NFR Requirements — Part2 生成完了（Q1〜Q6=全A）。nfr-requirements/tech-stack-decisions 作成。完了ゲート・承認待ち（2026-07-15）
 - [ ] NFR Design / Infrastructure Design / Code Generation
 
 #### U3〜U6（未着手）

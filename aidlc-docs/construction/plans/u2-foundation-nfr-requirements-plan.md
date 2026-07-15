@@ -12,9 +12,11 @@
 ---
 
 ## A. 実行チェックリスト（Part 2 で実行）
-- [ ] `../u2-foundation/nfr-requirements/nfr-requirements.md` を生成（U2 の NFR 目標・受入可能値）
-- [ ] `../u2-foundation/nfr-requirements/tech-stack-decisions.md` を生成（U2 の技術選定差分・根拠）
-- [ ] 要件（NFR-01〜12）・ストーリー（US-NAV/REG）とのトレース整合を確認
+- [x] `../u2-foundation/nfr-requirements/nfr-requirements.md` を生成（U2 の NFR 目標・受入可能値）
+- [x] `../u2-foundation/nfr-requirements/tech-stack-decisions.md` を生成（U2 の技術選定差分・根拠）
+- [x] 要件（NFR-01〜12）・ストーリー（US-NAV/REG）とのトレース整合を確認
+
+> **回答**: Q1〜Q6＝すべて A（推奨）。矛盾なし。Part 2 実行済み（2026-07-15）。
 
 ## B. 前提（U1 で確定済み・U2 も踏襲。原則 再質問しない）
 - **プラットフォーム**（NFR-01）: iOS 15+ / Android 8.0(API26)+、スマホ〜タブレット、縦横両対応。
@@ -48,7 +50,7 @@ C) 具体数値は設定せず「体感で引っかからない」を定性目�
 
 D) Other (please describe after [Answer]: tag below)
 
-[Answer]:
+[Answer]:A
 
 ## Question 2（登録 UX・アクセシビリティ / NFR-05・SECURITY-05）
 子ども/初心者向けの登録入力の非機能方針は？
@@ -59,7 +61,7 @@ B) 生年もホイール/ピッカー UI にする（ドロップダウン以外
 
 C) Other (please describe after [Answer]: tag below)
 
-[Answer]:
+[Answer]:A
 
 ## Question 3（ホーム・導線のユーザビリティ / 誤操作防止 / NFR-05）
 ホームの識別性と終了/戻るの安全性は？
@@ -70,7 +72,7 @@ B) 終了確認は行わない（ホームで端末バック→即終了）。�
 
 C) Other (please describe after [Answer]: tag below)
 
-[Answer]:
+[Answer]:A
 
 ## Question 4（信頼性・堅牢性 / NFR-07）
 U2 フローの失敗時のふるまいは？
@@ -81,7 +83,7 @@ B) 破損時は自動で既定プロフィールを作って続行（警告の�
 
 C) Other (please describe after [Answer]: tag below)
 
-[Answer]:
+[Answer]:A
 
 ## Question 5（テスト容易性 / NFR-09・PBT）
 U2 の検証方針は？（U2 は新規の純粋関数を追加しない前提）
@@ -94,7 +96,7 @@ C) 当面は手動確認中心（自動テストは Build & Test 段階で最小
 
 D) Other (please describe after [Answer]: tag below)
 
-[Answer]:
+[Answer]:A
 
 ## Question 6（保守性・ナビ統合 / NFR-08・NFR-10）
 遷移・ホームメニューの実装方針（保守性）は？
@@ -105,7 +107,7 @@ B) 最小改修：既存 per-button スクリプトは残し、内部を `Naviga
 
 C) Other (please describe after [Answer]: tag below)
 
-[Answer]:
+[Answer]:A
 
 ---
 
