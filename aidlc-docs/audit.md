@@ -233,3 +233,11 @@
 **Context**: CONSTRUCTION - U1 NFR Requirements（生成完了：承認ゲート・ユーザー確認待ち）
 
 ---
+
+## Construction U1 — NFR Requirements Approved / NFR Design Plan Created
+**Timestamp**: 2026-07-15T20:27:00+09:00
+**User Input**: "Continue to Next Stage"
+**AI Response**: U1 NFR Requirements をユーザーが承認。aidlc-state 更新（U1 NFR Requirements=完了）。次ステージ NFR Design を開始（NFR Requirements 実行済みのため EXECUTE）。nfr-design.md ルール詳細をロードし、u1-foundation-nfr-design-plan.md を作成（実行チェックリスト、必須成果物 nfr-design-patterns.md / logical-components.md、埋め込み質問 Q1〜Q6 を [Answer]: タグで記載）。質問はレスポンシブ/SafeArea実装パターン、性能パターン（読込/GC/フレーム）、堅牢性パターン（整合チェック/例外境界）、PBT/テスト配置、AsmDef 依存境界、UITheme/ハンドオフのパターンに焦点。ユーザー回答待ち。
+**Context**: CONSTRUCTION - U1 NFR Design（計画：質問回答待ち）
+
+---
