@@ -224,3 +224,12 @@
 **Context**: CONSTRUCTION - U1 NFR Requirements（計画：質問回答待ち）
 
 ---
+
+## Construction U1 — NFR Requirements Artifacts Generated (Part 2)
+**Timestamp**: 2026-07-15T20:25:00+09:00
+**User Input**: "done"（Q1〜Q7＝すべて A）
+**AI Response**: 回答受領。矛盾・曖昧さなし（全問=推奨A）。NFR成果物を生成: nfr-requirements.md（対象OS iOS15+/Android8+、レスポンシブ 1080×1920/Match0.5、SafeAreaFitter再計算、性能 遷移<0.3s/保存<0.5s/60fps・最低30fps、堅牢性はU1最小・U4本実装＋警告、PII非送信、PBT=FsCheck、保守=AsmDef/JsonUtility、可用性/DR=N/A）、tech-stack-decisions.md（Unity6/URP/uGUI/C#, AsmDep分割, JsonUtility＋制約留意, VoiceRecordingSection一本化, UITheme, FsCheck+UTF, MCP/Git, iOS15/Android8, 追加パッケージ想定）。plan チェックリスト全 [x]、aidlc-state 更新。承認ゲート提示。
+**AI Response（承認プロンプト）**: "U1 NFR Requirements 完了。construction/u1-foundation/nfr-requirements/ をご確認ください。Request Changes または Continue to Next Stage（NFR Design）を選択してください。"
+**Context**: CONSTRUCTION - U1 NFR Requirements（生成完了：承認ゲート・ユーザー確認待ち）
+
+---

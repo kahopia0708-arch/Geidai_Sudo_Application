@@ -12,9 +12,9 @@
 ---
 
 ## A. 実行チェックリスト（Part 2 で実行）
-- [ ] `../u1-foundation/nfr-requirements/nfr-requirements.md` を生成（U1 の NFR 目標・受入可能値）
-- [ ] `../u1-foundation/nfr-requirements/tech-stack-decisions.md` を生成（技術選定・根拠）
-- [ ] 要件（NFR-01〜12）とのトレース整合を確認
+- [x] `../u1-foundation/nfr-requirements/nfr-requirements.md` を生成（U1 の NFR 目標・受入可能値）
+- [x] `../u1-foundation/nfr-requirements/tech-stack-decisions.md` を生成（技術選定・根拠）
+- [x] 要件（NFR-01〜12）とのトレース整合を確認
 
 ## B. 前提（確定済み・要件由来）
 - 完全オフライン・ローカルのみ（NFR-02）。サーバー/クラウド/外部通信なし → 可用性/スケーラビリティ/DR はアプリ内・端末内の範囲。
@@ -35,7 +35,7 @@ C) 現時点では未確定（Unity 既定に従い、Build & Test で確定）
 
 D) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: A
 
 ## Question 2
 UI レスポンシブの技術数値（NFR-11 / CanvasScaler）は？（両向き対応）
@@ -48,7 +48,7 @@ C) 縦横で参照解像度/ Match を切替（縦=1080×1920/Match1、横=1920�
 
 D) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: A
 
 ## Question 3
 SafeArea の実装方式（NFR-12）は？
@@ -59,7 +59,7 @@ B) Canvas 全体を safeArea 内に固定（外側は背景色で塗る）
 
 D) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: A
 
 ## Question 4
 パフォーマンス目標（NFR-06。U1 は起動/遷移/保存が対象）は？
@@ -70,7 +70,7 @@ B) 具体数値は設定せず「体感で引っかからない」を定性目�
 
 D) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: A
 
 ## Question 5
 データ堅牢性の実装方針（NFR-07。U1 は最小、U4 で本実装）は？
@@ -81,7 +81,7 @@ B) U1 の段階で原子的置換まで実装してしまう（U4 は Collection
 
 D) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: A
 
 ## Question 6
 PBT（プロパティベーステスト / NFR-09）のフレームワークは？
@@ -94,7 +94,7 @@ C) 当面は通常のユニットテスト（NUnit）で代表ケース＋境界
 
 D) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: A
 
 ## Question 7
 保守性・シリアライズ等の技術選定（NFR-08）は？
@@ -105,4 +105,4 @@ B) 永続化に Newtonsoft.Json（com.unity.nuget.newtonsoft-json）を採用
 
 D) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: A
