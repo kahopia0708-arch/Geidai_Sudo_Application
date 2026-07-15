@@ -87,8 +87,8 @@
 
 #### U5 weekly theme（進行中）
 - [x] Functional Design — Part1 計画作成・承認済み（2026-07-16、"done"＝全て推奨A）。`Geidai.Theme` 新設方針（ThemeCatalog[SO]＋ThemeItem＋純粋 ThemeSelector＋WeeklyThemeController/WeeklyThemeScreenController）＋`IContentService` お題ベース実装。旧 `WeeklyTextController` は差し替え後に削除（MCP フォローアップ）。
-- [x] Functional Design — Part2 生成完了（2026-07-16）。domain-entities（ThemeItem/ThemeCatalog[SO]/ThemeContext）／business-logic-model（週選択→表示→タップ→Rec 遷移・Mermaid・ContentService 取得経路）／business-rules（BR-THEME-01〜52：週選択純粋関数・空カタログ フォールバック・差し替え反映・遷移安全・一方向依存・旧 Controller 削除）／frontend-components（WeeklyThemeController 再利用＋WeeklyThemeScreenController・Home 上部バナー両対応・Sさん ハンドオフ・MCP フォローアップ）。**承認ゲート提示中**。
-- [ ] NFR Requirements
+- [x] Functional Design — Part2 生成完了・承認済み（2026-07-16、"Continue to Next Stage"）。domain-entities（ThemeItem/ThemeCatalog[SO]/ThemeContext）／business-logic-model（週選択→表示→タップ→Rec 遷移・Mermaid・ContentService 取得経路）／business-rules（BR-THEME-01〜52）／frontend-components（WeeklyThemeController 再利用＋WeeklyThemeScreenController・Home 上部バナー両対応・Sさん ハンドオフ・MCP フォローアップ）。commit 1e100ed
+- [~] NFR Requirements — Part1 計画作成・回答待ち（2026-07-16）。U1〜U4 横断決定を踏襲し U5 固有差分（お題表示の応答性・空カタログ堅牢性・お題 PII なし・ThemeSelector PBT・`Geidai.Theme` 配置/`IContentService` 実装範囲）を確定予定。
 - [ ] NFR Design
 - [ ] Infrastructure Design（SKIP 予定・完全オフライン）
 - [ ] Code Generation
