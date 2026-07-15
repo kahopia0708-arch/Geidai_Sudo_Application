@@ -12,9 +12,11 @@
 ---
 
 ## A. 実行チェックリスト（Part 2 で実行）
-- [ ] `../u3-rec/nfr-requirements/nfr-requirements.md` を生成（U3 の NFR 目標・受入可能値）
-- [ ] `../u3-rec/nfr-requirements/tech-stack-decisions.md` を生成（U3 の技術選定差分・根拠）
-- [ ] 要件（NFR-01〜12 / SECURITY-15）・ストーリー（US-REC/US-TECH-03）とのトレース整合を確認
+- [x] `../u3-rec/nfr-requirements/nfr-requirements.md` を生成（U3 の NFR 目標・受入可能値）
+- [x] `../u3-rec/nfr-requirements/tech-stack-decisions.md` を生成（U3 の技術選定差分・根拠）
+- [x] 要件（NFR-01〜12 / SECURITY-15）・ストーリー（US-REC/US-TECH-03）とのトレース整合を確認
+
+> **回答**: Q1〜Q6＝すべて A（推奨）。矛盾なし。Part 2 実行済み（2026-07-15）。
 
 ## B. 前提（U1/U2 で確定済み・U3 も踏襲。原則 再質問しない）
 - **プラットフォーム**（NFR-01）: iOS 15+ / Android 8.0(API26)+、スマホ〜タブレット、縦横両対応。
@@ -50,7 +52,7 @@ C) 具体数値は設定せず「体感で引っかからない」を定性目�
 
 D) Other（[Answer]: の後に記述）
 
-[Answer]:
+[Answer]:A
 
 ## Question 2（加工のリアルタイム反映方式・受入 / NFR-06）
 加工プレビューの実現方式と受入基準は？（非破壊・Q3=A 前提）
@@ -61,7 +63,7 @@ B) 自前 DSP（`RecorderWithEffects` 系）でオフライン加工してから
 
 C) Other（[Answer]: の後に記述）
 
-[Answer]:
+[Answer]:A
 
 ## Question 3（信頼性・マイク権限フェイルセーフ / NFR-07・SECURITY-15）
 録音・保存の失敗時のふるまいは？
@@ -72,7 +74,7 @@ B) 権限は起動時に先回り要求してから録音可否を決める。�
 
 C) Other（[Answer]: の後に記述）
 
-[Answer]:
+[Answer]:A
 
 ## Question 4（プライバシー / NFR-04・SECURITY-15）
 録音音声・加工データの扱いは？
@@ -81,7 +83,7 @@ A) (推奨) 録音音声・WAV・加工設定は**端末内（`persistentDataPat
 
 B) Other（[Answer]: の後に記述）
 
-[Answer]:
+[Answer]:A
 
 ## Question 5（テスト容易性 / NFR-09・PBT）
 U3 の検証方針は？
@@ -92,7 +94,7 @@ B) 換算関数の PBT は行わず、PlayMode/統合テストと手動確認の
 
 C) Other（[Answer]: の後に記述）
 
-[Answer]:
+[Answer]:A
 
 ## Question 6（保守性・技術選定差分 / NFR-08・NFR-10・US-TECH-03）
 U3 の実装配置・IF 拡張の方針は？
@@ -103,7 +105,7 @@ B) `Geidai.Rec` を作らず `Geidai.Services` 内に録音実装を置く（ア
 
 C) Other（[Answer]: の後に記述）
 
-[Answer]:
+[Answer]:A
 
 ---
 
