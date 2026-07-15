@@ -5,7 +5,7 @@
 - **Project Type**: Brownfield
 - **Start Date**: 2026-07-15T16:48:08+09:00
 - **Current Phase**: INCEPTION
-- **Current Stage**: User Stories（Part 1 計画：story-generation-plan.md 質問回答待ち）
+- **Current Stage**: User Stories（Part 2 生成：stories.md / personas.md 生成済み・承認待ち）
 
 ## Workspace State
 - **Existing Code**: Yes（Unity 6000.4.2f1 / URP / uGUI）
@@ -38,7 +38,7 @@
 - [x] Workspace Detection — 2026-07-15
 - [x] Reverse Engineering（概要把握レベル）— 2026-07-15（承認済み）
 - [x] Requirements Analysis — requirements.md 承認済み（2026-07-15）
-- [~] User Stories — Part 1 計画（story-generation-plan.md）質問回答待ち（2026-07-15）
+- [~] User Stories — Part 2 生成（stories.md / personas.md）承認待ち（2026-07-15）
 - [ ] Workflow Planning
 - [ ] Application Design（条件付き・未定）
 - [ ] Units Generation（条件付き・未定）
