@@ -250,3 +250,11 @@
 **Context**: CONSTRUCTION - U1 NFR Design（生成完了：承認ゲート・ユーザー確認待ち）
 
 ---
+
+## Construction U1 — NFR Design Approved / Code Generation Plan (Part 1) Created
+**Timestamp**: 2026-07-15T20:36:00+09:00
+**User Input**: "次、行ってみよう！"
+**AI Response**: U1 NFR Design をユーザーが承認。aidlc-state 更新（U1 NFR Design=完了、Infrastructure Design=SKIP 明記）。Code Generation ステージ開始（ALWAYS）。code-generation.md ルール詳細をロード。既存コード構造（Assets/Scripts、AsmDef未整備・単一Assembly-CSharp・テスト無し・録音2重複）を確認。Brownfield 方針で U1 の Code Generation Plan（Part 1）を作成: u1-foundation-code-generation-plan.md（Step1〜13＋チェックボックス、正確なファイルパス Assets/Scripts/Common・Services・Tests、AsmDef 3種、Common モデル/純粋関数/UI基盤、Services器、PBTテスト、ストーリートレース US-TECH-01/02/04/05/07、既存ファイルは非破壊[新規namespace Geidai.*]）。承認ゲート提示（Part2 生成前）。
+**Context**: CONSTRUCTION - U1 Code Generation（Part 1 計画：承認待ち）
+
+---
