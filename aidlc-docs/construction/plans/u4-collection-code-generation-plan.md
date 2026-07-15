@@ -97,122 +97,128 @@ Assets/Scripts/Tests/EditMode/ (Geidai.Tests) ※追記（refs に Geidai.Collec
 ## 実行ステップ（Part 2 でこの順に実行）
 
 ### Step 0: MCP 接続確認・ベースライン（US-TECH-05）
-- [ ] `Unity_GetConsoleLogs` でベースライン取得（Error 0 を確認）
-- [ ] `user-unity-mcp` serverStatus=ready を確認（未接続時は §5 フォールバック）
+- [x] `Unity_GetConsoleLogs` でベースライン取得（Error 0 を確認）
+- [x] `user-unity-mcp` serverStatus=ready を確認（未接続時は §5 フォールバック）
+- _実施結果: serverStatus=ready・errorCount 0（ベースライン健全）_
 - _トレース: US-TECH-05 / NFR-10_
 
 ### Step 1: SoundClipMeta 後方互換拡張（Common 修正）
-- [ ] `Common/Models/SoundClipMeta.cs` に `title`/`photoFileName`/`memo`/`nickname`（string・既定 ""）を追加。既存 `id`/`displayName`/`createdAtIso`/`wavFileName` は不変。`CreateNew` は既定値で初期化（後方互換）。
+- [x] `Common/Models/SoundClipMeta.cs` に `title`/`photoFileName`/`memo`/`nickname`（string・既定 ""）を追加。既存 `id`/`displayName`/`createdAtIso`/`wavFileName` は不変。`CreateNew` は既定値で初期化（後方互換）。
 - _トレース: US-COL-02 / FR-10 / domain-entities §2 / Q2=A_
 
 ### Step 2: 純粋コレクション部品（Common/Collection）★新規
-- [ ] `Common/Collection/CollectionQuery.cs`（`yearMonth`(string・空=全月)／`keyword`(string・空=無条件)。イミュータブル志向）
-- [ ] `Common/Collection/LoadOutcome.cs`（`List<SavedSound> items`／`int skippedCount`）
-- [ ] `Common/Collection/CollectionFilter.cs`（静的純粋 `List<SavedSound> Filter(IReadOnlyList<SavedSound>, CollectionQuery)`：月導出 `createdAtIso`→`YYYY-MM`・検索 `title/memo/nickname` 正規化[Trim/小文字]部分一致・AND 合成。null 安全・副作用なし）
+- [x] `Common/Collection/CollectionQuery.cs`（`yearMonth`(string・空=全月)／`keyword`(string・空=無条件)。struct・`Empty`/`IsEmpty`）
+- [x] `Common/Collection/LoadOutcome.cs`（`List<SavedSound> items`／`int skippedCount`）
+- [x] `Common/Collection/CollectionFilter.cs`（静的純粋 `List<SavedSound> Filter(IReadOnlyList<SavedSound>, CollectionQuery)`：月導出 `createdAtIso`→`YYYY-MM`（`ToYearMonth`）・検索 `title/memo/nickname` 正規化[Trim/小文字]部分一致・AND 合成。null 安全・順序保持・副作用なし）
 - _トレース: US-COL-03/04 / nfr-design §5 / NFR-COL-T1 / Q5=A_
 
 ### Step 3: AtomicFile（Services/IO）★新規
-- [ ] `Services/IO/AtomicFile.cs`（静的）
-  - `Result WriteAllBytesAtomic(string path, byte[] data)` / `Result WriteAllTextAtomic(string path, string text)`
+- [x] `Services/IO/AtomicFile.cs`（静的）
+  - `Result WriteAllBytesAtomic(string path, byte[] data)` / `Result WriteAllTextAtomic(string path, string text)` / `Result CopyAtomic(string src, string dest)`
   - 内部: `Directory.CreateDirectory` → `{path}.tmp` へ書込＋`Flush(true)`/`Dispose` → `File.Replace`（既存）/`File.Move`（新規）で原子的置換 → 例外時 `.tmp` 破棄・`Result.Fail(IOError)`（本ファイルは不変）
 - _トレース: US-TECH-06 / nfr-design §1 / NFR-COL-R1 / Q1=A_
 
 ### Step 4: 永続化 IF 拡張＋StorageService 強化（Services 修正）
-- [ ] `Services/Storage/IStorageService.cs` に追加（既存不変）:
+- [x] `Services/Storage/IStorageService.cs` に追加（既存不変）:
   - `Result DeleteSound(string id)`（`{id}.wav`＋`{id}.meta.json`＋`{id}.photo.*` 一括削除・欠損無視）
   - `Result SaveMeta(SoundClipMeta meta)`（既存 `{id}.meta.json` を読み settings 保持のまま meta 差替→原子的置換。無ければ新規）
   - `Result<string> SavePhoto(string id, string sourceTempPath)`（`sounds/{id}.photo.<ext>` へ `AtomicFile` で原子的コピー→ `photoFileName` を返す）
   - `Result RemovePhoto(string id)`（写真ファイル削除・欠損無視）
-- [ ] `Services/Storage/StorageService.cs` 強化:
-  - `SaveProfile`/`SaveSound`/`SaveMeta`/写真 の全書込を `AtomicFile` 経由へ（原子的置換）。`SaveSound` は wav→meta を原子的書込＋対整合（meta 失敗時 wav 削除は維持）。
-  - `ListSounds`/`LoadSound` の破損・対 wav 欠損スキップを維持（`SafeLogger` 非PII）。任意で `LoadOutcome` 返却ヘルパーを追加可（IF は `Result<List<SavedSound>>` を維持）。
-  - `DeleteSound`/`SaveMeta`/`SavePhoto`/`RemovePhoto` を実装（例外は `Result` 化・クラッシュ禁止）。
+- [x] `Services/Storage/StorageService.cs` 強化:
+  - `SaveProfile`/`SaveSound`/`SaveMeta`/写真 の全書込を `AtomicFile` 経由へ（原子的置換）。`SaveSound` は wav→meta を原子的書込＋対整合（新規時 meta 失敗で wav 削除）。
+  - `ListSounds`/`LoadSound` の破損・対 wav 欠損スキップを維持（`SafeLogger` 非PII）。`ListSoundsDetailed()` で `LoadOutcome` 返却（IF は `Result<List<SavedSound>>` を維持）。
+  - `DeleteSound`（wav+meta+photo 一括）/`SaveMeta`（settings 保持）/`SavePhoto`（拡張子検証・原子的コピー）/`RemovePhoto` を実装（例外は `Result` 化・クラッシュ禁止）。
+  - 追加読取: `LoadPhoto(id)`（サムネ/詳細用バイト列）・`LoadSoundBuffer(id)`（wav→`AudioBuffer` デコード＝視聴用）を実装（写真表示・保存音再生の完結に必要）。
 - _トレース: US-COL-01/02/04・US-TECH-06 / nfr-design §1/§2/§6 / NFR-COL-R1〜R4 / Q1=A/Q2=A/Q6=A_
 
 ### Step 5: IAudioService 拡張（Services 修正）
-- [ ] `Services/Audio/IAudioService.cs` に追加（既存 `StartRecording`/`StopRecording`/`Play(AudioBuffer)`/`Stop` は不変）:
+- [x] `Services/Audio/IAudioService.cs` に追加（既存 `StartRecording`/`StopRecording`/`Play(AudioBuffer)`/`Stop` は不変）:
   - `Result Play(AudioBuffer buffer, SoundEffectSettingsData settings)`（保存エフェクト全 on 再適用再生）
   - `Result ApplyEffects(SoundEffectSettingsData settings, bool allOn, bool pitchOn, bool noiseOn, bool timbreOn, bool reverbOn)`（ライブプレビュー用・非破壊）
+  - `bool IsPlaying { get; }`（再生完了検知・Rec/Collection 共用）を追加
 - _トレース: US-COL-01 / nfr-design §4 / NFR-COL-M4 / Q4=A_
 
 ### Step 6: EffectChain 移設（Rec → Services.Audio）
-- [ ] `Assets/Scripts/Rec/EffectChain.cs`（＋`.meta`）を削除し、`Assets/Scripts/Services/Audio/EffectChain.cs` として再配置。名前空間を `Geidai.Rec` → `Geidai.Services.Audio` に変更（**ロジックは不変**：AudioSource＋各 AudioFilter・`Apply(settings, allOn, pitchOn, noiseOn, timbreOn, reverbOn)`・`SoundEffectMapper`/`PitchMath` 利用）。
+- [x] `Assets/Scripts/Rec/EffectChain.cs`（＋`.meta`）を削除し、`Assets/Scripts/Services/Audio/EffectChain.cs` として再配置。名前空間を `Geidai.Rec` → `Geidai.Services.Audio` に変更（**ロジックは不変**：AudioSource＋各 AudioFilter・`Apply(settings, allOn, pitchOn, noiseOn, timbreOn, reverbOn)`・`SoundEffectMapper`/`PitchMath` 利用）。
 - _トレース: US-TECH-03 / nfr-design §4 / NFR-COL-M4_
 
 ### Step 7: AudioService 共有実装（Services.Audio）★新規
-- [ ] `Services/Audio/AudioService.cs`（`IAudioService`）
+- [x] `Services/Audio/AudioService.cs`（`IAudioService`）
   - **再生リグ**: 遅延生成の GameObject（`AudioSource`＋`EffectChain`、`DontDestroyOnLoad`）を内部所有（シーンまたぎ発音）。
   - **録音**: U3 `RecAudioService` の `StartRecording`/`StopRecording` を挙動不変で移設（Microphone・4秒確保・固定長 `AudioBuffer`(132300) 再利用・0 埋め）。
-  - **再生**: `Play(AudioBuffer)`＝素再生（エフェクト中立）／`Play(AudioBuffer, settings)`＝`EffectChain.Apply(settings, all on)`後に再生／`Stop`。
-  - `ApplyEffects(...)`＝所有 `EffectChain.Apply(...)` を駆動。
+  - **再生**: `Play(AudioBuffer)`＝素再生（エフェクト中立化）／`Play(AudioBuffer, settings)`＝`EffectChain.Apply(settings, all on)`後に再生／`Stop`／`IsPlaying`。
+  - `ApplyEffects(...)`＝所有 `EffectChain.Apply(...)` を駆動。`GetPlaybackSource()` も提供。
   - 例外は全て `Result` 化（SECURITY-15）。
 - _トレース: US-COL-01・US-REC-01/02 / nfr-design §4 / NFR-COL-M4 / Q4=A_
 
 ### Step 8: AppManager に共有 AudioService 登録（Services 修正）
-- [ ] `Services/AppManager.cs` の `Bootstrap` に `if (!ServiceRegistry.IsRegistered<IAudioService>()) ServiceRegistry.Register<IAudioService>(new AudioService());` を追加（Storage/Navigation/Content と同様・後方互換）。
+- [x] `Services/AppManager.cs` の `Bootstrap` に `if (!ServiceRegistry.IsRegistered<IAudioService>()) ServiceRegistry.Register<IAudioService>(new AudioService());` を追加（Storage/Navigation/Content と同様・後方互換）。
 - _トレース: NFR-COL-M4 / logical §2.8_
 
 ### Step 9: Rec を共有実装へ切替（Rec 修正・録音側挙動不変）
-- [ ] `Assets/Scripts/Rec/RecAudioService.cs`（＋`.meta`）を削除（共有 `AudioService` へ移設済み）。
-- [ ] `Rec/RecBootstrap.cs`：`EnsureAudioService` を「共有 `IAudioService` を `ServiceRegistry.Resolve`（無ければ `AudioService` を登録）して返す」に変更。`SetPlaybackSource` 依存を廃止（再生リグは AudioService が所有）。
-- [ ] `Rec/RecordingController.cs`：`RecAudioService`/AudioSource 直結を廃止し、共有 `IAudioService`（Start/Stop/Play）を利用。
-- [ ] `Rec/EffectPanelController.cs`：`EffectChain` 直接保持を廃止し、`IAudioService.ApplyEffects(...)` でプレビュー反映（`using Geidai.Services.Audio`）。UI 値↔モデル換算は `SoundEffectMapper` を継続利用。
+- [x] `Assets/Scripts/Rec/RecAudioService.cs`（＋`.meta`）を削除（共有 `AudioService` へ移設済み）。
+- [x] `Rec/RecBootstrap.cs`：`EnsureAudioService()` を「共有 `IAudioService` を `ServiceRegistry.Resolve`（無ければ `AudioService` を登録）して返す」に変更。`SetPlaybackSource` 依存を廃止（再生リグは AudioService が所有）。
+- [x] `Rec/RecordingController.cs`：`IAudioService`（Start/Stop）を利用（元々 IF 依存のため変更最小）。
+- [x] `Rec/EffectPanelController.cs`：`EffectChain` 直接保持を廃止し `Init(IAudioService)`＋`IAudioService.ApplyEffects(...)` でプレビュー反映（`using Geidai.Services.Audio`）。UI 値↔モデル換算は `SoundEffectMapper` を継続利用。
+- [x] `Rec/RecScreenController.cs`：`EffectChain`/`RecAudioService` 参照を廃止し共有 `IAudioService` を利用（`effectPanel.Init(_audio)`・再生完了検知は `_audio.IsPlaying`）。
 - _注: 録音の Microphone 挙動・加工の `EffectChain.Apply` は不変。実 Rec シーン配線更新は Step 18（MCP フォローアップ）。_
 - _トレース: US-REC-01/02・US-TECH-03 / NFR-COL-M4_
 
 ### Step 10: 写真ピッカー抽象（Services/Media）★新規
-- [ ] `Services/Media/IPhotoPicker.cs`（`void Pick(Action<Result<string>> onResult)`＝一時パスを返す抽象）
-- [ ] `Services/Media/StubPhotoPicker.cs`（U4 スタブ：エディタ/テスト用に固定/ダミーの一時パス or `Result.Fail(NotSupported)`。クラウド送信なし）
+- [x] `Services/Media/IPhotoPicker.cs`（`void Pick(Action<Result<string>> onResult)`＝一時パスを返す抽象）
+- [x] `Services/Media/StubPhotoPicker.cs`（U4 スタブ：`FixedTempPath` 設定時は成功／未設定は `Result.Fail(NotImplemented)`。クラウド送信なし）
 - _トレース: US-COL-02 / nfr-design §5 / NFR-COL-Priv1 / Q5=A_
 
 ### Step 11: Geidai.Collection asmdef とフォルダ ★新規
-- [ ] `Assets/Scripts/Collection/Geidai.Collection.asmdef`（references: Geidai.Common, Geidai.Services, UnityEngine.UI；autoReferenced=true；**Geidai.Rec を参照しない**）
+- [x] `Assets/Scripts/Collection/Geidai.Collection.asmdef`（references: Geidai.Common, Geidai.Services, UnityEngine.UI；autoReferenced=true；**Geidai.Rec を参照しない**）
 - _トレース: NFR-COL-M1 / logical §3 / Q6=A_
 
 ### Step 12: Collection 列挙・ビューモデル（Geidai.Collection）
-- [ ] `Collection/CollectionState.cs`（enum: Loading/Empty/Listing/Playing/Detail/Editing/Confirm）
-- [ ] `Collection/SoundItemViewModel.cs`（`id`/`displayTitle`(title 空なら日付)/`createdAtIso`/`hasPhoto`。`SavedSound`→投影の静的 `From(SavedSound)`）
+- [x] `Collection/CollectionState.cs`（enum: Loading/Empty/Listing/Playing/Detail/Editing/Confirm）
+- [x] `Collection/SoundItemViewModel.cs`（`id`/`displayTitle`(title 空なら日付)/`createdAtIso`/`hasPhoto`。`SavedSound`→投影の静的 `From(SavedSound)`＋`FormatDate`）
 - _トレース: frontend-components §2/§3 / NFR-COL-P1_
 
 ### Step 13: 一覧ビュー（Geidai.Collection）
-- [ ] `Collection/SoundListItemView.cs`（MonoBehaviour: Title/Date/PhotoThumb/PlayButton/OpenButton。サムネ遅延読み・`onPlay(id)`/`onOpen(id)`）
-- [ ] `Collection/SoundListView.cs`（MonoBehaviour: `ScrollRect`＋レイアウトグループで VM リスト描画・固定px排除・可視範囲生成できる構造[仮想化可能]・タップ通知）
+- [x] `Collection/SoundListItemView.cs`（MonoBehaviour: Title/Date/PhotoThumb/PlayButton/OpenButton。`Bind(vm,onOpen,onPlay)`＋`SetThumbnail(sprite)` でサムネ遅延差込）
+- [x] `Collection/SoundListView.cs`（MonoBehaviour: `contentRoot`＋item プール描画・`ThumbnailLoader`(id→Sprite) 遅延読み・空状態トグル・`ItemOpenRequested`/`ItemPlayRequested` 通知）
+- [x] `Collection/CollectionSprites.cs`（写真バイト列→Sprite ヘルパー・端末内のみ）
 - _トレース: US-COL-01 / frontend-components §1/§3.2 / NFR-COL-P1/UI1 / Q3=A_
 
 ### Step 14: 絞込・検索（Geidai.Collection）
-- [ ] `Collection/FilterSearchController.cs`（MonoBehaviour: `MonthDropdown`/`SearchInput`/`ClearButton` → `CollectionQuery` 更新 → `CollectionFilter.Filter` 適用 → フィルタ済みリスト＋空状態フラグを出力）
+- [x] `Collection/FilterSearchController.cs`（MonoBehaviour: `monthDropdown`/`keywordInput`/`clearButton` → `SetAvailableMonths`／`BuildQuery`→`CollectionQuery`／変更で `QueryChanged` 発火。絞込実行は画面統括が `CollectionFilter.Filter` を呼ぶ）
 - _トレース: US-COL-03 / frontend-components §3.4 / NFR-COL-T1 / Q5=A_
 
 ### Step 15: 詳細・編集（Geidai.Collection）
-- [ ] `Collection/SoundDetailController.cs`（MonoBehaviour: 詳細表示・title/memo 編集（検証 BR-COL-12/13）・写真変更（`IPhotoPicker`→`SavePhoto`）/削除（`RemovePhoto`）・視聴（`IAudioService.Play(buffer,settings)`）/停止・保存（`SaveMeta`＝原子的置換）・削除起動（`ConfirmDialog`→`DeleteSound`）。失敗は `ErrorPresenter`）
+- [x] `Collection/SoundDetailController.cs`（MonoBehaviour: 詳細表示・title/memo 編集・写真変更（`IPhotoPicker`→`SavePhoto`→`SaveMeta`）/削除（`RemovePhoto`→`SaveMeta`）・視聴（`_storage.LoadSoundBuffer`→`IAudioService.Play(buffer,settings)`）・保存（`SaveMeta`＝原子的置換）・削除起動（`ConfirmDialog`→`DeleteSound`）。失敗は `ErrorPresenter`。`MetaChanged`/`Deleted`/`Closed` を通知）
 - _トレース: US-COL-01/02 / frontend-components §3.3/§5 / NFR-COL-R1/U1 / Q2=A/Q6=A_
 
 ### Step 16: 画面統括・初期化（Geidai.Collection）
-- [ ] `Collection/CollectionBootstrap.cs`（共有 `IStorageService`/`IAudioService`/`IPhotoPicker` を確保。`IPhotoPicker` 未登録なら `StubPhotoPicker` を登録）
-- [ ] `Collection/CollectionScreenController.cs`（`ScreenRootBase` 継承。`OnShow`→`ListSounds`→`CollectionFilter`→描画、`CollectionState` 統括、`SoundListView`/`FilterSearchController`/`SoundDetailController` を調停、`OnBackRequested`→Detail 中は一覧へ/一覧なら `NavigationService.GoTo(Home)`、破損スキップ・全失敗は空状態フォールバック）
+- [x] `Collection/CollectionBootstrap.cs`（`IPhotoPicker` を確保。未登録なら `StubPhotoPicker` を登録。Storage/Audio は AppManager 登録前提）
+- [x] `Collection/CollectionScreenController.cs`（`ScreenRootBase` 継承。`OnShow`→`ListSounds`→月抽出→`CollectionFilter`→描画、`SoundListView`/`FilterSearchController`/`SoundDetailController` を調停、サムネキャッシュ、`OnBackPressed`→Detail 中は一覧へ/一覧なら `NavigationService.GoTo(Home)`、破損スキップ・全失敗は空状態フォールバック）
 - _トレース: US-COL-01/04 / frontend-components §3.1 / NFR-COL-R2/R3 / Q6=A_
 
 ### Step 17: テスト生成（EditMode）
-- [ ] `Tests/EditMode/Geidai.Tests.asmdef` の references に `Geidai.Collection` を追加
-- [ ] `Tests/EditMode/CollectionFilterTests.cs`（PBT: 結果⊆入力・条件空→全件・冪等・AND 合成・月導出/検索の正当性）
-- [ ] `Tests/EditMode/SavedSoundJsonTests.cs`（PBT: `SavedSound`/`SoundClipMeta` serialize↔deserialize 往復・拡張フィールド欠損時既定値＝後方互換）
-- [ ] `Tests/EditMode/AtomicFileTests.cs`（成功で新値・置換失敗（無効パス等）で旧値維持・`.tmp` 残さない）
-- [ ] `Tests/EditMode/StorageCollectionTests.cs`（`ListSounds` 破損meta/対wav欠損スキップ・`DeleteSound` で wav+meta+photo 削除・`SaveMeta` が settings を保持）
+- [x] `Tests/EditMode/Geidai.Tests.asmdef` の references に `Geidai.Collection` を追加
+- [x] `Tests/EditMode/CollectionFilterTests.cs`（PBT: 結果⊆入力・条件空→全件・冪等・順序保持・AND 合成・月導出/検索の正当性）
+- [x] `Tests/EditMode/SavedSoundJsonTests.cs`（PBT: `SavedSound`/`SoundClipMeta` serialize↔deserialize 往復・旧 JSON 欠損時既定値＝後方互換）
+- [x] `Tests/EditMode/AtomicFileTests.cs`（成功で新値・置換失敗（無効パス）で旧値維持・`.tmp` 残さない・CopyAtomic）
+- [x] `Tests/EditMode/StorageCollectionTests.cs`（`ListSounds` 破損meta/対wav欠損スキップ・`DeleteSound` で wav+meta+photo 削除・`SaveMeta` が settings を保持・`LoadSoundBuffer` デコード）
 - _トレース: NFR-COL-T1/T2/T3 / nfr-requirements §5_
 
 ### Step 18: MCP 検証・スモーク（best-effort）
-- [ ] `Unity_RunCommand` で `AssetDatabase.Refresh()`→`Unity_GetConsoleLogs`（**Error 0** 確認・全アセンブリロード）
-- [ ] `Unity_RunCommand` で `CollectionFilter`／`SavedSound` メタ往復の同期スモーク（PASS 目標）
-- [ ] （ファイル I/O 系＝`AtomicFile`/`StorageService` は U3 同様 MCP 承認ガードの可能性 → EditMode テストで担保）
+- [x] `Unity_RunCommand` で `AssetDatabase.Refresh()`→`Unity_GetConsoleLogs`（**Error 0** 確認）。初回 `NoiseLevel.Mid` タイポを検出→`Medium` へ修正→再コンパイルで Error 0/Warning 0（唯一の Warning は Unity AI パッケージの Account API で自コード無関係）。
+- [x] `Unity_RunCommand` で `CollectionFilter`／`SavedSound` メタ往復の同期スモーク **PASS**（all=3・feb=2・neko=2・febTaro=1・json title=tori・PASS=True）。
+- [x] 全アセンブリロード確認：`Geidai.Collection`（CollectionScreenController/SoundListView）・`Geidai.Services`（AudioService/StorageService/AtomicFile/StubPhotoPicker）・`Geidai.Rec`（RecScreenController/RecBootstrap/EffectPanelController）を typeof で確認。Collection は Rec 非依存。
+- [x] （ファイル I/O 系＝`AtomicFile`/`StorageService` は U3 同様 MCP 承認ガードのため実行時スモークは非実施 → EditMode テスト（AtomicFileTests/StorageCollectionTests）で担保）。
 - [ ] （best-effort）Collection シーンの新コンポーネント配線・旧 `GoToSoundCollection`/`MySoundCollectionStorage` 差し替えは破壊回避のため **MCP フォローアップ**（§5・code-summary に手順明記）
 - _トレース: US-TECH-05 / NFR-10_
 
 ### Step 19: コード生成サマリ（ドキュメント）
-- [ ] `aidlc-docs/construction/u4-collection/code/code-summary.md`（生成/修正/移設/削除/据置ファイル一覧、名前空間・依存、共有 Audio 移設の要点、MCP 検証結果、Collection シーン配線 MCP 手順、旧 collection/audio 最終整理 TODO、S さんハンドオフ点）
+- [x] `aidlc-docs/construction/u4-collection/code/code-summary.md`（生成/修正/移設/削除ファイル一覧、名前空間・依存、共有 Audio 移設の要点、MCP 検証結果、Collection シーン配線 MCP 手順、旧 collection/audio 最終整理 TODO、S さんハンドオフ点、トレース）
 - _注: サマリのみ aidlc-docs 配下。コードは Assets 配下。_
 
 ### Step 20: ストーリー完了マーク
-- [ ] `stories.md` の US-COL-01〜04・US-TECH-06 に U4 実装分の実装状況を注記（実シーン配線・旧最終整理の残タスクを明記）
+- [x] `stories.md` の US-COL-01〜04・US-TECH-06 に U4 実装分の実装状況を注記（実シーン配線・旧最終整理の残タスクを明記）
 - _トレース: US-COL / US-TECH-06_
 
 ---

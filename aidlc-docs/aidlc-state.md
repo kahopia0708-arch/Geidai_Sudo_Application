@@ -5,7 +5,7 @@
 - **Project Type**: Brownfield
 - **Start Date**: 2026-07-15T16:48:08+09:00
 - **Current Phase**: CONSTRUCTION
-- **Current Stage**: U4 Persistence/Collection — Code Generation（Part 1 計画作成・承認待ち）
+- **Current Stage**: U4 Persistence/Collection — Code Generation（Part 2 生成完了・完了ゲート承認待ち）
 
 ## Workspace State
 - **Existing Code**: Yes（Unity 6000.4.2f1 / URP / uGUI）
@@ -79,7 +79,8 @@
 - [x] NFR Design — Part1（計画＋Q1〜Q6）承認済み（2026-07-15、Q1〜Q6=全A）
 - [x] NFR Design — Part2 生成完了・承認済み（2026-07-15、"Continue to Next Stage"）。nfr-design-patterns/logical-components 作成（`AtomicFile` 原子的置換／`ListSounds` 破損スキップ・空フォールバック／一覧=相対レイアウト＋サムネ遅延＋仮想化可能／共有 Audio 再生[`IAudioService.Play(buffer,settings)`・EffectChain を `Geidai.Services.Audio` へ移設]／純粋 `CollectionFilter`(PBT)＋`IPhotoPicker` スタブ／`Geidai.Collection` 画面群＋`IStorageService` 拡張[DeleteSound/SaveMeta]）。commit bde7d13
 - [x] Infrastructure Design — SKIP（完全オフライン・サーバー/クラウド無し／実行計画と整合）
-- [~] Code Generation — Part1（詳細計画 Step0〜20）作成・承認待ち（2026-07-15）。`Geidai.Collection` 新設＋`SoundClipMeta`/`IStorageService`/`IAudioService` 後方互換拡張＋`AtomicFile`＋純粋 `CollectionFilter`/`LoadOutcome`＋`IPhotoPicker` スタブ＋共有 Audio 移設（EffectChain を Services へ・RecAudioService 削除・録音側不変）＋EditMode テスト4種
+- [x] Code Generation — Part1（詳細計画 Step0〜20）作成・承認済み（2026-07-15、"Continue"）。commit 9888534
+- [x] Code Generation — Part2 生成完了（Step0〜20 全 [x]）・完了ゲート（2026-07-15）。新 `Geidai.Collection`（CollectionScreenController/SoundListView/SoundListItemView/FilterSearchController/SoundDetailController/CollectionSprites/SoundItemViewModel/CollectionState/CollectionBootstrap）＋`Geidai.Common.Collection`（CollectionQuery/CollectionFilter[純粋]/LoadOutcome）＋`Geidai.Services.IO.AtomicFile`＋`Geidai.Services.Audio`（EffectChain 移設・共有 AudioService）＋`Geidai.Services.Media`（IPhotoPicker/StubPhotoPicker）。`SoundClipMeta`/`IStorageService`/`IAudioService` を後方互換拡張、`StorageService` を AtomicFile 統一＋破損スキップ強化。`RecAudioService` 削除・Rec を共有実装へ切替（録音側不変）。EditMode テスト4種（CollectionFilter PBT/SavedSound JSON PBT/AtomicFile/StorageCollection）。公式 Unity MCP でコンパイル Error 0/Warning 0（NoiseLevel.Mid タイポ修正後）・CollectionFilter/meta JSON スモーク PASS・全アセンブリロード確認（Collection は Rec 非依存）。実シーン配線・実機写真ピッカーは MCP フォローアップ（code-summary §6）。
 
 #### U5〜U6（未着手）
 - [ ] 各ユニットの per-unit ループ

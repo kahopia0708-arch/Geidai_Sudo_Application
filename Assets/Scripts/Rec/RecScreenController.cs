@@ -4,6 +4,7 @@ using Geidai.Common.Models;
 using Geidai.Common.Results;
 using Geidai.Common.UI;
 using Geidai.Services;
+using Geidai.Services.Audio;
 using Geidai.Services.Navigation;
 using Geidai.Services.Storage;
 
@@ -21,7 +22,6 @@ namespace Geidai.Rec
         [SerializeField] private RecordingController recordingController;
         [SerializeField] private EffectPanelController effectPanel;
         [SerializeField] private SavePromptController savePrompt;
-        [SerializeField] private EffectChain effectChain;
 
         [Header("UI")]
         [SerializeField] private Button recordButton;
@@ -41,7 +41,7 @@ namespace Geidai.Rec
         private AudioBuffer _recorded;
         private INavigationService _nav;
         private IStorageService _storage;
-        private RecAudioService _audio;
+        private IAudioService _audio;
         private bool _wired;
 
         public RecordingState State => _state;
@@ -60,9 +60,9 @@ namespace Geidai.Rec
 
             _nav = ServiceRegistry.Resolve<INavigationService>();
             _storage = ServiceRegistry.Resolve<IStorageService>();
+            _audio = RecBootstrap.EnsureAudioService();
 
-            if (effectChain != null) effectChain.EnsureComponents();
-            _audio = RecBootstrap.EnsureAudioService(effectChain != null ? effectChain.Source : null);
+            if (effectPanel != null) effectPanel.Init(_audio);
 
             if (recordingController != null)
             {
@@ -206,7 +206,7 @@ namespace Geidai.Rec
             base.Update(); // システムバック（Escape）検知
 
             // 再生完了で Playing → Recorded に戻す
-            if (_state == RecordingState.Playing && effectChain != null && effectChain.Source != null && !effectChain.Source.isPlaying)
+            if (_state == RecordingState.Playing && _audio != null && !_audio.IsPlaying)
                 RefreshState(RecordingState.Recorded);
         }
     }

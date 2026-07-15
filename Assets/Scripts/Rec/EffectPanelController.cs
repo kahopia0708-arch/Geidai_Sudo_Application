@@ -2,19 +2,21 @@ using UnityEngine;
 using UnityEngine.UI;
 using Geidai.Common.Audio;
 using Geidai.Common.Models;
+using Geidai.Services.Audio;
 
 namespace Geidai.Rec
 {
     /// <summary>
     /// 加工パネル（US-REC-02 / frontend-components §2）。
     /// UI（スライダー/ドロップダウン/トグル）を正準モデル <see cref="SoundEffectSettingsData"/> に
-    /// バインドし、変更のたびに <see cref="EffectChain.Apply"/> で再生系へ非破壊反映する。
+    /// バインドし、変更のたびに共有 <see cref="IAudioService.ApplyEffects"/> で再生系へ非破壊反映する
+    /// （U4 で EffectChain を Services 共有へ移設 / Q4=A）。
     /// UI 値↔モデルの換算は <see cref="SoundEffectMapper"/> を用いる。
     /// 見た目・ラベル（なし/ロボット/コーラス系 等）は S さんが調整（US-TECH-07）。
     /// </summary>
     public class EffectPanelController : MonoBehaviour
     {
-        [SerializeField] private EffectChain effectChain;
+        private IAudioService _audio;
 
         [Header("Pitch (半音 -12..12)")]
         [SerializeField] private Slider pitchSlider;   // 0..1 → -12..12
@@ -44,6 +46,13 @@ namespace Geidai.Rec
 
         /// <summary>保存に用いる現在の加工設定。</summary>
         public SoundEffectSettingsData CurrentSettings => _settings;
+
+        /// <summary>共有 Audio サービスを注入する（RecScreenController から）。</summary>
+        public void Init(IAudioService audio)
+        {
+            _audio = audio;
+            ApplyToChain();
+        }
 
         private void Awake()
         {
@@ -88,11 +97,10 @@ namespace Geidai.Rec
             if (reverbBypass != null) _reverbOn = reverbBypass.isOn;
         }
 
-        /// <summary>現在の設定・バイパスを再生系へ反映する。</summary>
+        /// <summary>現在の設定・バイパスを共有再生系へ反映する（非破壊プレビュー）。</summary>
         public void ApplyToChain()
         {
-            if (effectChain != null)
-                effectChain.Apply(_settings, _allOn, _pitchOn, _noiseOn, _timbreOn, _reverbOn);
+            _audio?.ApplyEffects(_settings, _allOn, _pitchOn, _noiseOn, _timbreOn, _reverbOn);
         }
 
         /// <summary>UI 表記（0:なし/1:ロボット/2:コーラス系）→ TimbreType。</summary>

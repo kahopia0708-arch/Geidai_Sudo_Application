@@ -490,3 +490,19 @@
 **Context**: CONSTRUCTION - U4 Persistence/Collection / Code Generation（Part 1 計画作成・承認待ち）
 
 ---
+
+## Construction U4 Code Generation Part1 承認 → Part2 生成開始
+**Timestamp**: 2026-07-15T23:43:00+09:00
+**User Input**: "Continue"
+**AI Response**: U4 Code Generation 計画（Part 1・Step 0〜20）を承認。Part 2（コード生成）を開始。上から順に実行し各ステップ完了で [x]。共有 Audio 移設（EffectChain を Rec→Services.Audio・RecAudioService 削除・録音側不変）を含む。aidlc-state.md を Code Generation Part1 承認・Part2 進行中へ更新。
+**Context**: CONSTRUCTION - U4 Persistence/Collection / Code Generation（Part 2 生成）
+
+---
+
+## Construction U4 Code Generation Part2 完了
+**Timestamp**: 2026-07-15T23:55:00+09:00
+**User Input**: （前ターン "Continue" による Part2 実行の継続。本エントリは Part2 完了記録）
+**AI Response**: U4 Code Generation Part 2 の Step0〜20 を全て実行・完了（plan チェック全 [x]）。生成: `Geidai.Common.Collection`（CollectionQuery/CollectionFilter[純粋・PBT]/LoadOutcome）、`Geidai.Services.IO.AtomicFile`（原子的置換ヘルパー）、`Geidai.Services.Audio`（EffectChain を Rec から移設・共有 AudioService=IAudioService 実装）、`Geidai.Services.Media`（IPhotoPicker/StubPhotoPicker）、新アセンブリ `Geidai.Collection`（CollectionState/SoundItemViewModel/CollectionSprites/SoundListItemView/SoundListView/FilterSearchController/SoundDetailController/CollectionBootstrap/CollectionScreenController）。修正（後方互換）: `SoundClipMeta`（title/photoFileName/memo/nickname 追記）、`IStorageService`＋`StorageService`（DeleteSound/SaveMeta/SavePhoto/RemovePhoto/LoadPhoto/LoadSoundBuffer 追加・全書込 AtomicFile 統一・破損スキップ）、`IAudioService`（Play(buffer,settings)/ApplyEffects/IsPlaying）、`AppManager`（共有 AudioService 登録）、Rec 側（RecBootstrap/EffectPanelController/RecScreenController を共有実装へ・録音側不変）。削除: `RecAudioService.cs`（＋.meta）。移設: `EffectChain.cs`→Services.Audio。テスト: CollectionFilterTests/SavedSoundJsonTests/AtomicFileTests/StorageCollectionTests（Geidai.Tests に Geidai.Collection 参照追加）。MCP 検証（user-unity-mcp）: 初回 `NoiseLevel.Mid` タイポ（CS0117）検出→`Medium` 修正→再コンパイルで Error 0/Warning 0（唯一の Warning は Unity AI パッケージの Account API・自コード無関係）。同期スモーク: CollectionFilter＋meta JSON 往復 PASS（all=3/feb=2/neko=2/febTaro=1/title=tori）。全アセンブリロード確認（Collection→Services→Common・Rec 非依存、Rec もロード）。ファイル I/O 実行時スモークは MCP 承認ガードのため EditMode テストで担保。code-summary.md 生成、stories.md（US-COL-01〜04/US-TECH-06）に実装状況注記。aidlc-state.md を Part2 完了・完了ゲートへ更新。実シーン配線・実機写真ピッカーは MCP フォローアップ。
+**Context**: CONSTRUCTION - U4 Persistence/Collection / Code Generation（Part 2 完了・完了ゲート承認待ち）
+
+---

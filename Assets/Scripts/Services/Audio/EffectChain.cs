@@ -2,11 +2,12 @@ using UnityEngine;
 using Geidai.Common.Audio;
 using Geidai.Common.Models;
 
-namespace Geidai.Rec
+namespace Geidai.Services.Audio
 {
     /// <summary>
-    /// 再生系（AudioSource＋各 AudioFilter）を束ね、加工設定を一括反映する（nfr-design §1）。
-    /// 非破壊：録音バッファは変更せず、再生時のパラメータのみを更新する（US-REC-02）。
+    /// 再生系（AudioSource＋各 AudioFilter）を束ね、加工設定を一括反映する（nfr-design §4）。
+    /// U4 で Rec から Services へ移設し、Rec（プレビュー）と Collection（視聴）で共有する（Q4=A）。
+    /// 非破壊：録音/保存バッファは変更せず、再生時のパラメータのみを更新する（US-REC-02 / US-COL-01）。
     /// 具体フィルタ値はここに閉じ込め、数値換算は <see cref="SoundEffectMapper"/> / <see cref="PitchMath"/> を用いる。
     /// フィルタ参照は初期化時にキャッシュし、毎フレームの GetComponent を避ける（GC/性能）。
     /// </summary>

@@ -123,6 +123,8 @@ _実装状況（U3, 2026-07-15）: コード実装済み。`SavePromptController
 - Given 一覧の項目, When タップする, Then その音を再生できる。
 - Given 一覧の項目, When 削除する, Then 確認のうえ該当の音声と設定・メタデータが削除される。
 
+_実装状況（U4, 2026-07-15）: コード実装済み。新 `Geidai.Collection`（`CollectionScreenController`＋`SoundListView`/`SoundListItemView`）で一覧、`SoundDetailController` で視聴（共有 `IAudioService.Play(buffer, settings)` により保存エフェクトを非破壊再適用）と削除（`ConfirmDialog`→`IStorageService.DeleteSound`＝wav+meta+photo 一括・原子的）。実シーン配線と旧 `GoToSoundCollection`/`MySoundCollectionStorage` 差し替えは MCP フォローアップ（code-summary §6）。_
+
 _トレース: FR-09 / NFR-05_
 
 ## US-COL-02 メタデータの拡張
@@ -133,6 +135,8 @@ _トレース: FR-09 / NFR-05_
 - Given 保存音, When メタデータを表示する, Then 日付・タイトル（デフォルトは日付）・写真（任意）・メモ（任意）・ニックネームが確認できる。
 - Given メタデータ, When 編集する, Then タイトル/写真/メモを更新できる。
 - Given 写真・メモ等の個人情報, When 保存する, Then 端末外へ送信されない。
+
+_実装状況（U4, 2026-07-15）: コード実装済み。`SoundClipMeta` を後方互換で拡張（`title`/`photoFileName`/`memo`/`nickname`・旧 JSON も既定値で読める＝`SavedSoundJsonTests`）。`SoundDetailController` でタイトル/メモ編集（`IStorageService.SaveMeta`＝settings 保持・原子的置換）、写真は `IPhotoPicker`（U4 は `StubPhotoPicker`）→`SavePhoto`（拡張子検証・原子的コピー）→`SaveMeta`。写真/メモ/ニックネームは `persistentDataPath` 内のみ・ログ非出力（PII）。実機写真ピッカー本結線は MCP フォローアップ。_
 
 _トレース: FR-10 / NFR-04_
 
@@ -145,6 +149,8 @@ _トレース: FR-10 / NFR-04_
 - Given キーワード, When 検索する, Then タイトル/メモ等に一致する音のみ表示される。
 - Given 一致なし, When 検索する, Then 空状態が分かりやすく表示される。
 
+_実装状況（U4, 2026-07-15）: コード実装済み。純粋関数 `Geidai.Common.Collection.CollectionFilter.Filter(items, query)`（月別＋キーワード[title/memo/nickname 部分一致・大小無視]・AND 合成・順序保持／PBT=`CollectionFilterTests`）。UI は `FilterSearchController`（月ドロップダウン＋検索入力→`CollectionQuery`）。空一致は `SoundListView` の空状態表示。MCP スモークで all=3/feb=2/neko=2/febTaro=1 を確認。_
+
 _トレース: FR-11 / NFR-05_
 
 ## US-COL-04 端末での永続化と堅牢性
@@ -155,6 +161,8 @@ _トレース: FR-11 / NFR-05_
 - Given 保存済みデータ, When アプリを再起動する, Then 音声・設定・メタデータが保持されている（Application.persistentDataPath 配下）。
 - Given 一部ファイルが破損/欠損, When コレクションを読み込む, Then 破損項目を安全に読み飛ばし、他の項目は正常表示する（クラッシュしない）。
 - Given 空/初期状態, When コレクションを開く, Then フォールバック表示（空状態）となる。
+
+_実装状況（U4, 2026-07-15）: コード実装済み。`StorageService` の全書込（profile/meta/wav/写真）を `AtomicFile`（temp→原子的置換）へ統一し、`ListSoundsDetailed()` が破損 meta・対 wav 欠損を安全にスキップし空リストへフォールバック（`StorageCollectionTests`/`AtomicFileTests` で担保）。永続化は `Application.persistentDataPath` 配下。_
 
 _トレース: FR-12 / NFR-07（データ堅牢性）_
 
@@ -329,6 +337,8 @@ _トレース: NFR-10（変更管理）/ technology-stack.md 開発規約_
 - Given 保存処理, When 実行する, Then 原子的に書き込み（途中失敗で既存データを破損させない）。
 - Given 破損/欠損ファイル, When 読み込む, Then 安全に読み飛ばし、フォールバックする（US-COL-04 と整合）。
 - Given 重要度分類, When 定義する, Then Rec/Collection=Critical、ゲーム=High、weekly theme=Medium として扱う。
+
+_実装状況（U4, 2026-07-15）: コード実装済み。`Geidai.Services.IO.AtomicFile`（一時ファイル→`File.Replace`/`Move` による原子的置換・例外時 tmp 破棄）を新設し、`StorageService` の profile/meta/wav/写真の全書込を集約。`SaveSound` は wav→meta 順で原子的＋対整合。読込は `ListSoundsDetailed()` が破損/欠損をスキップし空フォールバック。EditMode `AtomicFileTests`/`StorageCollectionTests`（Test Runner）で担保。_
 
 _トレース: NFR-07（Resiliency R1）, RESILIENCY-01_
 

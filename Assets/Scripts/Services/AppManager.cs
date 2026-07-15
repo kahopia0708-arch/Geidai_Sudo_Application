@@ -4,6 +4,7 @@ using Geidai.Common.Utils;
 using Geidai.Services.Storage;
 using Geidai.Services.Navigation;
 using Geidai.Services.Content;
+using Geidai.Services.Audio;
 
 namespace Geidai.Services
 {
@@ -29,6 +30,9 @@ namespace Geidai.Services
                 ServiceRegistry.Register<INavigationService>(new NavigationService());
             if (!ServiceRegistry.IsRegistered<IContentService>())
                 ServiceRegistry.Register<IContentService>(new ContentService());
+            // U4: 共有 Audio（録音/再生・エフェクト再適用）を Services 層で登録（Rec/Collection 共用）。
+            if (!ServiceRegistry.IsRegistered<IAudioService>())
+                ServiceRegistry.Register<IAudioService>(new AudioService());
 
             SafeLogger.Log("[AppManager] services registered.");
 

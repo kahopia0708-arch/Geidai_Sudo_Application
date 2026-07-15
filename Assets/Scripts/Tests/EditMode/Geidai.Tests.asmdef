@@ -6,6 +6,7 @@
         "Geidai.Services",
         "Geidai.Foundation",
         "Geidai.Rec",
+        "Geidai.Collection",
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner"
     ],
