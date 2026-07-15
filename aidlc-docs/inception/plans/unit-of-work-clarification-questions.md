@@ -27,4 +27,4 @@ C) **Services器 も独立させて 7 ユニットにする**（U1 Services基�
 
 D) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: A

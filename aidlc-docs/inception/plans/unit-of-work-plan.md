@@ -10,11 +10,11 @@
 ---
 
 ## A. 実行チェックリスト（Part 2 で実行）
-- [ ] `../application-design/unit-of-work.md` を生成（ユニット定義・責務・含むストーリー/コンポーネント）
-- [ ] `../application-design/unit-of-work-dependency.md` を生成（ユニット依存マトリクス・実装順序）
-- [ ] `../application-design/unit-of-work-story-map.md` を生成（ストーリー→ユニットの割当・網羅確認）
-- [ ] ユニット境界・依存の妥当性検証
-- [ ] 全ストーリー（US-*）がいずれかのユニットに割り当て済みであることを確認
+- [x] `../application-design/unit-of-work.md` を生成（ユニット定義・責務・含むストーリー/コンポーネント）
+- [x] `../application-design/unit-of-work-dependency.md` を生成（ユニット依存マトリクス・実装順序）
+- [x] `../application-design/unit-of-work-story-map.md` を生成（ストーリー→ユニットの割当・網羅確認）
+- [x] ユニット境界・依存の妥当性検証
+- [x] 全ストーリー（US-*）がいずれかのユニットに割り当て済みであることを確認
 
 ## B. 想定ユニット（application-design / execution-plan の前提）
 - **U1 Foundation/UI基盤**: 起動・ホーム・ユーザー登録・ナビゲーション＋共通UI基盤（SafeArea/レスポンシブ）＋横断サービスの器（App/Navigation/Storage/Audio/Content の枠）
