@@ -5,7 +5,7 @@
 - **Project Type**: Brownfield
 - **Start Date**: 2026-07-15T16:48:08+09:00
 - **Current Phase**: CONSTRUCTION
-- **Current Stage**: U4 Persistence/Collection — Functional Design（Part 1 計画作成・承認待ち）
+- **Current Stage**: U4 Persistence/Collection — Functional Design（Part 2 生成完了・承認待ち）
 
 ## Workspace State
 - **Existing Code**: Yes（Unity 6000.4.2f1 / URP / uGUI）
@@ -72,7 +72,8 @@
 - [x] Code Generation 完了ゲート承認（2026-07-15、"Continue to Next Stage"）。commit 2c1ede3。per-unit ループ完了。
 
 #### U4 Persistence/Collection（進行中）
-- [~] Functional Design — Part1（計画＋Q1〜Q7）作成・承認待ち（2026-07-15）
+- [x] Functional Design — Part1 計画作成・承認済み（2026-07-15、Q1〜Q7=全A）
+- [~] Functional Design — Part2 生成完了・承認待ち（2026-07-15）。domain-entities/business-logic-model/business-rules/frontend-components 作成（新形式のみ・SoundClipMeta 後方互換拡張[title/photo/memo/nickname]・原子的書込/破損スキップ/空フォールバック・写真ローカル参照＋ピッカー抽象・純粋な絞込/検索・確認削除・1画面＋保存エフェクト再適用再生）
 - [ ] NFR Requirements
 - [ ] NFR Design
 - [ ] Infrastructure Design（想定 SKIP：完全オフライン）

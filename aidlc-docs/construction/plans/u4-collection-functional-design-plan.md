@@ -12,11 +12,13 @@
 ---
 
 ## A. 実行チェックリスト（Part 2 で実行）
-- [ ] `../u4-collection/functional-design/domain-entities.md`（U4 で扱うモデル：拡張メタ（日付/タイトル/写真/メモ/ニックネーム）、一覧項目、絞込/検索条件、破損項目の表現。U1 `SoundClipMeta`/`SoundEffectSettingsData`/`SavedSound`/`AudioBuffer` を再利用・後方互換拡張）
-- [ ] `../u4-collection/functional-design/business-logic-model.md`（一覧読込→視聴→削除、メタ編集、月別絞込/キーワード検索、原子的保存・破損フォールバックのふるまいとデータフロー）
-- [ ] `../u4-collection/functional-design/business-rules.md`（原子性・破損スキップ・空フォールバック、削除確認、メタ検証、検索一致規則、重要度分類=Critical）
-- [ ] `../u4-collection/functional-design/frontend-components.md`（Collection 画面：一覧/詳細・編集/絞込・検索/空状態の構造・状態・操作フロー・S さんハンドオフ点）
-- [ ] 要件（FR-09〜12 / NFR-04/05/07 / RESILIENCY-01）・ストーリー（US-COL/US-TECH-06）とのトレース整合確認
+- [x] `../u4-collection/functional-design/domain-entities.md`（U4 で扱うモデル：拡張メタ（日付/タイトル/写真/メモ/ニックネーム）、一覧項目、絞込/検索条件、破損項目の表現。U1 `SoundClipMeta`/`SoundEffectSettingsData`/`SavedSound`/`AudioBuffer` を再利用・後方互換拡張）
+- [x] `../u4-collection/functional-design/business-logic-model.md`（一覧読込→視聴→削除、メタ編集、月別絞込/キーワード検索、原子的保存・破損フォールバックのふるまいとデータフロー）
+- [x] `../u4-collection/functional-design/business-rules.md`（原子性・破損スキップ・空フォールバック、削除確認、メタ検証、検索一致規則、重要度分類=Critical）
+- [x] `../u4-collection/functional-design/frontend-components.md`（Collection 画面：一覧/詳細・編集/絞込・検索/空状態の構造・状態・操作フロー・S さんハンドオフ点）
+- [x] 要件（FR-09〜12 / NFR-04/05/07 / RESILIENCY-01）・ストーリー（US-COL/US-TECH-06）とのトレース整合確認
+
+> **回答**: Q1〜Q7＝すべて A（推奨）。矛盾なし。Part 2 実行済み（2026-07-15）。
 
 ## B. スコープ（U4 で確定する対象）
 - **永続化本実装（`StorageService` 強化）**: 原子的書込（途中失敗で既存を壊さない）、破損/欠損の安全な読み飛ばし、空/初期状態のフォールバック。対象＝profile / メタ / wav /（写真）。
@@ -45,7 +47,7 @@ B) 新形式を主としつつ、**起動時に旧 `MySoundCollection` を新形
 
 C) Other（[Answer]: の後に記述）
 
-[Answer]:
+[Answer]:A
 
 ## Question 2（メタデータ拡張モデル：後方互換）
 FR-10 のメタ拡張（日付/タイトル/写真/メモ/ニックネーム）をどう表現する？（U1 `SoundClipMeta`＝id/displayName/createdAtIso/wavFileName）
@@ -56,7 +58,7 @@ B) `SoundClipMeta` は変えず、拡張分を**別ファイル**（`{id}.extra.
 
 C) Other（[Answer]: の後に記述）
 
-[Answer]:
+[Answer]:A
 
 ## Question 3（永続化の堅牢化方式：原子性・破損・空）
 NFR-07 / US-TECH-06 のデータ堅牢性はどう実装する？（技術非依存のふるまいとして）
@@ -67,7 +69,7 @@ B) 原子性は meta/profile のみ（テキスト小容量）に適用し、wav
 
 C) Other（[Answer]: の後に記述）
 
-[Answer]:
+[Answer]:A
 
 ## Question 4（写真の扱い：取得と保存・プライバシー）
 US-COL-02 の「写真（任意）」はどう扱う？（NFR-04：端末外へ送信しない）
@@ -78,7 +80,7 @@ B) U4 では写真は**メタ項目として定義＋表示のみ**（撮影/選
 
 C) Other（[Answer]: の後に記述）
 
-[Answer]:
+[Answer]:A
 
 ## Question 5（絞り込み・検索モデル）
 US-COL-03 の月別絞込・キーワード検索の規則は？
@@ -89,7 +91,7 @@ B) 月別絞込のみ（検索は将来）。または検索は `title` のみ�
 
 C) Other（[Answer]: の後に記述）
 
-[Answer]:
+[Answer]:A
 
 ## Question 6（削除のふるまい）
 US-COL-01 の削除はどう扱う？
@@ -100,7 +102,7 @@ B) 確認なしで即削除（誤操作リスクあり）＋アンドゥ（一�
 
 C) Other（[Answer]: の後に記述）
 
-[Answer]:
+[Answer]:A
 
 ## Question 7（Collection 画面構成＋再生忠実度）
 コレクション画面の構成と「視聴」の音は？
@@ -111,7 +113,7 @@ B) 一覧画面と詳細画面を分割（一覧→タップ→詳細/編集）�
 
 C) Other（[Answer]: の後に記述）
 
-[Answer]:
+[Answer]:A
 
 ---
 
