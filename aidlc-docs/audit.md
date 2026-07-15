@@ -410,3 +410,19 @@
 **Context**: CONSTRUCTION - U3 Rec / NFR Design（Part 2 生成・完了ゲート待ち）
 
 ---
+
+## Construction U3 Rec NFR Design 承認 → Infrastructure Design SKIP → Code Generation 開始
+**Timestamp**: 2026-07-15T22:40:00+09:00
+**User Input**: "Continue to Next Stage"
+**AI Response**: U3 NFR Design を承認。Infrastructure Design は完全オフライン（サーバー/クラウド無し）のため実行計画どおり SKIP。次ステージ U3 Code Generation（Part 1: 計画）へ進む。Geidai.Rec アセンブリ・EffectChain/RecordingClock/MicPermissionGate/SoundEffectMapper/RecAudioService/Rec コントローラ群・IStorageService.SaveSound 拡張・重複削除・EditMode PBT/PlayMode テスト・公式 Unity MCP 検証を含む詳細計画を作成予定。aidlc-state.md 更新。
+**Context**: CONSTRUCTION - U3 Rec / Code Generation（Part 1 計画作成）
+
+---
+
+## Construction U3 Rec Code Generation Part1 計画作成
+**Timestamp**: 2026-07-15T22:41:00+09:00
+**User Input**: （前 "Continue to Next Stage" に続く計画作成）
+**AI Response**: 既存資産調査（IStorageService=SaveSound 無し／WavCodec.Encode(float[],rate,ch)／PitchMath.SemitonesToRatio／ServiceRegistry／AppManager／RecorderWithEffects=重複DSP／Scean=空クラス／Glob で Assets/Scripts 直下 17 ファイル確認）。技術判断：SoundEffectMapper は旧グローバル SoundEffectSettings(Assembly-CSharp) を参照不可のため純粋換算のみに限定・Common.Audio 配置、IAudioService 実装は循環回避のため Geidai.Rec 側で ServiceRegistry 登録（AppManager 不変）、旧録音一式は Rec シーン再配線まで据置（RecorderWithEffects/Scean のみ削除）。u3-rec-code-generation-plan.md（Step0〜17）を作成。aidlc-state.md 更新（NFR Design 承認済み・Infrastructure Design SKIP・Code Generation Part1）。承認待ち。
+**Context**: CONSTRUCTION - U3 Rec / Code Generation（Part 1 計画・承認待ち）
+
+---
