@@ -610,3 +610,11 @@
 **Context**: CONSTRUCTION - U6 Game①音合わせ / NFR Design（Part 1: Planning）
 
 ---
+
+## Construction U6 NFR Design Part1 回答 → Part2 生成
+**Timestamp**: 2026-07-16T09:41:00+09:00
+**User Input**: "done"
+**AI Response**: U6 NFR Design Plan の Q1〜Q5 を全て推奨（A）で確定。Q1=PitchVariationService 専用リグに pitch=CentsToRatio・基準 AudioClip 開始時キャッシュ・非保存・連打差替／Q2=純粋 QuestionBuilder（System.Random(seed)・正解1つ/距離・PBT）／Q3=開始処理に素材選択/フォールバック集約（ListSounds→失敗次候補→fallbackClip→Empty）／Q4=新 Geidai.Game1・純粋/SO/型は Common.Game・PitchVariationService は Services.Audio・保存音は IStorageService（Collection 非依存）／Q5=ChoiceItemView/FrogTargetView タップ+ドラッグ・純粋判定・ResultEffectController 進化/再挑戦・既存ゲーム選択 UI 残置し導線接続。矛盾なし。Part 2 で nfr-design-patterns.md / logical-components.md を生成。
+**Context**: CONSTRUCTION - U6 Game①音合わせ / NFR Design（Part 2 生成）
+
+---

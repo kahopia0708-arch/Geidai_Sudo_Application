@@ -11,9 +11,11 @@
 ---
 
 ## A. 実行チェックリスト（Part 2 で実行）
-- [ ] `../u6-game1/nfr-design/nfr-design-patterns.md` を生成（各 NFR の実現パターン）
-- [ ] `../u6-game1/nfr-design/logical-components.md` を生成（論理コンポーネント・責務・連携）
-- [ ] NFR Requirements / Functional Design とのトレース整合を確認
+- [x] `../u6-game1/nfr-design/nfr-design-patterns.md` を生成（各 NFR の実現パターン）
+- [x] `../u6-game1/nfr-design/logical-components.md` を生成（論理コンポーネント・責務・連携）
+- [x] NFR Requirements / Functional Design とのトレース整合を確認
+
+> **回答**: Q1〜Q5＝すべて A（推奨）。矛盾なし。Part 2 実行済み（2026-07-16）。
 
 ## B. カテゴリ適用性（このユニットでの判断）
 - **Resilience（耐障害）**: 適用（保存音0件フォールバック・素材読込失敗のスキップ・遷移/再生失敗の非致命化）。
@@ -47,7 +49,7 @@ B) 出題ごとに加工済み `AudioBuffer`/`AudioClip` を生成し問題終�
 
 C) Other（[Answer]: の後に記述）
 
-[Answer]:
+[Answer]:A
 
 ### Question 2（Performance/Testability — 出題生成の純粋パターン）
 決定的で PBT 可能な出題生成の実現は？
@@ -58,7 +60,7 @@ B) `SoundMatchGameController` 内でランダム生成（純粋分離しない�
 
 C) Other（[Answer]: の後に記述）
 
-[Answer]:
+[Answer]:A
 
 ### Question 3（Resilience — 素材選択・フォールバック集約）
 保存音0件/読込失敗時の安全パターンは？
@@ -69,7 +71,7 @@ B) 素材必須（0件はゲーム開始不可）で最小ガードのみ。
 
 C) Other（[Answer]: の後に記述）
 
-[Answer]:
+[Answer]:A
 
 ### Question 4（Maintainability — アセンブリ配置・データ型・Config）
 U6 の論理コンポーネント配置と Config の設計は？
@@ -80,7 +82,7 @@ B) `Geidai.Game1` を作らず既存 Assembly-CSharp に実装。
 
 C) Other（[Answer]: の後に記述）
 
-[Answer]:
+[Answer]:A
 
 ### Question 5（Usability/UI — 操作・演出パターン、既存 UI 接続）
 タップ確認・ドラッグ解答・演出の実現と既存ゲーム選択 UI 接続は？
@@ -91,7 +93,7 @@ B) ドラッグでなくタップ選択＋決定ボタン（簡素）。
 
 C) Other（[Answer]: の後に記述）
 
-[Answer]:
+[Answer]:A
 
 ---
 
