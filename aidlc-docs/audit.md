@@ -738,3 +738,12 @@
 **Context**: CONSTRUCTION - device verification passed (mic + orientation)
 
 ---
+
+## Documentation — README / Sさん向けガイド
+**Timestamp**: 2026-07-16T13:04:28+09:00
+**User Input**: "READMEの整備
+デザインの変更方法など Sさん向けのガイドを整備"
+**AI Response**: ルート `README.md`（概要・役割分担・起動/ビルドメニュー・ドキュメント案内）と `docs/Sさん向けガイド.md`（シーン調整・Settings アセット差し替え・画像入れ方・Build All 注意）を新規作成。
+**Context**: CONSTRUCTION follow-up — handoff docs for Sさん (US-TECH-07)
+
+---

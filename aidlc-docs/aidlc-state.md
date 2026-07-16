@@ -134,3 +134,4 @@
 ## Notes
 - ユーザー指定スコープ: Requirements Analysis → User Stories → Workflow Planning。
 - 各承認ゲートでユーザー確認を待つ。
+- Sさん ハンドオフ文書（2026-07-16）: ルート `README.md` ＋ `docs/Sさん向けガイド.md`（見た目・Settings 差し替え・Build All 注意）。
