@@ -1,0 +1,31 @@
+{
+    "name": "Geidai.Tests",
+    "rootNamespace": "Geidai.Tests",
+    "references": [
+        "Geidai.Common",
+        "Geidai.Services",
+        "Geidai.Foundation",
+        "Geidai.Rec",
+        "Geidai.Collection",
+        "Geidai.Theme",
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "nunit.framework.dll",
+        "FsCheck.dll",
+        "FSharp.Core.dll"
+    ],
+    "autoReferenced": false,
+    "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

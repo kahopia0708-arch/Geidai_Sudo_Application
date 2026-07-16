@@ -1,0 +1,16 @@
+{
+    "name": "Geidai.Services",
+    "rootNamespace": "Geidai.Services",
+    "references": [
+        "Geidai.Common"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

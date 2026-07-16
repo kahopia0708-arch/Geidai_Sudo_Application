@@ -26,6 +26,7 @@
 - Given 縦・横いずれの向き, When 画面遷移する, Then レイアウトが破綻せずボタンが操作可能である。
 
 _トレース: FR-01 / NFR-11_
+_実装状況（U2 Code Generation 2026-07-15）: コード実装済み（BootScreenController/StartupRouter/HomeScreenController/NavigationService＋BackToHomeButton）。実シーンの GameObject 配線は MCP フォローアップ（code-summary §5）。_
 
 ## US-NAV-02 迷わないホーム導線
 **P1**
@@ -36,6 +37,7 @@ _トレース: FR-01 / NFR-11_
 - Given MVPでスコープ外のモジュール（共有/Place 等）, When ホームを表示する, Then それらは非表示または導線から除外されている。
 
 _トレース: FR-01, FR-02 / NFR-05_
+_実装状況（U2 Code Generation 2026-07-15）: コード実装済み（HomeScreenController＋HomeMenuConfig データ駆動／Place・テスト除外、モチーフはアイコンキーで識別）。見た目・シーン配線は Sさん/MCP フォローアップ。_
 
 ---
 
@@ -51,6 +53,7 @@ _トレース: FR-01, FR-02 / NFR-05_
 - Given 登録情報, When 保存する, Then その情報は端末外へ送信されない。
 
 _トレース: FR-03 / NFR-02, NFR-04_
+_実装状況（U2 Code Generation 2026-07-15）: コード実装済み（UserRegistrationScreenController[New]＋U1 ValidationUtil/StorageService、初回判定は StartupRouter、端末外送信なし）。実シーン配線は MCP フォローアップ。_
 
 ## US-REG-02 登録情報の編集と入力検証
 **P1**
@@ -62,6 +65,7 @@ _トレース: FR-03 / NFR-02, NFR-04_
 - Given 入力値, When 検証する, Then 妥当性（年の範囲・ニックネーム長）を満たす場合のみ確定する。
 
 _トレース: FR-04 / SECURITY-05（入力検証）_
+_実装状況（U2 Code Generation 2026-07-15）: コード実装済み（UserRegistrationScreenController[Edit]＝既存値ロード→検証→上書き保存、キャンセルで破棄）。実シーン配線は MCP フォローアップ。_
 
 ---
 
@@ -78,6 +82,8 @@ _トレース: FR-04 / SECURITY-05（入力検証）_
 
 _トレース: FR-05 / NFR-03, NFR-06, SECURITY-15（フェイルセーフ）_
 
+_実装状況（U3, 2026-07-15）: コード実装済み。`RecordingController`＋`RecAudioService`（Unity `Microphone`）で 3秒録音、`RecordingClock` で自動停止、`MicPermissionGate` で権限フェイルセーフ。実シーン配線は MCP フォローアップ（code-summary §6）。_
+
 ## US-REC-02 録音音の加工
 **P1**
 こども/学習者として、録った音にリバーブ・ノイズリダクション・ピッチ・音色の変化を付けたい。なぜなら、音が変わる面白さを楽しみたいから。
@@ -89,6 +95,8 @@ _トレース: FR-05 / NFR-03, NFR-06, SECURITY-15（フェイルセーフ）_
 
 _トレース: FR-06 / NFR-06_
 
+_実装状況（U3, 2026-07-15）: コード実装済み。`EffectPanelController`＋`EffectChain`（Unity 標準 AudioFilter）で非破壊プレビュー、`SoundEffectMapper`（純粋・PBT）で数値換算。UI 見た目/ラベルは Sさん調整（US-TECH-07）。実シーン配線は MCP フォローアップ。_
+
 ## US-REC-03 加工音の保存
 **P1 / P3**
 こども/学習者として、加工した音を保存して後から使いたい。なぜなら、自分の音コレクションを増やしたいから。
@@ -99,6 +107,8 @@ _トレース: FR-06 / NFR-06_
 - Given 保存処理中の失敗（I/Oエラー等）, When 発生する, Then データを破損させず安全に失敗を通知する。
 
 _トレース: FR-08 / NFR-03, NFR-07, SECURITY-15_
+
+_実装状況（U3, 2026-07-15）: コード実装済み。`SavePromptController`＋`IStorageService.SaveSound`／`StorageService`（wav→meta 対保存・失敗時 wav 削除）。WAV は既存 `WavCodec`（16bit PCM）。原子的置換・破損復旧の本実装は U4。EditMode `SaveSoundTests` で担保。_
 
 ---
 
@@ -113,6 +123,8 @@ _トレース: FR-08 / NFR-03, NFR-07, SECURITY-15_
 - Given 一覧の項目, When タップする, Then その音を再生できる。
 - Given 一覧の項目, When 削除する, Then 確認のうえ該当の音声と設定・メタデータが削除される。
 
+_実装状況（U4, 2026-07-15）: コード実装済み。新 `Geidai.Collection`（`CollectionScreenController`＋`SoundListView`/`SoundListItemView`）で一覧、`SoundDetailController` で視聴（共有 `IAudioService.Play(buffer, settings)` により保存エフェクトを非破壊再適用）と削除（`ConfirmDialog`→`IStorageService.DeleteSound`＝wav+meta+photo 一括・原子的）。実シーン配線と旧 `GoToSoundCollection`/`MySoundCollectionStorage` 差し替えは MCP フォローアップ（code-summary §6）。_
+
 _トレース: FR-09 / NFR-05_
 
 ## US-COL-02 メタデータの拡張
@@ -123,6 +135,8 @@ _トレース: FR-09 / NFR-05_
 - Given 保存音, When メタデータを表示する, Then 日付・タイトル（デフォルトは日付）・写真（任意）・メモ（任意）・ニックネームが確認できる。
 - Given メタデータ, When 編集する, Then タイトル/写真/メモを更新できる。
 - Given 写真・メモ等の個人情報, When 保存する, Then 端末外へ送信されない。
+
+_実装状況（U4, 2026-07-15）: コード実装済み。`SoundClipMeta` を後方互換で拡張（`title`/`photoFileName`/`memo`/`nickname`・旧 JSON も既定値で読める＝`SavedSoundJsonTests`）。`SoundDetailController` でタイトル/メモ編集（`IStorageService.SaveMeta`＝settings 保持・原子的置換）、写真は `IPhotoPicker`（U4 は `StubPhotoPicker`）→`SavePhoto`（拡張子検証・原子的コピー）→`SaveMeta`。写真/メモ/ニックネームは `persistentDataPath` 内のみ・ログ非出力（PII）。実機写真ピッカー本結線は MCP フォローアップ。_
 
 _トレース: FR-10 / NFR-04_
 
@@ -135,6 +149,8 @@ _トレース: FR-10 / NFR-04_
 - Given キーワード, When 検索する, Then タイトル/メモ等に一致する音のみ表示される。
 - Given 一致なし, When 検索する, Then 空状態が分かりやすく表示される。
 
+_実装状況（U4, 2026-07-15）: コード実装済み。純粋関数 `Geidai.Common.Collection.CollectionFilter.Filter(items, query)`（月別＋キーワード[title/memo/nickname 部分一致・大小無視]・AND 合成・順序保持／PBT=`CollectionFilterTests`）。UI は `FilterSearchController`（月ドロップダウン＋検索入力→`CollectionQuery`）。空一致は `SoundListView` の空状態表示。MCP スモークで all=3/feb=2/neko=2/febTaro=1 を確認。_
+
 _トレース: FR-11 / NFR-05_
 
 ## US-COL-04 端末での永続化と堅牢性
@@ -145,6 +161,8 @@ _トレース: FR-11 / NFR-05_
 - Given 保存済みデータ, When アプリを再起動する, Then 音声・設定・メタデータが保持されている（Application.persistentDataPath 配下）。
 - Given 一部ファイルが破損/欠損, When コレクションを読み込む, Then 破損項目を安全に読み飛ばし、他の項目は正常表示する（クラッシュしない）。
 - Given 空/初期状態, When コレクションを開く, Then フォールバック表示（空状態）となる。
+
+_実装状況（U4, 2026-07-15）: コード実装済み。`StorageService` の全書込（profile/meta/wav/写真）を `AtomicFile`（temp→原子的置換）へ統一し、`ListSoundsDetailed()` が破損 meta・対 wav 欠損を安全にスキップし空リストへフォールバック（`StorageCollectionTests`/`AtomicFileTests` で担保）。永続化は `Application.persistentDataPath` 配下。_
 
 _トレース: FR-12 / NFR-07（データ堅牢性）_
 
@@ -162,6 +180,8 @@ _トレース: FR-12 / NFR-07（データ堅牢性）_
 
 _トレース: FR-13 / NFR-05_
 
+_実装状況（U5, 2026-07-16）: コード実装済み。`WeeklyThemeController`（再利用部品）＋`WeeklyThemeScreenController`（専用画面）が `IContentService.GetCurrentTheme()` で今週のお題を取得・表示。選択は純粋関数 `ThemeSelector.SelectIndex(date,count)`（`Geidai.Common.Content`・PBT）で決定的。空/無効カタログは `emptyState` フォールバック。既定 `ThemeCatalog`（`Assets/Settings/ThemeCatalog.asset`・13 オノマトペ移行済）を MCP 生成。実シーン配線・意匠は Sさん（US-TECH-07）＝MCP フォローアップ。_
+
 ## US-THEME-02 お題からRecへ
 **P1**
 こども/学習者として、お題をタップしたらそのまま録音に進みたい。なぜなら、思い立った流れで録りたいから。
@@ -172,6 +192,8 @@ _トレース: FR-13 / NFR-05_
 
 _トレース: FR-13_
 
+_実装状況（U5, 2026-07-16）: コード実装済み。お題タップ→`ThemeContext.Set(item)`（`Geidai.Services.Content`・実行時セッション・非永続）→`INavigationService.GoTo(Rec)`（失敗は `ErrorPresenter`）。Rec 側のお題ラベル表示は任意（`ThemeContext.Current` 参照・未設定でも通常録音）。Rec お題ラベルの実配置は MCP フォローアップ。_
+
 ## US-THEME-03 お題の差し替え可能な構成
 **P2**
 企画・運用者として、お題テキストを自分で用意した内容に差し替えたい。なぜなら、研究や季節に合わせて更新したいから。
@@ -181,6 +203,8 @@ _トレース: FR-13_
 - Given 差し替え後, When 利用者が表示する, Then 更新後のお題が表示される。
 
 _トレース: FR-14 / 前提（暫定・更新前提）_
+
+_実装状況（U5, 2026-07-16）: コード実装済み。`ThemeCatalog`（ScriptableObject・`[CreateAssetMenu] Geidai/Theme Catalog`）の `items`（`ThemeItem`: text/reading/hint）を Sさん がインスペクタで追加/編集/並べ替え可能＝再ビルド不要。`ThemeItem.IsValid`（text 非空）で無効項目は選択対象外。旧 `WeeklyTextController`（Assembly-CSharp・固定配列）は当面残置し、シーン差し替え後に削除（BR-THEME-52・MCP フォローアップ）。_
 
 ---
 
@@ -197,6 +221,8 @@ _トレース: FR-14 / 前提（暫定・更新前提）_
 
 _トレース: FR-15 / NFR-05_
 
+_実装状況（U6, 2026-07-16）: コード実装済み。`SoundMatchGameController`（`Geidai.Game1`）が出題を提示し、`FrogTargetView`（お手本＝カエル）と `ChoiceItemView`（選択肢＝おたまじゃくし）を配線。タップで `IPitchVariationService.Play(cents)` 確認再生、uGUI ドラッグ＆ドロップでカエル領域に落とすと `SubmitAnswer(index)` により純粋判定（`Question.correctIndex` 比較）。領域外ドロップは元位置へ復帰。実シーン配線・意匠は Sさん（US-TECH-07）＝MCP フォローアップ。_
+
 ## US-GAME1-02 聞き分け対象の要素
 **P1**
 こども/学習者として、音色・音の高さ・強弱の違いで聴き分けたい。なぜなら、いろいろな「きく」観点を育てたいから。
@@ -207,6 +233,8 @@ _トレース: FR-15 / NFR-05_
 
 _トレース: FR-16 / 前提_
 
+_実装状況（U6, 2026-07-16）: 部分実装。今回は「音高（ピッチ）」の聴き分けを実装（`QuestionBuilder` が基準音からのセント差で選択肢を生成、`PitchVariationService` が再生時ピッチで発音）。音色・強弱・長さの本格 DSP は研究会後に拡張予定（スコープ外）。難易度はセント間隔（`DifficultyLevel.centsStep`）で段階化し `SoundMatchConfig` で調整可能な構成。_
+
 ## US-GAME1-03 正解演出
 **P1**
 こども/学習者として、正解したら嬉しい演出を見たい。なぜなら、続けたくなるから。
@@ -216,6 +244,8 @@ _トレース: FR-16 / 前提_
 - Given 不正解, When 判定される, Then 再挑戦できる（過度なペナルティなし）。
 
 _トレース: FR-17 / NFR-05_
+
+_実装状況（U6, 2026-07-16）: コード実装済み。`ResultEffectController` が正解時に `PlayCorrect()`（カエル成長スプライトを1段階進化・`growthStages`）、不正解時に `PlayRetry()`（無ペナルティで選択肢を元位置復帰・再挑戦）、終了時に `ShowResult(correct,total)` で結果サマリを提示。進行判定は Controller、演出は本コンポーネントに分離。アニメ/イラストは Sさん＝MCP フォローアップ。_
 
 ## US-GAME1-04 出題パラメータ設定
 **P2 / P1**
@@ -228,6 +258,8 @@ _トレース: FR-17 / NFR-05_
 
 _トレース: FR-18 / 前提（研究会後に細部確定）_
 
+_実装状況（U6, 2026-07-16）: コード実装済み。`SoundMatchConfig`（ScriptableObject・`[CreateAssetMenu] Geidai/Sound Match Config`）で出題数（`questionCount`）・選択肢数（`choiceCount`）・難易度段階（`difficulties`＝label＋`centsStep`）・フォールバック素材（`fallbackClip`）を Sさん がインスペクタで調整可能＝再ビルド不要。異常値はアクセサでクランプ（questionCount≥1・choiceCount≥2・centsStep≥1）。既定アセット `Assets/Settings/SoundMatchConfig.asset`（かんたん200/ふつう100/むずかしい50/とても難しい20）を MCP 生成。_
+
 ## US-GAME1-05 ユーザーの保存音を使った出題
 **P1 / P3**
 こども/学習者として、自分の保存音がゲームのお題として出てきてほしい。なぜなら、自分の音で聴き分けるのが楽しいから。
@@ -238,6 +270,8 @@ _トレース: FR-18 / 前提（研究会後に細部確定）_
 - Given 加工処理, When 実行する, Then モバイル端末で体感遅延の少ない実用的な処理時間に収まる。
 
 _トレース: FR-19 / NFR-03, NFR-06_
+
+_実装状況（U6, 2026-07-16）: コード実装済み。`SoundMatchGameController` が `IStorageService.ListSounds()`／`LoadSoundBuffer(id)` で保存音を素材に選択（seed で決定的・読込失敗は次候補・0件/全滅は `fallbackClip`→`Empty` フォールバック）。ピッチ加工は `PitchVariationService` が再生時 `AudioSource.pitch = PitchMath.CentsToRatio(cents)` を適用する軽量方式で、加工済み音声は生成・保存しない（非永続・低GC＝NFR-06）。基準 `AudioClip` はゲーム開始時に一度だけキャッシュし体感遅延を抑制。_
 
 ---
 
@@ -257,6 +291,8 @@ _トレース: FR-19 / NFR-03, NFR-06_
 
 _トレース: NFR-11_
 
+**U1 実装状況（基盤）**: ✅ 済 — `Geidai.Common.UI.ResponsiveCanvasConfigurator`（1080×1920/Match0.5）・`ScreenRootBase` 生成。実シーンへの付与は U2 以降（Unity MCP）。
+
 ## US-TECH-02 SafeArea への追従
 **P1 / P3**
 利用者として、ノッチや角丸でボタンが隠れないでほしい。（実装者として、SafeArea 追従を全画面で担保したい。）なぜなら、どの端末でも確実に操作できるようにしたいから。
@@ -267,6 +303,8 @@ _トレース: NFR-11_
 - Given 縦・横いずれの向き, When 切り替える, Then SafeArea が追従し操作要素がシステムUIに隠れない。
 
 _トレース: NFR-12（ProjectSettings: androidRenderOutsideSafeArea=1 と整合）_
+
+**U1 実装状況（基盤）**: ✅ 済 — `Geidai.Common.UI.SafeAreaFitter`（向き/解像度変更で再適用・差分間引き）生成。実シーンへの付与は U2 以降（Unity MCP）。
 
 ## US-TECH-03 録音実装の一本化
 **P3**
@@ -279,6 +317,8 @@ _トレース: NFR-12（ProjectSettings: androidRenderOutsideSafeArea=1 と整�
 
 _トレース: FR-07, NFR-08_
 
+_実装状況（U3, 2026-07-15）: コード実装済み（統合先は当初想定の `VoiceRecordingSection` ではなく、新 `Geidai.Rec` の `IAudioService` 実装＝`RecAudioService` に一本化。加工は Unity 標準 AudioFilter を `EffectChain` で適用）。重複 DSP の `RecorderWithEffects.cs` と空の `Scean.cs`（＋`.meta`）を削除（参照なしを確認済み・ビルド影響なし＝Error 0）。旧録音一式（`VoiceRecordingSection`/`WavUtility`/`MySoundCollectionStorage`/`SoundSavePaths`/`SoundEffectSettings`）は現行 Rec シーンが参照中のため、シーン再配線（MCP フォローアップ）と同時に物理削除予定。_
+
 ## US-TECH-04 Place導線の除外と遷移不具合の解消
 **P1 / P3**
 利用者として、使えない/未対応の画面に迷い込みたくない。（実装者として、画面遷移の不具合を解消したい。）なぜなら、MVPで安定した導線を提供したいから。
@@ -289,6 +329,8 @@ _トレース: FR-07, NFR-08_
 - Given 各画面遷移, When 実行する, Then 存在しない/未対応シーンへの遷移でクラッシュしない。
 
 _トレース: FR-02_
+
+**U1 実装状況（基盤）**: ✅ 済 — `SceneId`（Place 除外）＋ `INavigationService`/`NavigationService`（未定義シーンは `NotFound` 返却でクラッシュ回避）生成。シーン登録の追加は U2/U5。
 
 ## US-TECH-05 Unity MCP 経由のシーン操作を規約化
 **P3 / P2**
@@ -301,6 +343,8 @@ _トレース: FR-02_
 
 _トレース: NFR-10（変更管理）/ technology-stack.md 開発規約_
 
+**U1 実装状況（規約運用開始）**: ✅ 運用中 — Unity 公式 AI Assistant パッケージの Unity MCP Server（Cursor 上 `user-unity-mcp`）で U1 のコンパイル確認・アセット生成・スモーク検証を実施。実シーン操作は U2 以降で本格活用。
+
 ## US-TECH-06 ローカルデータの堅牢性
 **P3**
 実装者として、保存の原子性と破損時の安全処理を実装したい。なぜなら、利用者のコレクション（Critical データ）を失わせないため。
@@ -309,6 +353,8 @@ _トレース: NFR-10（変更管理）/ technology-stack.md 開発規約_
 - Given 保存処理, When 実行する, Then 原子的に書き込み（途中失敗で既存データを破損させない）。
 - Given 破損/欠損ファイル, When 読み込む, Then 安全に読み飛ばし、フォールバックする（US-COL-04 と整合）。
 - Given 重要度分類, When 定義する, Then Rec/Collection=Critical、ゲーム=High、weekly theme=Medium として扱う。
+
+_実装状況（U4, 2026-07-15）: コード実装済み。`Geidai.Services.IO.AtomicFile`（一時ファイル→`File.Replace`/`Move` による原子的置換・例外時 tmp 破棄）を新設し、`StorageService` の profile/meta/wav/写真の全書込を集約。`SaveSound` は wav→meta 順で原子的＋対整合。読込は `ListSoundsDetailed()` が破損/欠損をスキップし空フォールバック。EditMode `AtomicFileTests`/`StorageCollectionTests`（Test Runner）で担保。_
 
 _トレース: NFR-07（Resiliency R1）, RESILIENCY-01_
 
@@ -323,6 +369,8 @@ _トレース: NFR-07（Resiliency R1）, RESILIENCY-01_
 - Given 調整対象と手順, When ハンドオフする, Then 「前本＝枠組み / Sさん＝詳細調整」の分担と調整箇所が明確になっている。
 
 _トレース: 要件 §7 UI開発フロー・役割分担 / NFR-05, NFR-11, NFR-12_
+
+**U1 実装状況（基盤・調整余地）**: ✅ 済 — `UITheme`（ScriptableObject／既定アセット `Assets/Settings/UITheme_Default.asset`）＋ `ErrorPresenter` の差し替え可能フィールドを用意（Sさん 調整点）。コンテンツ差し替え（お題/パラメータ）は U5/U6。
 
 > **テスト方針（NFR-09 / PBT）**: WAV エンコード/デコード、cents↔pitch 変換、設定JSONのシリアライズ等のプロパティベーステスト（ラウンドトリップ/不変条件）は Construction フェーズ（Functional Design〜Code Generation）で具体化する。ここではストーリー化しない。
 
