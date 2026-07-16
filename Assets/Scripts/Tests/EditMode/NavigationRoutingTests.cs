@@ -8,21 +8,26 @@ namespace Geidai.Tests.EditMode
 {
     /// <summary>
     /// ナビゲーションの安全処理テスト（NFR-07 / BR-14 / nfr-design §2）。
-    /// 未登録シーンへの遷移は例外を投げず NotFound を返すことを確認する。
     /// 実シーンのロードを伴う経路は Build & Test（PlayMode）で検証する。
     /// </summary>
     public class NavigationRoutingTests
     {
         [Test]
-        public void GoTo_UnmappedScene_ReturnsNotFound()
+        public void GoTo_Theme_IsMapped_NotNotFound()
         {
             var nav = new NavigationService();
-
-            // Theme は U5 でシーン整備するまで未登録（安全に NotFound を返す）。
+            // Theme は MCP フォローアップで SceneMap 登録済み。
+            // EditMode では LoadScene が失敗して IOError になり得るが、未定義（NotFound）ではない。
             var result = nav.GoTo(SceneId.Theme);
+            Assert.AreNotEqual(ResultCode.NotFound, result.Code);
+        }
 
-            Assert.IsFalse(result.IsSuccess);
-            Assert.AreEqual(ResultCode.NotFound, result.Code);
+        [Test]
+        public void GoTo_DoesNotThrow_OnMappedScene()
+        {
+            var nav = new NavigationService();
+            Assert.DoesNotThrow(() => nav.GoTo(SceneId.Home));
+            Assert.DoesNotThrow(() => nav.GoTo(SceneId.Game1));
         }
 
         [Test]

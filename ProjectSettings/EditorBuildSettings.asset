@@ -6,28 +6,46 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/SampleScene.unity
-    guid: 8c9cfa26abfee488c85f1582747f6a02
-  - enabled: 1
     path: "Assets/Main\u753B\u9762.unity"
     guid: 49435f7037c77476a947da63c0887347
-  - enabled: 1
-    path: Assets/Home.unity
-    guid: b6dbd73e288944561891f0345f82afc4
   - enabled: 1
     path: Assets/game_Home.unity
     guid: dc7e69128e4834e01858a63f9cf78bfe
   - enabled: 1
-    path: Assets/Game01.unity
-    guid: faffe0f30658c45429aa36be3c750272
+    path: Assets/Scenes/Geidai/GeidaiHome.unity
+    guid: 8fafafaf20bee48c0aeaeade7d65ee6f
   - enabled: 1
+    path: Assets/Scenes/Geidai/GeidaiRegister.unity
+    guid: b8eb6c165483646ce91512320595faf9
+  - enabled: 1
+    path: Assets/Scenes/Geidai/GeidaiRec.unity
+    guid: ff44d8c5c8cbb452d83014bfbbdd62d7
+  - enabled: 1
+    path: Assets/Scenes/Geidai/GeidaiCollection.unity
+    guid: 897f9a69332734ad988acc3e253ce6ad
+  - enabled: 1
+    path: Assets/Scenes/Geidai/GeidaiTheme.unity
+    guid: c7d1f4b1d83f7463ebeeaba6b05234fc
+  - enabled: 1
+    path: Assets/Scenes/Geidai/GeidaiGame1.unity
+    guid: 4b8370ec59d79449eaf0f7dd251dd1ce
+  - enabled: 0
+    path: Assets/Home.unity
+    guid: b6dbd73e288944561891f0345f82afc4
+  - enabled: 0
     path: Assets/Rec.unity
     guid: 08b34d3fa72c54723ab0bb63c88a395c
-  - enabled: 1
-    path: Assets/Place.unity
-    guid: 4e16a6cd78f9946dda518280737b67db
-  - enabled: 1
+  - enabled: 0
+    path: Assets/Game01.unity
+    guid: faffe0f30658c45429aa36be3c750272
+  - enabled: 0
     path: Assets/MySoundCollection.unity
     guid: 6955a5b4db5f34a1cb992031ce5bfe7d
+  - enabled: 0
+    path: Assets/Place.unity
+    guid: 4e16a6cd78f9946dda518280737b67db
+  - enabled: 0
+    path: Assets/Scenes/SampleScene.unity
+    guid: 8c9cfa26abfee488c85f1582747f6a02
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}

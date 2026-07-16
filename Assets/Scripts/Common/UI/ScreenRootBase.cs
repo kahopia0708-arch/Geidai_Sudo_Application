@@ -17,10 +17,18 @@ namespace Geidai.Common.UI
         [Tooltip("端末バック（Android の戻る＝Escape）を購読し OnBackPressed を呼ぶ")]
         [SerializeField] protected bool listenForSystemBack = true;
 
+        [Tooltip("シーン入場時に自動で Show() する（実シーン配線用）。")]
+        [SerializeField] protected bool showOnStart = true;
+
         public bool IsVisible { get; private set; }
 
         /// <summary>戻る操作が要求されたことを通知する（上位が購読して遷移する）。</summary>
         public event Action BackRequested;
+
+        protected virtual void Start()
+        {
+            if (showOnStart && !IsVisible) Show();
+        }
 
         public virtual void Show()
         {

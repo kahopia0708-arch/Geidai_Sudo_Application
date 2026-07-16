@@ -1250,7 +1250,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 567868724}
   m_HandleRect: {fileID: 567868723}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -2330,7 +2330,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StartGameButton
   startButton: {fileID: 1315890726}
-  sceneName: Game01
+  sceneName: GeidaiGame1
+  targetScene: 6
 --- !u!1 &1349597824
 GameObject:
   m_ObjectHideFlags: 0
@@ -2521,7 +2522,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1349597826}
   m_HandleRect: {fileID: 1349597825}
   m_Direction: 0
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -2594,8 +2595,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b91f395f412b24a57b486bf0f1093cb2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SceneSwitcher
-  sceneName: Home
-  homeSceneName: Home
+  sceneName: GeidaiHome
+  homeSceneName: GeidaiHome
+  targetScene: 1
+  homeScene: 1
 --- !u!4 &1619849271
 Transform:
   m_ObjectHideFlags: 0

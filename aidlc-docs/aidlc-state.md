@@ -5,7 +5,7 @@
 - **Project Type**: Brownfield
 - **Start Date**: 2026-07-15T16:48:08+09:00
 - **Current Phase**: CONSTRUCTION
-- **Current Stage**: Build and Test（全 6 ユニット完了・テスト手順生成）
+- **Current Stage**: Build and Test Follow-up — MCP 実シーン配線（完了ゲート）
 
 ## Workspace State
 - **Existing Code**: Yes（Unity 6000.4.2f1 / URP / uGUI）
@@ -111,6 +111,7 @@
 
 ### 🟢 Build and Test（全ユニット完了後）
 - [x] Build and Test — 手順生成完了・完了ゲート提示（2026-07-16）。`aidlc-docs/construction/build-and-test/` に build-instructions / unit-test-instructions（EditMode 17本）/ integration-test-instructions（6シナリオ）/ performance-test-instructions（端末体感・負荷系は N/A）/ build-and-test-summary を生成。コンパイルは全ユニット MCP で Error0/Warn0。実ビルド・Test Runner 全件実行・実シーン E2E・端末性能計測は MCP/実機フォローアップ。承認で Operations へ。
+- [x] MCP 実シーン配線フォローアップ — 完了（2026-07-16、「Use AI-DLC, 前述の作業を実施」）。Geidai* シーン6本生成・アセット割当・NavigationService マップ更新・ブラウンフィールド導線を GoTo 接続・Build Settings 整理・WeeklyTextController 削除。summary: `build-and-test/mcp-scene-wiring-summary.md`。意匠は Sさん残。
 
 ### 🟡 OPERATIONS PHASE
 - [ ] Operations — PLACEHOLDER

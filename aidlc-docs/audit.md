@@ -666,3 +666,11 @@
 **Context**: CONSTRUCTION - Build and Test（完了・完了ゲート）
 
 ---
+
+## Construction Follow-up — MCP 実シーン配線
+**Timestamp**: 2026-07-16T10:30:00+09:00
+**User Input**: "Use AI-DLC, 前述の作業を実施"
+**AI Response**: Build and Test 残タスク（実シーン配線）を AI-DLC フォローアップとして実行。計画 `mcp-scene-wiring-plan.md` を作成し即時実行。（1）NavigationService を Geidai* シーン名＋Theme 登録に更新、NavigationRoutingTests 更新、ScreenRootBase.showOnStart 追加。（2）StartGameButton/SceneSwitcher/ReturnHomeButton/GoToRec/GoToSoundCollection を INavigationService 接続。（3）GeidaiSceneBootstrap Editor ユーティリティ作成→MCP BuildAll で GeidaiHome/Register/Rec/Collection/Theme/Game1 生成＋HomeMenuConfig/ThemeCatalog/SoundMatchConfig 割当。（4）EditorBuildSettings で新シーン有効・旧シーン無効、Main画面に AppManager 追加、フォールバック名を Geidai* に更新。（5）WeeklyTextController.cs 削除。（6）MCP 検証: シーン6/6・Theme catalog=ThemeCatalog・Game1 config=SoundMatchConfig choices=3・コンパイル Error0。summary 作成。完了ゲート提示。
+**Context**: CONSTRUCTION - Build and Test Follow-up / MCP Scene Wiring
+
+---

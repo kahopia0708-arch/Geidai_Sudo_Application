@@ -10,19 +10,20 @@ namespace Geidai.Services.Navigation
     /// <summary>
     /// SceneId → 実シーン名のマップで型安全に遷移する（FR-02）。
     /// Place は列挙に含めない＝導線から除外（BR-15）。
-    /// U2 で Register（登録シーン）・GameSelect（既存 game_Home）を登録。
-    /// Theme（weekly theme 専用画面）は U5 でシーン整備するまで未登録（NotFound を返す＝安全処理 / BR-14）。
+    /// MCP フォローアップで Geidai* シーンへ切り替え（既存ブラウンフィールド名と衝突回避）。
+    /// GameSelect は既存 game_Home を維持。Boot は既存 Main画面。
     /// </summary>
     public class NavigationService : INavigationService
     {
         private static readonly Dictionary<SceneId, string> SceneMap = new Dictionary<SceneId, string>
         {
             { SceneId.Boot, "Main画面" },
-            { SceneId.Home, "Home" },
-            { SceneId.Register, "Register" },
-            { SceneId.Rec, "Rec" },
-            { SceneId.Collection, "MySoundCollection" },
-            { SceneId.Game1, "Game01" },
+            { SceneId.Home, "GeidaiHome" },
+            { SceneId.Register, "GeidaiRegister" },
+            { SceneId.Rec, "GeidaiRec" },
+            { SceneId.Collection, "GeidaiCollection" },
+            { SceneId.Theme, "GeidaiTheme" },
+            { SceneId.Game1, "GeidaiGame1" },
             { SceneId.GameSelect, "game_Home" }
         };
 
