@@ -14,7 +14,7 @@ namespace Geidai.EditorTools
     /// </summary>
     public static class GeidaiBuildScript
     {
-        private const string DefaultAndroidOut = "Builds/Android/GeidaiSudo.apk";
+        private const string DefaultAndroidOut = "Builds/Android/Oto.apk";
         private const string DefaultIosOut = "Builds/iOS";
 
         [MenuItem("Geidai/Build/Android Development APK")]

@@ -53,12 +53,21 @@ Unity Hub からプロジェクトを開くと `Packages/manifest.json` を基�
 - 完了後 `./Logs/import.log` に `Compilation finished` 系ログが出て Error 0 であること。
 
 ### 2. 環境設定（Player Settings の確認）
-- **画面向き**: 縦・横 両対応（Auto Rotation：Portrait / Portrait Upside Down / Landscape Left / Landscape Right を有効）※要件 NFR: 両対応
-- **解像度対応**: 各シーンの `Canvas` に `ResponsiveCanvasConfigurator`（`CanvasScaler`）＋ `SafeAreaFitter` が付与されていること（端末差の破綻防止・Safe Area 確保）
-- **マイク使用許諾**:
-  - iOS: `Microphone Usage Description`（`NSMicrophoneUsageDescription`）に子ども向け説明文を設定
-  - Android: `RECORD_AUDIO` 権限（録音時に `MicPermissionGate` が要求）
-- **バックエンド設定**: なし（オフライン）
+| 項目 | 値 |
+|---|---|
+| Product Name（表示名） | `おと` |
+| Company Name | `Geidai` |
+| Package / Bundle ID | `jp.geidai.sudo.oto`（Android / iOS / Standalone 共通） |
+| Version | `0.1.0`（プロトタイプ） |
+| Android `versionCode` | `1` |
+| iOS Build Number | `1` |
+| 画面向き | Auto Rotation（縦/縦逆/横左/横右） |
+| iOS マイク説明 | 子ども向け文言設定済 |
+| Android 権限 | インターネット強制オフ（オフライン）。マイクは実行時要求 |
+
+> 正式研究タイトルは「音」から始まる、耳のためのアプリケーションの考案。ホーム画面向けに表示名は短縮。ストア公開時の表示名変更は要相談。
+
+Build Profiles: `Assets/Settings/Build Profiles/{Android,iOS,macOS}.asset`
 
 ### 3. Build Settings（シーン登録）の確認
 有効シーン（MCP 配線後）:
@@ -80,7 +89,7 @@ CLI（Android Development APK 例）:
   -executeMethod Geidai.EditorTools.GeidaiBuildScript.BuildAndroidDevelopment \
   -logFile ./Logs/build-android.log
 ```
-- 出力: `Builds/Android/GeidaiSudo.apk`（Development・デバッグ署名）
+- 出力: `Builds/Android/Oto.apk`（Development・デバッグ署名）
 - ストア用本番署名・iOS Team 設定は手動（`device-verification-checklist.md` 参照）
 
 ### 5. ビルド成功の確認

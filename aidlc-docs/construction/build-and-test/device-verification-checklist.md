@@ -19,7 +19,8 @@
 | 解像度 | `ResponsiveCanvasConfigurator` + CanvasScaler | ✅ シーン骨組み |
 | Android minSdk | 25 / ARM64 | ✅ |
 | iOS target | 15.0 | ✅ |
-| 製品名 / Bundle ID | 現状 `application01` / DefaultCompany | ⚠️ 配布前に要リネーム（任意） |
+| 製品名 / Bundle ID | `おと` / `jp.geidai.sudo.oto` | ✅ 設定済（2026-07-16） |
+| Version | `0.1.0` / Android code `1` / iOS build `1` | ✅ |
 
 ---
 
@@ -72,7 +73,8 @@ CLI: `-executeMethod Geidai.EditorTools.GeidaiBuildScript.BuildIosXcode`（`-bui
 |---|---|---|
 | Android keystore / alias | ユーザー | Player Settings > Publishing Settings |
 | iOS Provisioning / Team | ユーザー | Xcode Signing & Capabilities |
-| Bundle ID / 製品名変更 | 要相談 | 現状は仮名 |
+| Bundle ID / 製品名変更 | 済（`jp.geidai.sudo.oto` / `おと`） | ストア用キーストア・Apple Team は手動 |
+| Android Development APK | `Geidai/Build/Android Development APK` | 出力 `Builds/Android/Oto.apk` |
 
 ---
 
@@ -98,7 +100,8 @@ CLI: `-executeMethod Geidai.EditorTools.GeidaiBuildScript.BuildIosXcode`（`-bui
 ### ビルド記録
 | 日時 | 成果物 | 結果 |
 |---|---|---|
-| 2026-07-16 | `Builds/Android/GeidaiSudo.apk`（約97MB・Development） | ✅ 成功 |
+| 2026-07-16 | `Builds/Android/GeidaiSudo.apk`（約97MB・Development・旧名） | ✅ 成功（リネーム前） |
+| — | `Builds/Android/Oto.apk`（新パッケージ `jp.geidai.sudo.oto`） | ⏳ 再ビルド推奨 |
 | — | iOS Xcode (`Builds/iOS/`) | ⏳ 未（Apple Team + Metal Toolchain 要確認） |
 
 ---

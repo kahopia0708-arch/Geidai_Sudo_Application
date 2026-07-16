@@ -722,3 +722,11 @@
 **Context**: CONSTRUCTION - device verification / EditMode / Android APK
 
 ---
+
+## Construction Follow-up — ビルド用 Player Settings
+**Timestamp**: 2026-07-16T12:16:00+09:00
+**User Input**: "iOS/ Androidのビルドプロファイルを追加した\nアプリ名、パッケージ名などビルドのた目に必要なプロジェクト設定を実施して"
+**AI Response**: Player Settings を設定: 表示名=`おと`、Company=`Geidai`、Package=`jp.geidai.sudo.oto`（Android/iOS/Standalone）、Version=`0.1.0`、Android versionCode=1、iOS build=1、マイク説明維持、向き AutoRotation、Android インターネット強制オフ。Build Profile `Android™`→`Android` にリネーム。docs/BuildScript 出力名を Oto.apk に更新。
+**Context**: CONSTRUCTION - Player Settings for Android/iOS builds
+
+---
