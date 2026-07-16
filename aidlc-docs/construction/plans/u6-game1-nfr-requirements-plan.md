@@ -12,9 +12,11 @@
 ---
 
 ## A. 実行チェックリスト（Part 2 で実行）
-- [ ] `../u6-game1/nfr-requirements/nfr-requirements.md` を生成（U6 の NFR 目標・受入可能値）
-- [ ] `../u6-game1/nfr-requirements/tech-stack-decisions.md` を生成（U6 の技術選定差分・根拠）
-- [ ] 要件（NFR-03/04/05/06/07/08/09/11/12 / FR-15〜19）・ストーリー（US-GAME1-01〜05 / US-TECH-07）とのトレース整合を確認
+- [x] `../u6-game1/nfr-requirements/nfr-requirements.md` を生成（U6 の NFR 目標・受入可能値）
+- [x] `../u6-game1/nfr-requirements/tech-stack-decisions.md` を生成（U6 の技術選定差分・根拠）
+- [x] 要件（NFR-03/04/05/06/07/08/09/11/12 / FR-15〜19）・ストーリー（US-GAME1-01〜05 / US-TECH-07）とのトレース整合を確認
+
+> **回答**: Q1〜Q6＝すべて A（推奨）。矛盾なし。Part 2 実行済み（2026-07-16）。
 
 ## B. 前提（U1〜U5 で確定済み・U6 も踏襲。原則 再質問しない）
 - **プラットフォーム**（NFR-01）: iOS 15+ / Android 8.0(API26)+、スマホ〜タブレット、縦横両対応。
@@ -54,7 +56,7 @@ C) 具体数値は設定せず「体感で引っかからない」を定性目�
 
 D) Other（[Answer]: の後に記述）
 
-[Answer]:
+[Answer]:A
 
 ## Question 2（一時素材の扱い・メモリ/GC / NFR-06・FR-19）
 生成/加工した出題音の扱いは？
@@ -65,7 +67,7 @@ B) 出題ごとに加工済みバッファを生成し、問題終了で破棄�
 
 C) Other（[Answer]: の後に記述）
 
-[Answer]:
+[Answer]:A
 
 ## Question 3（出題の決定性・堅牢性 / NFR-07・US-GAME1-05）
 出題生成の受入基準と素材欠落時の扱いは？
@@ -76,7 +78,7 @@ B) 出題はランダム（決定性を担保しない）。堅牢性は最小�
 
 C) Other（[Answer]: の後に記述）
 
-[Answer]:
+[Answer]:A
 
 ## Question 4（テスト容易性 / NFR-09・PBT）
 U6 の検証方針は？
@@ -87,7 +89,7 @@ B) PBT は行わず、単体テストと手動確認のみ。
 
 C) Other（[Answer]: の後に記述）
 
-[Answer]:
+[Answer]:A
 
 ## Question 5（保守性・アセンブリ/配置 / NFR-08・NFR-10）
 U6 の実装配置と既存ゲーム選択 UI の扱いは？
@@ -98,7 +100,7 @@ B) `Geidai.Game1` を作らず既存 Assembly-CSharp に実装（アセンブリ
 
 C) Other（[Answer]: の後に記述）
 
-[Answer]:
+[Answer]:A
 
 ## Question 6（プライバシー / NFR-04）
 保存音を素材に使う際の扱いは？
@@ -107,7 +109,7 @@ A) (推奨) 出題素材は端末内の保存音（`persistentDataPath`）のみ
 
 B) Other（[Answer]: の後に記述）
 
-[Answer]:
+[Answer]:A
 
 ---
 

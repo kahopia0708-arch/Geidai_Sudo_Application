@@ -594,3 +594,11 @@
 **Context**: CONSTRUCTION - U6 Game①音合わせ / NFR Requirements（Part 1: Planning）
 
 ---
+
+## Construction U6 NFR Requirements Part1 回答 → Part2 生成
+**Timestamp**: 2026-07-16T09:11:00+09:00
+**User Input**: "done"
+**AI Response**: U6 NFR Requirements Plan の Q1〜Q6 を全て推奨（A）で確定。Q1=再生時ピッチでタップ確認 体感即時(<0.1s)・出題生成 O(n)・60fps・基準音キャッシュ／Q2=加工音は非保存・低GC・基準バッファはゲーム中のみ・連打差替／Q3=純粋 QuestionBuilder 決定的・正解1つ/距離・0件は fallback→フォールバック表示／Q4=QuestionBuilder PBT＋Config クランプ＋PitchMath 委譲／Q5=新 Geidai.Game1・純粋/SO/型は Common.Game・PitchVariationService は Services.Audio・保存音は IStorageService（Collection 非依存）・既存ゲーム選択 UI 残置／Q6=端末内保存音のみ・加工音/進行 非保存・外部送信なし・PII 非ログ。矛盾なし。Part 2 で nfr-requirements.md / tech-stack-decisions.md を生成。
+**Context**: CONSTRUCTION - U6 Game①音合わせ / NFR Requirements（Part 2 生成）
+
+---

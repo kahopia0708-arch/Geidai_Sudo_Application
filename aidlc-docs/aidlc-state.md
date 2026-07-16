@@ -100,7 +100,7 @@
 #### U6 Game①音合わせ（進行中）
 - [x] Functional Design — Part1 計画作成・承認済み（2026-07-16、"done"＝全て推奨A）。新 `Geidai.Game1`（SoundMatchGameController/ChoiceItemView/QuestionBuilder[純粋]/ResultEffectController/SoundMatchConfig[SO]）＋`PitchVariationService`（Services・再生時 pitch・非保存）。保存音は StorageService 取得（Collection 非依存）。難易度＝セント段階。
 - [x] Functional Design — Part2 生成完了（2026-07-16）。domain-entities（SoundMatchConfig[SO]/DifficultyLevel/ChoiceSpec/Question/GameSession/PitchVariation）／business-logic-model（開始→素材選択→出題生成→タップ確認→ドラッグ解答→判定→演出→進行・Mermaid）／business-rules（BR-GAME1-01〜63：素材選択・出題制約[正解1つ/距離]・非保存再生時ピッチ・難易度クランプ・判定・再挑戦・一方向依存）／frontend-components（SoundMatchGameController/ChoiceItemView/FrogTargetView/ResultEffectController・状態・Sさん ハンドオフ・MCP フォローアップ）。**承認ゲート提示中**。
-- [~] NFR Requirements — Part1 計画作成・回答待ち（2026-07-16）。U1〜U5 横断決定を踏襲し U6 固有差分（リアルタイムピッチ加工の応答性[NFR-03/06]・非保存/一時素材の扱い・出題の決定性/PBT・`Geidai.Game1`/`PitchVariationService` 配置）を確定予定。
+- [x] NFR Requirements — Part1 計画作成・承認済み（2026-07-16、"done"＝全て推奨A）＋Part2 生成完了。nfr-requirements（NFR-U6-01 再生時ピッチ 体感即時/出題 O(n)/60fps・02 加工音 非保存/低GC・03 純粋 QuestionBuilder 決定的/正解1つ・距離/0件 fallback・04 QuestionBuilder PBT＋Config クランプ＋PitchMath 委譲・05 新 Geidai.Game1/純粋・SO は Common.Game/PitchVariationService は Services.Audio/保存音は IStorageService[Collection 非依存]・06 端末内・非保存・PII 非ログ）／tech-stack-decisions（再生時 pitch・純粋 QuestionBuilder・SoundMatchConfig SO・uGUI ドラッグ・既存ゲーム選択 UI 残置）。**承認ゲート提示中**。
 - [ ] NFR Design
 - [ ] Infrastructure Design（SKIP 予定・完全オフライン）
 - [ ] Code Generation
