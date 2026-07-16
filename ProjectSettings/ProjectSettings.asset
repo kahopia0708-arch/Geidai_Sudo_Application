@@ -489,6 +489,12 @@ PlayerSettings:
   - m_BuildTarget: Standalone
     m_StaticBatching: 1
     m_DynamicBatching: 0
+  - m_BuildTarget: iPhone
+    m_StaticBatching: 1
+    m_DynamicBatching: 0
+  - m_BuildTarget: Android
+    m_StaticBatching: 1
+    m_DynamicBatching: 0
   m_BuildTargetShaderSettings: []
   m_BuildTargetGraphicsJobs: []
   m_BuildTargetGraphicsJobMode: []
@@ -884,11 +890,11 @@ PlayerSettings:
   activeInputHandler: 1
   windowsGamepadBackendHint: 0
   enableDirectStorage: 0
-  cloudProjectId: 6e0cd85c-9a07-4fb3-b256-b0bfa057be59
+  cloudProjectId: 
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: application01 2026-04-23_18-00-20
-  organizationId: kahopia0708
+  projectName: 
+  organizationId: 
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
   hmiLoadingImage: {fileID: 0}
