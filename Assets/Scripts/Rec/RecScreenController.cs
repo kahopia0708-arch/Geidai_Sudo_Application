@@ -128,16 +128,16 @@ namespace Geidai.Rec
             savePrompt.Save(_recorded, effectPanel != null ? effectPanel.CurrentSettings : null);
         }
 
-        /// <summary>戻る/システムバック：未保存録音があれば破棄確認、なければホームへ。</summary>
+        /// <summary>戻る/システムバック：未保存録音があれば破棄確認、なければ直前画面へ（お題→録音ならお題）。</summary>
         public override void OnBackPressed()
         {
             bool hasUnsaved = _state == RecordingState.Recorded || _state == RecordingState.Playing;
             if (hasUnsaved && confirmDialog != null)
             {
-                confirmDialog.Show("かくにん", "ほぞんしないで もどる？", NavigateHome);
+                confirmDialog.Show("かくにん", "ほぞんしないで もどる？", NavigateBack);
                 return;
             }
-            NavigateHome();
+            NavigateBack();
         }
 
         // --- controller events ---
@@ -197,22 +197,25 @@ namespace Geidai.Rec
                     RecordingState.Recorded => "できたよ。「さいせい」か「ほぞん」してね",
                     RecordingState.Playing => "さいせいちゅう…",
                     RecordingState.Saving => "ほぞんちゅう…",
-                    RecordingState.Saved => "ほぞんしたよ。ホームに もどれるよ",
+                    RecordingState.Saved => "ほぞんしたよ。もどれるよ",
                     RecordingState.NoMic => "マイクを つかえないよ",
                     _ => statusText.text
                 };
             }
         }
 
-        private void NavigateHome()
+        /// <summary>直前画面へ戻る。履歴が無い場合のみホームへ（ホーム直遷移の録音など）。</summary>
+        private void NavigateBack()
         {
             if (_nav == null)
-            {
                 _nav = ServiceRegistry.Resolve<INavigationService>();
-            }
             if (_nav == null) return;
 
-            var result = _nav.GoTo(SceneId.Home);
+            var result = _nav.GoBack();
+            if (result.IsSuccess) return;
+
+            // 戻り先なし／失敗時はホームへフォールバック（U2 NFR: GoBack → Home）
+            result = _nav.GoTo(SceneId.Home);
             if (!result.IsSuccess && errorPresenter != null)
                 errorPresenter.ShowFromResult(result);
         }
