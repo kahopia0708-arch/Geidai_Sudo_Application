@@ -27,6 +27,8 @@ namespace Geidai.Game1
         private RectTransform _parentRt;
         private Canvas _canvas;
         private Vector2 _originalPos;
+        /// <summary>親ローカル空間での「ポインタ − ブロック位置」。掴んだ点を維持する。</summary>
+        private Vector2 _dragOffset;
 
         public int Index => _index;
         public int Cents => _spec.cents;
@@ -69,14 +71,21 @@ namespace Geidai.Game1
             if (_rt != null) _originalPos = _rt.anchoredPosition;
             if (canvasGroup != null) canvasGroup.blocksRaycasts = false;
             if (_rt != null) _rt.SetAsLastSibling();
+
+            // 掴んだ位置からの相対オフセットを保持（中心へジャンプしない）
+            _dragOffset = Vector2.zero;
+            if (_rt != null && _parentRt != null &&
+                TryPointerInParent(eventData, out Vector2 local))
+            {
+                _dragOffset = local - _rt.anchoredPosition;
+            }
         }
 
         public void OnDrag(PointerEventData eventData)
         {
             if (_rt == null || _parentRt == null) return;
-            Camera cam = _canvas != null ? _canvas.worldCamera : null;
-            if (RectTransformUtility.ScreenPointToLocalPointInRectangle(_parentRt, eventData.position, cam, out Vector2 local))
-                _rt.anchoredPosition = local;
+            if (TryPointerInParent(eventData, out Vector2 local))
+                _rt.anchoredPosition = local - _dragOffset;
         }
 
         public void OnEndDrag(PointerEventData eventData)
@@ -90,6 +99,13 @@ namespace Geidai.Game1
         public void ResetPosition()
         {
             if (_rt != null) _rt.anchoredPosition = _originalPos;
+        }
+
+        private bool TryPointerInParent(PointerEventData eventData, out Vector2 local)
+        {
+            Camera cam = _canvas != null ? _canvas.worldCamera : null;
+            return RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                _parentRt, eventData.position, cam, out local);
         }
     }
 }
