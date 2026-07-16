@@ -586,3 +586,11 @@
 **Context**: CONSTRUCTION - U6 Game①音合わせ / Functional Design（Part 2 生成）
 
 ---
+
+## Construction U6 Functional Design 完了ゲート → NFR Requirements Part1
+**Timestamp**: 2026-07-16T09:07:00+09:00
+**User Input**: "Continue to Next Stage"
+**AI Response**: U6 Functional Design（Part 2）完了を承認（commit 8caed75）。domain-entities/business-logic-model/business-rules/frontend-components を確定。次段階 U6 NFR Requirements（Part 1: 計画・質問）へ移行。aidlc-state.md 更新、u6-game1-nfr-requirements-plan.md を作成し Q1〜Q6 を提示（推奨A）。U1〜U5 の横断決定を踏襲し U6 固有差分（リアルタイムピッチ加工の性能・非保存/一時素材の扱い・出題の決定性/PBT・`Geidai.Game1`/`PitchVariationService` 配置）を確定する方針。
+**Context**: CONSTRUCTION - U6 Game①音合わせ / NFR Requirements（Part 1: Planning）
+
+---
