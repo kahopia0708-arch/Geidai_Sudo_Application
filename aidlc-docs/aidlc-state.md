@@ -94,8 +94,11 @@
 - [x] Code Generation — Part1 詳細計画（Step0〜13）作成・承認済み（2026-07-16、"Continue"）。
 - [x] Code Generation — Part2 生成完了（Step0〜13 全 [x]）・完了ゲート提示（2026-07-16）。`Geidai.Common.Content`（ThemeItem/ThemeCatalog[SO・CreateAssetMenu・SetItems]/ThemeSelector[純粋・PBT]）／`Geidai.Services.Content`（IContentService 後方互換拡張[GetCurrentTheme/SetCatalog]・ContentService 本実装[時刻注入・空/無効は NotFound]・ThemeContext[非永続]）／新 `Geidai.Theme`（Geidai.Theme.asmdef[Rec 非依存]・ThemeBootstrap・WeeklyThemeController[再利用]・WeeklyThemeScreenController[ScreenRootBase]）。EditMode テスト2種（ThemeSelector PBT/ContentServiceTheme 単体）。公式 Unity MCP でコンパイル Error 0/Warning 0・ThemeSelector/ContentService スモーク PASS・既定 ThemeCatalog.asset（13 オノマトペ）を Assets/Settings に生成。旧 WeeklyTextController は残置（シーン差替後削除）。実シーン配線・Home バナー/Rec お題ラベル・Build Settings 登録は MCP フォローアップ（code-summary §8）。
 
-#### U6（未着手）
-- [ ] per-unit ループ
+#### U5 weekly theme — 完了ゲート
+- [x] Code Generation 完了ゲート承認（2026-07-16、"Continue to Next Stage"）。commit 81ee129。per-unit ループ完了。
+
+#### U6 Game①音合わせ（進行中）
+- [~] Functional Design — Part1 計画作成・回答待ち（2026-07-16）。新 `Geidai.Game1`（SoundMatchGameController/ChoiceItemView/QuestionBuilder[純粋]/ResultEffectController/SoundMatchConfig[SO]）＋`PitchVariationService`（Services・再生時 pitch・非保存）。保存音は StorageService 取得（Collection 非依存）。難易度＝セント段階。
 
 ### 🟢 Build and Test（全ユニット完了後）
 - [ ] Build and Test — EXECUTE
