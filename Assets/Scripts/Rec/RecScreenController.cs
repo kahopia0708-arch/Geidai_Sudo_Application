@@ -28,6 +28,7 @@ namespace Geidai.Rec
         [SerializeField] private Button playButton;
         [SerializeField] private Button saveButton;
         [SerializeField] private Button backButton;
+        [SerializeField] private Text statusText;
         [SerializeField] private ErrorPresenter errorPresenter;
         [SerializeField] private ConfirmDialog confirmDialog;
 
@@ -186,6 +187,21 @@ namespace Geidai.Rec
             if (recordedPanel != null) recordedPanel.SetActive(canPlayOrSave);
             if (savedIndicator != null) savedIndicator.SetActive(next == RecordingState.Saved);
             if (noMicPanel != null) noMicPanel.SetActive(next == RecordingState.NoMic);
+
+            if (statusText != null)
+            {
+                statusText.text = next switch
+                {
+                    RecordingState.Idle => "「ろくおん」を おしてね（3びょう）",
+                    RecordingState.Recording => "ろくおんちゅう…",
+                    RecordingState.Recorded => "できたよ。「さいせい」か「ほぞん」してね",
+                    RecordingState.Playing => "さいせいちゅう…",
+                    RecordingState.Saving => "ほぞんちゅう…",
+                    RecordingState.Saved => "ほぞんしたよ。ホームに もどれるよ",
+                    RecordingState.NoMic => "マイクを つかえないよ",
+                    _ => statusText.text
+                };
+            }
         }
 
         private void NavigateHome()

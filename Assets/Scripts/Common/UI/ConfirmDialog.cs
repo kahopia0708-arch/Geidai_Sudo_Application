@@ -42,7 +42,11 @@ namespace Geidai.Common.UI
 
             if (titleText != null) titleText.text = title;
             if (messageText != null) messageText.text = message;
-            if (root != null) root.SetActive(true);
+            if (root != null)
+            {
+                root.transform.SetAsLastSibling();
+                root.SetActive(true);
+            }
 
             if (noButton != null) noButton.Select();
         }

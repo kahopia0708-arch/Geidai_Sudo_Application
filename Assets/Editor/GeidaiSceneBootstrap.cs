@@ -192,12 +192,126 @@ namespace Geidai.EditorTools
             var rt = go.GetComponent<RectTransform>();
             rt.sizeDelta = size;
             var img = go.GetComponent<Image>();
-            img.color = new Color(0.3f, 0.55f, 0.45f, 1f);
+            var normal = new Color(0.22f, 0.55f, 0.42f, 1f);
+            img.color = normal;
             var btn = go.GetComponent<Button>();
+            btn.transition = Selectable.Transition.ColorTint;
+            var colors = btn.colors;
+            colors.normalColor = Color.white;
+            colors.highlightedColor = new Color(1.15f, 1.15f, 1.15f, 1f);
+            colors.pressedColor = new Color(0.75f, 0.75f, 0.75f, 1f);
+            colors.selectedColor = Color.white;
+            colors.disabledColor = new Color(0.6f, 0.6f, 0.6f, 0.55f);
+            colors.colorMultiplier = 1f;
+            colors.fadeDuration = 0.08f;
+            btn.colors = colors;
+            btn.targetGraphic = img;
             var labelText = CreateText(go.transform, "Label", label, 28, TextAnchor.MiddleCenter);
             StretchFull(labelText.rectTransform);
             labelText.color = Color.white;
+            labelText.raycastTarget = false;
             return btn;
+        }
+
+        /// <summary>実行時にホームへ戻るコンポーネントを付ける（Edit 時の onClick はシーンに残らないため）。</summary>
+        private static void AttachBackToHome(Button back, ErrorPresenter error)
+        {
+            var bridge = back.gameObject.GetComponent<BackToHomeButton>();
+            if (bridge == null) bridge = back.gameObject.AddComponent<BackToHomeButton>();
+            var so = new SerializedObject(bridge);
+            so.FindProperty("button").objectReferenceValue = back;
+            so.FindProperty("errorPresenter").objectReferenceValue = error;
+            so.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        /// <summary>uGUI Dropdown の必須 Template（Toggle 付き）を生成する。</summary>
+        private static Dropdown CreateDropdown(Transform parent, string name, Vector2 size)
+        {
+            var root = new GameObject(name, typeof(RectTransform), typeof(Image), typeof(Dropdown));
+            root.transform.SetParent(parent, false);
+            var rootRt = root.GetComponent<RectTransform>();
+            rootRt.sizeDelta = size;
+            root.GetComponent<Image>().color = Color.white;
+
+            var caption = CreateText(root.transform, "Label", "えらんでね", 28, TextAnchor.MiddleCenter);
+            StretchFull(caption.rectTransform);
+            caption.color = Color.black;
+
+            // Template hierarchy (Unity Dropdown 必須)
+            var template = new GameObject("Template", typeof(RectTransform), typeof(Image), typeof(ScrollRect));
+            template.transform.SetParent(root.transform, false);
+            var templateRt = template.GetComponent<RectTransform>();
+            templateRt.anchorMin = new Vector2(0f, 0f);
+            templateRt.anchorMax = new Vector2(1f, 0f);
+            templateRt.pivot = new Vector2(0.5f, 1f);
+            templateRt.sizeDelta = new Vector2(0f, 280f);
+            templateRt.anchoredPosition = Vector2.zero;
+            template.GetComponent<Image>().color = new Color(0.95f, 0.95f, 0.95f, 1f);
+
+            var viewport = new GameObject("Viewport", typeof(RectTransform), typeof(Image), typeof(Mask));
+            viewport.transform.SetParent(template.transform, false);
+            StretchFull(viewport.GetComponent<RectTransform>());
+            viewport.GetComponent<Image>().color = Color.white;
+            viewport.GetComponent<Mask>().showMaskGraphic = false;
+
+            var content = new GameObject("Content", typeof(RectTransform));
+            content.transform.SetParent(viewport.transform, false);
+            var contentRt = content.GetComponent<RectTransform>();
+            contentRt.anchorMin = new Vector2(0f, 1f);
+            contentRt.anchorMax = new Vector2(1f, 1f);
+            contentRt.pivot = new Vector2(0.5f, 1f);
+            contentRt.sizeDelta = new Vector2(0f, 56f);
+
+            var item = new GameObject("Item", typeof(RectTransform), typeof(Toggle), typeof(Image));
+            item.transform.SetParent(content.transform, false);
+            var itemRt = item.GetComponent<RectTransform>();
+            itemRt.anchorMin = new Vector2(0f, 0.5f);
+            itemRt.anchorMax = new Vector2(1f, 0.5f);
+            itemRt.sizeDelta = new Vector2(0f, 48f);
+            item.GetComponent<Image>().color = new Color(0.9f, 0.95f, 0.9f, 1f);
+
+            var itemBg = new GameObject("Item Background", typeof(RectTransform), typeof(Image));
+            itemBg.transform.SetParent(item.transform, false);
+            StretchFull(itemBg.GetComponent<RectTransform>());
+            itemBg.GetComponent<Image>().color = new Color(0.85f, 0.9f, 0.85f, 1f);
+
+            var check = new GameObject("Item Checkmark", typeof(RectTransform), typeof(Image));
+            check.transform.SetParent(item.transform, false);
+            var checkRt = check.GetComponent<RectTransform>();
+            checkRt.anchorMin = new Vector2(0f, 0.5f);
+            checkRt.anchorMax = new Vector2(0f, 0.5f);
+            checkRt.sizeDelta = new Vector2(28f, 28f);
+            checkRt.anchoredPosition = new Vector2(24f, 0f);
+            check.GetComponent<Image>().color = new Color(0.2f, 0.5f, 0.3f, 1f);
+
+            var itemLabel = CreateText(item.transform, "Item Label", "Option", 26, TextAnchor.MiddleLeft);
+            var itemLabelRt = itemLabel.rectTransform;
+            itemLabelRt.anchorMin = Vector2.zero;
+            itemLabelRt.anchorMax = Vector2.one;
+            itemLabelRt.offsetMin = new Vector2(48f, 2f);
+            itemLabelRt.offsetMax = new Vector2(-8f, -2f);
+            itemLabel.color = Color.black;
+
+            var toggle = item.GetComponent<Toggle>();
+            toggle.targetGraphic = itemBg.GetComponent<Image>();
+            toggle.graphic = check.GetComponent<Image>();
+            toggle.isOn = true;
+
+            var scroll = template.GetComponent<ScrollRect>();
+            scroll.content = contentRt;
+            scroll.viewport = viewport.GetComponent<RectTransform>();
+            scroll.horizontal = false;
+            scroll.vertical = true;
+            scroll.movementType = ScrollRect.MovementType.Clamped;
+
+            var dropdown = root.GetComponent<Dropdown>();
+            dropdown.targetGraphic = root.GetComponent<Image>();
+            dropdown.captionText = caption;
+            dropdown.itemText = itemLabel;
+            dropdown.template = templateRt;
+            template.SetActive(false);
+
+            return dropdown;
         }
 
         private static ErrorPresenter CreateErrorPresenter(Transform parent)
@@ -339,28 +453,34 @@ namespace Geidai.EditorTools
             var nicknameGo = new GameObject("Nickname", typeof(RectTransform), typeof(Image), typeof(InputField));
             nicknameGo.transform.SetParent(content, false);
             var nickRt = nicknameGo.GetComponent<RectTransform>();
-            nickRt.sizeDelta = new Vector2(600, 80);
-            nickRt.anchoredPosition = new Vector2(0, 200);
+            nickRt.anchorMin = new Vector2(0.5f, 0.55f);
+            nickRt.anchorMax = new Vector2(0.5f, 0.55f);
+            nickRt.sizeDelta = new Vector2(640, 80);
+            nickRt.anchoredPosition = Vector2.zero;
+            nicknameGo.GetComponent<Image>().color = Color.white;
             var nickInput = nicknameGo.GetComponent<InputField>();
             var nickText = CreateText(nicknameGo.transform, "Text", "", 28, TextAnchor.MiddleLeft);
             StretchFull(nickText.rectTransform);
+            nickText.color = Color.black;
             nickInput.textComponent = nickText;
+            nickInput.placeholder = CreateText(nicknameGo.transform, "Placeholder", "ニックネーム（1〜8）", 26, TextAnchor.MiddleLeft);
+            StretchFull(((Text)nickInput.placeholder).rectTransform);
+            ((Text)nickInput.placeholder).color = new Color(0.5f, 0.5f, 0.5f, 0.8f);
 
-            var dropdownGo = new GameObject("BirthYear", typeof(RectTransform), typeof(Image), typeof(Dropdown));
-            dropdownGo.transform.SetParent(content, false);
-            var ddRt = dropdownGo.GetComponent<RectTransform>();
-            ddRt.sizeDelta = new Vector2(600, 80);
-            ddRt.anchoredPosition = new Vector2(0, 320);
-            var dropdown = dropdownGo.GetComponent<Dropdown>();
-            var caption = CreateText(dropdownGo.transform, "Label", "うまれたとし", 28, TextAnchor.MiddleCenter);
-            StretchFull(caption.rectTransform);
-            dropdown.captionText = caption;
+            var dropdown = CreateDropdown(content, "BirthYear", new Vector2(640, 80));
+            var ddRt = dropdown.GetComponent<RectTransform>();
+            ddRt.anchorMin = new Vector2(0.5f, 0.68f);
+            ddRt.anchorMax = new Vector2(0.5f, 0.68f);
+            ddRt.anchoredPosition = Vector2.zero;
 
             var submit = CreateButton(content, "Submit", "けってい", new Vector2(280, 90));
-            submit.GetComponent<RectTransform>().anchoredPosition = new Vector2(-160, -100);
+            AnchorBottom(submit.GetComponent<RectTransform>(), 90f, 160f);
+            submit.GetComponent<RectTransform>().anchoredPosition = new Vector2(-160f, 160f);
             var cancel = CreateButton(content, "Cancel", "もどる", new Vector2(280, 90));
-            cancel.GetComponent<RectTransform>().anchoredPosition = new Vector2(160, -100);
+            AnchorBottom(cancel.GetComponent<RectTransform>(), 90f, 160f);
+            cancel.GetComponent<RectTransform>().anchoredPosition = new Vector2(160f, 160f);
             var error = CreateErrorPresenter(content);
+            // cancel は UserRegistrationScreenController が OnCancel→GoHome を結線する
 
             var screenGo = new GameObject("RegisterScreen", typeof(UserRegistrationScreenController));
             screenGo.transform.SetParent(shell.canvas.transform, false);
@@ -386,14 +506,26 @@ namespace Geidai.EditorTools
             var title = CreateText(content, "Title", "ろくおん", 48, TextAnchor.MiddleCenter);
             AnchorTopBand(title.rectTransform, 100f, 32f);
 
-            var recordBtn = CreateButton(content, "Record", "ろくおん", new Vector2(280, 90));
-            recordBtn.GetComponent<RectTransform>().anchoredPosition = new Vector2(-200, 200);
-            var playBtn = CreateButton(content, "Play", "さいせい", new Vector2(280, 90));
-            playBtn.GetComponent<RectTransform>().anchoredPosition = new Vector2(200, 200);
-            var saveBtn = CreateButton(content, "Save", "ほぞん", new Vector2(280, 90));
-            saveBtn.GetComponent<RectTransform>().anchoredPosition = new Vector2(-200, 50);
+            var status = CreateText(content, "Status", "「ろくおん」を おしてね（3びょう）", 28, TextAnchor.MiddleCenter);
+            status.rectTransform.anchorMin = new Vector2(0.05f, 0.72f);
+            status.rectTransform.anchorMax = new Vector2(0.95f, 0.82f);
+            status.rectTransform.offsetMin = Vector2.zero;
+            status.rectTransform.offsetMax = Vector2.zero;
+
+            var recordBtn = CreateButton(content, "Record", "ろくおん", new Vector2(300, 100));
+            recordBtn.GetComponent<RectTransform>().anchorMin = new Vector2(0.5f, 0.55f);
+            recordBtn.GetComponent<RectTransform>().anchorMax = new Vector2(0.5f, 0.55f);
+            recordBtn.GetComponent<RectTransform>().anchoredPosition = new Vector2(-170f, 0f);
+            var playBtn = CreateButton(content, "Play", "さいせい", new Vector2(300, 100));
+            playBtn.GetComponent<RectTransform>().anchorMin = new Vector2(0.5f, 0.55f);
+            playBtn.GetComponent<RectTransform>().anchorMax = new Vector2(0.5f, 0.55f);
+            playBtn.GetComponent<RectTransform>().anchoredPosition = new Vector2(170f, 0f);
+            var saveBtn = CreateButton(content, "Save", "ほぞん", new Vector2(300, 100));
+            saveBtn.GetComponent<RectTransform>().anchorMin = new Vector2(0.5f, 0.42f);
+            saveBtn.GetComponent<RectTransform>().anchorMax = new Vector2(0.5f, 0.42f);
+            saveBtn.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
             var backBtn = CreateButton(content, "Back", "もどる", new Vector2(280, 90));
-            backBtn.GetComponent<RectTransform>().anchoredPosition = new Vector2(200, 50);
+            AnchorBottom(backBtn.GetComponent<RectTransform>(), 90f, 48f);
 
             var recording = new GameObject("RecordingControllerHost");
             recording.transform.SetParent(content, false);
@@ -409,6 +541,7 @@ namespace Geidai.EditorTools
 
             var error = CreateErrorPresenter(content);
             var confirm = CreateConfirmDialog(content);
+            // もどるは RecScreenController（未保存確認付き）が結線する。BackToHome は二重遷移になるので付けない。
 
             var screenGo = new GameObject("RecScreen", typeof(RecScreenController));
             screenGo.transform.SetParent(shell.canvas.transform, false);
@@ -424,6 +557,8 @@ namespace Geidai.EditorTools
             so.FindProperty("backButton").objectReferenceValue = backBtn;
             so.FindProperty("errorPresenter").objectReferenceValue = error;
             so.FindProperty("confirmDialog").objectReferenceValue = confirm;
+            var statusProp = so.FindProperty("statusText");
+            if (statusProp != null) statusProp.objectReferenceValue = status;
             so.ApplyModifiedPropertiesWithoutUndo();
 
             SaveScene("GeidaiRec");
@@ -440,9 +575,7 @@ namespace Geidai.EditorTools
 
             var listHost = new GameObject("SoundListView", typeof(RectTransform), typeof(SoundListView));
             listHost.transform.SetParent(content, false);
-            var listRt = listHost.GetComponent<RectTransform>();
-            listRt.sizeDelta = new Vector2(900, 900);
-            listRt.anchoredPosition = new Vector2(0, 0);
+            AnchorCenterBand(listHost.GetComponent<RectTransform>(), 0.78f, 0.22f);
 
             var filterHost = new GameObject("FilterSearch", typeof(RectTransform), typeof(FilterSearchController));
             filterHost.transform.SetParent(content, false);
@@ -451,9 +584,16 @@ namespace Geidai.EditorTools
             detailHost.transform.SetParent(content, false);
             detailHost.SetActive(false);
 
-            var back = CreateButton(content, "Back", "もどる", new Vector2(240, 80));
-            back.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -750);
+            var back = CreateButton(content, "Back", "もどる", new Vector2(280, 90));
+            AnchorBottom(back.GetComponent<RectTransform>(), 90f, 40f);
             var error = CreateErrorPresenter(content);
+            // もどるは CollectionScreenController が NavigateHome を結線する
+
+            var empty = CreateText(content, "EmptyHint", "まだ おとが ないよ。さきに ろくおんしてね", 26, TextAnchor.MiddleCenter);
+            empty.rectTransform.anchorMin = new Vector2(0.1f, 0.4f);
+            empty.rectTransform.anchorMax = new Vector2(0.9f, 0.55f);
+            empty.rectTransform.offsetMin = Vector2.zero;
+            empty.rectTransform.offsetMax = Vector2.zero;
 
             var screenGo = new GameObject("CollectionScreen", typeof(CollectionScreenController));
             screenGo.transform.SetParent(shell.canvas.transform, false);
@@ -480,11 +620,20 @@ namespace Geidai.EditorTools
             AnchorTopBand(title.rectTransform, 100f, 32f);
 
             var themeText = CreateText(content, "ThemeText", "おだい", 56, TextAnchor.MiddleCenter);
-            themeText.rectTransform.anchoredPosition = new Vector2(0, 200);
+            themeText.rectTransform.anchorMin = new Vector2(0.05f, 0.55f);
+            themeText.rectTransform.anchorMax = new Vector2(0.95f, 0.7f);
+            themeText.rectTransform.offsetMin = Vector2.zero;
+            themeText.rectTransform.offsetMax = Vector2.zero;
             var reading = CreateText(content, "ReadingText", "", 32, TextAnchor.MiddleCenter);
-            reading.rectTransform.anchoredPosition = new Vector2(0, 80);
+            reading.rectTransform.anchorMin = new Vector2(0.05f, 0.48f);
+            reading.rectTransform.anchorMax = new Vector2(0.95f, 0.55f);
+            reading.rectTransform.offsetMin = Vector2.zero;
+            reading.rectTransform.offsetMax = Vector2.zero;
             var hint = CreateText(content, "HintText", "", 28, TextAnchor.MiddleCenter);
-            hint.rectTransform.anchoredPosition = new Vector2(0, -40);
+            hint.rectTransform.anchorMin = new Vector2(0.05f, 0.4f);
+            hint.rectTransform.anchorMax = new Vector2(0.95f, 0.48f);
+            hint.rectTransform.offsetMin = Vector2.zero;
+            hint.rectTransform.offsetMax = Vector2.zero;
 
             var empty = new GameObject("EmptyState", typeof(RectTransform), typeof(Text));
             empty.transform.SetParent(content, false);
@@ -496,7 +645,9 @@ namespace Geidai.EditorTools
             empty.SetActive(false);
 
             var record = CreateButton(content, "Record", "ろくおんする", new Vector2(360, 100));
-            record.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -250);
+            record.GetComponent<RectTransform>().anchorMin = new Vector2(0.5f, 0.28f);
+            record.GetComponent<RectTransform>().anchorMax = new Vector2(0.5f, 0.28f);
+            record.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
             var error = CreateErrorPresenter(content);
 
             var themeCtrlGo = new GameObject("WeeklyTheme", typeof(WeeklyThemeController));
@@ -522,10 +673,9 @@ namespace Geidai.EditorTools
             so.FindProperty("errorPresenter").objectReferenceValue = error;
             so.ApplyModifiedPropertiesWithoutUndo();
 
-            // Back button
-            var back = CreateButton(content, "Back", "もどる", new Vector2(240, 80));
-            back.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -700);
-            back.onClick.AddListener(() => { /* runtime: ScreenRootBase back */ });
+            var back = CreateButton(content, "Back", "もどる", new Vector2(280, 90));
+            AnchorBottom(back.GetComponent<RectTransform>(), 90f, 40f);
+            AttachBackToHome(back, error);
 
             SaveScene("GeidaiTheme");
         }
@@ -542,17 +692,25 @@ namespace Geidai.EditorTools
             var frogGo = new GameObject("Frog", typeof(RectTransform), typeof(Image), typeof(FrogTargetView));
             frogGo.transform.SetParent(content, false);
             var frogRt = frogGo.GetComponent<RectTransform>();
-            frogRt.sizeDelta = new Vector2(280, 280);
-            frogRt.anchoredPosition = new Vector2(0, 280);
+            frogRt.anchorMin = new Vector2(0.5f, 0.58f);
+            frogRt.anchorMax = new Vector2(0.5f, 0.58f);
+            frogRt.sizeDelta = new Vector2(260, 260);
+            frogRt.anchoredPosition = Vector2.zero;
             frogGo.GetComponent<Image>().color = new Color(0.4f, 0.7f, 0.4f);
 
             var frogPreview = CreateButton(frogGo.transform, "Preview", "きく", new Vector2(120, 50));
-            frogPreview.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -160);
+            frogPreview.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -140);
             var frog = frogGo.GetComponent<FrogTargetView>();
             var soFrog = new SerializedObject(frog);
             soFrog.FindProperty("previewButton").objectReferenceValue = frogPreview;
             soFrog.FindProperty("dropArea").objectReferenceValue = frogRt;
             soFrog.ApplyModifiedPropertiesWithoutUndo();
+
+            var hint = CreateText(content, "Hint", "おたまを タップで きいて、カエルへ ドラッグしてね", 24, TextAnchor.MiddleCenter);
+            hint.rectTransform.anchorMin = new Vector2(0.05f, 0.48f);
+            hint.rectTransform.anchorMax = new Vector2(0.95f, 0.55f);
+            hint.rectTransform.offsetMin = Vector2.zero;
+            hint.rectTransform.offsetMax = Vector2.zero;
 
             var choices = new List<ChoiceItemView>();
             for (int i = 0; i < 3; i++)
@@ -560,11 +718,13 @@ namespace Geidai.EditorTools
                 var choiceGo = new GameObject($"Choice_{i}", typeof(RectTransform), typeof(Image), typeof(CanvasGroup), typeof(ChoiceItemView));
                 choiceGo.transform.SetParent(content, false);
                 var crt = choiceGo.GetComponent<RectTransform>();
-                crt.sizeDelta = new Vector2(180, 180);
-                crt.anchoredPosition = new Vector2(-220 + i * 220, -200);
+                crt.anchorMin = new Vector2(0.5f, 0.28f);
+                crt.anchorMax = new Vector2(0.5f, 0.28f);
+                crt.sizeDelta = new Vector2(170, 170);
+                crt.anchoredPosition = new Vector2(-200 + i * 200, 0f);
                 choiceGo.GetComponent<Image>().color = new Color(0.55f, 0.75f, 0.9f);
                 var preview = CreateButton(choiceGo.transform, "Preview", "きく", new Vector2(100, 40));
-                preview.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -90);
+                preview.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -80);
                 var choice = choiceGo.GetComponent<ChoiceItemView>();
                 var soC = new SerializedObject(choice);
                 soC.FindProperty("previewButton").objectReferenceValue = preview;
@@ -576,7 +736,10 @@ namespace Geidai.EditorTools
             var effectGo = new GameObject("ResultEffect", typeof(ResultEffectController));
             effectGo.transform.SetParent(content, false);
             var resultText = CreateText(content, "ResultText", "", 32, TextAnchor.MiddleCenter);
-            resultText.rectTransform.anchoredPosition = new Vector2(0, -500);
+            resultText.rectTransform.anchorMin = new Vector2(0.05f, 0.18f);
+            resultText.rectTransform.anchorMax = new Vector2(0.95f, 0.26f);
+            resultText.rectTransform.offsetMin = Vector2.zero;
+            resultText.rectTransform.offsetMax = Vector2.zero;
             var resultPanel = resultText.gameObject;
             resultPanel.SetActive(false);
             var soFx = new SerializedObject(effectGo.GetComponent<ResultEffectController>());
@@ -593,6 +756,9 @@ namespace Geidai.EditorTools
             empty.SetActive(false);
 
             var error = CreateErrorPresenter(content);
+            var back = CreateButton(content, "Back", "もどる", new Vector2(280, 90));
+            AnchorBottom(back.GetComponent<RectTransform>(), 90f, 36f);
+            AttachBackToHome(back, error);
             var config = AssetDatabase.LoadAssetAtPath<SoundMatchConfig>(SoundMatchConfigPath);
 
             var screenGo = new GameObject("SoundMatchScreen", typeof(SoundMatchGameController));

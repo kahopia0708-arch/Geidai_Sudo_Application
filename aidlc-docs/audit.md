@@ -674,3 +674,11 @@
 **Context**: CONSTRUCTION - Build and Test Follow-up / MCP Scene Wiring
 
 ---
+
+## Construction Follow-up — UX 導線ホットフィックス
+**Timestamp**: 2026-07-16T11:15:00+09:00
+**User Input**: "コレクション　戻る　がない\n\n設定　リストクリックするとエラー\nThe dropdown template is not assigned. The template needs to be assigned and must have a child GameObject with a Toggle component serving as the item.\nUnityEngine.EventSystems.EventSystem:Update () (at ./Library/PackageCache/com.unity.ugui@d8a2716f3013/Runtime/UGUI/EventSystem/EventSystem.cs:515)\n\n今週のお題\n録音に遷移したあと戻ってこれない\nホームに戻れない\n\nゲーム、録音など、ボタンは押せるか動いているか全くわからない"
+**AI Response**: 原因は (1) もどるボタンが SafeArea 外（y=-700〜-750）(2) Dropdown に Template+Toggle 未設定 (3) Theme の戻るが Edit 時 onClick のみでランタイム未配線 (4) ボタン押下フィードバック／Rec 状態文言なし。対応: GeidaiSceneBootstrap で CreateDropdown（Template 必須階層）・CreateButton ColorTint・AnchorBottom・Theme/Game1 に BackToHomeButton、Rec に statusText＋状態文言、ConfirmDialog を前面表示。Rec/Collection/Register は各コントローラが戻るを結線するため BackToHome 二重付与を回避。MCP BuildAll 再生成・検証（Dropdown template+Toggle OK / Collection・Theme Back 画面内 / Rec statusText 配線 / Game1 BackToHome）。
+**Context**: CONSTRUCTION - Build and Test Follow-up / UX hotfix
+
+---
