@@ -44,19 +44,29 @@
 
 ## Overall Status（総合）
 - **Build（コンパイル）**: Success（Error 0 / Warning 0・MCP 確認済）
-- **All Tests**: 手順整備完了・**実行待ち**（EditMode 全件＋実シーン E2E＋端末性能）
-- **Ready for Operations**: 条件付き Yes — 下記フォローアップ（実シーン配線・実ビルド・テスト実行）完了で Yes
+- **All Tests**: 手順整備完了・EditMode 全件は Test Runner 実行待ち／**実シーン導線はユーザー Play 確認済**（2026-07-16）
+- **Ready for Operations**: 条件付き Yes — 実ビルド・EditMode 全件・端末性能が残
 
 ## 既知のフォローアップ（MCP / 実機作業）
 各ユニット code-summary の「残タスク」を集約:
-1. 新 `Geidai.*` コントローラ/プレハブを配置した**実シーンの作成・配線**（Home/Rec/Collection/Theme/Game1）＋既定アセット割当（`HomeMenuConfig`/`ThemeCatalog`/`SoundMatchConfig`）
-2. 既存ゲーム選択 UI（ブラウンフィールド）から `NavigationService.GoTo(...)` 接続、旧 `WeeklyTextController` 等の撤去
-3. `EditorBuildSettings` へ新規シーン登録・不要旧シーンの整理
-4. 実機での**マイク権限**・**縦横両向き**・**SafeArea**・**解像度差**の確認
+1. ~~新 `Geidai.*` コントローラを配置した実シーン作成・配線~~ → **完了**（`mcp-scene-wiring-summary.md`）
+2. ~~既存ゲーム選択 UI から `GoTo` 接続、旧 `WeeklyTextController` 撤去~~ → **完了**
+3. ~~`EditorBuildSettings` へ新規シーン登録~~ → **完了**
+4. 実機での**マイク権限**・**縦横両向き**・**SafeArea**・**解像度差**の確認（Editor Play の導線確認は済）
 5. Player 実ビルド（Android/iOS 署名）＋ Unity Test Runner での全 EditMode 実行＋端末性能計測
+6. 意匠・イラスト（US-TECH-07・Sさん）
+
+## Play 確認済み（2026-07-16・ユーザー）
+- ホーム／各モジュール遷移・もどる導線
+- 設定 Dropdown・プロフィール再表示
+- 録音保存→コレクション一覧表示
+- お題 → 録音 → もどる → お題（`GoBack`）
+- 音合わせドラッグの掴み位置
+
+詳細・commit 一覧: `mcp-scene-wiring-summary.md` §6
 
 ## Next Steps（次段階）
-- 上記が整えば **Operations フェーズ**（デプロイ計画・配布・運用）へ。
+- 上記残（実ビルド・EditMode・実機）が整えば **Operations フェーズ**へ。
 - 実行で失敗が出た場合は該当ユニットに戻り修正 → 再ビルド/再テスト。
 
 ---
@@ -67,3 +77,4 @@
 - `integration-test-instructions.md`
 - `performance-test-instructions.md`
 - `build-and-test-summary.md`
+- `mcp-scene-wiring-summary.md`（実シーン配線＋ホットフィックス）

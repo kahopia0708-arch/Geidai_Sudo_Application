@@ -690,3 +690,27 @@
 **Context**: CONSTRUCTION - Build and Test Follow-up / persistence display fix
 
 ---
+
+## Construction Follow-up — ドラッグ／お題戻り
+**Timestamp**: 2026-07-16T11:29:00+09:00
+**User Input**: "音合わせ　水色ブロックをマウスでドラッグするとき、ブロック内でドラッグスタートしても少しズレた位置にブロックが移動してついてくる"
+**AI Response**: ChoiceItemView がポインタ位置を anchoredPosition に直結していた。BeginDrag で掴みオフセットを保持するよう修正（commit 81f3343）。
+**Context**: CONSTRUCTION - Game1 drag offset
+
+---
+
+## Construction Follow-up — お題→録音の戻り先
+**Timestamp**: 2026-07-16T11:32:00+09:00
+**User Input**: "今週もお題　→ 録音　→ 戻る　だとホームに戻ってしまう"
+**AI Response**: RecScreenController が常に GoTo(Home) していた。NavigationService.GoBack() に変更（履歴なしは Home フォールバック）。commit ea61662。
+**Context**: CONSTRUCTION - Rec GoBack
+
+---
+
+## Construction Follow-up — ユーザー確認＋ドキュメント更新
+**Timestamp**: 2026-07-16T11:35:00+09:00
+**User Input**: "ここまでの修正は確認できました\nドキュメントを更新し、コミット"
+**AI Response**: Play 確認済を aidlc-state / build-and-test-summary / mcp-scene-wiring-summary / integration-test-instructions / audit に反映し docs コミット。
+**Context**: CONSTRUCTION - docs sync after UX hotfix verification
+
+---

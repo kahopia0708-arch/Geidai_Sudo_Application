@@ -46,10 +46,11 @@ Game1 ──ListSounds/LoadSoundBuffer──> StorageService ──> PitchVariat
 - **後片付け**: `sounds/` 削除。
 
 ### Scenario 4: お題 → Rec 連携（Theme → Rec）
-- **説明**: 今週のお題を表示し、タップで `ThemeContext` に設定して Rec へ遷移。お題未設定でも通常録音できる。
-- **手順**: Theme 画面表示（`ThemeCatalog` 割当）→ お題タップ → Rec 遷移（お題ラベル任意表示）→ 録音。
-- **期待**: 週選択は決定的（`ThemeSelector`）。空/無効カタログは `emptyState`。`ThemeContext` は非永続（アプリ再起動で消える）。
+- **説明**: 今週のお題を表示し、タップで `ThemeContext` に設定して Rec へ遷移。お題未設定でも通常録音できる。録音のもどるは直前画面（お題）へ戻る。
+- **手順**: Theme 画面表示（`ThemeCatalog` 割当）→ ろくおんする → Rec 遷移 →（任意で録音）→ もどる。
+- **期待**: 週選択は決定的（`ThemeSelector`）。空/無効カタログは `emptyState`。`ThemeContext` は非永続（アプリ再起動で消える）。**Rec のもどるは `INavigationService.GoBack()`**（お題経由なら Theme、履歴なし時は Home フォールバック）。
 - **後片付け**: なし。
+- **Play 確認**: 2026-07-16 ユーザー確認済。
 
 ### Scenario 5: ①音合わせ 素材選択・出題・解答（Game1 → Storage → PitchVariation）
 - **説明**: 保存音を素材に出題し、タップ確認・ドラッグ解答・判定・演出・進行が成立する。0 件時は fallback。
