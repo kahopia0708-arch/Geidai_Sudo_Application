@@ -44,7 +44,12 @@ namespace Geidai.Foundation
         protected override void OnShow()
         {
             PopulateBirthYears();
-            if (mode == RegistrationMode.Edit) LoadExisting();
+            // ホームから再入したときも既存プロフィールを表示する（保存済みなのに空に見える不具合を防ぐ）。
+            // プロフィールが無ければ New、あれば Edit 扱い。
+            if (TryLoadExisting())
+                mode = RegistrationMode.Edit;
+            else
+                mode = RegistrationMode.New;
         }
 
         /// <summary>遷移元から New/Edit を指定する（ProfileEdit=Edit）。</summary>
@@ -54,7 +59,7 @@ namespace Geidai.Foundation
             if (IsVisible)
             {
                 PopulateBirthYears();
-                if (mode == RegistrationMode.Edit) LoadExisting();
+                if (mode == RegistrationMode.Edit) TryLoadExisting();
             }
         }
 
@@ -75,13 +80,14 @@ namespace Geidai.Foundation
             birthYearDropdown.RefreshShownValue();
         }
 
-        private void LoadExisting()
+        /// <summary>既存プロフィールがあればフォームへ反映。成功時 true。</summary>
+        private bool TryLoadExisting()
         {
             var storage = ServiceRegistry.Resolve<IStorageService>();
-            if (storage == null) return;
+            if (storage == null) return false;
 
             var result = storage.LoadProfile();
-            if (!result.IsSuccess || result.Value == null) return;
+            if (!result.IsSuccess || result.Value == null) return false;
 
             var profile = result.Value;
             if (nicknameInput != null) nicknameInput.text = profile.nickname;
@@ -94,6 +100,7 @@ namespace Geidai.Foundation
                     birthYearDropdown.RefreshShownValue();
                 }
             }
+            return true;
         }
 
         private int SelectedBirthYear()

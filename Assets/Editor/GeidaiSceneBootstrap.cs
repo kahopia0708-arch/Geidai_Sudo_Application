@@ -573,9 +573,56 @@ namespace Geidai.EditorTools
             var title = CreateText(content, "Title", "コレクション", 48, TextAnchor.MiddleCenter);
             AnchorTopBand(title.rectTransform, 100f, 32f);
 
-            var listHost = new GameObject("SoundListView", typeof(RectTransform), typeof(SoundListView));
+            // ScrollRect + Content + ItemPrefab（未配線だと保存音があっても一覧が空のまま）
+            var listHost = new GameObject("SoundListView", typeof(RectTransform), typeof(Image), typeof(ScrollRect), typeof(SoundListView));
             listHost.transform.SetParent(content, false);
             AnchorCenterBand(listHost.GetComponent<RectTransform>(), 0.78f, 0.22f);
+            listHost.GetComponent<Image>().color = new Color(0.94f, 0.96f, 0.94f, 1f);
+
+            var viewport = new GameObject("Viewport", typeof(RectTransform), typeof(Image), typeof(Mask));
+            viewport.transform.SetParent(listHost.transform, false);
+            StretchFull(viewport.GetComponent<RectTransform>());
+            viewport.GetComponent<Image>().color = Color.white;
+            viewport.GetComponent<Mask>().showMaskGraphic = false;
+
+            var contentRootGo = new GameObject("Content", typeof(RectTransform), typeof(VerticalLayoutGroup), typeof(ContentSizeFitter));
+            contentRootGo.transform.SetParent(viewport.transform, false);
+            var contentRt = contentRootGo.GetComponent<RectTransform>();
+            contentRt.anchorMin = new Vector2(0f, 1f);
+            contentRt.anchorMax = new Vector2(1f, 1f);
+            contentRt.pivot = new Vector2(0.5f, 1f);
+            contentRt.sizeDelta = new Vector2(0f, 0f);
+            var vlg = contentRootGo.GetComponent<VerticalLayoutGroup>();
+            vlg.childAlignment = TextAnchor.UpperCenter;
+            vlg.childControlHeight = true;
+            vlg.childControlWidth = true;
+            vlg.childForceExpandHeight = false;
+            vlg.childForceExpandWidth = true;
+            vlg.spacing = 12f;
+            vlg.padding = new RectOffset(12, 12, 12, 12);
+            var fitter = contentRootGo.GetComponent<ContentSizeFitter>();
+            fitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+
+            var scroll = listHost.GetComponent<ScrollRect>();
+            scroll.viewport = viewport.GetComponent<RectTransform>();
+            scroll.content = contentRt;
+            scroll.horizontal = false;
+            scroll.vertical = true;
+            scroll.movementType = ScrollRect.MovementType.Clamped;
+
+            var itemPrefab = CreateSoundListItemPrefab(listHost.transform);
+            var empty = CreateText(content, "EmptyHint", "まだ おとが ないよ。さきに ろくおんしてね", 26, TextAnchor.MiddleCenter);
+            empty.rectTransform.anchorMin = new Vector2(0.1f, 0.4f);
+            empty.rectTransform.anchorMax = new Vector2(0.9f, 0.55f);
+            empty.rectTransform.offsetMin = Vector2.zero;
+            empty.rectTransform.offsetMax = Vector2.zero;
+
+            var listView = listHost.GetComponent<SoundListView>();
+            var soList = new SerializedObject(listView);
+            soList.FindProperty("contentRoot").objectReferenceValue = contentRt;
+            soList.FindProperty("itemPrefab").objectReferenceValue = itemPrefab;
+            soList.FindProperty("emptyState").objectReferenceValue = empty.gameObject;
+            soList.ApplyModifiedPropertiesWithoutUndo();
 
             var filterHost = new GameObject("FilterSearch", typeof(RectTransform), typeof(FilterSearchController));
             filterHost.transform.SetParent(content, false);
@@ -587,20 +634,13 @@ namespace Geidai.EditorTools
             var back = CreateButton(content, "Back", "もどる", new Vector2(280, 90));
             AnchorBottom(back.GetComponent<RectTransform>(), 90f, 40f);
             var error = CreateErrorPresenter(content);
-            // もどるは CollectionScreenController が NavigateHome を結線する
-
-            var empty = CreateText(content, "EmptyHint", "まだ おとが ないよ。さきに ろくおんしてね", 26, TextAnchor.MiddleCenter);
-            empty.rectTransform.anchorMin = new Vector2(0.1f, 0.4f);
-            empty.rectTransform.anchorMax = new Vector2(0.9f, 0.55f);
-            empty.rectTransform.offsetMin = Vector2.zero;
-            empty.rectTransform.offsetMax = Vector2.zero;
 
             var screenGo = new GameObject("CollectionScreen", typeof(CollectionScreenController));
             screenGo.transform.SetParent(shell.canvas.transform, false);
             var col = screenGo.GetComponent<CollectionScreenController>();
             WireScreenRoot(col, shell.responsive, shell.fitter);
             var so = new SerializedObject(col);
-            so.FindProperty("listView").objectReferenceValue = listHost.GetComponent<SoundListView>();
+            so.FindProperty("listView").objectReferenceValue = listView;
             so.FindProperty("filterSearch").objectReferenceValue = filterHost.GetComponent<FilterSearchController>();
             so.FindProperty("detail").objectReferenceValue = detailHost.GetComponent<SoundDetailController>();
             so.FindProperty("backButton").objectReferenceValue = back;
@@ -608,6 +648,55 @@ namespace Geidai.EditorTools
             so.ApplyModifiedPropertiesWithoutUndo();
 
             SaveScene("GeidaiCollection");
+        }
+
+        /// <summary>コレクション一覧の1行 Prefab（非アクティブ雛形）。</summary>
+        private static SoundListItemView CreateSoundListItemPrefab(Transform parent)
+        {
+            var go = new GameObject("SoundListItemPrefab", typeof(RectTransform), typeof(Image), typeof(LayoutElement), typeof(SoundListItemView));
+            go.transform.SetParent(parent, false);
+            go.SetActive(false);
+            var rt = go.GetComponent<RectTransform>();
+            rt.sizeDelta = new Vector2(0f, 110f);
+            go.GetComponent<Image>().color = new Color(0.22f, 0.55f, 0.42f, 1f);
+            var le = go.GetComponent<LayoutElement>();
+            le.minHeight = 110f;
+            le.preferredHeight = 110f;
+
+            var title = CreateText(go.transform, "Title", "おと", 28, TextAnchor.MiddleLeft);
+            title.rectTransform.anchorMin = new Vector2(0.05f, 0.45f);
+            title.rectTransform.anchorMax = new Vector2(0.55f, 0.95f);
+            title.rectTransform.offsetMin = Vector2.zero;
+            title.rectTransform.offsetMax = Vector2.zero;
+            title.color = Color.white;
+
+            var date = CreateText(go.transform, "Date", "", 20, TextAnchor.MiddleLeft);
+            date.rectTransform.anchorMin = new Vector2(0.05f, 0.05f);
+            date.rectTransform.anchorMax = new Vector2(0.55f, 0.45f);
+            date.rectTransform.offsetMin = Vector2.zero;
+            date.rectTransform.offsetMax = Vector2.zero;
+            date.color = new Color(0.9f, 0.95f, 0.9f, 1f);
+
+            var play = CreateButton(go.transform, "Play", "きく", new Vector2(120, 70));
+            play.GetComponent<RectTransform>().anchorMin = new Vector2(1f, 0.5f);
+            play.GetComponent<RectTransform>().anchorMax = new Vector2(1f, 0.5f);
+            play.GetComponent<RectTransform>().pivot = new Vector2(1f, 0.5f);
+            play.GetComponent<RectTransform>().anchoredPosition = new Vector2(-24f, 0f);
+
+            // 行全体タップでも詳細へ（openButton）
+            var open = go.GetComponent<Button>();
+            if (open == null) open = go.AddComponent<Button>();
+            open.targetGraphic = go.GetComponent<Image>();
+            open.transition = Selectable.Transition.ColorTint;
+
+            var item = go.GetComponent<SoundListItemView>();
+            var so = new SerializedObject(item);
+            so.FindProperty("titleText").objectReferenceValue = title;
+            so.FindProperty("dateText").objectReferenceValue = date;
+            so.FindProperty("openButton").objectReferenceValue = open;
+            so.FindProperty("playButton").objectReferenceValue = play;
+            so.ApplyModifiedPropertiesWithoutUndo();
+            return item;
         }
 
         public static void BuildTheme()

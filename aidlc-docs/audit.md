@@ -682,3 +682,11 @@
 **Context**: CONSTRUCTION - Build and Test Follow-up / UX hotfix
 
 ---
+
+## Construction Follow-up — 永続化表示バグ
+**Timestamp**: 2026-07-16T11:24:00+09:00
+**User Input**: "録音したがコレクションに表示されない\n\n設定　保存したが再度シーンに入るとクリアされている"
+**AI Response**: ディスク上は profile.json と sounds 3件が既に保存済み（ListSounds=3）。表示側の問題。(1) コレクション: SoundListView の contentRoot/itemPrefab 未配線で EnsurePool が何も生成しなかった → ScrollRect+ItemPrefab+emptyState を Bootstrap で生成・結線し BuildCollection 再実行。(2) 設定: mode=New 固定で LoadExisting が走らず空フォーム → OnShow で既存プロフィールがあれば読み込み Edit 扱い（TryLoadExisting）。
+**Context**: CONSTRUCTION - Build and Test Follow-up / persistence display fix
+
+---
