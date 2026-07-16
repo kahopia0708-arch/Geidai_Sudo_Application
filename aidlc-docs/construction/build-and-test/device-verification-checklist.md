@@ -14,8 +14,8 @@
 |---|---|---|
 | 画面向き | Auto Rotation + 縦/縦逆/横左/横右 | ✅ 設定済 |
 | iOS `NSMicrophoneUsageDescription` | 子ども向け説明文あり | ✅ 設定済（空だったため追記） |
-| Android マイク | `MicPermissionGate` → `Permission.Microphone`（実行時要求） | ✅ コード側あり |
-| SafeArea | 各 Geidai シーンに `SafeAreaFitter` | ✅ シーン骨組み |
+| Android マイク | `MicPermissionGate` → `Permission.Microphone`（実行時要求） | ✅ コード側あり・実機確認済 |
+| SafeArea | 各 Geidai シーンに `SafeAreaFitter` | ✅ シーン骨組み・実機確認済 |
 | 解像度 | `ResponsiveCanvasConfigurator` + CanvasScaler | ✅ シーン骨組み |
 | Android minSdk | 25 / ARM64 | ✅ |
 | iOS target | 15.0 | ✅ |
@@ -58,15 +58,15 @@ CLI:
   -executeMethod Geidai.EditorTools.GeidaiBuildScript.BuildAndroidDevelopment \
   -logFile ./Logs/build-android.log
 ```
-- 出力: `Builds/Android/GeidaiSudo.apk`
-- インストール: `adb install -r Builds/Android/GeidaiSudo.apk`
+- 出力: `Builds/Android/Oto.apk`
+- インストール: `adb install -r Builds/Android/Oto.apk`
 
 ### C-2. iOS Xcode プロジェクト
 Editor: `Geidai/Build/iOS Xcode Project`  
 CLI: `-executeMethod Geidai.EditorTools.GeidaiBuildScript.BuildIosXcode`（`-buildTarget iOS`）
 - 出力: `Builds/iOS/`
 - 続き: Xcode で Team / Signing を設定 → 実機 Run / Archive
-- **要**: Apple Developer Team ID（ユーザー手元）
+- **状態**: 実機インストール・動作確認済（2026-07-16）
 
 ### C-3. ストア配布用署名（手動）
 | 項目 | 担当 | メモ |
@@ -80,29 +80,29 @@ CLI: `-executeMethod Geidai.EditorTools.GeidaiBuildScript.BuildIosXcode`（`-bui
 
 ## D. 実機確認チェックリスト（マイク・向き・SafeArea・解像度）
 
-対象端末: Android ______ / iOS ______  
-ビルド: APK / Development / AdHoc / ______
+対象端末: Android / iOS（ユーザー実機）  
+ビルド: Development（実機）  
+**確認日**: 2026-07-16（ユーザー報告）
 
 | # | 確認項目 | Android | iOS | メモ |
 |---|---|---|---|---|
-| D1 | 初回録音でマイク許可ダイアログが出る | ☐ | ☐ | iOS: 権限前に NoMic 誤表示しないこと（2026-07-16 修正） |
-| D2 | 許可後に録音→再生→保存できる | ☐ | ☐ | |
-| D3 | 拒否時にクラッシュせず平易メッセージ | ☐ | ☐ | |
-| D4 | 縦向きで全画面 SafeArea（ノッチ非干渉） | ☐ | ☐ | |
-| D5 | 横向きでも SafeArea・ボタン到達可 | ☐ | ☐ | |
-| D6 | 回転時にレイアウト破綻なし | ☐ | ☐ | |
-| D7 | 小画面（〜5"）で文字・ボタンが潰れていない | ☐ | ☐ | |
-| D8 | 大画面/タブレット相当で余白が極端でない | ☐ | ☐ | |
-| D9 | お題→録音→もどる→お題 | ☐ | ☐ | |
-| D10 | コレクションに保存音が一覧表示 | ☐ | ☐ | |
-| D11 | 設定再入でプロフィール表示 | ☐ | ☐ | |
+| D1 | 初回録音でマイク許可ダイアログが出る | ✅ | ✅ | iOS 権限前 NoMic 誤表示は `39db002` で修正後確認 |
+| D2 | 許可後に録音→再生→保存できる | ✅ | ✅ | 「録音/再生に問題なし」 |
+| D3 | 拒否時にクラッシュせず平易メッセージ | ☐ | ☐ | 未確認（任意） |
+| D4 | 縦向きで全画面 SafeArea（ノッチ非干渉） | ✅ | ✅ | 縦横レイアウト崩れなし |
+| D5 | 横向きでも SafeArea・ボタン到達可 | ✅ | ✅ | 同上 |
+| D6 | 回転時にレイアウト破綻なし | ✅ | ✅ | 同上 |
+| D7 | 小画面（〜5"）で文字・ボタンが潰れていない | ☐ | ☐ | 未確認（任意） |
+| D8 | 大画面/タブレット相当で余白が極端でない | ☐ | ☐ | 未確認（任意） |
+| D9 | お題→録音→もどる→お題 | ☐ | ☐ | Editor Play では確認済 |
+| D10 | コレクションに保存音が一覧表示 | ☐ | ☐ | Editor Play では確認済 |
+| D11 | 設定再入でプロフィール表示 | ☐ | ☐ | Editor Play では確認済 |
 
 ### ビルド記録
 | 日時 | 成果物 | 結果 |
 |---|---|---|
-| 2026-07-16 | `Builds/Android/GeidaiSudo.apk`（約97MB・Development・旧名） | ✅ 成功（リネーム前） |
-| — | `Builds/Android/Oto.apk`（新パッケージ `jp.geidai.sudo.oto`） | ⏳ 再ビルド推奨 |
-| — | iOS Xcode (`Builds/iOS/`) | ⏳ 未（Apple Team + Metal Toolchain 要確認） |
+| 2026-07-16 | Android Development APK | ✅ 実機確認済（録音/再生・縦横） |
+| 2026-07-16 | iOS 実機ビルド | ✅ 実機確認済（録音/再生・縦横） |
 
 ---
 
@@ -119,13 +119,14 @@ CLI: `-executeMethod Geidai.EditorTools.GeidaiBuildScript.BuildIosXcode`（`-bui
 | 起動〜ホーム | 体感即時 | | | ☐ |
 | GC スパイク | 小さい | | | ☐ |
 
-Profiler キャプチャ保存先: `Logs/perf-*.data`（任意）
+Profiler キャプチャ保存先: `Logs/perf-*.data`（任意）  
+**状態**: 未計測（任意フォローアップ）
 
 ---
 
 ## F. 実行順序（推奨）
-1. EditMode 全件（本機 CLI）→ 結果を §B に記入
-2. Android Development APK 生成 → 実機インストール → §D
-3. iOS Xcode 生成 → Team 署名 → 実機 → §D
-4. Development Build で Profiler 接続 → §E
+1. ~~EditMode 全件~~ → ✅ 85 Pass
+2. ~~Android / iOS 実機 → §D（マイク・向き）~~ → ✅ 2026-07-16
+3. （任意）Development Build で Profiler 接続 → §E
+4. （任意）§D3 / D7〜D11 の追加確認
 5. 結果を `build-and-test-summary.md` / `audit.md` に追記

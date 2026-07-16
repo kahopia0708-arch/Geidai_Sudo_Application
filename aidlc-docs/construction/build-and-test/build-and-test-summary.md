@@ -44,30 +44,26 @@
 
 ## Overall Status（総合）
 - **Build（コンパイル）**: Success（Error 0 / Warning 0・MCP 確認済）
-- **Android Development APK**: Success（2026-07-16・`Builds/Android/GeidaiSudo.apk`）
-- **All Tests**: EditMode **85 Pass / 0 Fail**（`editmode-results.md`）／実シーン導線はユーザー Play 確認済／実機 E2E・性能は端末待ち
-- **Ready for Operations**: 条件付き Yes — 実機確認（§D）・iOS 署名ビルド・性能計測が残
+- **Android / iOS 実機ビルド**: Success（2026-07-16・ユーザー確認）
+- **All Tests**: EditMode **85 Pass / 0 Fail**（`editmode-results.md`）／実シーン導線は Editor Play 確認済
+- **実機 §D**: 録音/再生・縦横レイアウト ✅（両 OS）。詳細は `device-verification-checklist.md`
+- **Ready for Operations**: 条件付き Yes — 性能計測（§E）・ストア署名は任意/別途
 
 ## 既知のフォローアップ（MCP / 実機作業）
 各ユニット code-summary の「残タスク」を集約:
 1. ~~新 `Geidai.*` コントローラを配置した実シーン作成・配線~~ → **完了**（`mcp-scene-wiring-summary.md`）
 2. ~~既存ゲーム選択 UI から `GoTo` 接続、旧 `WeeklyTextController` 撤去~~ → **完了**
 3. ~~`EditorBuildSettings` へ新規シーン登録~~ → **完了**
-4. 実機での**マイク権限**・**縦横両向き**・**SafeArea**・**解像度差**の確認（Editor Play の導線確認は済）
-5. Player 実ビルド（Android/iOS 署名）＋ Unity Test Runner での全 EditMode 実行＋端末性能計測
+4. ~~実機でのマイク権限・縦横両向き・SafeArea~~ → **完了**（2026-07-16）
+5. （任意）Player ストア署名＋ Profiler 性能計測（§E）
 6. 意匠・イラスト（US-TECH-07・Sさん）
 
-## Play 確認済み（2026-07-16・ユーザー）
-- ホーム／各モジュール遷移・もどる導線
-- 設定 Dropdown・プロフィール再表示
-- 録音保存→コレクション一覧表示
-- お題 → 録音 → もどる → お題（`GoBack`）
-- 音合わせドラッグの掴み位置
-
-詳細・commit 一覧: `mcp-scene-wiring-summary.md` §6
+## Play / 実機確認済み（2026-07-16・ユーザー）
+- Editor: ホーム／各モジュール遷移・もどる、設定、コレクション一覧、お題→録音→GoBack、音合わせドラッグ
+- 実機 iOS/Android: 録音/再生問題なし、縦横レイアウト崩れなし
 
 ## Next Steps（次段階）
-- 上記残（実ビルド・EditMode・実機）が整えば **Operations フェーズ**へ。
+- 性能計測が必要なら §E。なければ **Operations フェーズ**（配布・運用）へ進める判断可。
 - 実行で失敗が出た場合は該当ユニットに戻り修正 → 再ビルド/再テスト。
 
 ---

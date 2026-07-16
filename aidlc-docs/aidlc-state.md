@@ -114,9 +114,9 @@
 - [x] MCP 実シーン配線フォローアップ — 完了（2026-07-16、「Use AI-DLC, 前述の作業を実施」）。Geidai* シーン6本生成・アセット割当・NavigationService マップ更新・ブラウンフィールド導線を GoTo 接続・Build Settings 整理・WeeklyTextController 削除。summary: `build-and-test/mcp-scene-wiring-summary.md`。意匠は Sさん残。
 - [x] 実シーン UX ホットフィックス — 完了・ユーザー確認済（2026-07-16、「ここまでの修正は確認できました」）。もどる/Dropdown/一覧表示/設定再読込/ドラッグオフセット/お題→録音→GoBack。commits: `0137719`〜`ea61662`（詳細は mcp-scene-wiring-summary §6）。
 - [x] EditMode 全件 — **85 Pass / 0 Fail**（2026-07-16）。`GeidaiTestRunner` + LogAssert 修正。結果: `editmode-results.md`。
-- [x] Android Development APK — 生成成功（2026-07-16・`Builds/Android/GeidaiSudo.apk`）。実機インストール・§D 確認はユーザー端末待ち。
-- [ ] iOS Xcode / 署名ビルド — Apple Team・Metal Toolchain 要。
-- [ ] 実機マイク/向き/SafeArea/解像度・性能計測 — `device-verification-checklist.md` の §D/§E。
+- [x] Android / iOS 実機ビルド — ユーザー確認済（2026-07-16）。録音/再生 OK、縦横レイアウト崩れなし（`device-verification-checklist.md` §D1/D2/D4〜D6）。
+- [ ] 端末性能計測（Profiler）— 任意フォローアップ（§E）。
+- [ ] §D 残（拒否時メッセージ・小大画面・導線再確認）— 任意。
 
 ### 🟡 OPERATIONS PHASE
 - [ ] Operations — PLACEHOLDER
@@ -126,7 +126,7 @@
 - **Stages to Skip**: Infrastructure Design（完全オフライン・サーバー/クラウド無し）
 - **確定ユニット（6）**: U1 基盤(UI基盤+Services器) → U2 Foundation → U3 Rec → U4 Persistence/Collection → U5 weekly theme → U6 Game①音合わせ（Units Generation 2026-07-15 確定）
 - **Risk Level**: Medium
-- **Current Stage**: Build and Test Follow-up — 実シーン配線＋UX ホットフィックス（ユーザー確認済）。残: EditMode 全件 / 実機 / Player ビルド / Operations
+- **Current Stage**: Build and Test Follow-up — 実機マイク/向き確認済。残: 性能計測（任意）/ Operations
 ## Reverse Engineering Status
 - [x] Reverse Engineering - Completed on 2026-07-15T16:48:08+09:00（概要把握レベル）
 - **Artifacts Location**: aidlc-docs/inception/reverse-engineering/

@@ -730,3 +730,11 @@
 **Context**: CONSTRUCTION - Player Settings for Android/iOS builds
 
 ---
+
+## Construction Follow-up — 実機確認（録音/縦横）
+**Timestamp**: 2026-07-16T13:00:00+09:00
+**User Input**: "iOS Android ともに録音/再生に問題はなくなりました\n端末の縦横によるレイアウトの崩れも無いです"
+**AI Response**: device-verification-checklist §D1/D2/D4〜D6 を両 OS ✅ に更新。aidlc-state / build-and-test-summary / audit に反映しコミット。残は性能計測（§E）と任意項目。
+**Context**: CONSTRUCTION - device verification passed (mic + orientation)
+
+---
