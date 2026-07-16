@@ -97,7 +97,7 @@ namespace Geidai.EditorTools
                 es.transform.SetParent(root.transform, false);
             }
 
-            var camGo = new GameObject("Main Camera", typeof(Camera));
+            var camGo = new GameObject("Main Camera", typeof(Camera), typeof(AudioListener));
             camGo.tag = "MainCamera";
             camGo.transform.SetParent(root.transform, false);
             var cam = camGo.GetComponent<Camera>();
