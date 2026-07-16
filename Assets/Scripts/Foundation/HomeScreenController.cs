@@ -39,6 +39,9 @@ namespace Geidai.Foundation
                 return;
             }
 
+            // プレハブが非アクティブでもコンテナ／複製インスタンスは必ず表示する。
+            menuContainer.gameObject.SetActive(true);
+
             for (int i = menuContainer.childCount - 1; i >= 0; i--)
             {
                 Destroy(menuContainer.GetChild(i).gameObject);
@@ -47,10 +50,11 @@ namespace Geidai.Foundation
             foreach (var item in menuConfig.VisibleSorted())
             {
                 var button = Instantiate(menuButtonPrefab, menuContainer);
+                button.gameObject.SetActive(true);
                 button.gameObject.name = $"home-menu-{item.moduleId}";
                 button.interactable = item.enabled;
 
-                var label = button.GetComponentInChildren<Text>();
+                var label = button.GetComponentInChildren<Text>(true);
                 if (label != null) label.text = item.label;
 
                 var captured = item.moduleId;

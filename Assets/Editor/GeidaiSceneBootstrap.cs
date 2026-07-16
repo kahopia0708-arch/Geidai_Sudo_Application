@@ -114,6 +114,37 @@ namespace Geidai.EditorTools
             rt.anchorMax = Vector2.one;
             rt.offsetMin = Vector2.zero;
             rt.offsetMax = Vector2.zero;
+            rt.pivot = new Vector2(0.5f, 0.5f);
+        }
+
+        /// <summary>SafeArea 内の上部に固定（向き・アスペクトで画面外に出ない）。</summary>
+        private static void AnchorTopBand(RectTransform rt, float height, float topPadding = 24f)
+        {
+            rt.anchorMin = new Vector2(0.05f, 1f);
+            rt.anchorMax = new Vector2(0.95f, 1f);
+            rt.pivot = new Vector2(0.5f, 1f);
+            rt.sizeDelta = new Vector2(0f, height);
+            rt.anchoredPosition = new Vector2(0f, -topPadding);
+        }
+
+        /// <summary>SafeArea 中央の帯（メニュー等）。</summary>
+        private static void AnchorCenterBand(RectTransform rt, float top = 0.72f, float bottom = 0.12f)
+        {
+            rt.anchorMin = new Vector2(0.08f, bottom);
+            rt.anchorMax = new Vector2(0.92f, top);
+            rt.pivot = new Vector2(0.5f, 0.5f);
+            rt.offsetMin = Vector2.zero;
+            rt.offsetMax = Vector2.zero;
+        }
+
+        /// <summary>SafeArea 下部のボタン列。</summary>
+        private static void AnchorBottom(RectTransform rt, float height, float bottomPadding = 40f)
+        {
+            rt.anchorMin = new Vector2(0.5f, 0f);
+            rt.anchorMax = new Vector2(0.5f, 0f);
+            rt.pivot = new Vector2(0.5f, 0f);
+            rt.sizeDelta = new Vector2(rt.sizeDelta.x > 0 ? rt.sizeDelta.x : 280f, height);
+            rt.anchoredPosition = new Vector2(rt.anchoredPosition.x, bottomPadding);
         }
 
         private static Font ResolveUiFont(int fontSize)
@@ -253,21 +284,25 @@ namespace Geidai.EditorTools
             var shell = CreateScreenShell("GeidaiHomeRoot");
             var content = shell.safeArea;
 
-            CreateText(content, "Title", "ホーム", 48, TextAnchor.MiddleCenter)
-                .rectTransform.anchoredPosition = new Vector2(0, 700);
+            var title = CreateText(content, "Title", "ホーム", 48, TextAnchor.MiddleCenter);
+            AnchorTopBand(title.rectTransform, 100f, 32f);
 
             var menuContainerGo = new GameObject("MenuContainer", typeof(RectTransform), typeof(VerticalLayoutGroup));
             menuContainerGo.transform.SetParent(content, false);
+            menuContainerGo.SetActive(true);
             var menuRt = menuContainerGo.GetComponent<RectTransform>();
-            menuRt.anchoredPosition = new Vector2(0, 100);
-            menuRt.sizeDelta = new Vector2(700, 800);
+            AnchorCenterBand(menuRt, 0.78f, 0.14f);
             var vlg = menuContainerGo.GetComponent<VerticalLayoutGroup>();
             vlg.spacing = 24;
+            vlg.padding = new RectOffset(16, 16, 16, 16);
             vlg.childAlignment = TextAnchor.UpperCenter;
             vlg.childControlHeight = false;
             vlg.childControlWidth = true;
             vlg.childForceExpandWidth = true;
+            vlg.childForceExpandHeight = false;
 
+            // 非アクティブなプレハブから複製するとインスタンスも非アクティブになるため、
+            // HomeScreenController.BuildMenu 側で SetActive(true) する（ここではプレハブのみ非表示）。
             var prefabBtn = CreateButton(content, "MenuButtonPrefab", "メニュー", new Vector2(640, 90));
             prefabBtn.gameObject.SetActive(false);
             EnsurePrefab(prefabBtn.gameObject, $"{PrefabDir}/HomeMenuButton.prefab");
@@ -298,8 +333,8 @@ namespace Geidai.EditorTools
             var shell = CreateScreenShell("GeidaiRegisterRoot");
             var content = shell.safeArea;
 
-            CreateText(content, "Title", "せってい", 48, TextAnchor.MiddleCenter)
-                .rectTransform.anchoredPosition = new Vector2(0, 700);
+            var title = CreateText(content, "Title", "せってい", 48, TextAnchor.MiddleCenter);
+            AnchorTopBand(title.rectTransform, 100f, 32f);
 
             var nicknameGo = new GameObject("Nickname", typeof(RectTransform), typeof(Image), typeof(InputField));
             nicknameGo.transform.SetParent(content, false);
@@ -348,8 +383,8 @@ namespace Geidai.EditorTools
             var shell = CreateScreenShell("GeidaiRecRoot");
             var content = shell.safeArea;
 
-            CreateText(content, "Title", "ろくおん", 48, TextAnchor.MiddleCenter)
-                .rectTransform.anchoredPosition = new Vector2(0, 700);
+            var title = CreateText(content, "Title", "ろくおん", 48, TextAnchor.MiddleCenter);
+            AnchorTopBand(title.rectTransform, 100f, 32f);
 
             var recordBtn = CreateButton(content, "Record", "ろくおん", new Vector2(280, 90));
             recordBtn.GetComponent<RectTransform>().anchoredPosition = new Vector2(-200, 200);
@@ -400,8 +435,8 @@ namespace Geidai.EditorTools
             var shell = CreateScreenShell("GeidaiCollectionRoot");
             var content = shell.safeArea;
 
-            CreateText(content, "Title", "コレクション", 48, TextAnchor.MiddleCenter)
-                .rectTransform.anchoredPosition = new Vector2(0, 700);
+            var title = CreateText(content, "Title", "コレクション", 48, TextAnchor.MiddleCenter);
+            AnchorTopBand(title.rectTransform, 100f, 32f);
 
             var listHost = new GameObject("SoundListView", typeof(RectTransform), typeof(SoundListView));
             listHost.transform.SetParent(content, false);
@@ -441,8 +476,8 @@ namespace Geidai.EditorTools
             var shell = CreateScreenShell("GeidaiThemeRoot");
             var content = shell.safeArea;
 
-            CreateText(content, "Title", "こんしゅうの おだい", 40, TextAnchor.MiddleCenter)
-                .rectTransform.anchoredPosition = new Vector2(0, 700);
+            var title = CreateText(content, "Title", "こんしゅうの おだい", 40, TextAnchor.MiddleCenter);
+            AnchorTopBand(title.rectTransform, 100f, 32f);
 
             var themeText = CreateText(content, "ThemeText", "おだい", 56, TextAnchor.MiddleCenter);
             themeText.rectTransform.anchoredPosition = new Vector2(0, 200);
@@ -501,8 +536,8 @@ namespace Geidai.EditorTools
             var shell = CreateScreenShell("GeidaiGame1Root");
             var content = shell.safeArea;
 
-            CreateText(content, "Title", "① 音あわせ", 44, TextAnchor.MiddleCenter)
-                .rectTransform.anchoredPosition = new Vector2(0, 750);
+            var title = CreateText(content, "Title", "① 音あわせ", 44, TextAnchor.MiddleCenter);
+            AnchorTopBand(title.rectTransform, 100f, 32f);
 
             var frogGo = new GameObject("Frog", typeof(RectTransform), typeof(Image), typeof(FrogTargetView));
             frogGo.transform.SetParent(content, false);
