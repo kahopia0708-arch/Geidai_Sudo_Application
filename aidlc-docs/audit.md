@@ -714,3 +714,11 @@
 **Context**: CONSTRUCTION - docs sync after UX hotfix verification
 
 ---
+
+## Construction Follow-up — 実機・ビルド・EditMode
+**Timestamp**: 2026-07-16T11:37:00+09:00
+**User Input**: "実機でのマイク権限・縦横両向き・SafeArea・解像度差の確認\nPlayer 実ビルド（Android/iOS 署名）＋ Unity Test Runner での全 EditMode 実行＋端末性能計測\n\nこれを進めたい"
+**AI Response**: (1) iOS microphoneUsageDescription を設定・向き AutoRotation 確認済。(2) `GeidaiBuildScript`/`GeidaiTestRunner`/`device-verification-checklist.md` 整備。(3) EditMode 初回 82Pass/3Fail → LogAssert 修正後 **85Pass/0Fail**（editmode-results.md）。(4) Android Development APK 生成成功（`Builds/Android/GeidaiSudo.apk`）。iOS/実機インストール・性能は端末・Apple Team 待ち。
+**Context**: CONSTRUCTION - device verification / EditMode / Android APK
+
+---

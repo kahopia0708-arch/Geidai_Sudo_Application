@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Text.RegularExpressions;
 using NUnit.Framework;
 using UnityEngine;
+using UnityEngine.TestTools;
 using Geidai.Common.Results;
 using Geidai.Services.IO;
 
@@ -79,6 +81,7 @@ namespace Geidai.Tests.EditMode
 
             // 無効なパス（既存ファイルをディレクトリ扱い）で失敗させる。
             string invalid = Path.Combine(p, "child.txt");
+            LogAssert.Expect(LogType.Error, new Regex(@"\[AtomicFile\] write failed"));
             var result = AtomicFile.WriteAllTextAtomic(invalid, "boom");
 
             Assert.IsFalse(result.IsSuccess);

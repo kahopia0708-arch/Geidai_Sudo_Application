@@ -113,6 +113,10 @@
 - [x] Build and Test — 手順生成完了・完了ゲート提示（2026-07-16）。`aidlc-docs/construction/build-and-test/` に build-instructions / unit-test-instructions（EditMode 17本）/ integration-test-instructions（6シナリオ）/ performance-test-instructions（端末体感・負荷系は N/A）/ build-and-test-summary を生成。コンパイルは全ユニット MCP で Error0/Warn0。実ビルド・Test Runner 全件実行・実シーン E2E・端末性能計測は MCP/実機フォローアップ。承認で Operations へ。
 - [x] MCP 実シーン配線フォローアップ — 完了（2026-07-16、「Use AI-DLC, 前述の作業を実施」）。Geidai* シーン6本生成・アセット割当・NavigationService マップ更新・ブラウンフィールド導線を GoTo 接続・Build Settings 整理・WeeklyTextController 削除。summary: `build-and-test/mcp-scene-wiring-summary.md`。意匠は Sさん残。
 - [x] 実シーン UX ホットフィックス — 完了・ユーザー確認済（2026-07-16、「ここまでの修正は確認できました」）。もどる/Dropdown/一覧表示/設定再読込/ドラッグオフセット/お題→録音→GoBack。commits: `0137719`〜`ea61662`（詳細は mcp-scene-wiring-summary §6）。
+- [x] EditMode 全件 — **85 Pass / 0 Fail**（2026-07-16）。`GeidaiTestRunner` + LogAssert 修正。結果: `editmode-results.md`。
+- [x] Android Development APK — 生成成功（2026-07-16・`Builds/Android/GeidaiSudo.apk`）。実機インストール・§D 確認はユーザー端末待ち。
+- [ ] iOS Xcode / 署名ビルド — Apple Team・Metal Toolchain 要。
+- [ ] 実機マイク/向き/SafeArea/解像度・性能計測 — `device-verification-checklist.md` の §D/§E。
 
 ### 🟡 OPERATIONS PHASE
 - [ ] Operations — PLACEHOLDER

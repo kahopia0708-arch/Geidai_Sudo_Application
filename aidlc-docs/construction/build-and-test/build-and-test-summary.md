@@ -17,10 +17,10 @@
 
 ### Unit Tests（EditMode / NUnit＋FsCheck）
 - **Total Files**: 17（U1:3 / U2:3 / U3:3 / U4:4 / U5:2 / U6:2）
-- **Passed / Failed**: 実行環境（Unity Test Runner）で計測 — **目標: 全 Pass / 0 Failures**
+- **Passed / Failed**: **85 Pass / 0 Fail**（2026-07-16・`editmode-results.md`）
 - **Coverage**: 純粋ロジック＋永続化中心（数値カバレッジは任意計測）
-- **Status**: 未実行（本ステージは**手順生成**。実行は Test Runner で実施）
-- **MCP スモーク（実施済・健全性確認）**: `WavCodec`/`PitchMath`/`SerializationTests`（U1）、`StartupRouter`/`ModuleRouter`（U2）、`SoundEffectMapper`/`RecordingClock`（U3）、`CollectionFilter`/meta JSON（U4）、`ThemeSelector`/`ContentService`（U5）、`QuestionBuilder`（U6）は各ユニットで PASS
+- **Status**: **実行済・Pass**
+- **MCP スモーク（実施済・健全性確認）**: 各ユニット生成時に実施済
 
 ### Integration Tests（サービス結合＋手動 E2E）
 - **Test Scenarios**: 6（起動/遷移・録音→保存→一覧再生・編集/写真/削除整合・お題→Rec・ゲーム素材/出題/解答・サービス解決一貫性）
@@ -44,8 +44,9 @@
 
 ## Overall Status（総合）
 - **Build（コンパイル）**: Success（Error 0 / Warning 0・MCP 確認済）
-- **All Tests**: 手順整備完了・EditMode 全件は Test Runner 実行待ち／**実シーン導線はユーザー Play 確認済**（2026-07-16）
-- **Ready for Operations**: 条件付き Yes — 実ビルド・EditMode 全件・端末性能が残
+- **Android Development APK**: Success（2026-07-16・`Builds/Android/GeidaiSudo.apk`）
+- **All Tests**: EditMode **85 Pass / 0 Fail**（`editmode-results.md`）／実シーン導線はユーザー Play 確認済／実機 E2E・性能は端末待ち
+- **Ready for Operations**: 条件付き Yes — 実機確認（§D）・iOS 署名ビルド・性能計測が残
 
 ## 既知のフォローアップ（MCP / 実機作業）
 各ユニット code-summary の「残タスク」を集約:

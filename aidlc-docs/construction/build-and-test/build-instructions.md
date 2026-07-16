@@ -61,25 +61,30 @@ Unity Hub からプロジェクトを開くと `Packages/manifest.json` を基�
 - **バックエンド設定**: なし（オフライン）
 
 ### 3. Build Settings（シーン登録）の確認
-現状の登録シーン（`ProjectSettings/EditorBuildSettings.asset`）:
-`SampleScene` / `Main画面` / `Home` / `game_Home` / `Game01` / `Rec` / `Place` / `MySoundCollection`
+有効シーン（MCP 配線後）:
+`Main画面` / `GeidaiHome` / `GeidaiRegister` / `GeidaiRec` / `GeidaiCollection` / `GeidaiTheme` / `GeidaiGame1` / `game_Home`  
+（旧 Home/Rec/Game01 等は無効化済み。詳細は `mcp-scene-wiring-summary.md`）
 
-> ⚠️ **注記（MCP フォローアップ）**: 新アセンブリ（`Geidai.*`）の各コントローラを配置した**実シーンの作成/差し替え**は Code Generation 時のスコープ外（各 code-summary の「残タスク」参照）。新規シーン（例: Theme 専用画面・Game1 音合わせ）を作成した場合は本 Build Settings に追加し、旧 `WeeklyTextController` 等の旧実装をシーンから外すこと。
+実機・向き・マイク・性能の実行記録: **`device-verification-checklist.md`**
 
 ### 4. 全ユニットのビルド
-Editor GUI: `File > Build Profiles`（Unity 6）でプラットフォームを選択 →「Build」。
-CLI（Android 例）:
+Editor GUI: `File > Build Profiles`（Unity 6）でプラットフォームを選択 →「Build」。  
+またはメニュー **`Geidai/Build/Android Development APK`** / **`Geidai/Build/iOS Xcode Project`**（`Assets/Editor/GeidaiBuildScript.cs`）。
+
+CLI（Android Development APK 例）:
 ```bash
 "/Applications/Unity/Hub/Editor/6000.4.2f1/Unity.app/Contents/MacOS/Unity" \
-  -batchmode -quit -projectPath "$(pwd)" \
+  -batchmode -quit -nographics \
+  -projectPath "$(pwd)" \
   -buildTarget Android \
-  -executeMethod BuildScript.PerformAndroidBuild \
+  -executeMethod Geidai.EditorTools.GeidaiBuildScript.BuildAndroidDevelopment \
   -logFile ./Logs/build-android.log
 ```
-> `-executeMethod` を使う場合は `Assets/Editor/BuildScript.cs`（`BuildPipeline.BuildPlayer`）を用意する。未整備の場合は Editor GUI からのビルドを基本とする（現状はスクリプトビルド未整備＝GUI ビルド運用）。
+- 出力: `Builds/Android/GeidaiSudo.apk`（Development・デバッグ署名）
+- ストア用本番署名・iOS Team 設定は手動（`device-verification-checklist.md` 参照）
 
 ### 5. ビルド成功の確認
-- **期待出力**: `Build succeeded`（Editor）/ ログに `Build completed`。コンパイル **Error 0**。
+- **期待出力**: `Build succeeded`（Editor）/ ログに `[GeidaiBuild] ... result=Succeeded`。コンパイル **Error 0**。
 - **成果物**:
   - Android: `.apk` / `.aab`
   - iOS: Xcode プロジェクト（→ Xcode で Archive）
