@@ -221,6 +221,8 @@ _実装状況（U5, 2026-07-16）: コード実装済み。`ThemeCatalog`（Scri
 
 _トレース: FR-15 / NFR-05_
 
+_実装状況（U6, 2026-07-16）: コード実装済み。`SoundMatchGameController`（`Geidai.Game1`）が出題を提示し、`FrogTargetView`（お手本＝カエル）と `ChoiceItemView`（選択肢＝おたまじゃくし）を配線。タップで `IPitchVariationService.Play(cents)` 確認再生、uGUI ドラッグ＆ドロップでカエル領域に落とすと `SubmitAnswer(index)` により純粋判定（`Question.correctIndex` 比較）。領域外ドロップは元位置へ復帰。実シーン配線・意匠は Sさん（US-TECH-07）＝MCP フォローアップ。_
+
 ## US-GAME1-02 聞き分け対象の要素
 **P1**
 こども/学習者として、音色・音の高さ・強弱の違いで聴き分けたい。なぜなら、いろいろな「きく」観点を育てたいから。
@@ -231,6 +233,8 @@ _トレース: FR-15 / NFR-05_
 
 _トレース: FR-16 / 前提_
 
+_実装状況（U6, 2026-07-16）: 部分実装。今回は「音高（ピッチ）」の聴き分けを実装（`QuestionBuilder` が基準音からのセント差で選択肢を生成、`PitchVariationService` が再生時ピッチで発音）。音色・強弱・長さの本格 DSP は研究会後に拡張予定（スコープ外）。難易度はセント間隔（`DifficultyLevel.centsStep`）で段階化し `SoundMatchConfig` で調整可能な構成。_
+
 ## US-GAME1-03 正解演出
 **P1**
 こども/学習者として、正解したら嬉しい演出を見たい。なぜなら、続けたくなるから。
@@ -240,6 +244,8 @@ _トレース: FR-16 / 前提_
 - Given 不正解, When 判定される, Then 再挑戦できる（過度なペナルティなし）。
 
 _トレース: FR-17 / NFR-05_
+
+_実装状況（U6, 2026-07-16）: コード実装済み。`ResultEffectController` が正解時に `PlayCorrect()`（カエル成長スプライトを1段階進化・`growthStages`）、不正解時に `PlayRetry()`（無ペナルティで選択肢を元位置復帰・再挑戦）、終了時に `ShowResult(correct,total)` で結果サマリを提示。進行判定は Controller、演出は本コンポーネントに分離。アニメ/イラストは Sさん＝MCP フォローアップ。_
 
 ## US-GAME1-04 出題パラメータ設定
 **P2 / P1**
@@ -252,6 +258,8 @@ _トレース: FR-17 / NFR-05_
 
 _トレース: FR-18 / 前提（研究会後に細部確定）_
 
+_実装状況（U6, 2026-07-16）: コード実装済み。`SoundMatchConfig`（ScriptableObject・`[CreateAssetMenu] Geidai/Sound Match Config`）で出題数（`questionCount`）・選択肢数（`choiceCount`）・難易度段階（`difficulties`＝label＋`centsStep`）・フォールバック素材（`fallbackClip`）を Sさん がインスペクタで調整可能＝再ビルド不要。異常値はアクセサでクランプ（questionCount≥1・choiceCount≥2・centsStep≥1）。既定アセット `Assets/Settings/SoundMatchConfig.asset`（かんたん200/ふつう100/むずかしい50/とても難しい20）を MCP 生成。_
+
 ## US-GAME1-05 ユーザーの保存音を使った出題
 **P1 / P3**
 こども/学習者として、自分の保存音がゲームのお題として出てきてほしい。なぜなら、自分の音で聴き分けるのが楽しいから。
@@ -262,6 +270,8 @@ _トレース: FR-18 / 前提（研究会後に細部確定）_
 - Given 加工処理, When 実行する, Then モバイル端末で体感遅延の少ない実用的な処理時間に収まる。
 
 _トレース: FR-19 / NFR-03, NFR-06_
+
+_実装状況（U6, 2026-07-16）: コード実装済み。`SoundMatchGameController` が `IStorageService.ListSounds()`／`LoadSoundBuffer(id)` で保存音を素材に選択（seed で決定的・読込失敗は次候補・0件/全滅は `fallbackClip`→`Empty` フォールバック）。ピッチ加工は `PitchVariationService` が再生時 `AudioSource.pitch = PitchMath.CentsToRatio(cents)` を適用する軽量方式で、加工済み音声は生成・保存しない（非永続・低GC＝NFR-06）。基準 `AudioClip` はゲーム開始時に一度だけキャッシュし体感遅延を抑制。_
 
 ---
 

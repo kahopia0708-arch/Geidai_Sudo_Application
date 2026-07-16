@@ -5,7 +5,7 @@
 - **Project Type**: Brownfield
 - **Start Date**: 2026-07-15T16:48:08+09:00
 - **Current Phase**: CONSTRUCTION
-- **Current Stage**: U5 weekly theme — Functional Design（Part 1 計画作成・回答待ち）
+- **Current Stage**: U6 Game①音合わせ — Code Generation（Part 2 生成完了・完了ゲート提示）
 
 ## Workspace State
 - **Existing Code**: Yes（Unity 6000.4.2f1 / URP / uGUI）
@@ -103,7 +103,11 @@
 - [x] NFR Requirements — Part1 計画作成・承認済み（2026-07-16、"done"＝全て推奨A）＋Part2 生成完了。nfr-requirements（NFR-U6-01 再生時ピッチ 体感即時/出題 O(n)/60fps・02 加工音 非保存/低GC・03 純粋 QuestionBuilder 決定的/正解1つ・距離/0件 fallback・04 QuestionBuilder PBT＋Config クランプ＋PitchMath 委譲・05 新 Geidai.Game1/純粋・SO は Common.Game/PitchVariationService は Services.Audio/保存音は IStorageService[Collection 非依存]・06 端末内・非保存・PII 非ログ）／tech-stack-decisions（再生時 pitch・純粋 QuestionBuilder・SoundMatchConfig SO・uGUI ドラッグ・既存ゲーム選択 UI 残置）。**承認ゲート提示中**。
 - [x] NFR Design — Part1 計画作成・承認済み（2026-07-16、"done"＝全て推奨A）＋Part2 生成完了。nfr-design-patterns（P1 再生時ピッチ[PitchVariationService・専用リグ・AudioClip キャッシュ・非保存]／P2 純粋 QuestionBuilder[System.Random(seed)・正解1つ/距離・PBT]／P3 素材選択・フォールバック集約[StartGame に集約・fallbackClip・Empty]／P4 配置[新 Geidai.Game1・純粋/SO/型は Common.Game・PitchVariationService は Services.Audio・IStorageService 素材]／P5 操作・演出・接続[ChoiceItemView/FrogTargetView タップ+ドラッグ・純粋判定・ResultEffectController・既存 UI 残置]）／logical-components（ChoiceSpec/Question/DifficultyLevel/SoundMatchConfig/QuestionBuilder/IPitchVariationService/GameSession/SoundMatchGameController/ChoiceItemView/FrogTargetView/ResultEffectController/Game1Bootstrap・依存図・テスト対応）。**承認ゲート提示中**。
 - [x] Infrastructure Design — SKIP（完全オフライン・サーバー/クラウド無し／実行計画と整合）
-- [~] Code Generation — Part1 詳細計画（Step0〜13）作成・承認待ち（2026-07-16）。ChoiceSpec/Question/DifficultyLevel/SoundMatchConfig(SO)/QuestionBuilder(純粋)/GameSession を Geidai.Common.Game、IPitchVariationService/PitchVariationService(再生時 pitch・非保存) を Geidai.Services.Audio、新 Geidai.Game1 に SoundMatchGameController/ChoiceItemView/FrogTargetView/ResultEffectController/Game1Bootstrap、EditMode テスト（QuestionBuilder PBT/SoundMatchConfig クランプ）、保存音は IStorageService（Collection 非依存）、既存ゲーム選択 UI 残置。
+- [x] Code Generation — Part1 詳細計画（Step0〜13）作成・承認済み（2026-07-16、"Continue"）。ChoiceSpec/Question/DifficultyLevel/SoundMatchConfig(SO)/QuestionBuilder(純粋)/GameSession を Geidai.Common.Game、IPitchVariationService/PitchVariationService(再生時 pitch・非保存) を Geidai.Services.Audio、新 Geidai.Game1 に SoundMatchGameController/ChoiceItemView/FrogTargetView/ResultEffectController/Game1Bootstrap、EditMode テスト（QuestionBuilder PBT/SoundMatchConfig クランプ）、保存音は IStorageService（Collection 非依存）、既存ゲーム選択 UI 残置。
+- [x] Code Generation — Part2 生成完了（Step0〜13 全 [x]）・完了ゲート提示（2026-07-16）。`Geidai.Common.Game`（ChoiceSpec/Question/DifficultyLevel/SoundMatchConfig[SO・CreateAssetMenu・クランプアクセサ]/QuestionBuilder[純粋・Build/BuildQuestions・正解1つ/距離/決定的]/GameSession[非永続]）／`Geidai.Services.Audio`（IPitchVariationService＋PitchVariationService[専用リグ・AudioClip キャッシュ・再生時 pitch=CentsToRatio・非保存/低GC]）／新 `Geidai.Game1`（Geidai.Game1.asmdef[Collection/Rec 非依存]・Game1Bootstrap・SoundMatchGameController[ScreenRootBase・素材選択/フォールバック集約・出題・判定・進行・戻る]・ChoiceItemView[タップ確認＋uGUI ドラッグ&ドロップ・領域外復帰]・FrogTargetView[タップ確認＋ドロップ判定]・ResultEffectController[進化/やり直し/結果サマリ]）。EditMode テスト2種（QuestionBuilder PBT/SoundMatchConfig クランプ）。既存コード変更なし（追加のみ・非破壊）。公式 Unity MCP でコンパイル Error 0/Warning 0・QuestionBuilder スモーク PASS（choices=4/正解1つ/distinct/距離OK/決定的）・既定 SoundMatchConfig.asset を Assets/Settings に生成。実シーン配線・既存ゲーム選択 UI からの Navigation 接続・演出/イラスト・Build Settings 登録は MCP フォローアップ（code-summary §8）。
+
+#### U6 Game①音合わせ — 完了ゲート
+- [ ] Code Generation 完了ゲート承認待ち（2026-07-16）。承認で全 6 ユニット完了 → Build and Test へ。
 
 ### 🟢 Build and Test（全ユニット完了後）
 - [ ] Build and Test — EXECUTE

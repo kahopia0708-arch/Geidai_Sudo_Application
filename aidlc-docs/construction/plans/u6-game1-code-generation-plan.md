@@ -23,26 +23,26 @@
 ## 1. 実装ステップ（Part 2 で実行）
 
 ### コード生成
-- [ ] **Step0** MCP 接続確認・コンソール ベースライン（Error/Warning 現況）
-- [ ] **Step1** `Assets/Scripts/Common/Game/ChoiceSpec.cs`／`Question.cs`／`DifficultyLevel.cs`（`Geidai.Common.Game`・Serializable 値オブジェクト）
-- [ ] **Step2** `Assets/Scripts/Common/Game/SoundMatchConfig.cs`（`ScriptableObject`・`questionCount`/`choiceCount`/`difficulties`/`fallbackClip`＋クランプアクセサ。`[CreateAssetMenu]`）
-- [ ] **Step3** `Assets/Scripts/Common/Game/QuestionBuilder.cs`（static 純粋：`Build(baseSoundId, config, diff, seed)`＝`System.Random(seed)` で target/不正解セント決定・正解1つ・距離条件・シャッフル・`correctIndex`）
-- [ ] **Step4** `Assets/Scripts/Common/Game/GameSession.cs`（`Geidai.Common.Game`・実行時 POCO：`questions`/`currentIndex`/`correctCount`/`IsFinished`・非永続）
-- [ ] **Step5** `Assets/Scripts/Services/Audio/IPitchVariationService.cs`＋`PitchVariationService.cs`（`Geidai.Services.Audio`：`Play(AudioBuffer, cents)`＝専用リグ[AudioSource]＋基準 AudioClip キャッシュ＋`pitch=CentsToRatio`／`Stop`／`IsPlaying`／`SetBase(AudioBuffer)`。非保存・低GC）
-- [ ] **Step6** `Assets/Scripts/Game1/Geidai.Game1.asmdef`（参照＝`Geidai.Common`/`Geidai.Services`/`UnityEngine.UI`・**Collection/Rec 非依存**）
-- [ ] **Step7** `Assets/Scripts/Game1/Game1Bootstrap.cs`（static：`IPitchVariationService` を解決/未登録なら登録。`RecBootstrap`/`ThemeBootstrap` と同パターン）
-- [ ] **Step8** `Assets/Scripts/Game1/SoundMatchGameController.cs`（`ScreenRootBase`：`StartGame`＝素材選択/フォールバック集約＋出題生成、`NextQuestion`、`OnAnswer(index)`＝純粋判定→`ResultEffectController`、`OnBackPressed`→ホーム。状態 Loading/Empty/Playing/Judging/Result）
-- [ ] **Step9** `Assets/Scripts/Game1/ChoiceItemView.cs`＋`FrogTargetView.cs`（タップ確認＝`PitchVariationService.Play`／uGUI ドラッグ＋ドロップ領域判定→`OnAnswer`。領域外は元位置復帰）
-- [ ] **Step10** `Assets/Scripts/Game1/ResultEffectController.cs`（`PlayCorrect`＝カエル進化フック／`PlayRetry`／`ShowResult(correct,total)`。演出のみ・進行は Controller）
+- [x] **Step0** MCP 接続確認・コンソール ベースライン（Error/Warning 現況）
+- [x] **Step1** `Assets/Scripts/Common/Game/ChoiceSpec.cs`／`Question.cs`／`DifficultyLevel.cs`（`Geidai.Common.Game`・Serializable 値オブジェクト）
+- [x] **Step2** `Assets/Scripts/Common/Game/SoundMatchConfig.cs`（`ScriptableObject`・`questionCount`/`choiceCount`/`difficulties`/`fallbackClip`＋クランプアクセサ。`[CreateAssetMenu]`）
+- [x] **Step3** `Assets/Scripts/Common/Game/QuestionBuilder.cs`（static 純粋：`Build(baseSoundId, config, diff, seed)`＝`System.Random(seed)` で target/不正解セント決定・正解1つ・距離条件・シャッフル・`correctIndex`。加えて `BuildQuestions(...)` で1ゲーム分）
+- [x] **Step4** `Assets/Scripts/Common/Game/GameSession.cs`（`Geidai.Common.Game`・実行時 POCO：`questions`/`currentIndex`/`correctCount`/`IsFinished`・非永続）
+- [x] **Step5** `Assets/Scripts/Services/Audio/IPitchVariationService.cs`＋`PitchVariationService.cs`（`Geidai.Services.Audio`：`Play(AudioBuffer, cents)`＝専用リグ[AudioSource]＋基準 AudioClip キャッシュ＋`pitch=CentsToRatio`／`Stop`／`IsPlaying`／`SetBase(AudioBuffer)`。非保存・低GC）
+- [x] **Step6** `Assets/Scripts/Game1/Geidai.Game1.asmdef`（参照＝`Geidai.Common`/`Geidai.Services`/`UnityEngine.UI`・**Collection/Rec 非依存**）
+- [x] **Step7** `Assets/Scripts/Game1/Game1Bootstrap.cs`（static：`IPitchVariationService` を解決/未登録なら登録。`RecBootstrap`/`ThemeBootstrap` と同パターン）
+- [x] **Step8** `Assets/Scripts/Game1/SoundMatchGameController.cs`（`ScreenRootBase`：`StartGame`＝素材選択/フォールバック集約＋出題生成、`PresentCurrent`、`SubmitAnswer(index)`＝純粋判定→`ResultEffectController`、`OnBackPressed`→ホーム。状態 Loading/Empty/Playing/Judging/Result）
+- [x] **Step9** `Assets/Scripts/Game1/ChoiceItemView.cs`＋`FrogTargetView.cs`（タップ確認＝`PitchVariationService.Play`／uGUI ドラッグ＋ドロップ領域判定→`OnChoiceDropped`→`SubmitAnswer`。領域外は元位置復帰）
+- [x] **Step10** `Assets/Scripts/Game1/ResultEffectController.cs`（`PlayCorrect`＝カエル進化フック／`PlayRetry`／`ShowResult(correct,total)`。演出のみ・進行は Controller）
 
 ### テスト
-- [ ] **Step11** EditMode テスト（`Geidai.Tests` に `Geidai.Game1` 参照追加）
-  - `QuestionBuilderTests.cs`（PBT：正解ちょうど1つ／不正解は `centsStep` 以上／選択肢数=config／同一 seed 決定的／代表 difficulty）
-  - `SoundMatchConfigTests.cs`（クランプ：choiceCount≥2・questionCount≥1・centsStep≥1）
+- [x] **Step11** EditMode テスト（テストは `Geidai.Common.Game` のみ参照＝`Geidai.Tests` は既存参照で足りるため `Geidai.Game1` 追加不要）
+  - `QuestionBuilderTests.cs`（PBT：正解ちょうど1つ／不正解は `centsStep` 以上／選択肢数=config／同一 seed 決定的／`BuildQuestions` 件数）
+  - `SoundMatchConfigTests.cs`（クランプ：choiceCount≥2・questionCount≥1・centsStep≥1・difficulty index クランプ・空リスト既定）
 
 ### 検証・記録
-- [ ] **Step12** MCP 検証：`AssetDatabase.Refresh`→コンパイル Error 0 目標、`QuestionBuilder`（純粋）スモーク（正解1つ・距離・決定的）。既定 `SoundMatchConfig.asset`（暫定セント段階：かんたん200/ふつう100/むずかしい50/とても難しい20）を `Assets/Settings` に生成
-- [ ] **Step13** `../u6-game1/code/code-summary.md` 生成＋`stories.md`（US-GAME1-01〜05）実装状況追記＋commit
+- [x] **Step12** MCP 検証：`AssetDatabase.Refresh`→コンパイル Error 0 確認、`QuestionBuilder`（純粋）スモーク合格（choices=4・正解1つ・distinct・距離OK・決定的）。既定 `SoundMatchConfig.asset`（かんたん200/ふつう100/むずかしい50/とても難しい20）を `Assets/Settings` に生成
+- [x] **Step13** `../u6-game1/code/code-summary.md` 生成＋`stories.md`（US-GAME1-01〜05）実装状況追記＋commit
 
 ---
 

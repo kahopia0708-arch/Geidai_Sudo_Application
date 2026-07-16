@@ -626,3 +626,19 @@
 **Context**: CONSTRUCTION - U6 Game①音合わせ / Code Generation（Part 1: Planning）
 
 ---
+
+## Construction U6 Code Generation Part1 承認 → Part2 実行
+**Timestamp**: 2026-07-16T09:56:00+09:00
+**User Input**: "Continue"
+**AI Response**: U6 Code Generation Plan（Part 1・Step0〜13）を承認。Part 2（コード生成）を実行開始。aidlc-state.md / audit.md を更新し、計画に沿って実装へ着手。
+**Context**: CONSTRUCTION - U6 Game①音合わせ / Code Generation（Part 2 実行）
+
+---
+
+## Construction U6 Code Generation Part2 完了 → 完了ゲート提示
+**Timestamp**: 2026-07-16T10:10:00+09:00
+**User Input**: （Part 2 実行・ユーザー入力なし）
+**AI Response**: U6 Code Generation Part 2 完了（Step0〜13 全 [x]）。生成: `Geidai.Common.Game`（ChoiceSpec/Question/DifficultyLevel/SoundMatchConfig[SO]/QuestionBuilder[純粋・Build/BuildQuestions]/GameSession）／`Geidai.Services.Audio`（IPitchVariationService＋PitchVariationService[専用リグ・AudioClip キャッシュ・再生時 pitch・非保存/低GC]）／新 `Geidai.Game1`（asmdef[Collection/Rec 非依存]・Game1Bootstrap・SoundMatchGameController・ChoiceItemView・FrogTargetView・ResultEffectController）。EditMode テスト2種（QuestionBuilderTests[PBT]・SoundMatchConfigTests）。既存コード変更なし（追加のみ・非破壊）。公式 Unity MCP（user-unity-mcp）でベースライン Error0/Warn0 → AssetDatabase.Refresh（ドメインリロードで一時切断→再接続）後コンパイル Error0/Warn0 → QuestionBuilder スモーク PASS（choices=4/correctCount=1/correctIndex=3/distinct=True/distanceOK=True/deterministic=True）→ 既定 SoundMatchConfig.asset（q=5/choices=3/難易度4段階）を Assets/Settings に生成。code-summary.md 作成、stories.md（US-GAME1-01〜05）に実装状況追記、計画チェックボックス [x] 更新。完了ゲートを提示（Request Changes / Continue to Next Stage）。承認で全 6 ユニット完了 → Build and Test へ。
+**Context**: CONSTRUCTION - U6 Game①音合わせ / Code Generation（Part 2 完了・完了ゲート）
+
+---
