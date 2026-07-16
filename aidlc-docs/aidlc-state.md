@@ -5,7 +5,7 @@
 - **Project Type**: Brownfield
 - **Start Date**: 2026-07-15T16:48:08+09:00
 - **Current Phase**: CONSTRUCTION
-- **Current Stage**: U6 Game①音合わせ — Code Generation（Part 2 生成完了・完了ゲート提示）
+- **Current Stage**: Build and Test（全 6 ユニット完了・テスト手順生成）
 
 ## Workspace State
 - **Existing Code**: Yes（Unity 6000.4.2f1 / URP / uGUI）
@@ -107,10 +107,10 @@
 - [x] Code Generation — Part2 生成完了（Step0〜13 全 [x]）・完了ゲート提示（2026-07-16）。`Geidai.Common.Game`（ChoiceSpec/Question/DifficultyLevel/SoundMatchConfig[SO・CreateAssetMenu・クランプアクセサ]/QuestionBuilder[純粋・Build/BuildQuestions・正解1つ/距離/決定的]/GameSession[非永続]）／`Geidai.Services.Audio`（IPitchVariationService＋PitchVariationService[専用リグ・AudioClip キャッシュ・再生時 pitch=CentsToRatio・非保存/低GC]）／新 `Geidai.Game1`（Geidai.Game1.asmdef[Collection/Rec 非依存]・Game1Bootstrap・SoundMatchGameController[ScreenRootBase・素材選択/フォールバック集約・出題・判定・進行・戻る]・ChoiceItemView[タップ確認＋uGUI ドラッグ&ドロップ・領域外復帰]・FrogTargetView[タップ確認＋ドロップ判定]・ResultEffectController[進化/やり直し/結果サマリ]）。EditMode テスト2種（QuestionBuilder PBT/SoundMatchConfig クランプ）。既存コード変更なし（追加のみ・非破壊）。公式 Unity MCP でコンパイル Error 0/Warning 0・QuestionBuilder スモーク PASS（choices=4/正解1つ/distinct/距離OK/決定的）・既定 SoundMatchConfig.asset を Assets/Settings に生成。実シーン配線・既存ゲーム選択 UI からの Navigation 接続・演出/イラスト・Build Settings 登録は MCP フォローアップ（code-summary §8）。
 
 #### U6 Game①音合わせ — 完了ゲート
-- [ ] Code Generation 完了ゲート承認待ち（2026-07-16）。承認で全 6 ユニット完了 → Build and Test へ。
+- [x] Code Generation 完了ゲート承認（2026-07-16、"Continue to Next Stage"）。commit d5c1821。per-unit ループ完了。**全 6 ユニット（U1〜U6）コード生成完了。**
 
 ### 🟢 Build and Test（全ユニット完了後）
-- [ ] Build and Test — EXECUTE
+- [x] Build and Test — 手順生成完了・完了ゲート提示（2026-07-16）。`aidlc-docs/construction/build-and-test/` に build-instructions / unit-test-instructions（EditMode 17本）/ integration-test-instructions（6シナリオ）/ performance-test-instructions（端末体感・負荷系は N/A）/ build-and-test-summary を生成。コンパイルは全ユニット MCP で Error0/Warn0。実ビルド・Test Runner 全件実行・実シーン E2E・端末性能計測は MCP/実機フォローアップ。承認で Operations へ。
 
 ### 🟡 OPERATIONS PHASE
 - [ ] Operations — PLACEHOLDER

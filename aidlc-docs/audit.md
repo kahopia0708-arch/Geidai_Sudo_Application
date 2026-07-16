@@ -642,3 +642,27 @@
 **Context**: CONSTRUCTION - U6 Game①音合わせ / Code Generation（Part 2 完了・完了ゲート）
 
 ---
+
+## Construction U6 完了ゲート承認 → Build and Test 開始
+**Timestamp**: 2026-07-16T10:12:00+09:00
+**User Input**: "Continue to Next Stage"
+**AI Response**: U6 Code Generation（Part 2）完了を承認（commit d5c1821）。per-unit ループ完了・**全 6 ユニット（U1〜U6）コード生成完了**。Infrastructure Design は全ユニットで SKIP（完全オフライン）。次段階 Build and Test へ移行。build-and-test.md ルール詳細を読込のうえ、build-instructions / unit-test-instructions / integration-test-instructions / performance-test-instructions / build-and-test-summary を `aidlc-docs/construction/build-and-test/` に生成する。aidlc-state.md 更新。
+**Context**: CONSTRUCTION - Build and Test（手順生成）
+
+---
+
+## Build and Test Stage
+**Timestamp**: 2026-07-16T10:20:00+09:00
+**Build Status**: Success（コンパイル Error 0 / Warning 0・全ユニット MCP 確認済／Player 実ビルドは実機/署名環境で別途）
+**Test Status**: Pass（手順整備完了・MCP スモーク健全性確認済／EditMode 全件・実シーン E2E・端末性能は Test Runner/実機で実行）
+**User Input**: （Build and Test 手順生成・ユーザー入力なし）
+**AI Response**: Build and Test ステージの手順を生成。Unity 6000.4.2f1・完全オフライン・8 アセンブリ（Geidai.Common/Services/Foundation/Rec/Collection/Theme/Game1/Tests）構成を反映。unit-test は EditMode 17 本（NUnit＋FsCheck PBT）を一覧化、integration は 6 シナリオ（起動/遷移・録音→保存→一覧再生・編集/写真/削除整合・お題→Rec・ゲーム素材/出題/解答・サービス解決一貫性）、performance は端末体感（60fps/タップ<0.1s/100件<0.5s/低GC。負荷・同時接続・スループットは N/A）。build-and-test-summary に総合状況とフォローアップ（実シーン配線・実ビルド・全件実行・端末計測）を集約。aidlc-state.md 更新。完了ゲート提示（Request Changes / Approve & Continue → Operations）。
+**Files Generated**:
+- build-instructions.md
+- unit-test-instructions.md
+- integration-test-instructions.md
+- performance-test-instructions.md
+- build-and-test-summary.md
+**Context**: CONSTRUCTION - Build and Test（完了・完了ゲート）
+
+---
