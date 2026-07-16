@@ -50,9 +50,13 @@ namespace Geidai.Rec
         protected override void OnShow()
         {
             EnsureWired();
-            RefreshState(MicPermissionGate.Check() == MicPermissionStatus.Granted
-                ? RecordingState.Idle
-                : RecordingState.NoMic);
+            // 未許可(Denied)は Idle のまま「ろくおん」で権限ダイアログを出す。
+            // NoDevice（ハード無し/許可後もデバイス無し）のみ初期から録音不可にする。
+            // iOS は権限前に Microphone.devices が空になり NoDevice 誤判定しやすい（MicPermissionGate 側でも防御）。
+            var status = MicPermissionGate.Check();
+            RefreshState(status == MicPermissionStatus.NoDevice
+                ? RecordingState.NoMic
+                : RecordingState.Idle);
         }
 
         private void EnsureWired()
@@ -198,7 +202,7 @@ namespace Geidai.Rec
                     RecordingState.Playing => "さいせいちゅう…",
                     RecordingState.Saving => "ほぞんちゅう…",
                     RecordingState.Saved => "ほぞんしたよ。もどれるよ",
-                    RecordingState.NoMic => "マイクを つかえないよ",
+                    RecordingState.NoMic => "マイクが つかえないよ（せっていで きょかを みてね）",
                     _ => statusText.text
                 };
             }

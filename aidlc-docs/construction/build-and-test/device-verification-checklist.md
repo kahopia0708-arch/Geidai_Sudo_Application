@@ -85,7 +85,7 @@ CLI: `-executeMethod Geidai.EditorTools.GeidaiBuildScript.BuildIosXcode`（`-bui
 
 | # | 確認項目 | Android | iOS | メモ |
 |---|---|---|---|---|
-| D1 | 初回録音でマイク許可ダイアログが出る | ☐ | ☐ | |
+| D1 | 初回録音でマイク許可ダイアログが出る | ☐ | ☐ | iOS: 権限前に NoMic 誤表示しないこと（2026-07-16 修正） |
 | D2 | 許可後に録音→再生→保存できる | ☐ | ☐ | |
 | D3 | 拒否時にクラッシュせず平易メッセージ | ☐ | ☐ | |
 | D4 | 縦向きで全画面 SafeArea（ノッチ非干渉） | ☐ | ☐ | |
