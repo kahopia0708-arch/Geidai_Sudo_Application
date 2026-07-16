@@ -42,3 +42,7 @@ GeidaiTheme --WeeklyThemeController--> GeidaiRec
 2. Play → ボタンで GeidaiHome へ
 3. ホームメニューから Rec / Collection / ゲーム / お題 / せってい を開く
 4. game_Home の開始ボタンで GeidaiGame1 が開くこと
+
+## 6. ホットフィックス（2026-07-16）
+- **Input**: `ScreenRootBase` が旧 `UnityEngine.Input.GetKeyDown` を使用 → Input System 専用プロジェクトで毎フレーム `InvalidOperationException`。`Keyboard.current.escapeKey` に変更（`Geidai.Common` に `Unity.InputSystem` 参照追加）。
+- **真っ白**: シーン骨組みの uGUI `Text` が `LegacyRuntime`（日本語グリフ無し）→ OS フォント（Hiragino Sans 等）へ切替して全 Geidai シーンを再生成。

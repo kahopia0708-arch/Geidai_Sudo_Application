@@ -2,7 +2,8 @@
     "name": "Geidai.Common",
     "rootNamespace": "Geidai.Common",
     "references": [
-        "UnityEngine.UI"
+        "UnityEngine.UI",
+        "Unity.InputSystem"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

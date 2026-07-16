@@ -102,7 +102,7 @@ namespace Geidai.EditorTools
             camGo.transform.SetParent(root.transform, false);
             var cam = camGo.GetComponent<Camera>();
             cam.clearFlags = CameraClearFlags.SolidColor;
-            cam.backgroundColor = new Color(0.95f, 0.95f, 0.92f);
+            cam.backgroundColor = new Color(0.86f, 0.90f, 0.88f);
             cam.orthographic = true;
 
             return (canvas, safeRt, responsive, fitter, app);
@@ -116,21 +116,41 @@ namespace Geidai.EditorTools
             rt.offsetMax = Vector2.zero;
         }
 
+        private static Font ResolveUiFont(int fontSize)
+        {
+            // LegacyRuntime / Arial は日本語グリフが無く「真っ白」に見える。OS フォントを優先する。
+            var os = Font.CreateDynamicFontFromOSFont(new[]
+            {
+                "Hiragino Sans",
+                "Hiragino Kaku Gothic ProN",
+                "Yu Gothic UI",
+                "Yu Gothic",
+                "Meiryo",
+                "Noto Sans CJK JP",
+                "Apple SD Gothic Neo",
+                "Arial Unicode MS",
+                "Arial"
+            }, fontSize);
+            if (os != null) return os;
+            return Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf")
+                   ?? Resources.GetBuiltinResource<Font>("Arial.ttf");
+        }
+
         private static Text CreateText(Transform parent, string name, string content, int fontSize, TextAnchor anchor)
         {
             var go = new GameObject(name, typeof(RectTransform), typeof(Text));
             go.transform.SetParent(parent, false);
             var rt = go.GetComponent<RectTransform>();
-            rt.sizeDelta = new Vector2(800, 80);
+            rt.sizeDelta = new Vector2(800, 120);
             var text = go.GetComponent<Text>();
             text.text = content;
-            text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-            if (text.font == null) text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+            text.font = ResolveUiFont(fontSize);
             text.fontSize = fontSize;
             text.alignment = anchor;
-            text.color = Color.black;
+            text.color = new Color(0.12f, 0.12f, 0.12f, 1f);
             text.horizontalOverflow = HorizontalWrapMode.Wrap;
-            text.verticalOverflow = VerticalWrapMode.Truncate;
+            text.verticalOverflow = VerticalWrapMode.Overflow;
+            text.raycastTarget = false;
             return text;
         }
 

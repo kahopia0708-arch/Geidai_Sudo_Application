@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Geidai.Common.UI
 {
@@ -63,15 +64,17 @@ namespace Geidai.Common.UI
         protected virtual void OnHide() { }
 
         /// <summary>
-        /// 端末バック（Android の戻るは KeyCode.Escape に対応）を統一的に受ける（nfr-design §3）。
-        /// 表示中かつ購読有効なときのみ OnBackPressed を呼ぶ。各画面は OnBackPressed を override して分岐する。
+        /// 端末バック（Android の戻る＝Escape）を Input System で受ける（nfr-design §3）。
+        /// Player Settings が Input System 専用のため、旧 <c>UnityEngine.Input</c> は使わない。
+        /// 表示中かつ購読有効なときのみ OnBackPressed を呼ぶ。
         /// </summary>
         protected virtual void Update()
         {
-            if (IsVisible && listenForSystemBack && Input.GetKeyDown(KeyCode.Escape))
-            {
+            if (!IsVisible || !listenForSystemBack) return;
+
+            var keyboard = Keyboard.current;
+            if (keyboard != null && keyboard.escapeKey.wasPressedThisFrame)
                 OnBackPressed();
-            }
         }
 
         /// <summary>戻る/システムバック押下時の既定挙動。派生クラスで override して画面別に分岐する。</summary>
