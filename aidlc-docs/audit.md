@@ -578,3 +578,11 @@
 **Context**: CONSTRUCTION - U6 Game①音合わせ / Functional Design（Part 1: Planning）
 
 ---
+
+## Construction U6 Functional Design Part1 回答 → Part2 生成
+**Timestamp**: 2026-07-16T09:02:00+09:00
+**User Input**: "done"
+**AI Response**: U6 Functional Design Plan の Q1〜Q7 を全て推奨（A）で確定。Q1=ListSounds から1件選択＋保存音0件は fallbackClip／Q2=純粋 QuestionBuilder（メタ生成・正解1つ・距離条件・決定的・PBT）／Q3=再生時ピッチ（AudioSource.pitch=CentsToRatio・非保存・軽量）／Q4=SoundMatchConfig(SO)でデータ駆動・セント段階／Q5=ChoiceItemView タップ確認＋uGUI ドラッグ・純粋判定／Q6=ResultEffectController カエル進化・やさしい再挑戦／Q7=新 Geidai.Game1・QuestionBuilder/SoundMatchConfig は Common.Game・PitchVariationService は Services.Audio・既存ゲーム選択 UI 残置。矛盾なし。Part 2 で domain-entities/business-logic-model/business-rules/frontend-components を生成。
+**Context**: CONSTRUCTION - U6 Game①音合わせ / Functional Design（Part 2 生成）
+
+---

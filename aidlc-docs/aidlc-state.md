@@ -98,7 +98,12 @@
 - [x] Code Generation 完了ゲート承認（2026-07-16、"Continue to Next Stage"）。commit 81ee129。per-unit ループ完了。
 
 #### U6 Game①音合わせ（進行中）
-- [~] Functional Design — Part1 計画作成・回答待ち（2026-07-16）。新 `Geidai.Game1`（SoundMatchGameController/ChoiceItemView/QuestionBuilder[純粋]/ResultEffectController/SoundMatchConfig[SO]）＋`PitchVariationService`（Services・再生時 pitch・非保存）。保存音は StorageService 取得（Collection 非依存）。難易度＝セント段階。
+- [x] Functional Design — Part1 計画作成・承認済み（2026-07-16、"done"＝全て推奨A）。新 `Geidai.Game1`（SoundMatchGameController/ChoiceItemView/QuestionBuilder[純粋]/ResultEffectController/SoundMatchConfig[SO]）＋`PitchVariationService`（Services・再生時 pitch・非保存）。保存音は StorageService 取得（Collection 非依存）。難易度＝セント段階。
+- [x] Functional Design — Part2 生成完了（2026-07-16）。domain-entities（SoundMatchConfig[SO]/DifficultyLevel/ChoiceSpec/Question/GameSession/PitchVariation）／business-logic-model（開始→素材選択→出題生成→タップ確認→ドラッグ解答→判定→演出→進行・Mermaid）／business-rules（BR-GAME1-01〜63：素材選択・出題制約[正解1つ/距離]・非保存再生時ピッチ・難易度クランプ・判定・再挑戦・一方向依存）／frontend-components（SoundMatchGameController/ChoiceItemView/FrogTargetView/ResultEffectController・状態・Sさん ハンドオフ・MCP フォローアップ）。**承認ゲート提示中**。
+- [ ] NFR Requirements
+- [ ] NFR Design
+- [ ] Infrastructure Design（SKIP 予定・完全オフライン）
+- [ ] Code Generation
 
 ### 🟢 Build and Test（全ユニット完了後）
 - [ ] Build and Test — EXECUTE
