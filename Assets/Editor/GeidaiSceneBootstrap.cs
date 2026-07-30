@@ -1165,9 +1165,10 @@ namespace Geidai.EditorTools
             var scrollHost = new GameObject("CreateScroll", typeof(RectTransform), typeof(Image), typeof(ScrollRect));
             scrollHost.transform.SetParent(safe, false);
             var scrollRt = scrollHost.GetComponent<RectTransform>();
-            scrollRt.anchorMin = new Vector2(0.05f, 0.23f);
-            scrollRt.anchorMax = new Vector2(0.95f, 0.88f);
-            scrollRt.offsetMin = Vector2.zero;
+            scrollRt.anchorMin = new Vector2(0.05f, 0f);
+            scrollRt.anchorMax = new Vector2(0.95f, 0.9f);
+            // 下端は「もどる」とボタン行のぶんだけピクセルで空ける（端末比率に依存させない）。
+            scrollRt.offsetMin = new Vector2(0f, 208f);
             scrollRt.offsetMax = Vector2.zero;
             scrollHost.GetComponent<Image>().color = new Color(0.94f, 0.97f, 0.94f, 1f);
 
@@ -1348,8 +1349,9 @@ namespace Geidai.EditorTools
             var layout = row.GetComponent<HorizontalLayoutGroup>();
             layout.spacing = 12f;
             layout.childAlignment = TextAnchor.MiddleCenter;
+            // 高さを制御すると LayoutElement 無しのボタンが 0px になり、背景もタップ判定も消える。
             layout.childControlWidth = false;
-            layout.childControlHeight = true;
+            layout.childControlHeight = false;
             layout.childForceExpandWidth = false;
             layout.childForceExpandHeight = false;
             AddLayoutHeight(row, 78f);

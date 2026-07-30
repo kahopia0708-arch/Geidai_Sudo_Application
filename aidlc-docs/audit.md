@@ -978,3 +978,21 @@ featureブランチも作って"
 **Context**: U8 live preview and fixed controls complete
 
 ---
+
+## Construction Follow-up — U8 Action Row Broken
+**Timestamp**: 2026-07-30T17:48:30+09:00
+**User Input**: "音色が途切れている
+
+3つのボタン？押しても反応がない　ボタン背景色が無く、文字が見えない"
+**AI Response**: ボタン行の HorizontalLayoutGroup が childControlHeight=true で高さ0となり、背景非表示・当たり判定なしになっていた。行レイアウトを修正し、スクロール下端の余白も詰めて音色まで表示できるようにする。
+**Context**: U8 Play Mode UI defect / layout fix
+
+---
+
+## Construction Follow-up — U8 Action Row Fix Applied
+**Timestamp**: 2026-07-30T17:56:00+09:00
+**User Input**: (no new input — implementing fix for previous report)
+**AI Response**: CreateButtonRow の childControlHeight を false 化（ボタン高さ0 → 190x70 復元）、GeidaiCreate の ActionRow/RecipeRow を修復、スクロール下端を offsetMin 208px へ変更、ActionRow の描画順を ConfirmDialog/ErrorBanner より下へ、AudioService のレイヤープレビューを loop 再生化。コンパイル Error 0 / Warning 0。
+**Context**: U8 Play Mode UI + preview continuity fix
+
+---

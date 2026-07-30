@@ -318,6 +318,8 @@ namespace Geidai.Services.Audio
             chain.Apply(settings, true, true, true, true, true);
             source.clip = clip;
             source.volume = clamped.volume;
+            // スライダー調整中に鳴り続けないと変化を聴き比べられないため、プレビューはループ再生。
+            source.loop = true;
             if (shouldStart) source.Play();
         }
 
