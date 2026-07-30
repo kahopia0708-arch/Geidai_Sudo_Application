@@ -4,8 +4,8 @@
 - **Project Name**: 藝大 音響教育アプリ（「音」から始まる、耳のためのアプリケーション）
 - **Project Type**: Brownfield
 - **Start Date**: 2026-07-15T16:48:08+09:00
-- **Current Phase**: CONSTRUCTION（フェーズC）
-- **Current Stage**: CONSTRUCTION — Build and Test（Phase C U7/U8）完了ゲート
+- **Current Phase**: OPERATIONS（PLACEHOLDER）／Construction フォローアップ残
+- **Current Stage**: OPERATIONS — PLACEHOLDER（ワークフロー終端）
 
 ## Workspace State
 - **Existing Code**: Yes（Unity 6000.4.2f1 / URP / uGUI）
@@ -130,20 +130,20 @@
 - [x] U7/U8 Code Generation — Part2 生成完了・完了ゲート承認（2026-07-30）
 
 ### 🟢 Build and Test — Phase C（U7/U8）
-- [x] Build and Test 差分更新（2026-07-30）— `phase-c-u7-u8-addendum.md` ほか手順更新。完了ゲート提示中。
+- [x] Build and Test 差分更新（2026-07-30）— `phase-c-u7-u8-addendum.md` ほか手順更新。完了ゲート承認。
 - [ ] EditMode 全件再実行（21 ファイル）
 - [ ] Library/Create シーン配線（MCP）
 - [ ] 展示ビルドサイズ計測（任意）
 
 ### 🟡 OPERATIONS PHASE
-- [ ] Operations — PLACEHOLDER
+- [x] Operations — PLACEHOLDER 文書化（2026-07-30）— `operations/operations-placeholder.md`
 
 ## Execution Plan Summary
 - **Stages to Execute**: Application Design, Units Generation, Functional Design, NFR Requirements, NFR Design, Code Generation, Build and Test
 - **Stages to Skip**: Infrastructure Design（完全オフライン・サーバー/クラウド無し）
 - **確定ユニット（既存6＋新規2）**: U1〜U6 実装済み。U7 Sound Library / U8 Sound Create をフェーズCとして追加（レビュー待ち）
 - **Risk Level**: Medium
-- **Current Stage**: CONSTRUCTION — Build and Test（Phase C U7/U8）完了ゲート
+- **Current Stage**: OPERATIONS — PLACEHOLDER（ワークフロー終端）
 ## Reverse Engineering Status
 - [x] Reverse Engineering - Completed on 2026-07-15T16:48:08+09:00（概要把握レベル）
 - **Artifacts Location**: aidlc-docs/inception/reverse-engineering/
@@ -159,4 +159,5 @@
 - User Stories 差分: `stories.md` に US-LIB-01〜03 / US-CREATE-01〜04 / US-TECH-08/09、`personas.md` を役割名ベースへ更新。承認済み。
 - Application Design / Units 差分: U7/U8 承認済み。Construction 着手。
 - U7/U8 Construction 設計（FD/NFR）完了。
-- U7/U8 Code Generation 完了ゲート承認（2026-07-30）。Build and Test Phase C 差分更新済。
+- U7/U8 Code Generation 完了ゲート承認（2026-07-30）。Build and Test Phase C 差分更新・承認済。
+- Operations PLACEHOLDER 文書化。AI-DLC 現行サイクル終端。残はシーン配線等の Construction フォローアップ。

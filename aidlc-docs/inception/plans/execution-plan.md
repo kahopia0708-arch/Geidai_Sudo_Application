@@ -265,3 +265,4 @@ flowchart TD
 - [x] U7/U8 Code Generation Part1（計画）
 - [x] U7/U8 Code Generation Part2（生成）
 - [x] Build and Test Phase C（U7/U8 差分）
+- [x] Operations PLACEHOLDER 文書化

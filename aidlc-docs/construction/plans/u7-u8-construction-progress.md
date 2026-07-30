@@ -23,3 +23,6 @@
 | Security | SECURITY-15/05/03 該当。共有なしで 02/04/08 等 N/A。blocking なし |
 | Resiliency | ローカル堅牢性（Unlock/Recipe 原子的）。クラウドDR N/A |
 | PBT | Unlock 冪等・Recipe JSON・クランプを Code Gen で実装予定 |
+
+## ワークフロー
+- [x] Operations PLACEHOLDER 文書化（2026-07-30）
