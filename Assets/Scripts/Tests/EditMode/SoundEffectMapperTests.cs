@@ -75,6 +75,44 @@ namespace Geidai.Tests.EditMode
         }
 
         [Test]
+        public void Reverb_Filter_Params_Increase_With_Amount()
+        {
+            Prop.ForAll<int>(seed =>
+            {
+                float low = 0.02f + (Math.Abs(seed) % 490) / 1000f;  // 0.02..0.51
+                float high = low + 0.4f;                              // 0.42..0.91
+
+                return SoundEffectMapper.ReverbToRoomMilliBel(high) > SoundEffectMapper.ReverbToRoomMilliBel(low)
+                    && SoundEffectMapper.ReverbToLevelMilliBel(high) > SoundEffectMapper.ReverbToLevelMilliBel(low)
+                    && SoundEffectMapper.ReverbToDecaySeconds(high) > SoundEffectMapper.ReverbToDecaySeconds(low);
+            }).QuickCheckThrowOnFailure();
+        }
+
+        [Test]
+        public void Reverb_Filter_Params_Stay_In_Range()
+        {
+            Prop.ForAll<int>(seed =>
+            {
+                float v = (Math.Abs(seed) % 2001) / 1000f - 0.5f; // -0.5..1.5（範囲外含む）
+                float room = SoundEffectMapper.ReverbToRoomMilliBel(v);
+                float level = SoundEffectMapper.ReverbToLevelMilliBel(v);
+                float decay = SoundEffectMapper.ReverbToDecaySeconds(v);
+
+                return room >= SoundEffectMapper.ReverbMinMilliBel && room <= SoundEffectMapper.RoomMaxMilliBel
+                    && level >= SoundEffectMapper.ReverbMinMilliBel && level <= SoundEffectMapper.LevelMaxMilliBel
+                    && decay >= SoundEffectMapper.DecayOffSeconds && decay <= SoundEffectMapper.DecayMaxSeconds;
+            }).QuickCheckThrowOnFailure();
+        }
+
+        [Test]
+        public void Reverb_Zero_Disables_Filter()
+        {
+            Assert.AreEqual(SoundEffectMapper.ReverbMinMilliBel, SoundEffectMapper.ReverbToRoomMilliBel(0f));
+            Assert.AreEqual(SoundEffectMapper.ReverbMinMilliBel, SoundEffectMapper.ReverbToLevelMilliBel(0f));
+            Assert.AreEqual(SoundEffectMapper.DecayOffSeconds, SoundEffectMapper.ReverbToDecaySeconds(0f));
+        }
+
+        [Test]
         public void NormalizeReverb_Is_Clamped_To_Unit_Range()
         {
             Prop.ForAll<int>(seed =>

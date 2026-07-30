@@ -74,13 +74,20 @@ namespace Geidai.Services.Audio
                 goB = child.transform;
             }
 
-            _layerEffectA = goA.GetComponent<EffectChain>() ?? goA.gameObject.AddComponent<EffectChain>();
+            _layerEffectA = EnsureChain(goA);
             _layerEffectA.EnsureComponents();
             _layerSourceA = _layerEffectA.Source;
 
-            _layerEffectB = goB.GetComponent<EffectChain>() ?? goB.gameObject.AddComponent<EffectChain>();
+            _layerEffectB = EnsureChain(goB);
             _layerEffectB.EnsureComponents();
             _layerSourceB = _layerEffectB.Source;
+        }
+
+        // GetComponent は未アタッチ時に「偽 null」を返すため ?? では AddComponent に落ちない。
+        private static EffectChain EnsureChain(Transform target)
+        {
+            var chain = target.GetComponent<EffectChain>();
+            return chain != null ? chain : target.gameObject.AddComponent<EffectChain>();
         }
 
         public Result StartRecording()

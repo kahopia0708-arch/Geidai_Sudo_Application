@@ -996,3 +996,11 @@ featureブランチも作って"
 **Context**: U8 Play Mode UI + preview continuity fix
 
 ---
+
+## Construction Follow-up — Reverb/Timbre Had No Effect
+**Timestamp**: 2026-07-30T18:09:00+09:00
+**User Input**: "ピッチの変化はわかったが、リバーブと音色を変えた時の再生音の変化はわからなかった"
+**AI Response**: 原因は `GetComponent<T>() ?? AddComponent<T>()`。Unity の偽 null により AddComponent が呼ばれず、LowPass/HighPass/Reverb/Distortion が未アタッチのままだった（ピッチは AudioSource 直接指定のため唯一有効）。EffectChain / AudioService を明示 null 判定へ修正し、リバーブは room+decayTime+reverbLevel の 3 値換算（SoundEffectMapper に純粋関数を追加、PBT 3件）、音色プリセットは Soft=LP2200・Hard=LP3500+HP900+Dist0.6 へ調整。EditMode 100件パス、フィルタ実値をエディタスモークで確認。
+**Context**: U8 audio effect defect / root cause fix
+
+---

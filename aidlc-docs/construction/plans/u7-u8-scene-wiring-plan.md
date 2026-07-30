@@ -48,3 +48,13 @@
 - [x] ActionRow をダイアログ／エラーバナーより下の描画順へ戻す
 - [x] レイヤープレビューをループ再生にし、調整中に音が途切れないようにする
 - [x] コンパイル Error/Warning 0 を確認して記録・コミット
+
+## リバーブ・音色が効かない問題（2026-07-30）
+
+- [x] 原因特定: `GetComponent<T>() ?? AddComponent<T>()` は Unity の偽 null により AddComponent へ落ちず、
+      LowPass/HighPass/Reverb/Distortion の各フィルタが未アタッチのままだった（ピッチのみ AudioSource 直接指定で有効）
+- [x] `EffectChain.EnsureComponents` / `AudioService.EnsureLayerRig` を明示 null 判定へ修正
+- [x] リバーブ換算を room / decayTime / reverbLevel の 3 値へ拡張し、スライダー中央でも変化が聴こえるようにする
+- [x] 音色プリセットを聴き分け可能な値へ調整（Soft=LP2200 / Hard=LP3500+HP900+Dist0.6）
+- [x] 新規 PBT 3件を追加し EditMode 100件パス、フィルタ実値をスモークで検証
+- [x] 記録更新・コミット
