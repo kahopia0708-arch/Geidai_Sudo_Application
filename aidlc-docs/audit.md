@@ -832,3 +832,20 @@ featureブランチも作って"
 **Context**: Proceed to Construction with incremental commits
 
 ---
+
+## Construction — U7/U8 Design Artifacts
+**Timestamp**: 2026-07-30T16:48:18+09:00
+**User Input**: "OK
+適宜コミットしながら進めて"
+**AI Response**: Inception 計画を commit 0e4f692。U7/U8 の Functional Design と NFR Requirements/Design を生成（Infrastructure SKIP）。Code Generation 前の承認ゲートを提示。
+**Context**: CONSTRUCTION phase C design package
+
+---
+
+## Construction — U7/U8 Design Approval Prompt
+**Timestamp**: 2026-07-30T16:48:18+09:00
+**AI Prompt**: "U7/U8 の Functional/NFR 設計を確認し、Request Changes または Continue to Code Generation を選択してください。"
+**Status**: Awaiting response
+**Context**: Standardized 2-option gate before Code Generation
+
+---

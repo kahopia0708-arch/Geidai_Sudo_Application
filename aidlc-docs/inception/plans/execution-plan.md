@@ -261,4 +261,5 @@ flowchart TD
 - [x] User Stories 承認（"OK"）
 - [x] Application Design／Units を差分更新
 - [x] Application Design／Units 承認（"OK"）
-- [ ] U7/U8 Construction（Functional/NFR/Code）
+- [x] U7/U8 Functional Design + NFR Design
+- [ ] U7/U8 Code Generation

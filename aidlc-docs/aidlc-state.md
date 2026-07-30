@@ -121,6 +121,13 @@
 - [ ] 端末性能計測（Profiler）— 任意フォローアップ（§E）。
 - [ ] §D 残（拒否時メッセージ・小大画面・導線再確認）— 任意。
 
+### 🟢 CONSTRUCTION PHASE C（U7/U8）
+- [x] U7 Functional Design — 2026-07-30（承認待ちゲートと一体提示）
+- [x] U7 NFR Requirements / Design — 2026-07-30（Infrastructure SKIP）
+- [x] U8 Functional Design — 2026-07-30
+- [x] U8 NFR Requirements / Design — 2026-07-30（Infrastructure SKIP）
+- [ ] U7/U8 Code Generation — 計画承認待ち
+
 ### 🟡 OPERATIONS PHASE
 - [ ] Operations — PLACEHOLDER
 
@@ -144,3 +151,4 @@
 - 変更回答: 次期MVPは音図鑑＋複合条件アンロック＋2音の音づくり。初期50〜100音、レシピ保存＋任意WAVE書き出し、役割別＋ゲーム縦割り、任意展示へ音図鑑入り実機ビルド。
 - User Stories 差分: `stories.md` に US-LIB-01〜03 / US-CREATE-01〜04 / US-TECH-08/09、`personas.md` を役割名ベースへ更新。承認済み。
 - Application Design / Units 差分: U7/U8 承認済み。Construction 着手。
+- U7/U8 Construction 設計（FD/NFR）完了。Code Generation 承認待ち。
