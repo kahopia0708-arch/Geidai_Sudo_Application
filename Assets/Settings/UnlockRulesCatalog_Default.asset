@@ -12,9 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2f120b8bdbb9462b8519818b7440b97, type: 3}
   m_Name: UnlockRulesCatalog_Default
   m_EditorClassIdentifier: Geidai.Common::Geidai.Common.Library.UnlockRulesCatalog
-  rules:
-  - soundId: demo_drum
-    kind: 0
-    gameKey: game1.clear
-    recordingChallengeKey: 
-    requireAll: 1
+  rules: []

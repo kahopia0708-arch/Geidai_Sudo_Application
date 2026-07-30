@@ -163,3 +163,4 @@
 - U7/U8 Code Generation 完了ゲート承認（2026-07-30）。Build and Test Phase C 差分更新・承認済。
 - Operations PLACEHOLDER 文書化。AI-DLC 現行サイクル終端。残はシーン配線等の Construction フォローアップ。
 - U7/U8 Construction フォローアップ: 実シーン配線と EditMode 全件再実行を完了。summary: `construction/build-and-test/u7-u8-scene-wiring-summary.md`。残は Play Mode 操作確認・本番素材・Progression本番配線。
+- U8 Play Mode フィードバック対応（2026-07-30）: 既定ベル/ドラムを両方初期解除し、Create 入場時に A/B へ自動選択。2音ミックス生成 PASS、EditMode 97 Pass / 0 Fail。

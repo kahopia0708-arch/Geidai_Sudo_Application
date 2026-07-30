@@ -946,3 +946,19 @@ featureブランチも作って"
 **Context**: Construction follow-up complete / Play Mode manual verification remains
 
 ---
+
+## Construction Follow-up — U8 Mixing Preview Feedback
+**Timestamp**: 2026-07-30T17:31:30+09:00
+**User Input**: "アンロックされている音が ベル しかないので、音作りでミキシングが試せない
+音作り　では、音のプレビューができない"
+**AI Response**: 既定アンロック数と Create UI → AudioService のプレビュー経路を再現し、テスト可能な状態へ修正する。
+**Context**: U8 Play Mode feedback / bug fix
+
+---
+
+## Construction Follow-up — U8 Mixing Preview Feedback Resolved
+**Timestamp**: 2026-07-30T17:36:30+09:00
+**AI Response**: 既定ベル/ドラムを両方初期解除へ変更し、Create 入場時に素材A=ベル・素材B=ドラムを自動選択するよう修正。MCPで選択肢3件（なし＋2音）、異なるA/B、2音ミックスWAV 88,244 bytesを確認。EditModeは97 Pass / 0 Fail。
+**Context**: U8 preview usability fix complete
+
+---

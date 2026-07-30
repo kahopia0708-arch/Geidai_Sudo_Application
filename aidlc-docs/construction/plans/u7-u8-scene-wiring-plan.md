@@ -25,3 +25,10 @@
 - Create に解除済み素材が表示され、1〜2音の選択・加工・保存・削除・書出し操作ができる
 - `GeidaiLibrary` / `GeidaiCreate` が Build Settings で有効
 - Unity Console Error 0 / Warning 0
+
+## Play Mode フィードバック対応（2026-07-30）
+
+- [x] 既定カタログで異なる2音を初期解除し、ミキシング可能にする
+- [x] 音づくり入場時に素材A/Bを自動選択し、即時プレビュー可能にする
+- [x] プレビュー経路・EditMode全件を再検証する
+- [x] audit / summary / state を更新してコミットする

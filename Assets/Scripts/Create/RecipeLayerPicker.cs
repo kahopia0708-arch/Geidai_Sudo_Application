@@ -22,6 +22,8 @@ namespace Geidai.Create
 
         public void SetOptions(IReadOnlyList<LibraryItemView> unlockedItems)
         {
+            string previousA = SelectedIdA;
+            string previousB = SelectedIdB;
             _ids.Clear();
             var options = new List<Dropdown.OptionData> { new Dropdown.OptionData("（なし）") };
 
@@ -38,6 +40,15 @@ namespace Geidai.Create
 
             Wire(slotA, options);
             Wire(slotB, options);
+
+            // 既存選択を維持し、初回は異なる2音を自動選択してすぐ試聴できるようにする。
+            string nextA = _ids.Contains(previousA)
+                ? previousA
+                : (_ids.Count > 0 ? _ids[0] : null);
+            string nextB = _ids.Contains(previousB)
+                ? previousB
+                : (_ids.Count > 1 ? _ids[1] : null);
+            SetSelection(nextA, nextB);
         }
 
         public void ApplyToRecipe(SoundRecipe recipe)
