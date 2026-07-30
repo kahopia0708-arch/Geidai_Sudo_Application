@@ -890,3 +890,11 @@ featureブランチも作って"
 **Context**: Standardized 2-option completion gate
 
 ---
+
+## Construction — U7/U8 Code Generation Review Fix
+**Timestamp**: 2026-07-30T17:09:00+09:00
+**User Input**: "Assets/Editor/GeidaiSceneBootstrap.cs(94,17): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'"
+**AI Response**: `FindFirstObjectByType<EventSystem>()` を `FindAnyObjectByType<EventSystem>()` に置換。Unity 再コンパイル後、Error 0 / Warning 0 を確認。
+**Context**: Code Generation completion review — warning fix
+
+---

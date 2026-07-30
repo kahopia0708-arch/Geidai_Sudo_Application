@@ -91,7 +91,7 @@ namespace Geidai.EditorTools
             StretchFull(safeRt);
             var fitter = safeGo.GetComponent<SafeAreaFitter>();
 
-            if (Object.FindFirstObjectByType<EventSystem>() == null)
+            if (Object.FindAnyObjectByType<EventSystem>() == null)
             {
                 var es = new GameObject("EventSystem", typeof(EventSystem), typeof(InputSystemUIInputModule));
                 es.transform.SetParent(root.transform, false);
