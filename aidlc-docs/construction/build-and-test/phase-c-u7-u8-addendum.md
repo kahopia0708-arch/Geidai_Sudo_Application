@@ -26,10 +26,10 @@ Geidai.Common ← Geidai.Services ← { ..., Geidai.Library, Geidai.Create }
 ### Build Settings 追加（MCP フォローアップ）
 | SceneId | 想定シーン名 | 状態 |
 |---|---|---|
-| `Library` | `GeidaiLibrary` | 未作成（配線フォローアップ） |
-| `Create` | `GeidaiCreate` | 未作成（配線フォローアップ） |
+| `Library` | `GeidaiLibrary` | 作成・配線・Build Settings 有効化済（2026-07-30） |
+| `Create` | `GeidaiCreate` | 作成・配線・Build Settings 有効化済（2026-07-30） |
 
-Navigation マップはコード上登録済み。シーン未登録時は遷移が `Result.Fail` で止まりクラッシュしないこと。
+HomeMenuConfig / ModuleRouter / Navigation マップから両シーンへ遷移可能。既定カタログには試聴可能な1秒 WAVを2件割り当て済み。
 
 ### 展示ビルド観点（US-TECH-09 / NFR-13）
 1. Development / Release で Android または iOS ビルド。
@@ -51,7 +51,7 @@ Navigation マップはコード上登録済み。シーン未登録時は遷移
 
 **合計ファイル**: 既存 17 ＋ 新規 4 ＝ **21**  
 **実行**: 既存どおり Test Runner EditMode `Run All`  
-**既知結果**: U7/U8 生成時 MCP スモーク PASS。**全件再実行は未実施**（本ゲート承認後または CI で実施）。
+**既知結果**: 2026-07-30 に全件再実行し **97 Pass / 0 Fail / 0 Skip**。PBT が検出した `NaN` クランプ不具合は修正後に再実行済み。
 
 ---
 
@@ -61,7 +61,7 @@ Navigation マップはコード上登録済み。シーン未登録時は遷移
 - **セットアップ**: `CuratedSoundCatalog_Default` / `UnlockRulesCatalog_Default` を画面に割当。`AppManager` 起動済み。
 - **手順**: Home → Library（シーン配線後）→ 初期解除音は試聴可 → ロック音は試聴不可 → GameClear イベント後に再投影で解除反映。
 - **期待**: クラッシュなし。未知IDは無視。UnlockState は原子的保存。
-- **現状**: コード生成済・**シーン未配線**のため Editor ではコントローラ単体/サービス層で先行確認。
+- **現状**: シーン・全参照・Home 導線を MCP で検証済み。Play Mode の操作確認は次の手動テスト。
 
 ### Scenario 8: 音づくり 2音・保存・書き出し（Create ↔ Unlock ↔ Audio ↔ Storage）
 - **手順**: 解除済み2音選択 → パラメータ調整 → プレビュー → レシピ保存 → 任意 WAVE 書き出し。
@@ -98,13 +98,13 @@ Navigation マップはコード上登録済み。シーン未登録時は遷移
 ## 6. 合否（Phase C）
 
 - [x] コンパイル Error 0 / Warning 0（U7/U8 生成＋CS0618 修正後）
-- [ ] EditMode 全件（21 ファイル）Pass
-- [ ] Scenario 7/8（シーン配線後）
+- [x] EditMode 全件（21 ファイル）Pass — 97 Pass / 0 Fail
+- [x] Scenario 7/8 シーン・参照・導線の静的検証
+- [ ] Scenario 7/8 Play Mode 操作確認
 - [ ] 展示向けサイズ計測（任意／任意展示前）
 - [ ] Progression 本番配線（Scenario 9）
 
 ## 7. 次アクション推奨順
-1. MCP: `GeidaiLibrary` / `GeidaiCreate` シーン作成・Home メニュー接続・Build Settings 登録  
-2. EditMode 全件再実行  
-3. カタログ本投入＋サイズ計測  
-4. Game1/Rec → Progression 通知配線  
+1. Play Mode で Scenario 7/8 を操作確認
+2. カタログ本投入＋サイズ計測
+3. Game1/Rec → Progression 通知配線

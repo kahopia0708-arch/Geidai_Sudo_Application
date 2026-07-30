@@ -248,6 +248,9 @@ namespace Geidai.Create
             if (recipe == null) return;
             _draft = recipe.Clone();
             if (titleField != null) titleField.text = _draft.title ?? string.Empty;
+            layerPicker?.SetSelection(
+                _draft.layerA != null ? _draft.layerA.curatedSoundId : null,
+                _draft.layerB != null ? _draft.layerB.curatedSoundId : null);
             effectPanel?.Bind(_draft);
             SetState(CreateState.Editing);
         }

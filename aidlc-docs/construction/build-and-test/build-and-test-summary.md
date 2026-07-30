@@ -19,13 +19,13 @@
 ### Unit Tests（EditMode / NUnit＋FsCheck）
 - **Total Files**: **21**（U1〜U6: 17 ＋ U7/U8: 4）
 - **U1〜U6**: **85 Pass / 0 Fail**（2026-07-16・`editmode-results.md`）
-- **U7/U8**: 生成時 MCP スモーク PASS。**全件再実行は未実施**（承認後に Test Runner / CLI）
+- **U7/U8**: 全件再実行 **97 Pass / 0 Fail / 0 Skip**（2026-07-30）
 - **Status**: 手順更新済（`unit-test-instructions.md`）
 
 ### Integration Tests
 - **Test Scenarios**: 6（既存）＋ 3（Library / Create / Progression 配線）＝ **9**
 - **U1〜U6 E2E**: シーン配線・実機確認済（2026-07-16）
-- **U7/U8 E2E**: コード生成済・**シーン未配線** → MCP フォローアップ後に Scenario 7/8
+- **U7/U8 E2E**: シーン・参照・Home導線・Build Settings の MCP 静的検証 PASS。Play Mode 操作確認待ち。
 - **Status**: 手順更新済（`integration-test-instructions.md` / addendum）
 
 ### Performance Tests
@@ -43,16 +43,15 @@
 |---|---|
 | U1〜U6 コンパイル／実機 | Success |
 | U7/U8 コンパイル | Success（Error 0 / Warning 0） |
-| EditMode 全件（21） | U1〜U6 Pass済 / U7/U8 追加分は再実行待ち |
-| Library/Create シーン配線 | 未着手（MCP） |
-| Ready for Operations | 条件付き — Phase C のシーン配線・全件テスト・任意サイズ計測が残 |
+| EditMode 全件（21） | 97 Pass / 0 Fail / 0 Skip |
+| Library/Create シーン配線 | 完了（MCP 静的検証 PASS） |
+| Ready for Operations | 条件付き — Play Mode操作確認・本番素材サイズ計測が残 |
 
 ## 既知のフォローアップ
-1. MCP: `GeidaiLibrary` / `GeidaiCreate` シーン＋Home 導線＋Build Settings  
-2. EditMode 全件（21）再実行  
-3. 本番カタログ 50〜100 音＋サイズ計測  
-4. Game1/Rec → `IProgressionService` 通知配線  
-5. （任意）Profiler §E / ストア署名  
+1. Play Mode で Library/Create の操作確認
+2. 本番カタログ 50〜100 音＋サイズ計測
+3. Game1/Rec → `IProgressionService` 通知配線
+4. （任意）Profiler §E / ストア署名
 
 ## Next Steps
 - 本サマリ承認後、Operations（PLACEHOLDER）へ進むか、上記フォローアップを継続するかを選択。

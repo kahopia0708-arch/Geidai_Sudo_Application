@@ -12,6 +12,7 @@ namespace Geidai.Common.Create
 
         public static float ClampVolume(float v)
         {
+            if (float.IsNaN(v)) return 1f;
             if (v < VolumeMin) return VolumeMin;
             if (v > VolumeMax) return VolumeMax;
             return v;
@@ -26,6 +27,7 @@ namespace Geidai.Common.Create
 
         public static float ClampReverb(float r)
         {
+            if (float.IsNaN(r)) return 0f;
             if (r < ReverbMin) return ReverbMin;
             if (r > ReverbMax) return ReverbMax;
             return r;

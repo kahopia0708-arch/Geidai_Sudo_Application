@@ -18,6 +18,8 @@ namespace Geidai.Foundation
                 case ModuleId.GameSelect: return SceneId.GameSelect;
                 case ModuleId.WeeklyTheme: return SceneId.Theme;
                 case ModuleId.ProfileEdit: return SceneId.Register;
+                case ModuleId.Library: return SceneId.Library;
+                case ModuleId.Create: return SceneId.Create;
                 default: return SceneId.Home;
             }
         }

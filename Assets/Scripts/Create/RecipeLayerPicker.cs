@@ -47,6 +47,13 @@ namespace Geidai.Create
             recipe.layerB = MakeLayer(SelectedIdB, recipe.layerB);
         }
 
+        /// <summary>保存レシピを開いたとき、素材IDに対応する選択状態を復元する。</summary>
+        public void SetSelection(string idA, string idB)
+        {
+            SetDropdownValue(slotA, idA);
+            SetDropdownValue(slotB, idB);
+        }
+
         private static SoundRecipeLayer MakeLayer(string id, SoundRecipeLayer existing)
         {
             if (string.IsNullOrEmpty(id)) return null;
@@ -73,6 +80,14 @@ namespace Geidai.Create
         }
 
         private void OnChanged(int _) => SelectionChanged?.Invoke();
+
+        private void SetDropdownValue(Dropdown dropdown, string id)
+        {
+            if (dropdown == null) return;
+            int index = string.IsNullOrEmpty(id) ? -1 : _ids.IndexOf(id);
+            dropdown.SetValueWithoutNotify(index + 1); // 0 = なし
+            dropdown.RefreshShownValue();
+        }
 
         private string IndexToId(Dropdown dropdown)
         {

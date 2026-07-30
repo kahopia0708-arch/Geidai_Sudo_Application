@@ -43,3 +43,15 @@ MonoBehaviour:
     visible: 1
     enabled: 1
     order: 4
+  - moduleId: 5
+    label: "\u304A\u3068\u305A\u304B\u3093"
+    iconKey: library
+    visible: 1
+    enabled: 1
+    order: 5
+  - moduleId: 6
+    label: "\u304A\u3068\u3065\u304F\u308A"
+    iconKey: create
+    visible: 1
+    enabled: 1
+    order: 6

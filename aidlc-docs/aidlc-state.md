@@ -131,8 +131,9 @@
 
 ### 🟢 Build and Test — Phase C（U7/U8）
 - [x] Build and Test 差分更新（2026-07-30）— `phase-c-u7-u8-addendum.md` ほか手順更新。完了ゲート承認。
-- [ ] EditMode 全件再実行（21 ファイル）
-- [ ] Library/Create シーン配線（MCP）
+- [x] EditMode 全件再実行（21 ファイル）— 97 Pass / 0 Fail / 0 Skip（2026-07-30）
+- [x] Library/Create シーン配線（MCP）— Home導線・Build Settings・既定音声・全参照の静的検証 PASS（2026-07-30）
+- [ ] Library/Create Play Mode 操作確認
 - [ ] 展示ビルドサイズ計測（任意）
 
 ### 🟡 OPERATIONS PHASE
@@ -161,3 +162,4 @@
 - U7/U8 Construction 設計（FD/NFR）完了。
 - U7/U8 Code Generation 完了ゲート承認（2026-07-30）。Build and Test Phase C 差分更新・承認済。
 - Operations PLACEHOLDER 文書化。AI-DLC 現行サイクル終端。残はシーン配線等の Construction フォローアップ。
+- U7/U8 Construction フォローアップ: 実シーン配線と EditMode 全件再実行を完了。summary: `construction/build-and-test/u7-u8-scene-wiring-summary.md`。残は Play Mode 操作確認・本番素材・Progression本番配線。

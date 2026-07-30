@@ -930,3 +930,19 @@ featureブランチも作って"
 **Context**: Operations PLACEHOLDER complete for current workflow cycle
 
 ---
+
+## Construction Follow-up — U7/U8 Scene Wiring Start
+**Timestamp**: 2026-07-30T17:18:30+09:00
+**User Input**: "2. アプリ画面でテストする前に必要な作業
+を進めて"
+**AI Response**: 明示的な実行承認として、Library/Create シーン生成・Home 導線・Build Settings・既定アセット割当のフォローアップを開始。
+**Context**: Construction follow-up / MCP scene wiring
+
+---
+
+## Construction Follow-up — U7/U8 Scene Wiring Complete
+**Timestamp**: 2026-07-30T17:26:30+09:00
+**AI Response**: `GeidaiLibrary` / `GeidaiCreate` を生成し、Home 導線・Build Settings・既定カタログ WAV・全UI参照を配線。Unity MCP 静的検証は全項目 PASS。EditMode 全件で発見した RecipeClamp の NaN 正規化不具合を修正し、再実行で 97 Pass / 0 Fail / 0 Skip を確認。
+**Context**: Construction follow-up complete / Play Mode manual verification remains
+
+---
