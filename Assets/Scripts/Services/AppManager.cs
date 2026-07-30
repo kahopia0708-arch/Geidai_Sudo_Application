@@ -5,6 +5,7 @@ using Geidai.Services.Storage;
 using Geidai.Services.Navigation;
 using Geidai.Services.Content;
 using Geidai.Services.Audio;
+using Geidai.Services.Progression;
 
 namespace Geidai.Services
 {
@@ -48,6 +49,17 @@ namespace Geidai.Services
             {
                 ServiceRegistry.Register<IAudioService>(new AudioService());
                 registeredAny = true;
+            }
+            // U7: 進行・解除（Storage/Content 登録後に構築）
+            if (!ServiceRegistry.IsRegistered<IProgressionService>())
+            {
+                var storage = ServiceRegistry.Resolve<IStorageService>();
+                var content = ServiceRegistry.Resolve<IContentService>();
+                if (storage != null && content != null)
+                {
+                    ServiceRegistry.Register<IProgressionService>(new ProgressionService(storage, content));
+                    registeredAny = true;
+                }
             }
 
             // シーン遷移のたびに同じログが流れないようにする。

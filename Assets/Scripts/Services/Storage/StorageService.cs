@@ -4,6 +4,8 @@ using System.IO;
 using UnityEngine;
 using Geidai.Common.Audio;
 using Geidai.Common.Collection;
+using Geidai.Common.Create;
+using Geidai.Common.Library;
 using Geidai.Common.Models;
 using Geidai.Common.Results;
 using Geidai.Common.Utils;
@@ -12,8 +14,8 @@ using Geidai.Services.IO;
 namespace Geidai.Services.Storage
 {
     /// <summary>
-    /// ローカル永続化の本実装（U4 / nfr-design §1・§2・§6）。
-    /// - 全書込（profile/meta/wav/写真）を <see cref="AtomicFile"/> の原子的置換へ統一（NFR-COL-R1）。
+    /// ローカル永続化の本実装（U4 / nfr-design §1・§2・§6 + U7/U8）。
+    /// - 全書込（profile/meta/wav/写真/UnlockState/Recipe）を <see cref="AtomicFile"/> の原子的置換へ統一（NFR-COL-R1）。
     /// - sounds/{id}.wav と sounds/{id}.meta.json は対で扱い、破損/欠損はスキップ（NFR-COL-R2）。
     /// - 空/ディレクトリ無しは空リストへフォールバック（NFR-COL-R3）。
     /// - 失敗は Result（理由コード）で返し、クラッシュさせない（SECURITY-15）。ログに PII を出さない。
@@ -24,10 +26,18 @@ namespace Geidai.Services.Storage
         private const string SoundsDirName = "sounds";
         private const string MetaSuffix = ".meta.json";
         private const string PhotoPrefix = ".photo"; // {id}.photo.<ext>
+        private const string ProgressionDirName = "progression";
+        private const string UnlockStateFileName = "unlock-state.json";
+        private const string RecipesDirName = "recipes";
+        private const string ExportsDirName = "exports";
 
         private static string Root => Application.persistentDataPath;
         private static string ProfilePath => Path.Combine(Root, ProfileFileName);
         private static string SoundsPath => Path.Combine(Root, SoundsDirName);
+        private static string ProgressionPath => Path.Combine(Root, ProgressionDirName);
+        private static string UnlockStatePath => Path.Combine(ProgressionPath, UnlockStateFileName);
+        private static string RecipesPath => Path.Combine(Root, RecipesDirName);
+        private static string ExportsPath => Path.Combine(Root, ExportsDirName);
 
         // ---------------------------------------------------------------- Profile
 
@@ -384,6 +394,167 @@ namespace Geidai.Services.Storage
             {
                 SafeLogger.Error("[Storage] DeleteSound failed: " + e.Message);
                 return Result.Fail(ResultCode.IOError, "さくじょに しっぱいしました。");
+            }
+        }
+
+        // ---------------------------------------------------------------- UnlockState (U7)
+
+        public Result<UnlockState> LoadUnlockState()
+        {
+            try
+            {
+                if (!File.Exists(UnlockStatePath))
+                    return Result<UnlockState>.Ok(UnlockState.Empty());
+
+                string json = File.ReadAllText(UnlockStatePath);
+                var state = JsonUtility.FromJson<UnlockState>(json);
+                if (state == null)
+                {
+                    SafeLogger.Warn("[Storage] unlock-state corrupted; empty fallback");
+                    return Result<UnlockState>.Ok(UnlockState.Empty());
+                }
+                if (state.unlockedIds == null) state.unlockedIds = Array.Empty<string>();
+                if (state.achievedGameKeys == null) state.achievedGameKeys = Array.Empty<string>();
+                if (state.achievedRecordingKeys == null) state.achievedRecordingKeys = Array.Empty<string>();
+                return Result<UnlockState>.Ok(state);
+            }
+            catch (Exception e)
+            {
+                SafeLogger.Error("[Storage] LoadUnlockState failed: " + e.Message);
+                return Result<UnlockState>.Ok(UnlockState.Empty());
+            }
+        }
+
+        public Result SaveUnlockState(UnlockState state)
+        {
+            if (state == null)
+                return Result.Fail(ResultCode.ValidationError, "じょうたいが ないよ");
+            try
+            {
+                Directory.CreateDirectory(ProgressionPath);
+                string json = JsonUtility.ToJson(state);
+                return AtomicFile.WriteAllTextAtomic(UnlockStatePath, json);
+            }
+            catch (Exception e)
+            {
+                SafeLogger.Error("[Storage] SaveUnlockState failed: " + e.Message);
+                return Result.Fail(ResultCode.IOError, "ほぞんに しっぱいしたよ");
+            }
+        }
+
+        // ---------------------------------------------------------------- Recipes (U8)
+
+        public Result SaveRecipe(SoundRecipe recipe)
+        {
+            if (recipe == null || string.IsNullOrWhiteSpace(recipe.id))
+                return Result.Fail(ResultCode.ValidationError, "レシピが ないよ");
+
+            var clamped = RecipeValidator.Clamp(recipe);
+            try
+            {
+                Directory.CreateDirectory(RecipesPath);
+                string path = Path.Combine(RecipesPath, clamped.id + ".json");
+                string json = JsonUtility.ToJson(clamped);
+                return AtomicFile.WriteAllTextAtomic(path, json);
+            }
+            catch (Exception e)
+            {
+                SafeLogger.Error("[Storage] SaveRecipe failed: " + e.Message);
+                return Result.Fail(ResultCode.IOError, "ほぞんに しっぱいしたよ");
+            }
+        }
+
+        public Result DeleteRecipe(string id)
+        {
+            if (string.IsNullOrWhiteSpace(id))
+                return Result.Fail(ResultCode.ValidationError, "IDが ないよ");
+            try
+            {
+                string path = Path.Combine(RecipesPath, id + ".json");
+                TryDelete(path);
+                string export = Path.Combine(ExportsPath, id + ".wav");
+                TryDelete(export);
+                return Result.Ok();
+            }
+            catch (Exception e)
+            {
+                SafeLogger.Error("[Storage] DeleteRecipe failed: " + e.Message);
+                return Result.Fail(ResultCode.IOError, "さくじょに しっぱいしたよ");
+            }
+        }
+
+        public Result<List<SoundRecipe>> ListRecipes()
+        {
+            var list = new List<SoundRecipe>();
+            try
+            {
+                if (!Directory.Exists(RecipesPath))
+                    return Result<List<SoundRecipe>>.Ok(list);
+
+                foreach (var file in Directory.GetFiles(RecipesPath, "*.json"))
+                {
+                    try
+                    {
+                        string json = File.ReadAllText(file);
+                        var recipe = JsonUtility.FromJson<SoundRecipe>(json);
+                        if (recipe == null || string.IsNullOrEmpty(recipe.id))
+                        {
+                            SafeLogger.Warn("[Storage] recipe skipped: " + Path.GetFileName(file));
+                            continue;
+                        }
+                        list.Add(recipe);
+                    }
+                    catch (Exception inner)
+                    {
+                        SafeLogger.Warn("[Storage] recipe read failed: " + Path.GetFileName(file) + " " + inner.Message);
+                    }
+                }
+                return Result<List<SoundRecipe>>.Ok(list);
+            }
+            catch (Exception e)
+            {
+                SafeLogger.Error("[Storage] ListRecipes failed: " + e.Message);
+                return Result<List<SoundRecipe>>.Ok(list);
+            }
+        }
+
+        public Result<SoundRecipe> LoadRecipe(string id)
+        {
+            if (string.IsNullOrWhiteSpace(id))
+                return Result<SoundRecipe>.Fail(ResultCode.ValidationError, "IDが ないよ");
+            try
+            {
+                string path = Path.Combine(RecipesPath, id + ".json");
+                if (!File.Exists(path))
+                    return Result<SoundRecipe>.Fail(ResultCode.NotFound, "レシピが みつからないよ");
+                var recipe = JsonUtility.FromJson<SoundRecipe>(File.ReadAllText(path));
+                if (recipe == null)
+                    return Result<SoundRecipe>.Fail(ResultCode.Corrupted, "レシピが こわれてるよ");
+                return Result<SoundRecipe>.Ok(recipe);
+            }
+            catch (Exception e)
+            {
+                SafeLogger.Error("[Storage] LoadRecipe failed: " + e.Message);
+                return Result<SoundRecipe>.Fail(ResultCode.IOError, "よめなかったよ");
+            }
+        }
+
+        public Result SaveRecipeExport(string id, byte[] wavBytes)
+        {
+            if (string.IsNullOrWhiteSpace(id))
+                return Result.Fail(ResultCode.ValidationError, "IDが ないよ");
+            if (wavBytes == null || wavBytes.Length == 0)
+                return Result.Fail(ResultCode.ValidationError, "データが ないよ");
+            try
+            {
+                Directory.CreateDirectory(ExportsPath);
+                string path = Path.Combine(ExportsPath, id + ".wav");
+                return AtomicFile.WriteAllBytesAtomic(path, wavBytes);
+            }
+            catch (Exception e)
+            {
+                SafeLogger.Error("[Storage] SaveRecipeExport failed: " + e.Message);
+                return Result.Fail(ResultCode.IOError, "かきだしに しっぱいしたよ");
             }
         }
 

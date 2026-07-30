@@ -515,3 +515,9 @@ _トレース: 要件 §4 スコープ外／後続_
 | FUTURE | FUT-01〜05 | 将来 | §4 スコープ外 |
 
 **INVEST 自己チェック**: 各ストーリーは独立して価値を持ち（Independent/Valuable）、受入基準で検証可能（Testable）、中粒度で見積り可能（Estimable/Small）、詳細は設計で調整可能（Negotiable）。音づくりの加工数値範囲・解除条件の具体表は Functional Design / コンテンツデータで確定（暫定・更新前提）。
+
+<!-- U7U8_IMPL_STATUS -->
+## 実装状況メモ（U7/U8 Code Generation 2026-07-30）
+- US-LIB-01〜03 / US-CREATE-01〜04 / US-TECH-08: コード生成済み（シーン配線は MCP フォローアップ）
+- モジュール: `Geidai.Library` / `Geidai.Create` + Progression/Unlock/Recipe 共通IF
+

@@ -11,10 +11,10 @@
 
 ## 次
 - [x] U7/U8 Code Generation 計画作成（Part1）
-- [ ] U7/U8 Code Generation 計画の承認
-- [ ] 共通IF実装（Progression/Unlock/Recipe）
-- [ ] U7 コード生成
-- [ ] U8 コード生成
+- [x] U7/U8 Code Generation 計画の承認
+- [x] 共通IF実装（Progression/Unlock/Recipe）
+- [x] U7 コード生成
+- [x] U8 コード生成
 - [ ] Build and Test 更新（展示ビルド観点）
 
 ## 拡張コンプライアンス（設計段階）

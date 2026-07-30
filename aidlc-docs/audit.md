@@ -866,3 +866,27 @@ featureブランチも作って"
 **Context**: Code Generation Part1 gate
 
 ---
+
+## Construction — U7/U8 Code Generation Plan Approved
+**Timestamp**: 2026-07-30T16:55:30+09:00
+**User Input**: "OK"
+**AI Response**: Code Generation Part1 承認。Part2（Step0〜16）を開始する。
+**Context**: Continue to Code Generation Part2
+
+---
+
+## Construction — U7/U8 Code Generation Part2 Complete
+**Timestamp**: 2026-07-30T17:08:00+09:00
+**User Input**: "OK"
+**AI Response**: Part2 Step0〜16 実行。Geidai.Library / Geidai.Create / ProgressionService / Unlock・Recipe 共通IF・EditMode テスト・既定カタログ asset を生成。Unity MCP で Error 0・スモーク PASS。完了ゲートを提示。
+**Context**: Code Generation Part2 complete gate
+
+---
+
+## Construction — U7/U8 Code Generation Completion Gate
+**Timestamp**: 2026-07-30T17:08:00+09:00
+**AI Prompt**: "Code Generation Complete — U7/U8。Request Changes または Continue to Next Stage を選択してください。"
+**Status**: Awaiting response
+**Context**: Standardized 2-option completion gate
+
+---

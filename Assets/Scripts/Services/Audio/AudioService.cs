@@ -1,5 +1,7 @@
 using System;
 using UnityEngine;
+using Geidai.Common.Audio;
+using Geidai.Common.Create;
 using Geidai.Common.Models;
 using Geidai.Common.Results;
 using Geidai.Common.Utils;
@@ -7,19 +9,14 @@ using Geidai.Common.Utils;
 namespace Geidai.Services.Audio
 {
     /// <summary>
-    /// 録音/再生の共有実装（U4 / IAudioService / nfr-design §4・NFR-COL-M4・Q4=A）。
-    /// - 再生リグ（AudioSource＋<see cref="EffectChain"/>）を遅延生成し DontDestroyOnLoad で常駐させ、
-    ///   シーンをまたいで発音できる（Collection 視聴・Rec プレビュー/再生を一本化）。
-    /// - 録音は Unity 標準 <see cref="Microphone"/>（3秒・44100・モノラル）。停止時に固定長
-    ///   <see cref="AudioBuffer"/>（再利用）へコピーして GC を抑制する（U3 の挙動を移設・不変）。
-    /// - すべての失敗は <see cref="Result"/> で表現しクラッシュさせない（SECURITY-15）。
+    /// 録音/再生の共有実装（U4 + U7/U8）。
+    /// Create 用にデュアル AudioSource リグを遅延生成する。
     /// </summary>
     public class AudioService : IAudioService
     {
-        // Microphone の録音長（自動停止は 3秒だが、ゆとりを持って確保）
         private const int RecordSeconds = 4;
 
-        private readonly AudioBuffer _buffer = new AudioBuffer(); // 再利用（132300 サンプル）
+        private readonly AudioBuffer _buffer = new AudioBuffer();
         private AudioClip _recordingClip;
         private AudioClip _playbackClip;
         private string _device;
@@ -28,9 +25,12 @@ namespace Geidai.Services.Audio
         private EffectChain _effectChain;
         private AudioSource _playbackSource;
 
-        // --------------------------------------------------------------- rig (lazy)
+        private GameObject _layerRig;
+        private AudioSource _layerSourceA;
+        private AudioSource _layerSourceB;
+        private EffectChain _layerEffectA;
+        private EffectChain _layerEffectB;
 
-        /// <summary>再生リグ（GameObject＋AudioSource＋EffectChain）を必要時に生成・常駐させる。</summary>
         private void EnsureRig()
         {
             if (_rig != null && _effectChain != null && _playbackSource != null) return;
@@ -49,7 +49,39 @@ namespace Geidai.Services.Audio
             _playbackSource = _effectChain.Source;
         }
 
-        // --------------------------------------------------------------- recording
+        private void EnsureLayerRig()
+        {
+            if (_layerRig != null && _layerSourceA != null && _layerSourceB != null) return;
+
+            if (_layerRig == null)
+            {
+                _layerRig = new GameObject("Geidai.AudioService.LayerRig");
+                UnityEngine.Object.DontDestroyOnLoad(_layerRig);
+            }
+
+            var goA = _layerRig.transform.Find("LayerA");
+            if (goA == null)
+            {
+                var child = new GameObject("LayerA");
+                child.transform.SetParent(_layerRig.transform, false);
+                goA = child.transform;
+            }
+            var goB = _layerRig.transform.Find("LayerB");
+            if (goB == null)
+            {
+                var child = new GameObject("LayerB");
+                child.transform.SetParent(_layerRig.transform, false);
+                goB = child.transform;
+            }
+
+            _layerEffectA = goA.GetComponent<EffectChain>() ?? goA.gameObject.AddComponent<EffectChain>();
+            _layerEffectA.EnsureComponents();
+            _layerSourceA = _layerEffectA.Source;
+
+            _layerEffectB = goB.GetComponent<EffectChain>() ?? goB.gameObject.AddComponent<EffectChain>();
+            _layerEffectB.EnsureComponents();
+            _layerSourceB = _layerEffectB.Source;
+        }
 
         public Result StartRecording()
         {
@@ -90,7 +122,6 @@ namespace Geidai.Services.Audio
                 var temp = new float[total];
                 _recordingClip.GetData(temp, 0);
 
-                // 先頭 3秒（SampleCount）を再利用バッファへコピー。不足分は 0 埋め。
                 int copy = Math.Min(AudioBuffer.SampleCount, temp.Length);
                 Array.Copy(temp, 0, _buffer.Samples, 0, copy);
                 for (int i = copy; i < AudioBuffer.SampleCount; i++)
@@ -105,19 +136,10 @@ namespace Geidai.Services.Audio
             }
         }
 
-        // --------------------------------------------------------------- playback
-
-        public Result Play(AudioBuffer buffer)
-        {
-            // 素の再生（エフェクト中立）。
-            return PlayInternal(buffer, null, false);
-        }
+        public Result Play(AudioBuffer buffer) => PlayInternal(buffer, null, false);
 
         public Result Play(AudioBuffer buffer, SoundEffectSettingsData settings)
-        {
-            // 保存エフェクトを全 on で再適用して再生（Collection 視聴）。
-            return PlayInternal(buffer, settings, true);
-        }
+            => PlayInternal(buffer, settings, true);
 
         private Result PlayInternal(AudioBuffer buffer, SoundEffectSettingsData settings, bool applyEffects)
         {
@@ -130,7 +152,8 @@ namespace Geidai.Services.Audio
                 if (_playbackSource == null)
                     return Result.Fail(ResultCode.Unknown, "さいせいの じゅんびが できてないよ");
 
-                // エフェクト反映（適用しない場合は中立化）。
+                StopLayersQuiet();
+
                 if (applyEffects && settings != null)
                     _effectChain.Apply(settings, true, true, true, true, true);
                 else
@@ -141,6 +164,7 @@ namespace Geidai.Services.Audio
 
                 _playbackClip.SetData(buffer.Samples, 0);
                 _playbackSource.clip = _playbackClip;
+                _playbackSource.volume = 1f;
                 _playbackSource.Play();
                 return Result.Ok();
             }
@@ -175,6 +199,7 @@ namespace Geidai.Services.Audio
             {
                 if (_playbackSource != null && _playbackSource.isPlaying)
                     _playbackSource.Stop();
+                StopLayersQuiet();
                 return Result.Ok();
             }
             catch (Exception e)
@@ -184,13 +209,198 @@ namespace Geidai.Services.Audio
             }
         }
 
-        public bool IsPlaying => _playbackSource != null && _playbackSource.isPlaying;
+        public bool IsPlaying
+        {
+            get
+            {
+                if (_playbackSource != null && _playbackSource.isPlaying) return true;
+                if (_layerSourceA != null && _layerSourceA.isPlaying) return true;
+                if (_layerSourceB != null && _layerSourceB.isPlaying) return true;
+                return false;
+            }
+        }
 
-        /// <summary>再生に用いる AudioSource を取得する（Rec が録音プレビュー等で参照する場合に使用）。</summary>
         public AudioSource GetPlaybackSource()
         {
             EnsureRig();
             return _playbackSource;
+        }
+
+        public Result PlayCuratedClip(AudioClip clip)
+        {
+            try
+            {
+                if (clip == null)
+                    return Result.Fail(ResultCode.ValidationError, "おとが ないよ");
+
+                EnsureRig();
+                StopLayersQuiet();
+                _effectChain.Apply(new SoundEffectSettingsData(), false, false, false, false, false);
+                _playbackSource.clip = clip;
+                _playbackSource.volume = 1f;
+                _playbackSource.Play();
+                return Result.Ok();
+            }
+            catch (Exception e)
+            {
+                SafeLogger.Error("[Audio] PlayCuratedClip failed: " + e.Message);
+                return Result.Fail(ResultCode.IOError, "さいせいできなかったよ");
+            }
+        }
+
+        public Result PlayLayers(AudioClip clipA, SoundRecipeLayer layerA, AudioClip clipB, SoundRecipeLayer layerB)
+        {
+            try
+            {
+                bool hasA = clipA != null && layerA != null && !string.IsNullOrEmpty(layerA.curatedSoundId);
+                bool hasB = clipB != null && layerB != null && !string.IsNullOrEmpty(layerB.curatedSoundId);
+                if (!hasA && !hasB)
+                    return Result.Fail(ResultCode.ValidationError, "おとを えらんでね");
+
+                EnsureLayerRig();
+                if (_playbackSource != null && _playbackSource.isPlaying)
+                    _playbackSource.Stop();
+
+                StopLayersQuiet();
+
+                if (hasA)
+                    StartLayer(_layerSourceA, _layerEffectA, clipA, layerA);
+                if (hasB)
+                    StartLayer(_layerSourceB, _layerEffectB, clipB, layerB);
+
+                return Result.Ok();
+            }
+            catch (Exception e)
+            {
+                SafeLogger.Error("[Audio] PlayLayers failed: " + e.Message);
+                return Result.Fail(ResultCode.IOError, "さいせいできなかったよ");
+            }
+        }
+
+        public Result<byte[]> RenderRecipeToWav(AudioClip clipA, SoundRecipeLayer layerA, AudioClip clipB, SoundRecipeLayer layerB)
+        {
+            try
+            {
+                bool hasA = clipA != null && layerA != null && !string.IsNullOrEmpty(layerA.curatedSoundId);
+                bool hasB = clipB != null && layerB != null && !string.IsNullOrEmpty(layerB.curatedSoundId);
+                if (!hasA && !hasB)
+                    return Result<byte[]>.Fail(ResultCode.ValidationError, "おとを えらんでね");
+
+                float[] mixed = MixOffline(
+                    hasA ? clipA : null, hasA ? RecipeValidator.Clamp(new SoundRecipe { layerA = layerA }).layerA : null,
+                    hasB ? clipB : null, hasB ? RecipeValidator.Clamp(new SoundRecipe { layerB = layerB }).layerB : null);
+
+                if (mixed == null || mixed.Length == 0)
+                    return Result<byte[]>.Fail(ResultCode.ValidationError, "おとが ないよ");
+
+                byte[] wav = WavCodec.Encode(mixed, AudioBuffer.SampleRate, 1);
+                return Result<byte[]>.Ok(wav);
+            }
+            catch (Exception e)
+            {
+                SafeLogger.Error("[Audio] RenderRecipeToWav failed: " + e.Message);
+                return Result<byte[]>.Fail(ResultCode.IOError, "かきだしに しっぱいしたよ");
+            }
+        }
+
+        private static void StartLayer(AudioSource source, EffectChain chain, AudioClip clip, SoundRecipeLayer layer)
+        {
+            var clamped = layer.Clone();
+            RecipeValidator.ClampLayer(clamped);
+            var settings = ToSettings(clamped);
+            chain.Apply(settings, true, true, true, true, true);
+            source.clip = clip;
+            source.volume = clamped.volume;
+            source.Play();
+        }
+
+        private void StopLayersQuiet()
+        {
+            if (_layerSourceA != null && _layerSourceA.isPlaying) _layerSourceA.Stop();
+            if (_layerSourceB != null && _layerSourceB.isPlaying) _layerSourceB.Stop();
+        }
+
+        private static SoundEffectSettingsData ToSettings(SoundRecipeLayer layer)
+        {
+            return new SoundEffectSettingsData
+            {
+                pitchSemitones = layer.pitchSemitones,
+                reverb = layer.reverb,
+                noiseLevel = NoiseLevel.None,
+                timbre = MapTimbre(layer.timbre)
+            };
+        }
+
+        private static TimbreType MapTimbre(RecipeTimbreKind kind)
+        {
+            switch (kind)
+            {
+                case RecipeTimbreKind.Robot: return TimbreType.Hard;
+                case RecipeTimbreKind.Chorus: return TimbreType.Soft;
+                default: return TimbreType.Original;
+            }
+        }
+
+        /// <summary>
+        /// 簡易オフラインミックス: 各クリップを GetData → volume 乗算 → pitch は線形再サンプル近似 → 加算クランプ。
+        /// MVP 品質。DSP 精度は後続改善。
+        /// </summary>
+        private static float[] MixOffline(AudioClip clipA, SoundRecipeLayer layerA, AudioClip clipB, SoundRecipeLayer layerB)
+        {
+            float[] a = clipA != null ? ExtractMono(clipA, layerA) : null;
+            float[] b = clipB != null ? ExtractMono(clipB, layerB) : null;
+            int len = Math.Max(a?.Length ?? 0, b?.Length ?? 0);
+            if (len == 0) return Array.Empty<float>();
+
+            var mixed = new float[len];
+            for (int i = 0; i < len; i++)
+            {
+                float s = 0f;
+                if (a != null && i < a.Length) s += a[i];
+                if (b != null && i < b.Length) s += b[i];
+                if (s > 1f) s = 1f;
+                if (s < -1f) s = -1f;
+                mixed[i] = s;
+            }
+            return mixed;
+        }
+
+        private static float[] ExtractMono(AudioClip clip, SoundRecipeLayer layer)
+        {
+            int samples = clip.samples * clip.channels;
+            var data = new float[samples];
+            clip.GetData(data, 0);
+
+            // モノラル化（先頭チャンネル相当）
+            float[] mono;
+            if (clip.channels <= 1)
+            {
+                mono = data;
+            }
+            else
+            {
+                mono = new float[clip.samples];
+                for (int i = 0; i < clip.samples; i++)
+                    mono[i] = data[i * clip.channels];
+            }
+
+            float vol = layer != null ? RecipeClamp.ClampVolume(layer.volume) : 1f;
+            int pitch = layer != null ? RecipeClamp.ClampPitch(layer.pitchSemitones) : 0;
+            double ratio = PitchMath.SemitonesToRatio(pitch);
+
+            // ピッチ変更: 出力長 = 入力長 / ratio
+            int outLen = Math.Max(1, (int)(mono.Length / ratio));
+            var pitched = new float[outLen];
+            for (int i = 0; i < outLen; i++)
+            {
+                double srcIndex = i * ratio;
+                int i0 = (int)srcIndex;
+                int i1 = Math.Min(i0 + 1, mono.Length - 1);
+                double t = srcIndex - i0;
+                float sample = (float)((1.0 - t) * mono[Math.Min(i0, mono.Length - 1)] + t * mono[i1]);
+                pitched[i] = sample * vol;
+            }
+            return pitched;
         }
     }
 }

@@ -2,18 +2,18 @@ using System;
 using System.Collections.Generic;
 using Geidai.Common.Results;
 using Geidai.Common.Content;
+using Geidai.Common.Library;
 
 namespace Geidai.Services.Content
 {
     /// <summary>
-    /// お題コンテンツの取得実装（U5 / P2/P4）。
-    /// ThemeCatalog を参照し、ThemeSelector（純粋）で「今週のお題」を導出する。
-    /// カタログ未注入/空/全項目無効は Fail(NotFound) を返しクラッシュしない（BR-THEME-21/41）。
-    /// 時刻は注入可能（テスト時は固定日付）。ゲーム用パラメータ取得は U6。
+    /// コンテンツ取得実装（U5 お題 + U7 音図鑑）。
     /// </summary>
     public class ContentService : IContentService
     {
         private ThemeCatalog _catalog;
+        private CuratedSoundCatalog _curatedCatalog;
+        private UnlockRulesCatalog _unlockRules;
         private readonly Func<DateTime> _now;
 
         public ContentService()
@@ -30,6 +30,30 @@ namespace Geidai.Services.Content
         public void SetCatalog(ThemeCatalog catalog)
         {
             _catalog = catalog;
+        }
+
+        public void SetCuratedCatalog(CuratedSoundCatalog catalog)
+        {
+            _curatedCatalog = catalog;
+        }
+
+        public Result<CuratedSoundCatalog> GetCuratedCatalog()
+        {
+            if (_curatedCatalog == null)
+                return Result<CuratedSoundCatalog>.Fail(ResultCode.NotFound, "おとのずかんが まだ ないよ");
+            return Result<CuratedSoundCatalog>.Ok(_curatedCatalog);
+        }
+
+        public void SetUnlockRules(UnlockRulesCatalog rules)
+        {
+            _unlockRules = rules;
+        }
+
+        public Result<UnlockRulesCatalog> GetUnlockRules()
+        {
+            if (_unlockRules == null)
+                return Result<UnlockRulesCatalog>.Fail(ResultCode.NotFound, "かいじょじょうけんが まだ ないよ");
+            return Result<UnlockRulesCatalog>.Ok(_unlockRules);
         }
 
         public Result<ThemeItem> GetCurrentTheme()

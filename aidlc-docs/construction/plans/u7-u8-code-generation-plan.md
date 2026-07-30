@@ -141,32 +141,32 @@ Assets/Settings/
 
 ### A. 共通基盤
 
-- [ ] **Step0** MCP 接続確認・コンソール ベースライン（Error/Warning）
-- [ ] **Step1** `SceneId` に `Library`, `Create` を末尾追加。Navigation マップは既存パターンに合わせて定数／辞書側を追記（未登録シーンはフォローアップで可）
-- [ ] **Step2** Common.Library モデル一式（Definition / Unlock* / ProgressionEvent / LibraryItemView）
-- [ ] **Step3** `CuratedSoundCatalog` / `UnlockRulesCatalog`（SO・`CreateAssetMenu`）
-- [ ] **Step4** `UnlockEvaluator`（静的純粋: `Apply(state, rules, catalog, event)`／`Project(items, state)`／冪等）
-- [ ] **Step5** Common.Create モデル一式（TimbreKind / Layer / Recipe / RecipeClamp / RecipeValidator）
-- [ ] **Step6** `IContentService`／`ContentService` 拡張（カタログ・解除表）
-- [ ] **Step7** `IStorageService`／`StorageService` 拡張（UnlockState・Recipe・Export・AtomicFile・破損時空フォールバック）
-- [ ] **Step8** `IAudioService`／`AudioService` 拡張（PlayCuratedClip / PlayLayers / RenderRecipeToWav）。PlayLayers は2ソース同時再生（2 AudioSource）＋レイヤー別 volume/pitch/reverb/timbre を簡易適用。Render はオフラインミックス→WavCodec（既存）
-- [ ] **Step9** `IProgressionService`／`ProgressionService`＋`AppManager` 登録。起動時 `ApplyInitialUnlocks`
+- [x] **Step0** MCP 接続確認・コンソール ベースライン（Error/Warning）
+- [x] **Step1** `SceneId` に `Library`, `Create` を末尾追加。Navigation マップは既存パターンに合わせて定数／辞書側を追記（未登録シーンはフォローアップで可）
+- [x] **Step2** Common.Library モデル一式（Definition / Unlock* / ProgressionEvent / LibraryItemView）
+- [x] **Step3** `CuratedSoundCatalog` / `UnlockRulesCatalog`（SO・`CreateAssetMenu`）
+- [x] **Step4** `UnlockEvaluator`（静的純粋: `Apply(state, rules, catalog, event)`／`Project(items, state)`／冪等）
+- [x] **Step5** Common.Create モデル一式（TimbreKind / Layer / Recipe / RecipeClamp / RecipeValidator）
+- [x] **Step6** `IContentService`／`ContentService` 拡張（カタログ・解除表）
+- [x] **Step7** `IStorageService`／`StorageService` 拡張（UnlockState・Recipe・Export・AtomicFile・破損時空フォールバック）
+- [x] **Step8** `IAudioService`／`AudioService` 拡張（PlayCuratedClip / PlayLayers / RenderRecipeToWav）。PlayLayers は2ソース同時再生（2 AudioSource）＋レイヤー別 volume/pitch/reverb/timbre を簡易適用。Render はオフラインミックス→WavCodec（既存）
+- [x] **Step9** `IProgressionService`／`ProgressionService`＋`AppManager` 登録。起動時 `ApplyInitialUnlocks`
 
 ### B. U7 Library UI
 
-- [ ] **Step10** `Geidai.Library.asmdef`（refs: Common, Services, UnityEngine.UI）
-- [ ] **Step11** `LibraryBootstrap` / `LibraryState` / `LibraryScreenController` / `CuratedSoundListView` / `CuratedSoundItemView`（locked は試聴不可・unlocked のみ Play）
+- [x] **Step10** `Geidai.Library.asmdef`（refs: Common, Services, UnityEngine.UI）
+- [x] **Step11** `LibraryBootstrap` / `LibraryState` / `LibraryScreenController` / `CuratedSoundListView` / `CuratedSoundItemView`（locked は試聴不可・unlocked のみ Play）
 
 ### C. U8 Create UI
 
-- [ ] **Step12** `Geidai.Create.asmdef`（refs: Common, Services, UnityEngine.UI・**Library 非依存**＝UnlockState は Storage/Progression 経由）
-- [ ] **Step13** `CreateBootstrap` / `CreateState` / Controllers（Picker / EffectPanel / List / Export）。選択は解除済み ID のみ。保存はレシピのみ。書き出しは ConfirmDialog 経由
+- [x] **Step12** `Geidai.Create.asmdef`（refs: Common, Services, UnityEngine.UI・**Library 非依存**＝UnlockState は Storage/Progression 経由）
+- [x] **Step13** `CreateBootstrap` / `CreateState` / Controllers（Picker / EffectPanel / List / Export）。選択は解除済み ID のみ。保存はレシピのみ。書き出しは ConfirmDialog 経由
 
 ### D. テスト・検証・記録
 
-- [ ] **Step14** EditMode テスト4種（UnlockEvaluator PBT／UnlockState JSON／RecipeValidator／SoundRecipe JSON）
-- [ ] **Step15** MCP: Refresh→コンパイル Error 0、UnlockEvaluator／RecipeValidator スモーク、既定カタログ／ルール asset を少数サンプルで生成（実50〜100音は後続アセット投入）
-- [ ] **Step16** `u7-library/code/code-summary.md` ＋ `u8-create/code/code-summary.md`、`stories.md` 実装状況追記、progress／aidlc-state 更新、commit
+- [x] **Step14** EditMode テスト4種（UnlockEvaluator PBT／UnlockState JSON／RecipeValidator／SoundRecipe JSON）
+- [x] **Step15** MCP: Refresh→コンパイル Error 0、UnlockEvaluator／RecipeValidator スモーク、既定カタログ／ルール asset を少数サンプルで生成（実50〜100音は後続アセット投入）
+- [x] **Step16** `u7-library/code/code-summary.md` ＋ `u8-create/code/code-summary.md`、`stories.md` 実装状況追記、progress／aidlc-state 更新、commit
 
 ---
 

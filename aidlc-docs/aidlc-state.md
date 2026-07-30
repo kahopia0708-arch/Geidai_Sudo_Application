@@ -5,7 +5,7 @@
 - **Project Type**: Brownfield
 - **Start Date**: 2026-07-15T16:48:08+09:00
 - **Current Phase**: CONSTRUCTION（フェーズC）
-- **Current Stage**: CONSTRUCTION — U7/U8 Code Generation（Part1 承認待ち）
+- **Current Stage**: CONSTRUCTION — U7/U8 Code Generation 完了ゲート
 
 ## Workspace State
 - **Existing Code**: Yes（Unity 6000.4.2f1 / URP / uGUI）
@@ -126,8 +126,8 @@
 - [x] U7 NFR Requirements / Design — 2026-07-30（Infrastructure SKIP）
 - [x] U8 Functional Design — 2026-07-30
 - [x] U8 NFR Requirements / Design — 2026-07-30（Infrastructure SKIP）
-- [x] U7/U8 Code Generation — Part1 計画作成（2026-07-30）・承認待ち
-- [ ] U7/U8 Code Generation — Part2 生成
+- [x] U7/U8 Code Generation — Part1 計画承認（2026-07-30）
+- [x] U7/U8 Code Generation — Part2 生成完了（2026-07-30）・完了ゲート提示中
 
 ### 🟡 OPERATIONS PHASE
 - [ ] Operations — PLACEHOLDER
@@ -153,4 +153,4 @@
 - User Stories 差分: `stories.md` に US-LIB-01〜03 / US-CREATE-01〜04 / US-TECH-08/09、`personas.md` を役割名ベースへ更新。承認済み。
 - Application Design / Units 差分: U7/U8 承認済み。Construction 着手。
 - U7/U8 Construction 設計（FD/NFR）完了。
-- U7/U8 Code Generation Part1 計画作成済み（`u7-u8-code-generation-plan.md`）。承認待ち。
+- U7/U8 Code Generation Part1 承認済み。Part2 生成完了（2026-07-30）・完了ゲート提示中。
