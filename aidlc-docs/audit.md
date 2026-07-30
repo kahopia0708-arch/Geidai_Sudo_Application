@@ -747,3 +747,88 @@
 **Context**: CONSTRUCTION follow-up — handoff docs for Sさん (US-TECH-07)
 
 ---
+
+## Requirements Change Analysis — 音図鑑・音づくり
+**Timestamp**: 2026-07-30T16:22:10+09:00
+**User Input**: "現状までで個人情報や個人の予定が入らないようにして計画をドキュメントに反映してください
+featureブランチも作って"
+**AI Response**: `feature/sound-library-planning` を作成。外部 Source of Truth のプロジェクト概要と `execution-plan.md` へ、ユーザー間共有の第一弾見送り、制作側音素材の音図鑑、ゲーム進行によるアンロック、音づくり、役割ベースの共同開発、展示用インストールビルドを、確定事項と検討事項に分けて反映。個人プロフィール・連絡手段・個人予定は計画から除外。未確定要件は `sound-library-change-questions.md` に整理。
+**Context**: INCEPTION — requirements change proposal / privacy-safe planning
+
+---
+
+## Requirements Change Analysis — 回答検証・要件更新
+**Timestamp**: 2026-07-30T16:26:59+09:00
+**User Input**: "回答した"
+**AI Response**: `sound-library-change-questions.md` の全6回答（B/C/B/B/A/A）を検証し、矛盾なしと判定。外部 Source of Truth と requirements.md に、音図鑑50〜100音、ゲーム＋録音課題アンロック、2音の音づくり、レシピ保存＋任意WAVE書き出し、役割別／ゲーム縦割り、任意展示向け実機ビルドを反映。Requirements review gate を提示。
+**Context**: INCEPTION — Requirements Change Analysis / review required
+
+---
+
+## Requirements Change Analysis — Approval Prompt
+**Timestamp**: 2026-07-30T16:26:59+09:00
+**AI Prompt**: "更新した要件を確認し、Request Changes または Approve & Continue を選択してください。"
+**Status**: Awaiting response
+**Context**: Requirements change document generated; User Stories update is gated on explicit approval
+
+---
+
+## Requirements Change Analysis — Approval Response
+**Timestamp**: 2026-07-30T16:37:43+09:00
+**User Input**: "OK"
+**AI Response**: 要件変更を承認と解釈。User Stories 更新（EPIC-LIBRARY / EPIC-CREATE / 役割ペルソナ / FUT-02 見直し）へ進む。
+**Status**: Approved
+**Context**: Requirements Change Analysis — proceed to User Stories delta update
+
+---
+
+## User Stories Update — 音図鑑・音づくり
+**Timestamp**: 2026-07-30T16:37:43+09:00
+**User Input**: "OK"
+**AI Response**: Requirements 承認後、stories.md に EPIC-LIBRARY / EPIC-CREATE / US-TECH-08/09 を追加、FUT-02 を音図鑑代替に更新、personas.md を役割名ベースへ再編。assessment を plans に記録。
+**Context**: INCEPTION — User Stories delta for phase C
+
+---
+
+## User Stories Update — Approval Prompt
+**Timestamp**: 2026-07-30T16:37:43+09:00
+**AI Prompt**: "更新した User Stories / Personas を確認し、Request Changes または Approve & Continue を選択してください。"
+**Status**: Awaiting response
+**Context**: Next after approval: Workflow Planning / Application Design / Units delta for sound library
+
+---
+
+## User Stories Update — Approval Response
+**Timestamp**: 2026-07-30T16:42:55+09:00
+**User Input**: "OK"
+**AI Response**: User Stories／Personas 差分を承認と解釈。Application Design／Units Generation の差分更新へ進む。
+**Status**: Approved
+**Context**: Proceed to Application Design and Units delta for phase C
+
+---
+
+## Application Design / Units Update — 音図鑑・音づくり
+**Timestamp**: 2026-07-30T16:42:55+09:00
+**User Input**: "OK"
+**AI Response**: User Stories 承認後、components/services/component-dependency と unit-of-work 一式へ U7 Library / U8 Create、ProgressionService、Curated/Unlock/Recipe モデルを追加。役割名ベースを維持。
+**Context**: INCEPTION — Application Design and Units delta for phase C
+
+---
+
+## Application Design / Units Update — Approval Prompt
+**Timestamp**: 2026-07-30T16:42:55+09:00
+**AI Prompt**: "更新した Application Design / Units を確認し、Request Changes または Approve & Continue を選択してください。"
+**Status**: Awaiting response
+**Context**: Next after approval: Construction planning for U7/U8 (or commit current planning branch)
+
+---
+
+## Application Design / Units Update — Approval Response
+**Timestamp**: 2026-07-30T16:48:18+09:00
+**User Input**: "OK
+適宜コミットしながら進めて"
+**AI Response**: Application Design／Units を承認と解釈。計画ドキュメントをコミット後、Construction（U7→U8）へ進む。
+**Status**: Approved
+**Context**: Proceed to Construction with incremental commits
+
+---

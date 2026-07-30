@@ -1,71 +1,89 @@
 # Component Dependency（依存関係・通信・データフロー）
 
-**プロジェクト**: 藝大 須藤さんアプリ
+**プロジェクト**: 藝大 音響教育アプリ
 **作成**: 2026-07-15 / AI-DLC Application Design（Part 2）
+**更新**: 2026-07-30 / フェーズC（音図鑑・音づくり）差分
 
 ---
 
 ## 1. 依存マトリクス（→ = 依存する / 呼び出す）
 
-| From \ To | Common | Storage | Audio | Pitch | Nav | Content | AppMgr |
-|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| Foundation (U1) | → | → | | | → | → | ← |
-| Rec (U2) | → | → | → | | → | → | |
-| Collection (U3) | → | → | (再生) | | → | | |
-| Theme (U4) | → | | | | → | → | |
-| Game1 (U5) | → | → | → | → | → | → | |
-| Services | → | - | - | - | - | - | - |
+| From \ To | Common | Storage | Audio | Pitch | Nav | Content | Progression | AppMgr |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| Foundation | → | → | | | → | → | | ← |
+| Rec | → | → | → | | → | → | → | |
+| Collection | → | → | → | | → | | | |
+| Theme | → | | | | → | → | | |
+| Game1 | → | → | → | → | → | → | → | |
+| Library | → | → | → | | → | → | → | |
+| Create | → | → | → | | → | → | → | |
+| Services | → | - | - | - | - | - | - | - |
 
 - 依存は上位（モジュール）→ Services → Common の一方向。**Common は他へ依存しない**（循環なし）。
-- Collection の音再生は AudioService の再生機能のみ利用（録音は不要）。
+- Library / Create は Collection / Rec に直接依存しない。素材・解除は Content + Progression + Storage 経由。
 
 ## 2. 通信パターン
-- **画面遷移**: 各 ScreenController → `NavigationService.GoTo(SceneId)`（enum）。イベント/コールバックで戻り。
-- **永続化**: 各モジュール → `StorageService`（同期API＋失敗は Result 型）。直接ファイルI/Oを触らない。
-- **音声**: Rec/Game → `AudioService`（録音/再生/加工）。Game の出題加工のみ `PitchVariationService`。
-- **コンテンツ取得**: Theme/Game/UI → `ContentService`（ScriptableObject/JSON）。Sさん の調整はアセット/設定側で完結。
+- **画面遷移**: 各 ScreenController → `NavigationService.GoTo(SceneId)`（enum）。Library / Create を追加。
+- **永続化**: 各モジュール → `StorageService`。直接ファイルI/Oを触らない。
+- **音声**: Rec/Game/Library/Create → `AudioService`。Game の出題加工のみ `PitchVariationService`。
+- **進行**: Rec保存成功・Gameクリア → `ProgressionService` → UnlockState。
+- **コンテンツ取得**: Theme/Game/Library → `ContentService`（カタログ・解除条件含む）。
 - **起動**: `AppManager` がサービス初期化と最初の遷移をオーケストレーション。
 
-## 3. データフロー（録音→保存→コレクション→ゲーム出題）
+## 3. データフロー（既存＋フェーズC）
 
 ```mermaid
 flowchart LR
-    Mic["マイク入力"] --> AS["AudioService<br/>録音3秒/加工"]
-    AS --> RS["RecScreenController"]
-    RS --> ST["StorageService<br/>原子的保存"]
-    ST --> FS["ローカル保存<br/>WAV+設定JSON+メタ"]
-    FS --> CS["CollectionScreen<br/>一覧/検索/再生"]
-    FS --> QB["QuestionBuilder"]
-    QB --> PV["PitchVariationService<br/>±セント(非保存)"]
-    PV --> GC["SoundMatchGame<br/>出題/判定/演出"]
+    Mic["マイク入力"] --> AS["AudioService"]
+    AS --> Rec["Rec"]
+    Rec --> ST["StorageService"]
+    ST --> UserSounds["ユーザー録音"]
+    UserSounds --> Col["Collection"]
+    UserSounds --> Game["Game1"]
+    Game --> Prog["ProgressionService"]
+    Rec --> Prog
+    Catalog["CuratedSoundCatalog"] --> Cont["ContentService"]
+    Cont --> Lib["Library"]
+    Prog --> Unlock["UnlockState"]
+    Unlock --> Lib
+    Unlock --> Create["Create"]
+    Cont --> Create
+    Create --> Recipe["SoundRecipe"]
+    Recipe --> ST
+    Create --> AS
 
-    style Mic fill:#CE93D8,stroke:#6A1B9A,color:#000
-    style FS fill:#FFF59D,stroke:#F9A825,color:#000
-    style AS fill:#BBDEFB,stroke:#1565C0,color:#000
-    style PV fill:#BBDEFB,stroke:#1565C0,color:#000
+    style Catalog fill:#C8E6C9,stroke:#2E7D32,color:#000
+    style Unlock fill:#FFF59D,stroke:#F9A825,color:#000
+    style Recipe fill:#BBDEFB,stroke:#1565C0,color:#000
     linkStyle default stroke:#333,stroke-width:2px
 ```
 
 ### テキスト代替（Data Flow）
-1. マイク入力 → AudioService（3秒録音・加工）
-2. → RecScreenController（プレビュー/保存操作）
-3. → StorageService（原子的保存）→ ローカル保存（WAV＋設定JSON＋メタ）
-4. ローカル保存 → CollectionScreen（一覧/検索/再生）
-5. ローカル保存 → QuestionBuilder → PitchVariationService（±セント・非保存）→ SoundMatchGame（出題/判定/演出）
+1. マイク → AudioService → Rec → Storage（ユーザー録音）
+2. ユーザー録音 → Collection / Game1
+3. Gameクリア・録音課題 → ProgressionService → UnlockState
+4. CuratedSoundCatalog → ContentService → Library / Create
+5. Create → SoundRecipe → Storage（素材ID＋パラメータ）
+6. Create → AudioService（レイヤー試聴・任意WAVE書き出し）
 
 ## 4. 永続化レイアウト（案 / persistentDataPath 配下）
 ```
 persistentDataPath/
-├── profile.json                # UserProfile
+├── profile.json
+├── unlock-state.json
 ├── sounds/
-│   ├── {id}.wav                # 加工済み WAVE(16bit PCM)
-│   └── {id}.meta.json          # SoundClipMeta + SoundEffectSettings
-└── settings/
-    └── *.json                  # 各種設定
+│   ├── {id}.wav
+│   └── {id}.meta.json
+├── recipes/
+│   └── {recipeId}.json
+└── exports/                    # 任意WAVE書き出し（必要時のみ）
+    └── {exportId}.wav
 ```
-- 保存は一時ファイル→原子的置換。`{id}.wav` と `{id}.meta.json` は対で扱い、片方欠損時は該当項目を読み飛ばす（NFR-07）。
+- 同梱カタログ音声は `Assets`（読み取り専用）。UnlockState / Recipe は原子的置換。
+- Recipe は素材ID参照のみ。未知ID・欠損は読み飛ばし／不足表示（NFR-14）。
 
 ## 5. リスク/留意点
-- **循環依存の回避**: Common は最下層に固定。モジュール間の直接参照は禁止（必要な連携は Services 経由）。
-- **AsmDef 境界**: モジュール分割時、既存 `Assembly-CSharp` からの段階移行が必要（U1 で基盤整備）。
-- **シーン結合**: 現状シーン分割型。NavigationService 導入で文字列依存を解消（FR-02）。
+- **循環依存の回避**: Common は最下層。モジュール間の直接参照は禁止。
+- **進行イベント契約**: GameN / Rec は ProgressionService のイベント型のみに依存。
+- **容量**: 50〜100音の圧縮後ビルド容量を実測し、ロード方式を調整（NFR-13）。
+- **共同開発**: Create のDSP変更と Library のUI変更は並行可能。共通IF破壊はレビュー必須（NFR-15）。

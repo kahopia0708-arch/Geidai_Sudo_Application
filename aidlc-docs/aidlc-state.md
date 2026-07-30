@@ -1,11 +1,11 @@
 # AI-DLC State Tracking
 
 ## Project Information
-- **Project Name**: 藝大 須藤さんアプリ（「音」から始まる、耳のためのアプリケーション）
+- **Project Name**: 藝大 音響教育アプリ（「音」から始まる、耳のためのアプリケーション）
 - **Project Type**: Brownfield
 - **Start Date**: 2026-07-15T16:48:08+09:00
-- **Current Phase**: CONSTRUCTION
-- **Current Stage**: Build and Test Follow-up — 実シーン配線＋UX ホットフィックス（ユーザー確認済・2026-07-16）
+- **Current Phase**: CONSTRUCTION（フェーズC）
+- **Current Stage**: CONSTRUCTION — U7 Sound Library / U8 Sound Create
 
 ## Workspace State
 - **Existing Code**: Yes（Unity 6000.4.2f1 / URP / uGUI）
@@ -18,7 +18,7 @@
 ## Reference Source (動的参照)
 - **Rule**: `.cursor/rules/project-reference.mdc`（alwaysApply）
 - **Root**: `/Users/maemoto/Library/CloudStorage/GoogleDrive-.../202607.藝大_須藤さん`
-- **Summary**: `.../プロジェクト概要.md`（最終更新 2026-07-11）
+- **Summary**: `.../プロジェクト概要.md`（最終更新 2026-07-30）
 - **企画・構想の正の入力源。各ステージ着手時に最新版を動的に読む。**
 
 ## Code Location Rules
@@ -42,6 +42,9 @@
 - [x] Workflow Planning — execution-plan.md 承認済み（2026-07-15）
 - [x] Application Design — 設計成果物（components/methods/services/dependency/統合）承認済み（2026-07-15）
 - [x] Units Generation — unit-of-work 一式 承認済み（2026-07-15）
+- [x] Requirements Change Analysis — 音図鑑・アンロック・音づくり（2026-07-30、全6問回答・矛盾なし、requirements.md 承認済み）
+- [x] User Stories Update — EPIC-LIBRARY / EPIC-CREATE / 役割ペルソナ（2026-07-30、承認済み）
+- [x] Application Design / Units Update — U7 Library / U8 Create（2026-07-30、承認済み）
 
 ### 🟢 CONSTRUCTION PHASE（各ユニットで per-unit ループ）
 順序: U1 基盤 → U2 Foundation → U3 Rec → U4 Persistence/Collection → U5 weekly theme → U6 Game①
@@ -124,9 +127,9 @@
 ## Execution Plan Summary
 - **Stages to Execute**: Application Design, Units Generation, Functional Design, NFR Requirements, NFR Design, Code Generation, Build and Test
 - **Stages to Skip**: Infrastructure Design（完全オフライン・サーバー/クラウド無し）
-- **確定ユニット（6）**: U1 基盤(UI基盤+Services器) → U2 Foundation → U3 Rec → U4 Persistence/Collection → U5 weekly theme → U6 Game①音合わせ（Units Generation 2026-07-15 確定）
+- **確定ユニット（既存6＋新規2）**: U1〜U6 実装済み。U7 Sound Library / U8 Sound Create をフェーズCとして追加（レビュー待ち）
 - **Risk Level**: Medium
-- **Current Stage**: Build and Test Follow-up — 実機マイク/向き確認済。残: 性能計測（任意）/ Operations
+- **Current Stage**: CONSTRUCTION — U7 Sound Library / U8 Sound Create
 ## Reverse Engineering Status
 - [x] Reverse Engineering - Completed on 2026-07-15T16:48:08+09:00（概要把握レベル）
 - **Artifacts Location**: aidlc-docs/inception/reverse-engineering/
@@ -135,3 +138,9 @@
 - ユーザー指定スコープ: Requirements Analysis → User Stories → Workflow Planning。
 - 各承認ゲートでユーザー確認を待つ。
 - Sさん ハンドオフ文書（2026-07-16）: ルート `README.md` ＋ `docs/Sさん向けガイド.md`（見た目・Settings 差し替え・Build All 注意）。
+- 変更計画ブランチ: `feature/sound-library-planning`。
+- 2026-07-30 の企画更新は、個人情報・連絡手段・個人予定を除外し、役割名とプロジェクト上のマイルストーンのみ記録する。
+- 外部 Source of Truth に「制作側音素材の音図鑑」「ゲーム進行によるアンロック」「音を作る」「機能単位の共同実装」「展示用インストールビルド」を提案／確定の状態を分けて反映済み。
+- 変更回答: 次期MVPは音図鑑＋複合条件アンロック＋2音の音づくり。初期50〜100音、レシピ保存＋任意WAVE書き出し、役割別＋ゲーム縦割り、任意展示へ音図鑑入り実機ビルド。
+- User Stories 差分: `stories.md` に US-LIB-01〜03 / US-CREATE-01〜04 / US-TECH-08/09、`personas.md` を役割名ベースへ更新。承認済み。
+- Application Design / Units 差分: U7/U8 承認済み。Construction 着手。

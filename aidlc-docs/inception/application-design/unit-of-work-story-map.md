@@ -1,7 +1,8 @@
 # Unit of Work Story Map（ストーリー→ユニット割当）
 
-**プロジェクト**: 藝大 須藤さんアプリ
+**プロジェクト**: 藝大 音響教育アプリ
 **作成**: 2026-07-15 / AI-DLC Units Generation（Part 2）
+**更新**: 2026-07-30 / フェーズC 割当追加
 **入力**: `../user-stories/stories.md`、`unit-of-work.md`
 
 ---
@@ -10,32 +11,34 @@
 
 | ユニット | フェーズ | ストーリー | 対応要件 |
 |---|:---:|---|---|
-| U1 基盤 | A | US-TECH-01, US-TECH-02, US-TECH-04, US-TECH-05, US-TECH-07 | FR-02, NFR-05/10/11/12, §7 UI開発フロー |
-| U2 Foundation | A | US-NAV-01, US-NAV-02, US-REG-01, US-REG-02 | FR-01/02/03/04, SEC-05 |
-| U3 Rec | A | US-REC-01, US-REC-02, US-REC-03, US-TECH-03 | FR-05/06/07/08, NFR-03/06/08 |
-| U4 Persistence/Collection | A | US-COL-01, US-COL-02, US-COL-03, US-COL-04, US-TECH-06 | FR-09/10/11/12, NFR-07 |
-| U5 weekly theme | B | US-THEME-01, US-THEME-02, US-THEME-03 | FR-13/14 |
-| U6 Game①音合わせ | B | US-GAME1-01, US-GAME1-02, US-GAME1-03, US-GAME1-04, US-GAME1-05 | FR-15〜19, NFR-03/06 |
-| 将来（未着手） | 将来 | FUT-01, FUT-02, FUT-03, FUT-04 | §4 スコープ外 |
+| U1 基盤 | A/C | US-TECH-01, 02, 04, 05, 07, 09（共通IF） | NFR-05/10/11/12/15/17, §7 |
+| U2 Foundation | A | US-NAV-01, 02, US-REG-01, 02 | FR-01〜04 |
+| U3 Rec | A | US-REC-01〜03, US-TECH-03 | FR-05〜08 |
+| U4 Persistence/Collection | A/C | US-COL-01〜04, US-TECH-06 | FR-09〜12, NFR-07/14 |
+| U5 weekly theme | B | US-THEME-01〜03 | FR-13/14 |
+| U6 Game①音合わせ | B | US-GAME1-01〜05 | FR-15〜19 |
+| U7 Sound Library | C | US-LIB-01〜03 | FR-20〜24, NFR-13/14 |
+| U8 Sound Create | C | US-CREATE-01〜04 | FR-25〜29, NFR-06/07/14 |
+| 横断（Build） | C | US-TECH-08 | NFR-16/17 |
+| 将来 | 将来 | FUT-01〜05 | §4 スコープ外 |
 
-## 2. 網羅性チェック（全ストーリーが割当済み）
+## 2. 網羅性チェック
 
-- **NAV**: US-NAV-01→U2, US-NAV-02→U2 ✔
-- **REG**: US-REG-01→U2, US-REG-02→U2 ✔
-- **REC**: US-REC-01→U3, US-REC-02→U3, US-REC-03→U3 ✔
-- **COL**: US-COL-01→U4, US-COL-02→U4, US-COL-03→U4, US-COL-04→U4 ✔
-- **THEME**: US-THEME-01→U5, US-THEME-02→U5, US-THEME-03→U5 ✔
-- **GAME1**: US-GAME1-01→U6, 02→U6, 03→U6, 04→U6, 05→U6 ✔
-- **TECH**: US-TECH-01→U1, 02→U1, 03→U3, 04→U1, 05→U1, 06→U4, 07→U1 ✔
-- **FUTURE**: FUT-01〜04→将来（MVP外） ✔
+- **NAV / REG / REC / COL / THEME / GAME1**: 既存どおり U2〜U6 ✔
+- **LIBRARY**: US-LIB-01〜03 → U7 ✔
+- **CREATE**: US-CREATE-01〜04 → U8 ✔
+- **TECH**: 01/02/04/05/07/09 → U1、03 → U3、06 → U4、08 → Build横断 ✔
+- **FUTURE**: FUT-01〜05 → 将来 ✔
 
-**結果**: MVP 対象の全ストーリー（US-*＝24）が U1〜U6 に割当済み。将来スタブ（FUT-*）は将来ユニット。**未割当なし**。
+**結果**: フェーズA/B/C の US-* はすべて割当済み。未割当なし。
 
 ## 3. フェーズ別サマリ
-- **フェーズA（基盤〜保存）**: U1, U2, U3, U4 — 中間報告（2026-11）に向けた主軸。
-- **フェーズB（最初のゲーム）**: U5, U6 — お題連携と①音合わせ。
-- **将来**: FUT-01〜04。
+- **A**: U1〜U4（基盤〜保存）— 実装済み
+- **B**: U5〜U6（お題・①音合わせ）— 実装済み
+- **C**: U7〜U8＋共通IF拡張＋展示試用ビルド — 計画中
+- **将来**: FUT-01〜05
 
 ## 4. 補足
-- 技術イネーブラー（US-TECH-*）は主に U1 に集約し、録音一本化（US-TECH-03）は Rec 実装と不可分のため U3、データ堅牢性（US-TECH-06）は永続化本実装の U4 に配置。
-- 各ユニット完了時に UI 詳細調整を Sさん へハンドオフ（US-TECH-07 は U1 で仕組みを用意し、全ユニットで運用）。
+- アンロック進行は U1 ProgressionService に集約し、U3/U6 はイベント通知のみ。
+- UI詳細調整は各ユニット完了時に企画・デザインへハンドオフ（US-TECH-07）。
+- 追加ミニゲームは将来の縦割りユニットとして FUT-01 から展開する。
