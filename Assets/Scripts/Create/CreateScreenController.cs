@@ -72,7 +72,7 @@ namespace Geidai.Create
             CreateBootstrap.EnsureCatalogs(curatedCatalog, unlockRules);
 
             if (layerPicker != null) layerPicker.SelectionChanged += OnSelectionChanged;
-            if (effectPanel != null) effectPanel.Changed += () => { };
+            if (effectPanel != null) effectPanel.Changed += OnEffectChanged;
             if (recipeList != null)
             {
                 recipeList.OpenRequested += OnOpenRecipe;
@@ -90,6 +90,7 @@ namespace Geidai.Create
         private void OnDestroy()
         {
             if (layerPicker != null) layerPicker.SelectionChanged -= OnSelectionChanged;
+            if (effectPanel != null) effectPanel.Changed -= OnEffectChanged;
             if (recipeList != null)
             {
                 recipeList.OpenRequested -= OnOpenRecipe;
@@ -143,7 +144,10 @@ namespace Geidai.Create
             layerPicker?.ApplyToRecipe(_draft);
             effectPanel?.Bind(_draft);
             SetState(CreateState.Picking);
+            OnPreview();
         }
+
+        private void OnEffectChanged() => OnPreview();
 
         private void OnPreview()
         {

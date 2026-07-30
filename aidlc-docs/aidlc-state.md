@@ -164,3 +164,4 @@
 - Operations PLACEHOLDER 文書化。AI-DLC 現行サイクル終端。残はシーン配線等の Construction フォローアップ。
 - U7/U8 Construction フォローアップ: 実シーン配線と EditMode 全件再実行を完了。summary: `construction/build-and-test/u7-u8-scene-wiring-summary.md`。残は Play Mode 操作確認・本番素材・Progression本番配線。
 - U8 Play Mode フィードバック対応（2026-07-30）: 既定ベル/ドラムを両方初期解除し、Create 入場時に A/B へ自動選択。2音ミックス生成 PASS、EditMode 97 Pass / 0 Fail。
+- U8 プレビュー操作修正（2026-07-30）: きく/とめる/ほぞんを画面下部へ固定。素材選択・加工値変更をライブプレビューへ接続し、再生中は設定のみ連続更新。Create配置検証 PASS、EditMode 97 Pass / 0 Fail。

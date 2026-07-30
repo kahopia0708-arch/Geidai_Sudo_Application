@@ -1165,7 +1165,7 @@ namespace Geidai.EditorTools
             var scrollHost = new GameObject("CreateScroll", typeof(RectTransform), typeof(Image), typeof(ScrollRect));
             scrollHost.transform.SetParent(safe, false);
             var scrollRt = scrollHost.GetComponent<RectTransform>();
-            scrollRt.anchorMin = new Vector2(0.05f, 0.13f);
+            scrollRt.anchorMin = new Vector2(0.05f, 0.23f);
             scrollRt.anchorMax = new Vector2(0.95f, 0.88f);
             scrollRt.offsetMin = Vector2.zero;
             scrollRt.offsetMax = Vector2.zero;
@@ -1262,7 +1262,14 @@ namespace Geidai.EditorTools
             var titleInput = CreateInputField(formGo.transform, "RecipeTitle", "なまえ（なくてもOK）", new Vector2(0f, 64f));
             AddLayoutHeight(titleInput.gameObject, 64f);
 
-            var actionRow = CreateButtonRow(formGo.transform, "ActionRow");
+            // 主要操作はスクロールの外へ固定し、縦長端末でも常に表示する。
+            var actionRow = CreateButtonRow(safe, "ActionRow");
+            var actionRt = actionRow.GetComponent<RectTransform>();
+            actionRt.anchorMin = new Vector2(0.05f, 0f);
+            actionRt.anchorMax = new Vector2(0.95f, 0f);
+            actionRt.pivot = new Vector2(0.5f, 0f);
+            actionRt.sizeDelta = new Vector2(0f, 74f);
+            actionRt.anchoredPosition = new Vector2(0f, 116f);
             var preview = CreateButton(actionRow.transform, "Preview", "きく", new Vector2(190f, 70f));
             var stop = CreateButton(actionRow.transform, "Stop", "とめる", new Vector2(190f, 70f));
             var save = CreateButton(actionRow.transform, "Save", "ほぞん", new Vector2(190f, 70f));

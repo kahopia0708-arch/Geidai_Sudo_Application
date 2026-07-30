@@ -261,12 +261,14 @@ namespace Geidai.Services.Audio
                 if (_playbackSource != null && _playbackSource.isPlaying)
                     _playbackSource.Stop();
 
-                StopLayersQuiet();
-
                 if (hasA)
-                    StartLayer(_layerSourceA, _layerEffectA, clipA, layerA);
+                    StartOrUpdateLayer(_layerSourceA, _layerEffectA, clipA, layerA);
+                else
+                    StopLayer(_layerSourceA);
                 if (hasB)
-                    StartLayer(_layerSourceB, _layerEffectB, clipB, layerB);
+                    StartOrUpdateLayer(_layerSourceB, _layerEffectB, clipB, layerB);
+                else
+                    StopLayer(_layerSourceB);
 
                 return Result.Ok();
             }
@@ -303,15 +305,25 @@ namespace Geidai.Services.Audio
             }
         }
 
-        private static void StartLayer(AudioSource source, EffectChain chain, AudioClip clip, SoundRecipeLayer layer)
+        private static void StartOrUpdateLayer(
+            AudioSource source,
+            EffectChain chain,
+            AudioClip clip,
+            SoundRecipeLayer layer)
         {
             var clamped = layer.Clone();
             RecipeValidator.ClampLayer(clamped);
             var settings = ToSettings(clamped);
+            bool shouldStart = source.clip != clip || !source.isPlaying;
             chain.Apply(settings, true, true, true, true, true);
             source.clip = clip;
             source.volume = clamped.volume;
-            source.Play();
+            if (shouldStart) source.Play();
+        }
+
+        private static void StopLayer(AudioSource source)
+        {
+            if (source != null && source.isPlaying) source.Stop();
         }
 
         private void StopLayersQuiet()

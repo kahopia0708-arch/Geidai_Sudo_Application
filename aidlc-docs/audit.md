@@ -962,3 +962,19 @@ featureブランチも作って"
 **Context**: U8 preview usability fix complete
 
 ---
+
+## Construction Follow-up — U8 Preview Controls Feedback
+**Timestamp**: 2026-07-30T17:39:30+09:00
+**User Input**: "きく　ボタンは無いようだ
+スライダーを動かす度に音が出て、変化を確認できるようにもして"
+**AI Response**: 画像から操作ボタンがスクロール領域下部に隠れていることを確認。きく/とめる/ほぞんを固定表示し、素材選択・加工値変更時に再生を開始または再生中の設定を連続更新する。
+**Context**: U8 Play Mode UI feedback / live preview
+
+---
+
+## Construction Follow-up — U8 Preview Controls Resolved
+**Timestamp**: 2026-07-30T17:43:30+09:00
+**AI Response**: `きく` / `とめる` / `ほぞん` をスクロール外の画面下部へ固定。素材選択・音量・ピッチ・リバーブ・音色変更をライブプレビューへ接続し、再生中は同じクリップを再始動せず設定のみ更新するよう AudioService を変更。Createシーン再生成後、参照・配置検証PASS、EditMode 97 Pass / 0 Fail。
+**Context**: U8 live preview and fixed controls complete
+
+---
