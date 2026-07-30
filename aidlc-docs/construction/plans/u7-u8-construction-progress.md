@@ -15,7 +15,7 @@
 - [x] 共通IF実装（Progression/Unlock/Recipe）
 - [x] U7 コード生成
 - [x] U8 コード生成
-- [ ] Build and Test 更新（展示ビルド観点）
+- [x] Build and Test 更新（展示ビルド観点）
 
 ## 拡張コンプライアンス（設計段階）
 | Extension | 判定 |

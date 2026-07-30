@@ -1,8 +1,9 @@
 # Build Instructions（ビルド手順）
 
 **プロジェクト**: 藝大 須藤さんアプリ（「音」から始まる、耳のためのアプリケーション）
-**作成**: 2026-07-16 / AI-DLC CONSTRUCTION / Build and Test
-**対象**: 全 6 ユニット（U1〜U6）完了後の統合ビルド
+**作成**: 2026-07-16 / AI-DLC CONSTRUCTION / Build and Test  
+**更新**: 2026-07-30 / Phase C（U7 Sound Library / U8 Sound Create）  
+**対象**: 全 8 ユニット（U1〜U6 ＋ U7/U8）統合ビルド。U7/U8 差分は `phase-c-u7-u8-addendum.md`。
 
 > 本アプリは**完全オフラインの Unity モバイルアプリ**（サーバー/クラウド無し）。ビルドは Unity Editor / Unity Hub 経由で行う。
 
@@ -25,18 +26,20 @@
 
 ## アセンブリ構成（一方向依存・循環なし）
 ```
-Geidai.Common ← Geidai.Services ← { Geidai.Foundation, Geidai.Rec, Geidai.Collection, Geidai.Theme, Geidai.Game1 }
+Geidai.Common ← Geidai.Services ← { Geidai.Foundation, Geidai.Rec, Geidai.Collection, Geidai.Theme, Geidai.Game1, Geidai.Library, Geidai.Create }
 Geidai.Tests（EditMode専用）→ Common/Services/Foundation/Rec/Collection/Theme を参照
 ```
 | Assembly | 役割 |
 |---|---|
-| `Geidai.Common` | 型・純粋関数・UI 基盤（Result/SceneId/WavCodec/PitchMath/ScreenRootBase 等） |
-| `Geidai.Services` | サービス（Storage/Navigation/Audio/Content/IO/Media/ServiceRegistry/AppManager） |
+| `Geidai.Common` | 型・純粋関数・UI 基盤（Result/SceneId/WavCodec/PitchMath/ScreenRootBase／Library・Create モデル等） |
+| `Geidai.Services` | サービス（Storage/Navigation/Audio/Content/Progression/IO/Media/ServiceRegistry/AppManager） |
 | `Geidai.Foundation` | Boot/Home/Registration/ルーティング |
 | `Geidai.Rec` | 録音・エフェクト・保存 |
 | `Geidai.Collection` | 保存音コレクション（一覧/検索/編集/削除） |
 | `Geidai.Theme` | 週替わりお題 |
 | `Geidai.Game1` | ①音合わせ ゲーム |
+| `Geidai.Library` | 音図鑑（一覧・ロック・試聴） |
+| `Geidai.Create` | 音づくり（2音レシピ・保存・WAVE書き出し） |
 | `Geidai.Tests` | EditMode テスト（`UNITY_INCLUDE_TESTS` 制約・Editor 限定） |
 
 ---
@@ -72,6 +75,7 @@ Build Profiles: `Assets/Settings/Build Profiles/{Android,iOS,macOS}.asset`
 ### 3. Build Settings（シーン登録）の確認
 有効シーン（MCP 配線後）:
 `Main画面` / `GeidaiHome` / `GeidaiRegister` / `GeidaiRec` / `GeidaiCollection` / `GeidaiTheme` / `GeidaiGame1` / `game_Home`  
+＋ Phase C（未配線）: `GeidaiLibrary` / `GeidaiCreate`（`phase-c-u7-u8-addendum.md`）  
 （旧 Home/Rec/Game01 等は無効化済み。詳細は `mcp-scene-wiring-summary.md`）
 
 実機・向き・マイク・性能の実行記録: **`device-verification-checklist.md`**

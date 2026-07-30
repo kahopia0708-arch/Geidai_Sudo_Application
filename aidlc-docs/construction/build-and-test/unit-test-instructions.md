@@ -1,10 +1,11 @@
 # Unit Test Execution（ユニットテスト実行手順）
 
 **プロジェクト**: 藝大 須藤さんアプリ
-**作成**: 2026-07-16 / AI-DLC CONSTRUCTION / Build and Test
+**作成**: 2026-07-16 / AI-DLC CONSTRUCTION / Build and Test  
+**更新**: 2026-07-30 / Phase C（U7/U8）追記  
 **テスト基盤**: Unity Test Runner（NUnit）＋ Property-Based Testing（FsCheck）。全 **EditMode**。
 
-> 各ユニットの Code Generation で生成した **17 本の EditMode テスト**を統合実行する。純粋関数・データ整合・永続化ロジックを対象（`AudioSource`/`Microphone`/シーン配線を伴う実発音・UI 操作は PlayMode/手動＝integration/performance で扱う）。
+> 各ユニットの Code Generation で生成した EditMode テストを統合実行する（U1〜U6: 17 本 ＋ U7/U8: 4 本 ＝ **21 本**）。純粋関数・データ整合・永続化ロジックを対象（`AudioSource`/`Microphone`/シーン配線を伴う実発音・UI 操作は PlayMode/手動＝integration/performance で扱う）。詳細差分は `phase-c-u7-u8-addendum.md`。
 
 ---
 
@@ -28,6 +29,10 @@
 | U5 | `ContentServiceThemeTests.cs` | お題取得・空/無効フォールバック | 例示 |
 | U6 | `QuestionBuilderTests.cs` | 出題生成（正解1つ/距離/決定的） | PBT/例示 |
 | U6 | `SoundMatchConfigTests.cs` | パラメータのクランプ/フォールバック | 例示 |
+| U7 | `UnlockEvaluatorTests.cs` | Unlock 冪等・Combined・初期解除・投影 | PBT/例示 |
+| U7 | `UnlockStateJsonTests.cs` | UnlockState JSON 往復 | 例示 |
+| U8 | `RecipeValidatorTests.cs` | レシピクランプ・CanSave・LayerCount | PBT/例示 |
+| U8 | `SoundRecipeJsonTests.cs` | SoundRecipe JSON 往復 | 例示 |
 
 ---
 
@@ -57,7 +62,7 @@
 上記いずれかで EditMode 全件を実行。
 
 ### 2. 結果の確認
-- **期待**: 17 ファイル・全テストケース **Pass / 0 Failures**。
+- **期待**: 21 ファイル・全テストケース **Pass / 0 Failures**（U1〜U6 は 2026-07-16 に 85 Pass 確認済。U7/U8 追加分は全件再実行で確認）。
 - **カバレッジ**: 対象は「純粋ロジック＋永続化」中心（数値カバレッジは任意。Code Coverage パッケージ導入時は `Window > Analysis > Code Coverage` で計測）。
 - **レポート**: `./Logs/editmode-results.xml`（CLI）/ Test Runner 画面（GUI）。
 
