@@ -10,6 +10,8 @@ namespace Geidai.Foundation
         Collection,
         GameSelect,
         WeeklyTheme,
-        ProfileEdit
+        ProfileEdit,
+        Library,
+        Create
     }
 }

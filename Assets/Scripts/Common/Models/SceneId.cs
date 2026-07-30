@@ -15,6 +15,8 @@ namespace Geidai.Common.Models
         Collection,
         Theme,
         Game1,
-        GameSelect
+        GameSelect,
+        Library,
+        Create
     }
 }

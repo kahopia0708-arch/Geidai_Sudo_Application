@@ -22,6 +22,7 @@ namespace Geidai.Services.Audio
 
         // 音色プリセットの基準値（Original/Soft/Hard）
         private const float LowPassMax = 22000f;
+        private const float LowPassMin = 1500f;
         private const float HighPassMin = 10f;
 
         public AudioSource Source => audioSource;
@@ -34,12 +35,19 @@ namespace Geidai.Services.Audio
         /// <summary>再生系コンポーネントを確保・キャッシュする。</summary>
         public void EnsureComponents()
         {
-            if (audioSource == null) audioSource = GetComponent<AudioSource>();
-            if (audioSource == null) audioSource = gameObject.AddComponent<AudioSource>();
-            if (lowPassFilter == null) lowPassFilter = GetComponent<AudioLowPassFilter>() ?? gameObject.AddComponent<AudioLowPassFilter>();
-            if (highPassFilter == null) highPassFilter = GetComponent<AudioHighPassFilter>() ?? gameObject.AddComponent<AudioHighPassFilter>();
-            if (reverbFilter == null) reverbFilter = GetComponent<AudioReverbFilter>() ?? gameObject.AddComponent<AudioReverbFilter>();
-            if (distortionFilter == null) distortionFilter = GetComponent<AudioDistortionFilter>() ?? gameObject.AddComponent<AudioDistortionFilter>();
+            // GetComponent は未アタッチ時に「偽 null」を返すため ?? は使えない（AddComponent が呼ばれない）。
+            audioSource = Ensure(audioSource);
+            lowPassFilter = Ensure(lowPassFilter);
+            highPassFilter = Ensure(highPassFilter);
+            reverbFilter = Ensure(reverbFilter);
+            distortionFilter = Ensure(distortionFilter);
+        }
+
+        private T Ensure<T>(T current) where T : Component
+        {
+            if (current != null) return current;
+            var found = GetComponent<T>();
+            return found != null ? found : gameObject.AddComponent<T>();
         }
 
         /// <summary>
@@ -64,11 +72,12 @@ namespace Geidai.Services.Audio
             {
                 switch (s.timbre)
                 {
+                    // 聴き分けられる差を優先し、Soft はこもった音、Hard は細く歪んだ音に振る。
                     case TimbreType.Soft:
-                        lp = 8000f; hp = 10f; dist = 0f;
+                        lp = 2200f; hp = 10f; dist = 0f;
                         break;
                     case TimbreType.Hard:
-                        lp = 22000f; hp = 800f; dist = 0.35f;
+                        lp = 3500f; hp = 900f; dist = 0.6f;
                         break;
                     case TimbreType.Original:
                     default:
@@ -85,7 +94,7 @@ namespace Geidai.Services.Audio
                 lp -= Mathf.Lerp(0f, 5000f, amt);
             }
 
-            lp = Mathf.Clamp(lp, 3000f, 22000f);
+            lp = Mathf.Clamp(lp, LowPassMin, LowPassMax);
             hp = Mathf.Clamp(hp, 10f, 5000f);
 
             if (lowPassFilter != null) lowPassFilter.cutoffFrequency = lp;
@@ -95,9 +104,13 @@ namespace Geidai.Services.Audio
             // --- Reverb ---
             if (reverbFilter != null)
             {
-                reverbFilter.reverbLevel = (allOn && reverbOn)
-                    ? SoundEffectMapper.DenormalizeReverb(s.reverb)
-                    : -10000f;
+                float amount = (allOn && reverbOn) ? s.reverb : 0f;
+                // プリセットを User に固定してから各値を書かないと、プリセット側の値で上書きされる。
+                reverbFilter.reverbPreset = AudioReverbPreset.User;
+                reverbFilter.dryLevel = 0f;
+                reverbFilter.room = SoundEffectMapper.ReverbToRoomMilliBel(amount);
+                reverbFilter.decayTime = SoundEffectMapper.ReverbToDecaySeconds(amount);
+                reverbFilter.reverbLevel = SoundEffectMapper.ReverbToLevelMilliBel(amount);
             }
         }
     }

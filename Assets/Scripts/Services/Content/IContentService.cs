@@ -1,21 +1,29 @@
 using Geidai.Common.Results;
 using Geidai.Common.Content;
+using Geidai.Common.Library;
 
 namespace Geidai.Services.Content
 {
     /// <summary>
-    /// コンテンツ取得サービスの器（お題テキスト/ゲームパラメータ等 / NFR-05）。
-    /// Sさん が差し替えるデータ（ThemeCatalog 等）へのアクセスを抽象化。お題本実装は U5。
+    /// コンテンツ取得サービスの器（お題/ゲームパラメータ/音図鑑 / NFR-05）。
+    /// 既存シグネチャは不変。U7 でカタログ／解除表を後方互換追加。
     /// </summary>
     public interface IContentService
     {
-        /// <summary>キーに対応するテキストを返す（例: "theme.current"＝今週のお題本文）。後方互換 IF。</summary>
         Result<string> GetText(string key);
-
-        /// <summary>今週のお題（ThemeItem）を返す（U5 / P2）。空/無効カタログは Fail(NotFound)。</summary>
         Result<ThemeItem> GetCurrentTheme();
-
-        /// <summary>お題カタログを注入する（起動時 DI / ThemeBootstrap 等から呼ぶ）。</summary>
         void SetCatalog(ThemeCatalog catalog);
+
+        /// <summary>音図鑑カタログを注入する（U7）。</summary>
+        void SetCuratedCatalog(CuratedSoundCatalog catalog);
+
+        /// <summary>音図鑑カタログを返す。未設定は Fail(NotFound)。</summary>
+        Result<CuratedSoundCatalog> GetCuratedCatalog();
+
+        /// <summary>解除条件表を注入する（U7）。</summary>
+        void SetUnlockRules(UnlockRulesCatalog rules);
+
+        /// <summary>解除条件表を返す。未設定は Fail(NotFound)。</summary>
+        Result<UnlockRulesCatalog> GetUnlockRules();
     }
 }

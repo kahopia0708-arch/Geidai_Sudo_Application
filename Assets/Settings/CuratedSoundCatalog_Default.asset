@@ -1,0 +1,55 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!83 &-3586521966541224617
+AudioClip:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: sample
+  m_LoadType: 0
+  m_Channels: 1
+  m_Frequency: 44100
+  m_BitsPerSample: 32
+  m_Length: 0
+  m_IsTrackerFormat: 0
+  m_Ambisonic: 0
+  m_SubsoundIndex: 0
+  m_PreloadAudioData: 1
+  m_LoadInBackground: 0
+  m_Legacy3D: 0
+  m_Resource:
+    m_Source: 
+    m_Offset: 0
+    m_Size: 0
+  m_CompressionFormat: 0
+  m_EditorResource:
+    m_Source: 
+    m_Offset: 0
+    m_Size: 0
+  m_EditorCompressionFormat: 0
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd3b5dde8530e420485869b4abfc8e41, type: 3}
+  m_Name: CuratedSoundCatalog_Default
+  m_EditorClassIdentifier: Geidai.Common::Geidai.Common.Library.CuratedSoundCatalog
+  items:
+  - id: demo_bell
+    displayName: "\u30D9\u30EB"
+    category: "\u30C6\u30B9\u30C8"
+    description: "\u8A66\u8074\u7528\u306E\u30D9\u30EB\u97F3"
+    clipRef: {fileID: 8300000, guid: 7084a0aa1c82242e6b159ea85aa39d4d, type: 3}
+    initiallyUnlocked: 1
+  - id: demo_drum
+    displayName: "\u30C9\u30E9\u30E0"
+    category: "\u30C6\u30B9\u30C8"
+    description: "\u30DF\u30AD\u30B7\u30F3\u30B0\u8A66\u8074\u7528\u306E\u30C9\u30E9\u30E0\u97F3"
+    clipRef: {fileID: 8300000, guid: eeeadc4f43e41479fa0152f46f8b26a1, type: 3}
+    initiallyUnlocked: 1

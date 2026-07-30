@@ -24,7 +24,9 @@ namespace Geidai.Services.Navigation
             { SceneId.Collection, "GeidaiCollection" },
             { SceneId.Theme, "GeidaiTheme" },
             { SceneId.Game1, "GeidaiGame1" },
-            { SceneId.GameSelect, "game_Home" }
+            { SceneId.GameSelect, "game_Home" },
+            { SceneId.Library, "GeidaiLibrary" },
+            { SceneId.Create, "GeidaiCreate" }
         };
 
         private readonly Stack<SceneId> _history = new Stack<SceneId>();

@@ -17,6 +17,17 @@ namespace Geidai.Common.Audio
         public const float ReverbMinMilliBel = -10000f; // 無し
         public const float ReverbMaxMilliBel = 0f;      // 最大
 
+        // AudioReverbFilter(User プリセット)へ渡す実効レンジ。
+        public const float RoomMinMilliBel = -2500f;
+        public const float RoomMaxMilliBel = 0f;
+        public const float LevelMinMilliBel = -1500f;
+        public const float LevelMaxMilliBel = 2000f;
+        public const float DecayOffSeconds = 0.1f;
+        public const float DecayMinSeconds = 0.5f;
+        public const float DecayMaxSeconds = 4f;
+
+        private const float OffThreshold = 0.01f;
+
         /// <summary>セント → 半音（100 セント=1 半音・最寄り丸め・±12 クランプ）。</summary>
         public static int CentsToSemitones(double cents)
         {
@@ -67,6 +78,35 @@ namespace Geidai.Common.Audio
             float v = Clamp01(v01);
             return ReverbMinMilliBel + v * (ReverbMaxMilliBel - ReverbMinMilliBel);
         }
+
+        /// <summary>
+        /// リバーブ量(0〜1) → <c>AudioReverbFilter.room</c>(mB)。
+        /// 線形の reverbLevel だけではスライダー中央付近が -50dB 相当で聴感上ほぼ無音になるため、
+        /// room / decay / level の 3 値を同時に動かして変化を聴き取れるようにする。
+        /// </summary>
+        public static float ReverbToRoomMilliBel(float v01)
+        {
+            float v = Clamp01(v01);
+            return IsOff(v) ? ReverbMinMilliBel : Lerp(RoomMinMilliBel, RoomMaxMilliBel, v);
+        }
+
+        /// <summary>リバーブ量(0〜1) → <c>AudioReverbFilter.reverbLevel</c>(mB)。</summary>
+        public static float ReverbToLevelMilliBel(float v01)
+        {
+            float v = Clamp01(v01);
+            return IsOff(v) ? ReverbMinMilliBel : Lerp(LevelMinMilliBel, LevelMaxMilliBel, v);
+        }
+
+        /// <summary>リバーブ量(0〜1) → <c>AudioReverbFilter.decayTime</c>(秒)。</summary>
+        public static float ReverbToDecaySeconds(float v01)
+        {
+            float v = Clamp01(v01);
+            return IsOff(v) ? DecayOffSeconds : Lerp(DecayMinSeconds, DecayMaxSeconds, v);
+        }
+
+        private static bool IsOff(float v01) => v01 <= OffThreshold;
+
+        private static float Lerp(float from, float to, float t) => from + (to - from) * t;
 
         private static float Clamp01(float v)
         {

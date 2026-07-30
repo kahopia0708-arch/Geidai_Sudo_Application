@@ -1,7 +1,8 @@
 # Integration Test Instructions（統合テスト手順）
 
 **プロジェクト**: 藝大 須藤さんアプリ
-**作成**: 2026-07-16 / AI-DLC CONSTRUCTION / Build and Test
+**作成**: 2026-07-16 / AI-DLC CONSTRUCTION / Build and Test  
+**更新**: 2026-07-30 / Phase C Scenario 7〜9 追加（詳細は `phase-c-u7-u8-addendum.md`）
 
 ## Purpose（目的）
 ユニット間（アセンブリ間）およびサービス連携が正しく協調することを検証する。本アプリはオフライン単体アプリのため、統合テストは **(a) サービス層の EditMode/PlayMode 結合テスト** と **(b) 実シーンでの手動 E2E** の二層で行う。
@@ -12,12 +13,15 @@
 
 ## 依存関係マップ（統合の観点）
 ```
-Foundation(Boot/Home) ──GoTo──> Rec / Collection / Theme / Game1   （すべて INavigationService 経由）
+Foundation(Boot/Home) ──GoTo──> Rec / Collection / Theme / Game1 / Library / Create
 Rec ──SaveSound──> StorageService ──(wav+meta 原子的書込)
 Collection ──ListSounds/LoadSoundBuffer/DeleteSound/SaveMeta──> StorageService
 Collection ──Play(buffer,settings)──> AudioService(共有・EffectChain)
 Theme ──ThemeContext.Set──> (Rec が Current 参照) ──> Rec
 Game1 ──ListSounds/LoadSoundBuffer──> StorageService ──> PitchVariationService(再生時ピッチ)
+Game1/Rec ──Notify*──> ProgressionService ──UnlockState──> Library / Create（解除済み選択）
+Library ──Catalog+Unlock──> Content / Progression ──PlayCuratedClip──> AudioService
+Create ──Recipe CRUD/Export──> Storage ──PlayLayers/Render──> AudioService
 全モジュール ──Resolve──> ServiceRegistry（AppManager で登録）
 ```
 
@@ -60,9 +64,24 @@ Game1 ──ListSounds/LoadSoundBuffer──> StorageService ──> PitchVariat
 - **後片付け**: なし（ゲーム状態は非永続）。
 
 ### Scenario 6: サービス登録・解決の一貫性（ServiceRegistry / AppManager）
-- **説明**: 各 Bootstrap（Rec/Theme/Game1）が必要サービスを解決/未登録なら登録し、シーンをまたいで単一インスタンスを共有する。
-- **手順**: 起動 → 複数モジュールを行き来 → `AudioService`/`PitchVariationService` の常駐リグ（`DontDestroyOnLoad`）が重複生成されないこと。
-- **期待**: サービスは単一。クロスシーン再生が継続。
+- **説明**: 各 Bootstrap（Rec/Theme/Game1/Library/Create）が必要サービスを解決/未登録なら登録し、シーンをまたいで単一インスタンスを共有する。
+- **手順**: 起動 → 複数モジュールを行き来 → `AudioService`/`PitchVariationService`/`ProgressionService` の常駐が重複生成されないこと。
+- **期待**: サービスは単一。クロスシーン再生が継続。`IProgressionService` が登録済み。
+
+### Scenario 7: 音図鑑（Library）— ロック投影・試聴
+- **説明**: カタログ＋UnlockState でロック付き一覧。解除済みのみ試聴。
+- **セットアップ**: 既定カタログ／解除表 asset。Library シーン配線後。
+- **手順**: Library 表示 → 初期解除音を試聴 → ロック音は不可 →（任意）進行イベント後に再投影。
+- **期待**: クラッシュなし。通貨UIなし。詳細は `phase-c-u7-u8-addendum.md`。
+
+### Scenario 8: 音づくり（Create）— 2音レシピ・保存・書き出し
+- **説明**: 解除済み最大2音でプレビュー／レシピ保存／任意 WAVE 書き出し。
+- **手順**: 2音選択 → パラメータ → プレビュー → 保存 → 書き出し確認。
+- **期待**: レシピのみ永続。同梱音非複製。書き出し失敗で不完全ファイルなし。
+
+### Scenario 9: 進行イベント（Game1/Rec → Progression → Library）※フォローアップ
+- **説明**: クリア／録音課題達成が UnlockState に反映され Library に見える。
+- **現状**: IF 実装済。呼び出し元の本番配線は後続。
 
 ---
 
@@ -82,8 +101,8 @@ Game1 ──ListSounds/LoadSoundBuffer──> StorageService ──> PitchVariat
 不要（ネットワーク境界なし）。データ境界は `Application.persistentDataPath` のみ。
 
 ## Run Integration Tests（実行）
-1. 実シーン整備後、上記 Scenario 1〜6 を手動 E2E で実施（実機・縦横両向き・複数解像度）。
-2. サービス層の自動結合は EditMode（`StorageCollectionTests`/`AtomicFileTests`/`SaveSoundTests` が Storage 結合を、`ContentServiceThemeTests` が Content 結合をカバー）で先行検証。
+1. 実シーン整備後、上記 Scenario 1〜8 を手動 E2E で実施（実機・縦横両向き・複数解像度）。Scenario 9 は Progression 配線後。
+2. サービス層の自動結合は EditMode（`StorageCollectionTests`/`AtomicFileTests`/`SaveSoundTests`/`ContentServiceThemeTests`/`UnlockEvaluatorTests`/`RecipeValidatorTests` 等）で先行検証。
 3. ログは `Unity_GetConsoleLogs`（MCP）または Editor Console / `./Logs/*.log` で確認。
 
 ### Cleanup（後片付け）
@@ -96,6 +115,6 @@ rm -rf "$HOME/Library/Application Support/DefaultCompany/"*  # 実 Company/Produ
 ---
 
 ## 合否基準
-- Scenario 1〜6 が縦横両向き・代表解像度（スマホ/タブレット）で破綻なく完了。
+- Scenario 1〜8 が縦横両向き・代表解像度（スマホ/タブレット）で破綻なく完了（Scenario 9 は配線後）。
 - 保存/削除/編集でファイル片割れ・破損残存がない（原子性）。
 - 遷移/権限/空データの各失敗が**クラッシュせず**平易な通知に落ちる。

@@ -29,6 +29,12 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Geidai/GeidaiGame1.unity
     guid: 4b8370ec59d79449eaf0f7dd251dd1ce
+  - enabled: 1
+    path: Assets/Scenes/Geidai/GeidaiLibrary.unity
+    guid: 09f971704e4d245119e32963cb439ec9
+  - enabled: 1
+    path: Assets/Scenes/Geidai/GeidaiCreate.unity
+    guid: 9e32477f085e142938e196854bc8a602
   - enabled: 0
     path: Assets/Home.unity
     guid: b6dbd73e288944561891f0345f82afc4

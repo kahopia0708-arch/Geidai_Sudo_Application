@@ -45,6 +45,8 @@ namespace Geidai.Tests.EditMode
             Assert.AreEqual(SceneId.GameSelect, ModuleRouter.ToSceneId(ModuleId.GameSelect));
             Assert.AreEqual(SceneId.Theme, ModuleRouter.ToSceneId(ModuleId.WeeklyTheme));
             Assert.AreEqual(SceneId.Register, ModuleRouter.ToSceneId(ModuleId.ProfileEdit));
+            Assert.AreEqual(SceneId.Library, ModuleRouter.ToSceneId(ModuleId.Library));
+            Assert.AreEqual(SceneId.Create, ModuleRouter.ToSceneId(ModuleId.Create));
         }
     }
 }

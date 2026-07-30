@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using Geidai.Common.Create;
+using Geidai.Common.Library;
 using Geidai.Common.Models;
 using Geidai.Common.Results;
 
@@ -56,5 +58,21 @@ namespace Geidai.Services.Storage
         /// 破損/欠損は失敗コードで返す。
         /// </summary>
         Result<AudioBuffer> LoadSoundBuffer(string id);
+
+        // ---- U7/U8 Progression / Recipe ----
+
+        /// <summary>解除状態を読み込む。無ければ空状態（破損時も空フォールバック）。</summary>
+        Result<UnlockState> LoadUnlockState();
+
+        /// <summary>解除状態を原子的に保存する。</summary>
+        Result SaveUnlockState(UnlockState state);
+
+        Result SaveRecipe(SoundRecipe recipe);
+        Result DeleteRecipe(string id);
+        Result<List<SoundRecipe>> ListRecipes();
+        Result<SoundRecipe> LoadRecipe(string id);
+
+        /// <summary>レシピ WAVE 書き出しを原子的に保存する（不完全ファイルを残さない）。</summary>
+        Result SaveRecipeExport(string id, byte[] wavBytes);
     }
 }

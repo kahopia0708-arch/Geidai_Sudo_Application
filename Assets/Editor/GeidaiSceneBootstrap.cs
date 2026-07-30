@@ -8,12 +8,15 @@ using UnityEngine.InputSystem.UI;
 using UnityEngine.UI;
 using Geidai.Common.Content;
 using Geidai.Common.Game;
+using Geidai.Common.Library;
 using Geidai.Common.UI;
 using Geidai.Foundation;
 using Geidai.Rec;
 using Geidai.Collection;
 using Geidai.Theme;
 using Geidai.Game1;
+using Geidai.Library;
+using Geidai.Create;
 using Geidai.Services;
 
 namespace Geidai.EditorTools
@@ -30,6 +33,8 @@ namespace Geidai.EditorTools
         private const string HomeMenuConfigPath = "Assets/Settings/HomeMenuConfig_Default.asset";
         private const string ThemeCatalogPath = "Assets/Settings/ThemeCatalog.asset";
         private const string SoundMatchConfigPath = "Assets/Settings/SoundMatchConfig.asset";
+        private const string CuratedSoundCatalogPath = "Assets/Settings/CuratedSoundCatalog_Default.asset";
+        private const string UnlockRulesCatalogPath = "Assets/Settings/UnlockRulesCatalog_Default.asset";
 
         [MenuItem("Geidai/Scenes/Build All Geidai Scenes")]
         public static void BuildAll()
@@ -41,6 +46,8 @@ namespace Geidai.EditorTools
             BuildCollection();
             BuildTheme();
             BuildGame1();
+            BuildLibrary();
+            BuildCreate();
             UpdateBuildSettings();
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
@@ -91,7 +98,7 @@ namespace Geidai.EditorTools
             StretchFull(safeRt);
             var fitter = safeGo.GetComponent<SafeAreaFitter>();
 
-            if (Object.FindFirstObjectByType<EventSystem>() == null)
+            if (Object.FindAnyObjectByType<EventSystem>() == null)
             {
                 var es = new GameObject("EventSystem", typeof(EventSystem), typeof(InputSystemUIInputModule));
                 es.transform.SetParent(root.transform, false);
@@ -312,6 +319,119 @@ namespace Geidai.EditorTools
             template.SetActive(false);
 
             return dropdown;
+        }
+
+        private static InputField CreateInputField(Transform parent, string name, string placeholder, Vector2 size)
+        {
+            var go = new GameObject(name, typeof(RectTransform), typeof(Image), typeof(InputField));
+            go.transform.SetParent(parent, false);
+            go.GetComponent<RectTransform>().sizeDelta = size;
+            go.GetComponent<Image>().color = Color.white;
+
+            var text = CreateText(go.transform, "Text", string.Empty, 24, TextAnchor.MiddleLeft);
+            StretchFull(text.rectTransform);
+            text.rectTransform.offsetMin = new Vector2(16f, 4f);
+            text.rectTransform.offsetMax = new Vector2(-16f, -4f);
+            text.color = Color.black;
+
+            var hint = CreateText(go.transform, "Placeholder", placeholder, 24, TextAnchor.MiddleLeft);
+            StretchFull(hint.rectTransform);
+            hint.rectTransform.offsetMin = new Vector2(16f, 4f);
+            hint.rectTransform.offsetMax = new Vector2(-16f, -4f);
+            hint.color = new Color(0.45f, 0.45f, 0.45f, 0.8f);
+
+            var input = go.GetComponent<InputField>();
+            input.textComponent = text;
+            input.placeholder = hint;
+            return input;
+        }
+
+        private static Slider CreateSlider(
+            Transform parent,
+            string name,
+            float min,
+            float max,
+            float value,
+            bool wholeNumbers,
+            Vector2 size)
+        {
+            var root = new GameObject(name, typeof(RectTransform), typeof(Slider));
+            root.transform.SetParent(parent, false);
+            root.GetComponent<RectTransform>().sizeDelta = size;
+
+            var background = new GameObject("Background", typeof(RectTransform), typeof(Image));
+            background.transform.SetParent(root.transform, false);
+            var bgRt = background.GetComponent<RectTransform>();
+            bgRt.anchorMin = new Vector2(0f, 0.35f);
+            bgRt.anchorMax = new Vector2(1f, 0.65f);
+            bgRt.offsetMin = Vector2.zero;
+            bgRt.offsetMax = Vector2.zero;
+            background.GetComponent<Image>().color = new Color(0.75f, 0.78f, 0.75f, 1f);
+
+            var fillArea = new GameObject("Fill Area", typeof(RectTransform));
+            fillArea.transform.SetParent(root.transform, false);
+            StretchFull(fillArea.GetComponent<RectTransform>());
+            fillArea.GetComponent<RectTransform>().offsetMin = new Vector2(10f, 0f);
+            fillArea.GetComponent<RectTransform>().offsetMax = new Vector2(-10f, 0f);
+
+            var fill = new GameObject("Fill", typeof(RectTransform), typeof(Image));
+            fill.transform.SetParent(fillArea.transform, false);
+            StretchFull(fill.GetComponent<RectTransform>());
+            fill.GetComponent<Image>().color = new Color(0.22f, 0.55f, 0.42f, 1f);
+
+            var handleArea = new GameObject("Handle Slide Area", typeof(RectTransform));
+            handleArea.transform.SetParent(root.transform, false);
+            StretchFull(handleArea.GetComponent<RectTransform>());
+            handleArea.GetComponent<RectTransform>().offsetMin = new Vector2(10f, 0f);
+            handleArea.GetComponent<RectTransform>().offsetMax = new Vector2(-10f, 0f);
+
+            var handle = new GameObject("Handle", typeof(RectTransform), typeof(Image));
+            handle.transform.SetParent(handleArea.transform, false);
+            handle.GetComponent<RectTransform>().sizeDelta = new Vector2(36f, 52f);
+            handle.GetComponent<Image>().color = Color.white;
+
+            var slider = root.GetComponent<Slider>();
+            slider.minValue = min;
+            slider.maxValue = max;
+            slider.wholeNumbers = wholeNumbers;
+            slider.fillRect = fill.GetComponent<RectTransform>();
+            slider.handleRect = handle.GetComponent<RectTransform>();
+            slider.targetGraphic = handle.GetComponent<Image>();
+            slider.value = value;
+            return slider;
+        }
+
+        private static Toggle CreateToggle(Transform parent, string name, string label, bool isOn)
+        {
+            var root = new GameObject(name, typeof(RectTransform), typeof(Toggle));
+            root.transform.SetParent(parent, false);
+            root.GetComponent<RectTransform>().sizeDelta = new Vector2(300f, 54f);
+
+            var background = new GameObject("Background", typeof(RectTransform), typeof(Image));
+            background.transform.SetParent(root.transform, false);
+            var bgRt = background.GetComponent<RectTransform>();
+            bgRt.anchorMin = new Vector2(0f, 0.5f);
+            bgRt.anchorMax = new Vector2(0f, 0.5f);
+            bgRt.sizeDelta = new Vector2(44f, 44f);
+            bgRt.anchoredPosition = new Vector2(22f, 0f);
+            background.GetComponent<Image>().color = Color.white;
+
+            var check = new GameObject("Checkmark", typeof(RectTransform), typeof(Image));
+            check.transform.SetParent(background.transform, false);
+            StretchFull(check.GetComponent<RectTransform>());
+            check.GetComponent<RectTransform>().offsetMin = new Vector2(7f, 7f);
+            check.GetComponent<RectTransform>().offsetMax = new Vector2(-7f, -7f);
+            check.GetComponent<Image>().color = new Color(0.22f, 0.55f, 0.42f, 1f);
+
+            var text = CreateText(root.transform, "Label", label, 24, TextAnchor.MiddleLeft);
+            StretchFull(text.rectTransform);
+            text.rectTransform.offsetMin = new Vector2(60f, 0f);
+
+            var toggle = root.GetComponent<Toggle>();
+            toggle.targetGraphic = background.GetComponent<Image>();
+            toggle.graphic = check.GetComponent<Image>();
+            toggle.isOn = isOn;
+            return toggle;
         }
 
         private static ErrorPresenter CreateErrorPresenter(Transform parent)
@@ -869,6 +989,375 @@ namespace Geidai.EditorTools
             SaveScene("GeidaiGame1");
         }
 
+        public static void BuildLibrary()
+        {
+            EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+            var shell = CreateScreenShell("GeidaiLibraryRoot");
+            var content = shell.safeArea;
+
+            var title = CreateText(content, "Title", "おとずかん", 46, TextAnchor.MiddleCenter);
+            AnchorTopBand(title.rectTransform, 90f, 24f);
+
+            var listHost = new GameObject(
+                "CuratedSoundList",
+                typeof(RectTransform),
+                typeof(Image),
+                typeof(ScrollRect),
+                typeof(CuratedSoundListView));
+            listHost.transform.SetParent(content, false);
+            AnchorCenterBand(listHost.GetComponent<RectTransform>(), 0.84f, 0.20f);
+            listHost.GetComponent<Image>().color = new Color(0.94f, 0.97f, 0.94f, 1f);
+
+            var viewport = new GameObject("Viewport", typeof(RectTransform), typeof(Image), typeof(Mask));
+            viewport.transform.SetParent(listHost.transform, false);
+            StretchFull(viewport.GetComponent<RectTransform>());
+            viewport.GetComponent<Image>().color = Color.white;
+            viewport.GetComponent<Mask>().showMaskGraphic = false;
+
+            var contentRootGo = new GameObject(
+                "Content",
+                typeof(RectTransform),
+                typeof(VerticalLayoutGroup),
+                typeof(ContentSizeFitter));
+            contentRootGo.transform.SetParent(viewport.transform, false);
+            var contentRt = contentRootGo.GetComponent<RectTransform>();
+            contentRt.anchorMin = new Vector2(0f, 1f);
+            contentRt.anchorMax = new Vector2(1f, 1f);
+            contentRt.pivot = new Vector2(0.5f, 1f);
+            contentRt.sizeDelta = Vector2.zero;
+            var layout = contentRootGo.GetComponent<VerticalLayoutGroup>();
+            layout.childAlignment = TextAnchor.UpperCenter;
+            layout.childControlHeight = true;
+            layout.childControlWidth = true;
+            layout.childForceExpandHeight = false;
+            layout.childForceExpandWidth = true;
+            layout.spacing = 12f;
+            layout.padding = new RectOffset(12, 12, 12, 12);
+            contentRootGo.GetComponent<ContentSizeFitter>().verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+
+            var scroll = listHost.GetComponent<ScrollRect>();
+            scroll.viewport = viewport.GetComponent<RectTransform>();
+            scroll.content = contentRt;
+            scroll.horizontal = false;
+            scroll.vertical = true;
+            scroll.movementType = ScrollRect.MovementType.Clamped;
+
+            var itemPrefab = CreateCuratedSoundItemPrefab(listHost.transform);
+            var empty = CreateText(content, "EmptyState", "おとが まだ ないよ", 28, TextAnchor.MiddleCenter);
+            empty.rectTransform.anchorMin = new Vector2(0.1f, 0.42f);
+            empty.rectTransform.anchorMax = new Vector2(0.9f, 0.56f);
+            empty.rectTransform.offsetMin = Vector2.zero;
+            empty.rectTransform.offsetMax = Vector2.zero;
+
+            var listView = listHost.GetComponent<CuratedSoundListView>();
+            var soList = new SerializedObject(listView);
+            soList.FindProperty("contentRoot").objectReferenceValue = contentRt;
+            soList.FindProperty("itemPrefab").objectReferenceValue = itemPrefab;
+            soList.FindProperty("emptyState").objectReferenceValue = empty.gameObject;
+            soList.ApplyModifiedPropertiesWithoutUndo();
+
+            var back = CreateButton(content, "Back", "もどる", new Vector2(240f, 84f));
+            var backRt = back.GetComponent<RectTransform>();
+            backRt.anchorMin = new Vector2(0.28f, 0f);
+            backRt.anchorMax = new Vector2(0.28f, 0f);
+            backRt.pivot = new Vector2(0.5f, 0f);
+            backRt.anchoredPosition = new Vector2(0f, 32f);
+
+            var stop = CreateButton(content, "Stop", "とめる", new Vector2(240f, 84f));
+            var stopRt = stop.GetComponent<RectTransform>();
+            stopRt.anchorMin = new Vector2(0.72f, 0f);
+            stopRt.anchorMax = new Vector2(0.72f, 0f);
+            stopRt.pivot = new Vector2(0.5f, 0f);
+            stopRt.anchoredPosition = new Vector2(0f, 32f);
+
+            var error = CreateErrorPresenter(content);
+            var catalog = AssetDatabase.LoadAssetAtPath<CuratedSoundCatalog>(CuratedSoundCatalogPath);
+            var rules = AssetDatabase.LoadAssetAtPath<UnlockRulesCatalog>(UnlockRulesCatalogPath);
+
+            var screenGo = new GameObject("LibraryScreen", typeof(LibraryScreenController));
+            screenGo.transform.SetParent(shell.canvas.transform, false);
+            var screen = screenGo.GetComponent<LibraryScreenController>();
+            WireScreenRoot(screen, shell.responsive, shell.fitter);
+            var so = new SerializedObject(screen);
+            so.FindProperty("curatedCatalog").objectReferenceValue = catalog;
+            so.FindProperty("unlockRules").objectReferenceValue = rules;
+            so.FindProperty("listView").objectReferenceValue = listView;
+            so.FindProperty("backButton").objectReferenceValue = back;
+            so.FindProperty("stopButton").objectReferenceValue = stop;
+            so.FindProperty("errorPresenter").objectReferenceValue = error;
+            so.ApplyModifiedPropertiesWithoutUndo();
+
+            SaveScene("GeidaiLibrary");
+        }
+
+        private static CuratedSoundItemView CreateCuratedSoundItemPrefab(Transform parent)
+        {
+            var go = new GameObject(
+                "CuratedSoundItemPrefab",
+                typeof(RectTransform),
+                typeof(Image),
+                typeof(LayoutElement),
+                typeof(CuratedSoundItemView));
+            go.transform.SetParent(parent, false);
+            go.SetActive(false);
+            go.GetComponent<RectTransform>().sizeDelta = new Vector2(0f, 112f);
+            go.GetComponent<Image>().color = new Color(0.22f, 0.55f, 0.42f, 1f);
+            var element = go.GetComponent<LayoutElement>();
+            element.minHeight = 112f;
+            element.preferredHeight = 112f;
+
+            var name = CreateText(go.transform, "Name", "おと", 28, TextAnchor.MiddleLeft);
+            name.rectTransform.anchorMin = new Vector2(0.05f, 0.42f);
+            name.rectTransform.anchorMax = new Vector2(0.55f, 0.95f);
+            name.rectTransform.offsetMin = Vector2.zero;
+            name.rectTransform.offsetMax = Vector2.zero;
+            name.color = Color.white;
+
+            var category = CreateText(go.transform, "Category", "", 20, TextAnchor.MiddleLeft);
+            category.rectTransform.anchorMin = new Vector2(0.05f, 0.05f);
+            category.rectTransform.anchorMax = new Vector2(0.55f, 0.42f);
+            category.rectTransform.offsetMin = Vector2.zero;
+            category.rectTransform.offsetMax = Vector2.zero;
+            category.color = new Color(0.9f, 0.95f, 0.9f, 1f);
+
+            var lockIconGo = new GameObject("LockIcon", typeof(RectTransform), typeof(Image));
+            lockIconGo.transform.SetParent(go.transform, false);
+            var lockRt = lockIconGo.GetComponent<RectTransform>();
+            lockRt.anchorMin = new Vector2(0.62f, 0.5f);
+            lockRt.anchorMax = new Vector2(0.62f, 0.5f);
+            lockRt.sizeDelta = new Vector2(40f, 40f);
+            lockIconGo.GetComponent<Image>().color = new Color(0.95f, 0.75f, 0.2f, 1f);
+
+            var lockLabel = CreateText(go.transform, "LockLabel", "ロック", 20, TextAnchor.MiddleCenter);
+            lockLabel.rectTransform.anchorMin = new Vector2(0.66f, 0.2f);
+            lockLabel.rectTransform.anchorMax = new Vector2(0.78f, 0.8f);
+            lockLabel.rectTransform.offsetMin = Vector2.zero;
+            lockLabel.rectTransform.offsetMax = Vector2.zero;
+            lockLabel.color = Color.white;
+
+            var play = CreateButton(go.transform, "Play", "きく", new Vector2(130f, 70f));
+            var playRt = play.GetComponent<RectTransform>();
+            playRt.anchorMin = new Vector2(1f, 0.5f);
+            playRt.anchorMax = new Vector2(1f, 0.5f);
+            playRt.pivot = new Vector2(1f, 0.5f);
+            playRt.anchoredPosition = new Vector2(-20f, 0f);
+
+            var item = go.GetComponent<CuratedSoundItemView>();
+            var so = new SerializedObject(item);
+            so.FindProperty("nameLabel").objectReferenceValue = name;
+            so.FindProperty("categoryLabel").objectReferenceValue = category;
+            so.FindProperty("lockLabel").objectReferenceValue = lockLabel;
+            so.FindProperty("playButton").objectReferenceValue = play;
+            so.FindProperty("lockIcon").objectReferenceValue = lockIconGo.GetComponent<Image>();
+            so.ApplyModifiedPropertiesWithoutUndo();
+            return item;
+        }
+
+        public static void BuildCreate()
+        {
+            EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+            var shell = CreateScreenShell("GeidaiCreateRoot");
+            var safe = shell.safeArea;
+
+            var title = CreateText(safe, "Title", "おとづくり", 44, TextAnchor.MiddleCenter);
+            AnchorTopBand(title.rectTransform, 84f, 20f);
+
+            var scrollHost = new GameObject("CreateScroll", typeof(RectTransform), typeof(Image), typeof(ScrollRect));
+            scrollHost.transform.SetParent(safe, false);
+            var scrollRt = scrollHost.GetComponent<RectTransform>();
+            scrollRt.anchorMin = new Vector2(0.05f, 0f);
+            scrollRt.anchorMax = new Vector2(0.95f, 0.9f);
+            // 下端は「もどる」とボタン行のぶんだけピクセルで空ける（端末比率に依存させない）。
+            scrollRt.offsetMin = new Vector2(0f, 208f);
+            scrollRt.offsetMax = Vector2.zero;
+            scrollHost.GetComponent<Image>().color = new Color(0.94f, 0.97f, 0.94f, 1f);
+
+            var viewport = new GameObject("Viewport", typeof(RectTransform), typeof(Image), typeof(Mask));
+            viewport.transform.SetParent(scrollHost.transform, false);
+            StretchFull(viewport.GetComponent<RectTransform>());
+            viewport.GetComponent<Image>().color = Color.white;
+            viewport.GetComponent<Mask>().showMaskGraphic = false;
+
+            var formGo = new GameObject("Form", typeof(RectTransform), typeof(VerticalLayoutGroup), typeof(ContentSizeFitter));
+            formGo.transform.SetParent(viewport.transform, false);
+            var formRt = formGo.GetComponent<RectTransform>();
+            formRt.anchorMin = new Vector2(0f, 1f);
+            formRt.anchorMax = new Vector2(1f, 1f);
+            formRt.pivot = new Vector2(0.5f, 1f);
+            formRt.sizeDelta = Vector2.zero;
+            var formLayout = formGo.GetComponent<VerticalLayoutGroup>();
+            formLayout.padding = new RectOffset(24, 24, 20, 20);
+            formLayout.spacing = 10f;
+            formLayout.childAlignment = TextAnchor.UpperCenter;
+            formLayout.childControlWidth = true;
+            formLayout.childControlHeight = false;
+            formLayout.childForceExpandWidth = true;
+            formLayout.childForceExpandHeight = false;
+            formGo.GetComponent<ContentSizeFitter>().verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+
+            var scroll = scrollHost.GetComponent<ScrollRect>();
+            scroll.viewport = viewport.GetComponent<RectTransform>();
+            scroll.content = formRt;
+            scroll.horizontal = false;
+            scroll.vertical = true;
+            scroll.movementType = ScrollRect.MovementType.Clamped;
+
+            var pickLabel = CreateText(formGo.transform, "PickLabel", "つかう おと（A / B）", 28, TextAnchor.MiddleLeft);
+            AddLayoutHeight(pickLabel.gameObject, 46f);
+            var slotA = CreateDropdown(formGo.transform, "SlotA", new Vector2(0f, 64f));
+            AddLayoutHeight(slotA.gameObject, 64f);
+            var slotB = CreateDropdown(formGo.transform, "SlotB", new Vector2(0f, 64f));
+            AddLayoutHeight(slotB.gameObject, 64f);
+
+            var pickerGo = new GameObject("RecipeLayerPicker", typeof(RecipeLayerPicker));
+            pickerGo.transform.SetParent(formGo.transform, false);
+            AddLayoutHeight(pickerGo, 1f);
+            var picker = pickerGo.GetComponent<RecipeLayerPicker>();
+            var soPicker = new SerializedObject(picker);
+            soPicker.FindProperty("slotA").objectReferenceValue = slotA;
+            soPicker.FindProperty("slotB").objectReferenceValue = slotB;
+            soPicker.ApplyModifiedPropertiesWithoutUndo();
+
+            var effectLabel = CreateText(formGo.transform, "EffectLabel", "こうか（チェックON=A / OFF=B）", 26, TextAnchor.MiddleLeft);
+            AddLayoutHeight(effectLabel.gameObject, 44f);
+            var layerToggle = CreateToggle(formGo.transform, "EditLayerA", "A を ちょうせい", true);
+            AddLayoutHeight(layerToggle.gameObject, 54f);
+
+            var volumeLabel = CreateText(formGo.transform, "VolumeLabel", "おんりょう", 22, TextAnchor.MiddleLeft);
+            AddLayoutHeight(volumeLabel.gameObject, 34f);
+            var volume = CreateSlider(formGo.transform, "Volume", 0f, 1f, 1f, false, new Vector2(0f, 54f));
+            AddLayoutHeight(volume.gameObject, 54f);
+
+            var pitchLabel = CreateText(formGo.transform, "PitchLabel", "ピッチ（-12 〜 +12）", 22, TextAnchor.MiddleLeft);
+            AddLayoutHeight(pitchLabel.gameObject, 34f);
+            var pitch = CreateSlider(formGo.transform, "Pitch", -12f, 12f, 0f, true, new Vector2(0f, 54f));
+            AddLayoutHeight(pitch.gameObject, 54f);
+            var pitchValue = CreateText(formGo.transform, "PitchValue", "0", 22, TextAnchor.MiddleCenter);
+            AddLayoutHeight(pitchValue.gameObject, 34f);
+
+            var reverbLabel = CreateText(formGo.transform, "ReverbLabel", "リバーブ", 22, TextAnchor.MiddleLeft);
+            AddLayoutHeight(reverbLabel.gameObject, 34f);
+            var reverb = CreateSlider(formGo.transform, "Reverb", 0f, 1f, 0f, false, new Vector2(0f, 54f));
+            AddLayoutHeight(reverb.gameObject, 54f);
+
+            var timbreLabel = CreateText(formGo.transform, "TimbreLabel", "おんしょく", 22, TextAnchor.MiddleLeft);
+            AddLayoutHeight(timbreLabel.gameObject, 34f);
+            var timbre = CreateDropdown(formGo.transform, "Timbre", new Vector2(0f, 64f));
+            AddLayoutHeight(timbre.gameObject, 64f);
+
+            var effectGo = new GameObject("RecipeEffectPanel", typeof(RecipeEffectPanel));
+            effectGo.transform.SetParent(formGo.transform, false);
+            AddLayoutHeight(effectGo, 1f);
+            var effect = effectGo.GetComponent<RecipeEffectPanel>();
+            var soEffect = new SerializedObject(effect);
+            soEffect.FindProperty("layerAToggle").objectReferenceValue = layerToggle;
+            soEffect.FindProperty("volumeSlider").objectReferenceValue = volume;
+            soEffect.FindProperty("pitchSlider").objectReferenceValue = pitch;
+            soEffect.FindProperty("reverbSlider").objectReferenceValue = reverb;
+            soEffect.FindProperty("timbreDropdown").objectReferenceValue = timbre;
+            soEffect.FindProperty("pitchValueLabel").objectReferenceValue = pitchValue;
+            soEffect.ApplyModifiedPropertiesWithoutUndo();
+
+            var titleLabel = CreateText(formGo.transform, "RecipeTitleLabel", "レシピの なまえ", 22, TextAnchor.MiddleLeft);
+            AddLayoutHeight(titleLabel.gameObject, 34f);
+            var titleInput = CreateInputField(formGo.transform, "RecipeTitle", "なまえ（なくてもOK）", new Vector2(0f, 64f));
+            AddLayoutHeight(titleInput.gameObject, 64f);
+
+            // 主要操作はスクロールの外へ固定し、縦長端末でも常に表示する。
+            var actionRow = CreateButtonRow(safe, "ActionRow");
+            var actionRt = actionRow.GetComponent<RectTransform>();
+            actionRt.anchorMin = new Vector2(0.05f, 0f);
+            actionRt.anchorMax = new Vector2(0.95f, 0f);
+            actionRt.pivot = new Vector2(0.5f, 0f);
+            actionRt.sizeDelta = new Vector2(0f, 74f);
+            actionRt.anchoredPosition = new Vector2(0f, 116f);
+            var preview = CreateButton(actionRow.transform, "Preview", "きく", new Vector2(190f, 70f));
+            var stop = CreateButton(actionRow.transform, "Stop", "とめる", new Vector2(190f, 70f));
+            var save = CreateButton(actionRow.transform, "Save", "ほぞん", new Vector2(190f, 70f));
+
+            var recipeLabel = CreateText(formGo.transform, "RecipeListLabel", "ほぞんした レシピ", 24, TextAnchor.MiddleLeft);
+            AddLayoutHeight(recipeLabel.gameObject, 40f);
+            var recipeDropdown = CreateDropdown(formGo.transform, "RecipeList", new Vector2(0f, 64f));
+            AddLayoutHeight(recipeDropdown.gameObject, 64f);
+            var recipeRow = CreateButtonRow(formGo.transform, "RecipeRow");
+            var open = CreateButton(recipeRow.transform, "Open", "ひらく", new Vector2(190f, 70f));
+            var delete = CreateButton(recipeRow.transform, "Delete", "けす", new Vector2(190f, 70f));
+            var export = CreateButton(recipeRow.transform, "Export", "WAVE", new Vector2(190f, 70f));
+
+            var listGo = new GameObject("RecipeListController", typeof(RecipeListController));
+            listGo.transform.SetParent(formGo.transform, false);
+            AddLayoutHeight(listGo, 1f);
+            var recipeList = listGo.GetComponent<RecipeListController>();
+            var soList = new SerializedObject(recipeList);
+            soList.FindProperty("recipeDropdown").objectReferenceValue = recipeDropdown;
+            soList.FindProperty("openButton").objectReferenceValue = open;
+            soList.FindProperty("deleteButton").objectReferenceValue = delete;
+            soList.ApplyModifiedPropertiesWithoutUndo();
+
+            var confirm = CreateConfirmDialog(safe);
+            var exportGo = new GameObject("RecipeExportController", typeof(RecipeExportController));
+            exportGo.transform.SetParent(formGo.transform, false);
+            AddLayoutHeight(exportGo, 1f);
+            var exportController = exportGo.GetComponent<RecipeExportController>();
+            var soExport = new SerializedObject(exportController);
+            soExport.FindProperty("exportButton").objectReferenceValue = export;
+            soExport.FindProperty("confirmDialog").objectReferenceValue = confirm;
+            soExport.ApplyModifiedPropertiesWithoutUndo();
+
+            var back = CreateButton(safe, "Back", "もどる", new Vector2(280f, 82f));
+            AnchorBottom(back.GetComponent<RectTransform>(), 82f, 24f);
+            var error = CreateErrorPresenter(safe);
+            var catalog = AssetDatabase.LoadAssetAtPath<CuratedSoundCatalog>(CuratedSoundCatalogPath);
+            var rules = AssetDatabase.LoadAssetAtPath<UnlockRulesCatalog>(UnlockRulesCatalogPath);
+
+            var screenGo = new GameObject("CreateScreen", typeof(CreateScreenController));
+            screenGo.transform.SetParent(shell.canvas.transform, false);
+            var screen = screenGo.GetComponent<CreateScreenController>();
+            WireScreenRoot(screen, shell.responsive, shell.fitter);
+            var so = new SerializedObject(screen);
+            so.FindProperty("curatedCatalog").objectReferenceValue = catalog;
+            so.FindProperty("unlockRules").objectReferenceValue = rules;
+            so.FindProperty("layerPicker").objectReferenceValue = picker;
+            so.FindProperty("effectPanel").objectReferenceValue = effect;
+            so.FindProperty("recipeList").objectReferenceValue = recipeList;
+            so.FindProperty("exportController").objectReferenceValue = exportController;
+            so.FindProperty("titleField").objectReferenceValue = titleInput;
+            so.FindProperty("previewButton").objectReferenceValue = preview;
+            so.FindProperty("saveButton").objectReferenceValue = save;
+            so.FindProperty("stopButton").objectReferenceValue = stop;
+            so.FindProperty("backButton").objectReferenceValue = back;
+            so.FindProperty("errorPresenter").objectReferenceValue = error;
+            so.FindProperty("confirmDialog").objectReferenceValue = confirm;
+            so.ApplyModifiedPropertiesWithoutUndo();
+
+            SaveScene("GeidaiCreate");
+        }
+
+        private static void AddLayoutHeight(GameObject go, float height)
+        {
+            var element = go.GetComponent<LayoutElement>();
+            if (element == null) element = go.AddComponent<LayoutElement>();
+            element.minHeight = height;
+            element.preferredHeight = height;
+            element.flexibleHeight = 0f;
+        }
+
+        private static GameObject CreateButtonRow(Transform parent, string name)
+        {
+            var row = new GameObject(name, typeof(RectTransform), typeof(HorizontalLayoutGroup), typeof(LayoutElement));
+            row.transform.SetParent(parent, false);
+            var layout = row.GetComponent<HorizontalLayoutGroup>();
+            layout.spacing = 12f;
+            layout.childAlignment = TextAnchor.MiddleCenter;
+            // 高さを制御すると LayoutElement 無しのボタンが 0px になり、背景もタップ判定も消える。
+            layout.childControlWidth = false;
+            layout.childControlHeight = false;
+            layout.childForceExpandWidth = false;
+            layout.childForceExpandHeight = false;
+            AddLayoutHeight(row, 78f);
+            return row;
+        }
+
         private static void EnsurePrefab(GameObject source, string path)
         {
             var dir = Path.GetDirectoryName(path);
@@ -899,6 +1388,8 @@ namespace Geidai.EditorTools
                 $"{SceneDir}/GeidaiCollection.unity",
                 $"{SceneDir}/GeidaiTheme.unity",
                 $"{SceneDir}/GeidaiGame1.unity",
+                $"{SceneDir}/GeidaiLibrary.unity",
+                $"{SceneDir}/GeidaiCreate.unity",
             };
 
             var list = new List<EditorBuildSettingsScene>();

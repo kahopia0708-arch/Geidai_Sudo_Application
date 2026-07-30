@@ -747,3 +747,260 @@
 **Context**: CONSTRUCTION follow-up — handoff docs for Sさん (US-TECH-07)
 
 ---
+
+## Requirements Change Analysis — 音図鑑・音づくり
+**Timestamp**: 2026-07-30T16:22:10+09:00
+**User Input**: "現状までで個人情報や個人の予定が入らないようにして計画をドキュメントに反映してください
+featureブランチも作って"
+**AI Response**: `feature/sound-library-planning` を作成。外部 Source of Truth のプロジェクト概要と `execution-plan.md` へ、ユーザー間共有の第一弾見送り、制作側音素材の音図鑑、ゲーム進行によるアンロック、音づくり、役割ベースの共同開発、展示用インストールビルドを、確定事項と検討事項に分けて反映。個人プロフィール・連絡手段・個人予定は計画から除外。未確定要件は `sound-library-change-questions.md` に整理。
+**Context**: INCEPTION — requirements change proposal / privacy-safe planning
+
+---
+
+## Requirements Change Analysis — 回答検証・要件更新
+**Timestamp**: 2026-07-30T16:26:59+09:00
+**User Input**: "回答した"
+**AI Response**: `sound-library-change-questions.md` の全6回答（B/C/B/B/A/A）を検証し、矛盾なしと判定。外部 Source of Truth と requirements.md に、音図鑑50〜100音、ゲーム＋録音課題アンロック、2音の音づくり、レシピ保存＋任意WAVE書き出し、役割別／ゲーム縦割り、任意展示向け実機ビルドを反映。Requirements review gate を提示。
+**Context**: INCEPTION — Requirements Change Analysis / review required
+
+---
+
+## Requirements Change Analysis — Approval Prompt
+**Timestamp**: 2026-07-30T16:26:59+09:00
+**AI Prompt**: "更新した要件を確認し、Request Changes または Approve & Continue を選択してください。"
+**Status**: Awaiting response
+**Context**: Requirements change document generated; User Stories update is gated on explicit approval
+
+---
+
+## Requirements Change Analysis — Approval Response
+**Timestamp**: 2026-07-30T16:37:43+09:00
+**User Input**: "OK"
+**AI Response**: 要件変更を承認と解釈。User Stories 更新（EPIC-LIBRARY / EPIC-CREATE / 役割ペルソナ / FUT-02 見直し）へ進む。
+**Status**: Approved
+**Context**: Requirements Change Analysis — proceed to User Stories delta update
+
+---
+
+## User Stories Update — 音図鑑・音づくり
+**Timestamp**: 2026-07-30T16:37:43+09:00
+**User Input**: "OK"
+**AI Response**: Requirements 承認後、stories.md に EPIC-LIBRARY / EPIC-CREATE / US-TECH-08/09 を追加、FUT-02 を音図鑑代替に更新、personas.md を役割名ベースへ再編。assessment を plans に記録。
+**Context**: INCEPTION — User Stories delta for phase C
+
+---
+
+## User Stories Update — Approval Prompt
+**Timestamp**: 2026-07-30T16:37:43+09:00
+**AI Prompt**: "更新した User Stories / Personas を確認し、Request Changes または Approve & Continue を選択してください。"
+**Status**: Awaiting response
+**Context**: Next after approval: Workflow Planning / Application Design / Units delta for sound library
+
+---
+
+## User Stories Update — Approval Response
+**Timestamp**: 2026-07-30T16:42:55+09:00
+**User Input**: "OK"
+**AI Response**: User Stories／Personas 差分を承認と解釈。Application Design／Units Generation の差分更新へ進む。
+**Status**: Approved
+**Context**: Proceed to Application Design and Units delta for phase C
+
+---
+
+## Application Design / Units Update — 音図鑑・音づくり
+**Timestamp**: 2026-07-30T16:42:55+09:00
+**User Input**: "OK"
+**AI Response**: User Stories 承認後、components/services/component-dependency と unit-of-work 一式へ U7 Library / U8 Create、ProgressionService、Curated/Unlock/Recipe モデルを追加。役割名ベースを維持。
+**Context**: INCEPTION — Application Design and Units delta for phase C
+
+---
+
+## Application Design / Units Update — Approval Prompt
+**Timestamp**: 2026-07-30T16:42:55+09:00
+**AI Prompt**: "更新した Application Design / Units を確認し、Request Changes または Approve & Continue を選択してください。"
+**Status**: Awaiting response
+**Context**: Next after approval: Construction planning for U7/U8 (or commit current planning branch)
+
+---
+
+## Application Design / Units Update — Approval Response
+**Timestamp**: 2026-07-30T16:48:18+09:00
+**User Input**: "OK
+適宜コミットしながら進めて"
+**AI Response**: Application Design／Units を承認と解釈。計画ドキュメントをコミット後、Construction（U7→U8）へ進む。
+**Status**: Approved
+**Context**: Proceed to Construction with incremental commits
+
+---
+
+## Construction — U7/U8 Design Artifacts
+**Timestamp**: 2026-07-30T16:48:18+09:00
+**User Input**: "OK
+適宜コミットしながら進めて"
+**AI Response**: Inception 計画を commit 0e4f692。U7/U8 の Functional Design と NFR Requirements/Design を生成（Infrastructure SKIP）。Code Generation 前の承認ゲートを提示。
+**Context**: CONSTRUCTION phase C design package
+
+---
+
+## Construction — U7/U8 Design Approval Prompt
+**Timestamp**: 2026-07-30T16:48:18+09:00
+**AI Prompt**: "U7/U8 の Functional/NFR 設計を確認し、Request Changes または Continue to Code Generation を選択してください。"
+**Status**: Awaiting response
+**Context**: Standardized 2-option gate before Code Generation
+
+---
+
+## Construction — U7/U8 Design Approved → Code Gen Planning
+**Timestamp**: 2026-07-30T16:52:00+09:00
+**User Input**: "OK"
+**AI Response**: Functional/NFR 設計承認として記録。U7/U8 Code Generation Part1（詳細計画 Step0〜16）を作成し承認ゲートを提示。
+**Context**: Continue to Code Generation（design gate）
+
+---
+
+## Construction — U7/U8 Code Generation Plan Approval Prompt
+**Timestamp**: 2026-07-30T16:55:00+09:00
+**AI Prompt**: "U7/U8 Code Generation Plan（aidlc-docs/construction/plans/u7-u8-code-generation-plan.md）を確認し、Continue または Request Changes を選択してください。"
+**Plan**: Step0〜16（共通IF → Library → Create → テスト/MCP/記録）
+**Status**: Awaiting response
+**Context**: Code Generation Part1 gate
+
+---
+
+## Construction — U7/U8 Code Generation Plan Approved
+**Timestamp**: 2026-07-30T16:55:30+09:00
+**User Input**: "OK"
+**AI Response**: Code Generation Part1 承認。Part2（Step0〜16）を開始する。
+**Context**: Continue to Code Generation Part2
+
+---
+
+## Construction — U7/U8 Code Generation Part2 Complete
+**Timestamp**: 2026-07-30T17:08:00+09:00
+**User Input**: "OK"
+**AI Response**: Part2 Step0〜16 実行。Geidai.Library / Geidai.Create / ProgressionService / Unlock・Recipe 共通IF・EditMode テスト・既定カタログ asset を生成。Unity MCP で Error 0・スモーク PASS。完了ゲートを提示。
+**Context**: Code Generation Part2 complete gate
+
+---
+
+## Construction — U7/U8 Code Generation Completion Gate
+**Timestamp**: 2026-07-30T17:08:00+09:00
+**AI Prompt**: "Code Generation Complete — U7/U8。Request Changes または Continue to Next Stage を選択してください。"
+**Status**: Awaiting response
+**Context**: Standardized 2-option completion gate
+
+---
+
+## Construction — U7/U8 Code Generation Review Fix
+**Timestamp**: 2026-07-30T17:09:00+09:00
+**User Input**: "Assets/Editor/GeidaiSceneBootstrap.cs(94,17): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'"
+**AI Response**: `FindFirstObjectByType<EventSystem>()` を `FindAnyObjectByType<EventSystem>()` に置換。Unity 再コンパイル後、Error 0 / Warning 0 を確認。
+**Context**: Code Generation completion review — warning fix
+
+---
+
+## Construction — U7/U8 Code Generation Completion Approved
+**Timestamp**: 2026-07-30T17:10:30+09:00
+**User Input**: "OK"
+**AI Response**: Code Generation 完了ゲート承認。Build and Test Phase C（U7/U8）差分を更新し、完了ゲートを提示。
+**Context**: Continue to Next Stage → Build and Test Phase C
+
+---
+
+## Construction — Build and Test Phase C Approval Prompt
+**Timestamp**: 2026-07-30T17:12:00+09:00
+**AI Prompt**: "Build and test instructions（Phase C）complete. Ready to proceed to Operations stage?"
+**Artifacts**: phase-c-u7-u8-addendum.md / 既存 BAT 手順更新 / build-and-test-summary.md
+**Status**: Awaiting response
+**Context**: Build and Test completion gate before Operations placeholder
+
+---
+
+## Construction — Build and Test Phase C Approved → Operations
+**Timestamp**: 2026-07-30T17:14:30+09:00
+**User Input**: "OK"
+**AI Response**: Build and Test Phase C 承認。Operations PLACEHOLDER を文書化し、現行 AI-DLC サイクルを終端とする。Construction フォローアップ（シーン配線等）は別途継続可能。
+**Context**: Ready to proceed to Operations stage
+
+---
+
+## Operations — PLACEHOLDER Documented
+**Timestamp**: 2026-07-30T17:15:00+09:00
+**AI Response**: `aidlc-docs/operations/operations-placeholder.md` を作成。オフライン／展示ビルド読み替えと残タスクを記載。
+**Context**: Operations PLACEHOLDER complete for current workflow cycle
+
+---
+
+## Construction Follow-up — U7/U8 Scene Wiring Start
+**Timestamp**: 2026-07-30T17:18:30+09:00
+**User Input**: "2. アプリ画面でテストする前に必要な作業
+を進めて"
+**AI Response**: 明示的な実行承認として、Library/Create シーン生成・Home 導線・Build Settings・既定アセット割当のフォローアップを開始。
+**Context**: Construction follow-up / MCP scene wiring
+
+---
+
+## Construction Follow-up — U7/U8 Scene Wiring Complete
+**Timestamp**: 2026-07-30T17:26:30+09:00
+**AI Response**: `GeidaiLibrary` / `GeidaiCreate` を生成し、Home 導線・Build Settings・既定カタログ WAV・全UI参照を配線。Unity MCP 静的検証は全項目 PASS。EditMode 全件で発見した RecipeClamp の NaN 正規化不具合を修正し、再実行で 97 Pass / 0 Fail / 0 Skip を確認。
+**Context**: Construction follow-up complete / Play Mode manual verification remains
+
+---
+
+## Construction Follow-up — U8 Mixing Preview Feedback
+**Timestamp**: 2026-07-30T17:31:30+09:00
+**User Input**: "アンロックされている音が ベル しかないので、音作りでミキシングが試せない
+音作り　では、音のプレビューができない"
+**AI Response**: 既定アンロック数と Create UI → AudioService のプレビュー経路を再現し、テスト可能な状態へ修正する。
+**Context**: U8 Play Mode feedback / bug fix
+
+---
+
+## Construction Follow-up — U8 Mixing Preview Feedback Resolved
+**Timestamp**: 2026-07-30T17:36:30+09:00
+**AI Response**: 既定ベル/ドラムを両方初期解除へ変更し、Create 入場時に素材A=ベル・素材B=ドラムを自動選択するよう修正。MCPで選択肢3件（なし＋2音）、異なるA/B、2音ミックスWAV 88,244 bytesを確認。EditModeは97 Pass / 0 Fail。
+**Context**: U8 preview usability fix complete
+
+---
+
+## Construction Follow-up — U8 Preview Controls Feedback
+**Timestamp**: 2026-07-30T17:39:30+09:00
+**User Input**: "きく　ボタンは無いようだ
+スライダーを動かす度に音が出て、変化を確認できるようにもして"
+**AI Response**: 画像から操作ボタンがスクロール領域下部に隠れていることを確認。きく/とめる/ほぞんを固定表示し、素材選択・加工値変更時に再生を開始または再生中の設定を連続更新する。
+**Context**: U8 Play Mode UI feedback / live preview
+
+---
+
+## Construction Follow-up — U8 Preview Controls Resolved
+**Timestamp**: 2026-07-30T17:43:30+09:00
+**AI Response**: `きく` / `とめる` / `ほぞん` をスクロール外の画面下部へ固定。素材選択・音量・ピッチ・リバーブ・音色変更をライブプレビューへ接続し、再生中は同じクリップを再始動せず設定のみ更新するよう AudioService を変更。Createシーン再生成後、参照・配置検証PASS、EditMode 97 Pass / 0 Fail。
+**Context**: U8 live preview and fixed controls complete
+
+---
+
+## Construction Follow-up — U8 Action Row Broken
+**Timestamp**: 2026-07-30T17:48:30+09:00
+**User Input**: "音色が途切れている
+
+3つのボタン？押しても反応がない　ボタン背景色が無く、文字が見えない"
+**AI Response**: ボタン行の HorizontalLayoutGroup が childControlHeight=true で高さ0となり、背景非表示・当たり判定なしになっていた。行レイアウトを修正し、スクロール下端の余白も詰めて音色まで表示できるようにする。
+**Context**: U8 Play Mode UI defect / layout fix
+
+---
+
+## Construction Follow-up — U8 Action Row Fix Applied
+**Timestamp**: 2026-07-30T17:56:00+09:00
+**User Input**: (no new input — implementing fix for previous report)
+**AI Response**: CreateButtonRow の childControlHeight を false 化（ボタン高さ0 → 190x70 復元）、GeidaiCreate の ActionRow/RecipeRow を修復、スクロール下端を offsetMin 208px へ変更、ActionRow の描画順を ConfirmDialog/ErrorBanner より下へ、AudioService のレイヤープレビューを loop 再生化。コンパイル Error 0 / Warning 0。
+**Context**: U8 Play Mode UI + preview continuity fix
+
+---
+
+## Construction Follow-up — Reverb/Timbre Had No Effect
+**Timestamp**: 2026-07-30T18:09:00+09:00
+**User Input**: "ピッチの変化はわかったが、リバーブと音色を変えた時の再生音の変化はわからなかった"
+**AI Response**: 原因は `GetComponent<T>() ?? AddComponent<T>()`。Unity の偽 null により AddComponent が呼ばれず、LowPass/HighPass/Reverb/Distortion が未アタッチのままだった（ピッチは AudioSource 直接指定のため唯一有効）。EffectChain / AudioService を明示 null 判定へ修正し、リバーブは room+decayTime+reverbLevel の 3 値換算（SoundEffectMapper に純粋関数を追加、PBT 3件）、音色プリセットは Soft=LP2200・Hard=LP3500+HP900+Dist0.6 へ調整。EditMode 100件パス、フィルタ実値をエディタスモークで確認。
+**Context**: U8 audio effect defect / root cause fix
+
+---
