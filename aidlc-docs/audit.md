@@ -849,3 +849,20 @@ featureブランチも作って"
 **Context**: Standardized 2-option gate before Code Generation
 
 ---
+
+## Construction — U7/U8 Design Approved → Code Gen Planning
+**Timestamp**: 2026-07-30T16:52:00+09:00
+**User Input**: "OK"
+**AI Response**: Functional/NFR 設計承認として記録。U7/U8 Code Generation Part1（詳細計画 Step0〜16）を作成し承認ゲートを提示。
+**Context**: Continue to Code Generation（design gate）
+
+---
+
+## Construction — U7/U8 Code Generation Plan Approval Prompt
+**Timestamp**: 2026-07-30T16:55:00+09:00
+**AI Prompt**: "U7/U8 Code Generation Plan（aidlc-docs/construction/plans/u7-u8-code-generation-plan.md）を確認し、Continue または Request Changes を選択してください。"
+**Plan**: Step0〜16（共通IF → Library → Create → テスト/MCP/記録）
+**Status**: Awaiting response
+**Context**: Code Generation Part1 gate
+
+---

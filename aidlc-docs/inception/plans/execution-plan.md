@@ -262,4 +262,5 @@ flowchart TD
 - [x] Application Design／Units を差分更新
 - [x] Application Design／Units 承認（"OK"）
 - [x] U7/U8 Functional Design + NFR Design
-- [ ] U7/U8 Code Generation
+- [x] U7/U8 Code Generation Part1（計画）
+- [ ] U7/U8 Code Generation Part2（生成）

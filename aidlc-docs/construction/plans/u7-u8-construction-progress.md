@@ -10,6 +10,7 @@
 - [x] U8 NFR Requirements / Design（Infrastructure SKIP）
 
 ## 次
+- [x] U7/U8 Code Generation 計画作成（Part1）
 - [ ] U7/U8 Code Generation 計画の承認
 - [ ] 共通IF実装（Progression/Unlock/Recipe）
 - [ ] U7 コード生成

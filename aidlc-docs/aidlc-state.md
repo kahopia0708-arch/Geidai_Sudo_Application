@@ -5,7 +5,7 @@
 - **Project Type**: Brownfield
 - **Start Date**: 2026-07-15T16:48:08+09:00
 - **Current Phase**: CONSTRUCTION（フェーズC）
-- **Current Stage**: CONSTRUCTION — U7 Sound Library / U8 Sound Create
+- **Current Stage**: CONSTRUCTION — U7/U8 Code Generation（Part1 承認待ち）
 
 ## Workspace State
 - **Existing Code**: Yes（Unity 6000.4.2f1 / URP / uGUI）
@@ -126,7 +126,8 @@
 - [x] U7 NFR Requirements / Design — 2026-07-30（Infrastructure SKIP）
 - [x] U8 Functional Design — 2026-07-30
 - [x] U8 NFR Requirements / Design — 2026-07-30（Infrastructure SKIP）
-- [ ] U7/U8 Code Generation — 計画承認待ち
+- [x] U7/U8 Code Generation — Part1 計画作成（2026-07-30）・承認待ち
+- [ ] U7/U8 Code Generation — Part2 生成
 
 ### 🟡 OPERATIONS PHASE
 - [ ] Operations — PLACEHOLDER
@@ -151,4 +152,5 @@
 - 変更回答: 次期MVPは音図鑑＋複合条件アンロック＋2音の音づくり。初期50〜100音、レシピ保存＋任意WAVE書き出し、役割別＋ゲーム縦割り、任意展示へ音図鑑入り実機ビルド。
 - User Stories 差分: `stories.md` に US-LIB-01〜03 / US-CREATE-01〜04 / US-TECH-08/09、`personas.md` を役割名ベースへ更新。承認済み。
 - Application Design / Units 差分: U7/U8 承認済み。Construction 着手。
-- U7/U8 Construction 設計（FD/NFR）完了。Code Generation 承認待ち。
+- U7/U8 Construction 設計（FD/NFR）完了。
+- U7/U8 Code Generation Part1 計画作成済み（`u7-u8-code-generation-plan.md`）。承認待ち。
