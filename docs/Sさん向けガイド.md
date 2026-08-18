@@ -191,6 +191,7 @@ A. 直前に触ったシーンを保存せず戻す／Git で差分を確認。�
 ## 9. 関連リンク
 
 - リポジトリ概要: [README.md](../README.md)  
+- ゲーム実装・シーン所有: [Fさん向けガイド.md](Fさん向けガイド.md)  
 - 実機確認チェックリスト: `aidlc-docs/construction/build-and-test/device-verification-checklist.md`  
 - ハンドオフ方針（ストーリー）: `aidlc-docs/inception/user-stories/stories.md` の US-TECH-07  
 - 企画の正: Google Drive の `プロジェクト概要.md`（リポジトリ外）

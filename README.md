@@ -18,9 +18,11 @@
 | 担当 | やること |
 |---|---|
 | **Sさん** | 企画・音素材・**画面の見た目調整**・お題/パラメータ差し替え・試用フィードバック |
-| **前本** | 実装ロジック・画面の骨組み・ナビ/録音/保存・ビルド環境・GitHub |
+| **前本** | 共通基盤・ナビ/録音/保存/音図鑑システム・①②・ビルド・GitHub |
+| **Fさん** | **③音並べ**・**④サウンドレスキュー**・**音づくり**、音楽理論と実装の対応 |
 
-見た目の変え方は **[docs/Sさん向けガイド.md](docs/Sさん向けガイド.md)** を参照してください。
+見た目の変え方は **[docs/Sさん向けガイド.md](docs/Sさん向けガイド.md)**。  
+ゲーム実装・シーン所有は **[docs/Fさん向けガイド.md](docs/Fさん向けガイド.md)**。
 
 ---
 
@@ -37,7 +39,10 @@
 | `Assets/Main画面.unity` | 起動（Boot） |
 | `Assets/Scenes/Geidai/GeidaiHome.unity` | ホーム |
 | `GeidaiRegister` / `GeidaiRec` / `GeidaiCollection` / `GeidaiTheme` / `GeidaiGame1` | 設定・録音・コレクション・今週のお題・①音合わせ |
+| `GeidaiLibrary` / `GeidaiCreate` | 音図鑑・音づくり |
 | `Assets/game_Home.unity` | ゲーム選択（既存 UI → Game1 へ） |
+
+③音並べ・④サウンドレスキューのシーンは未作成。追加手順は Fさんガイド。
 
 ### メニュー（Editor）
 
@@ -55,6 +60,7 @@
 | 場所 | 内容 |
 |---|---|
 | [docs/Sさん向けガイド.md](docs/Sさん向けガイド.md) | **デザイン変更・お題/設定の差し替え手順**（Sさん向け） |
+| [docs/Fさん向けガイド.md](docs/Fさん向けガイド.md) | **ゲーム実装・音楽理論・シーン所有**（Fさん向け） |
 | `aidlc-docs/` | AI-DLC の要件・設計・Construction 記録（実装者向け） |
 | `aidlc-docs/construction/build-and-test/` | ビルド・テスト・実機確認チェックリスト |
 | 企画の正（Google Drive） | `プロジェクト概要.md` および `input/`（リポジトリには複製しない） |
