@@ -4,8 +4,9 @@
 - **Project Name**: 藝大 音響教育アプリ（「音」から始まる、耳のためのアプリケーション）
 - **Project Type**: Brownfield
 - **Start Date**: 2026-07-15T16:48:08+09:00
-- **Current Phase**: OPERATIONS（PLACEHOLDER）／Construction フォローアップ残
-- **Current Stage**: OPERATIONS — PLACEHOLDER（ワークフロー終端）
+- **Current Phase**: OPERATIONS（PLACEHOLDER）
+- **Current Stage**: OPERATIONS — Fさん導入ドキュメント ワークフロー終端
+- **Active Workstream**: Fさん向け導入ドキュメント（2026-08-19）完了
 
 ## Workspace State
 - **Existing Code**: Yes（Unity 6000.4.2f1 / URP / uGUI）
@@ -31,6 +32,19 @@
 | Security Baseline | Yes | Blocking（全ルール） | Requirements Analysis 2026-07-15 |
 | Resiliency Baseline | Yes | Blocking（RTO/RPO・変更管理はユーザー確認待ち） | Requirements Analysis 2026-07-15 |
 | Property-Based Testing | Yes | Full（全PBTルール） | Requirements Analysis 2026-07-15 |
+
+## Active Workstream — Fさん導入ドキュメント（2026-08-19）
+- **Request Type**: Documentation / onboarding
+- **Brownfield**: Yes（既存 Unity アプリ。Reverse Engineering 成果物あり → 再実行 SKIP）
+- **Requirements Depth**: Standard（分担範囲・文書構成に未確定あり）
+- **User Stories**: 評価待ち（ドキュメントのみなら SKIP 見込み）
+- [x] Workspace Detection — 2026-08-19
+- [x] Requirements Analysis — onboarding-f-requirements.md 承認（2026-08-19、"OK"）
+- [x] User Stories — SKIP（ドキュメントのみ）
+- [x] Workflow Planning — onboarding-f-execution-plan.md 承認（2026-08-19、"OK"）
+- [x] Code Generation — Part1/Part2 完了ゲート承認待ちだったが Part2 生成済・2026-08-19 "OK" で承認
+- [x] Build and Test — 文書検証 Pass。承認（2026-08-19、"OK"）
+- [x] Operations — PLACEHOLDER（2026-08-19）。ワークフロー終端
 
 ## Stage Progress
 
