@@ -4,9 +4,9 @@
 - **Project Name**: 藝大 音響教育アプリ（「音」から始まる、耳のためのアプリケーション）
 - **Project Type**: Brownfield
 - **Start Date**: 2026-07-15T16:48:08+09:00
-- **Current Phase**: OPERATIONS（PLACEHOLDER）
-- **Current Stage**: OPERATIONS — Fさん導入ドキュメント ワークフロー終端
-- **Active Workstream**: Fさん向け導入ドキュメント（2026-08-19）完了
+- **Current Phase**: INCEPTION
+- **Current Stage**: INCEPTION — Requirements Analysis（ホーム UI 整備）
+- **Active Workstream**: ホーム／メイン画面デザイン適用（2026-08-28）
 
 ## Workspace State
 - **Existing Code**: Yes（Unity 6000.4.2f1 / URP / uGUI）
@@ -33,7 +33,22 @@
 | Resiliency Baseline | Yes | Blocking（RTO/RPO・変更管理はユーザー確認待ち） | Requirements Analysis 2026-07-15 |
 | Property-Based Testing | Yes | Full（全PBTルール） | Requirements Analysis 2026-07-15 |
 
-## Active Workstream — Fさん導入ドキュメント（2026-08-19）
+## Active Workstream — ホーム UI 整備（2026-08-28）
+- **Request Type**: UI Enhancement / Visual redesign
+- **Brownfield**: Yes（Reverse Engineering 成果物あり → SKIP）
+- **Branch**: `feature/home-ui-redesign`
+- **Requirements Depth**: Standard（導線・統計表示に未確定あり）
+- **User Stories**: 評価待ち（UI 改修・既存 US-NAV-02 拡張見込み）
+- [x] Workspace Detection — 2026-08-28
+- [x] Requirements Analysis — home-ui-requirements.md 承認（2026-08-28、OK）
+- [x] User Stories — SKIP
+- [x] Workflow Planning — home-ui-execution-plan.md（2026-08-28）
+- [x] Application Design — SKIP（最小 UI コンポーネント）
+- [x] Code Generation — 実装完了（Unity メニュー実行済 2026-08-28）
+- [x] Build and Test — シーン生成済。EditMode / Play Mode は Unity で確認
+- [ ] Operations
+
+## Active Workstream — Fさん導入ドキュメント（2026-08-19）【完了】
 - **Request Type**: Documentation / onboarding
 - **Brownfield**: Yes（既存 Unity アプリ。Reverse Engineering 成果物あり → 再実行 SKIP）
 - **Requirements Depth**: Standard（分担範囲・文書構成に未確定あり）

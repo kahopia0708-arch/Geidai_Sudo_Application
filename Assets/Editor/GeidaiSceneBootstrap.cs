@@ -1370,6 +1370,8 @@ namespace Geidai.EditorTools
         {
             var keepDisabled = new HashSet<string>
             {
+                "Assets/Main画面.unity",
+                "Assets/game_Home.unity",
                 "Assets/Home.unity",
                 "Assets/Rec.unity",
                 "Assets/Game01.unity",
@@ -1380,13 +1382,12 @@ namespace Geidai.EditorTools
 
             var enabledNew = new[]
             {
-                "Assets/Main画面.unity",
-                "Assets/game_Home.unity",
                 $"{SceneDir}/GeidaiHome.unity",
                 $"{SceneDir}/GeidaiRegister.unity",
                 $"{SceneDir}/GeidaiRec.unity",
                 $"{SceneDir}/GeidaiCollection.unity",
                 $"{SceneDir}/GeidaiTheme.unity",
+                $"{SceneDir}/GeidaiGameSelect.unity",
                 $"{SceneDir}/GeidaiGame1.unity",
                 $"{SceneDir}/GeidaiLibrary.unity",
                 $"{SceneDir}/GeidaiCreate.unity",
