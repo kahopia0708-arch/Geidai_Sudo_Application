@@ -21,7 +21,7 @@ namespace Geidai.Foundation
         private void Awake()
         {
             _background = GetComponent<Image>();
-            if (labelText != null) UiFontResolver.ApplyTo(labelText, 48);
+            if (labelText != null) UiFontResolver.ApplyTo(labelText, HomeUiTheme.MenuButtonLabel);
         }
 
         public void ApplyChrome(Sprite pillSprite)
@@ -33,7 +33,7 @@ namespace Geidai.Foundation
         {
             if (labelText != null)
             {
-                UiFontResolver.ApplyTo(labelText, 48);
+                UiFontResolver.ApplyTo(labelText, HomeUiTheme.MenuButtonLabel);
                 labelText.text = label ?? string.Empty;
             }
 

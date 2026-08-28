@@ -10,8 +10,8 @@ namespace Geidai.Foundation
     public class HomeProfilePanelView : MonoBehaviour
     {
         private const string PlaceholderValue = "—";
-        private static readonly Color PanelFillColor = Color.white;
-        private static readonly Color MenuTextColor = new Color(0.22f, 0.32f, 0.45f, 1f);
+        private static readonly Color PanelFillColor = HomeUiTheme.PanelFill;
+        private static readonly Color MenuTextColor = HomeUiTheme.MenuText;
 
         [SerializeField] private Image panelBackground;
         [SerializeField] private Image settingsButtonBackground;
@@ -33,8 +33,8 @@ namespace Geidai.Foundation
         {
             EnsureWired();
             var fontRoot = contentRoot != null ? contentRoot : transform;
-            UiFontResolver.ApplyToChildren(fontRoot, 32);
-            if (titleText != null) UiFontResolver.ApplyTo(titleText, 40);
+            UiFontResolver.ApplyToChildren(fontRoot, HomeUiTheme.Body);
+            if (titleText != null) UiFontResolver.ApplyTo(titleText, HomeUiTheme.PanelTitle);
 
             if (closeButton != null) closeButton.onClick.AddListener(() => CloseRequested?.Invoke());
             if (settingsButton != null) settingsButton.onClick.AddListener(() => SettingsRequested?.Invoke());
@@ -69,7 +69,7 @@ namespace Geidai.Foundation
 
             if (titleText != null)
             {
-                UiFontResolver.ApplyTo(titleText, 40);
+                UiFontResolver.ApplyTo(titleText, HomeUiTheme.PanelTitle);
                 titleText.text = string.IsNullOrEmpty(nickname) ? "プロフィール" : $"{nickname} のプロフィール";
             }
 

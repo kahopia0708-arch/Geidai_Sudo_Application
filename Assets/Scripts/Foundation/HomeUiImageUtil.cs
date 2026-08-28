@@ -8,17 +8,46 @@ namespace Geidai.Foundation
     /// </summary>
     public static class HomeUiImageUtil
     {
-        private static Sprite _unityWhiteSprite;
+        private static Sprite _solidFillSprite;
 
-        /// <summary>Unity 組込みの白 UI スプライト（塗りつぶしの最終フォールバック）。</summary>
-        public static Sprite UnityWhiteSprite
+        /// <summary>単色矩形塗り用の白スプライト（Unity 6 では UISprite.psd が使えないため生成）。</summary>
+        private static Sprite SolidFillSprite
         {
             get
             {
-                if (_unityWhiteSprite == null)
-                    _unityWhiteSprite = Resources.GetBuiltinResource<Sprite>("UI/Skin/UISprite.psd");
-                return _unityWhiteSprite;
+                if (_solidFillSprite != null) return _solidFillSprite;
+
+                var tex = Texture2D.whiteTexture;
+                _solidFillSprite = Sprite.Create(
+                    tex,
+                    new Rect(0f, 0f, tex.width, tex.height),
+                    new Vector2(0.5f, 0.5f),
+                    100f);
+                return _solidFillSprite;
             }
+        }
+
+        private static Sprite _cachedPillSprite;
+
+        /// <summary>角丸 pill スプライト（カタログ → Resources の順で解決）。</summary>
+        public static Sprite ResolvePillSprite(HomeMenuIconCatalog catalog = null)
+        {
+            if (catalog != null)
+            {
+                var fromCatalog = catalog.Resolve("pill");
+                if (fromCatalog != null) return fromCatalog;
+            }
+
+            if (_cachedPillSprite == null)
+                _cachedPillSprite = Resources.Load<Sprite>("Geidai/menu_button_pill");
+
+            return _cachedPillSprite;
+        }
+
+        /// <summary>入力欄は角丸にせず白矩形で塗る。</summary>
+        public static void ApplyInputFill(Image image)
+        {
+            ApplySolidFill(image, HomeUiTheme.InputFill);
         }
 
         public static void ApplyBackground(Image image, Sprite sprite, Color color)
@@ -48,7 +77,7 @@ namespace Geidai.Foundation
         public static void ApplySolidFill(Image image, Color color)
         {
             if (image == null) return;
-            image.sprite = UnityWhiteSprite;
+            image.sprite = SolidFillSprite;
             image.type = Image.Type.Simple;
             image.color = color;
             image.enabled = true;

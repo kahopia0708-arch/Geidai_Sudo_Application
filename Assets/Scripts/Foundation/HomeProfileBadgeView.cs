@@ -17,7 +17,7 @@ namespace Geidai.Foundation
 
         private void Awake()
         {
-            if (nicknameText != null) UiFontResolver.ApplyTo(nicknameText, 28);
+            if (nicknameText != null) UiFontResolver.ApplyTo(nicknameText, HomeUiTheme.FieldLabel);
         }
 
         public void ApplyChrome(Sprite pillSprite)

@@ -23,9 +23,6 @@ namespace Geidai.EditorTools
         private const string HomeMenuConfigPath = "Assets/Settings/HomeMenuConfig_Default.asset";
         private const string IconCatalogPath = "Assets/Settings/HomeMenuIconCatalog_Default.asset";
 
-        private static readonly Color HomeBg = new Color(0.478f, 0.580f, 0.722f, 1f);
-        private static readonly Color MenuText = new Color(0.22f, 0.32f, 0.45f, 1f);
-
         [MenuItem("Geidai/Scenes/Build Home UI (Redesign)")]
         public static void BuildAllHomeUi()
         {
@@ -35,6 +32,7 @@ namespace Geidai.EditorTools
             EnsureHomeMenuConfig();
             BuildHomeScene();
             BuildGameSelectScene();
+            BuildRegisterScene();
             UpdateBuildSettings();
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
@@ -141,7 +139,7 @@ namespace Geidai.EditorTools
             bg.transform.SetParent(content, false);
             StretchFull(bg.GetComponent<RectTransform>());
             var bgImg = bg.GetComponent<Image>();
-            bgImg.color = HomeBg;
+            bgImg.color = HomeUiTheme.Background;
             bgImg.raycastTarget = false;
 
             var menuContainerGo = new GameObject("MenuContainer", typeof(RectTransform), typeof(VerticalLayoutGroup));
@@ -212,10 +210,10 @@ namespace Geidai.EditorTools
             var bg = new GameObject("Background", typeof(RectTransform), typeof(Image));
             bg.transform.SetParent(content, false);
             StretchFull(bg.GetComponent<RectTransform>());
-            bg.GetComponent<Image>().color = HomeBg;
+            bg.GetComponent<Image>().color = HomeUiTheme.Background;
 
-            var title = CreateText(content, "Title", "おとあそび", 44, TextAnchor.MiddleCenter);
-            title.color = Color.white;
+            var title = CreateText(content, "Title", "おとあそび", HomeUiTheme.ScreenTitle, TextAnchor.MiddleCenter);
+            title.color = HomeUiTheme.TitleOnBackground;
             var titleRt = title.rectTransform;
             titleRt.anchorMin = new Vector2(0.1f, 0.85f);
             titleRt.anchorMax = new Vector2(0.9f, 0.95f);
@@ -247,6 +245,93 @@ namespace Geidai.EditorTools
             so.ApplyModifiedPropertiesWithoutUndo();
 
             SaveScene("GeidaiGameSelect");
+        }
+
+        public static void BuildRegisterScene()
+        {
+            EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+            EnsureIconCatalog();
+            var shell = CreateScreenShell("GeidaiRegisterRoot");
+            var content = shell.safeArea;
+            var iconCatalog = AssetDatabase.LoadAssetAtPath<HomeMenuIconCatalog>(IconCatalogPath);
+
+            var bg = new GameObject("Background", typeof(RectTransform), typeof(Image));
+            bg.transform.SetParent(content, false);
+            StretchFull(bg.GetComponent<RectTransform>());
+            var bgImg = bg.GetComponent<Image>();
+            bgImg.color = HomeUiTheme.Background;
+            bgImg.raycastTarget = false;
+
+            var title = CreateText(content, "Title", "せってい", HomeUiTheme.ScreenTitle, TextAnchor.MiddleCenter);
+            title.color = HomeUiTheme.TitleOnBackground;
+            title.fontStyle = FontStyle.Bold;
+            var titleRt = title.rectTransform;
+            titleRt.anchorMin = new Vector2(0.1f, 0.85f);
+            titleRt.anchorMax = new Vector2(0.9f, 0.95f);
+            titleRt.offsetMin = Vector2.zero;
+            titleRt.offsetMax = Vector2.zero;
+
+            var birthLabel = CreateText(content, "AgeLabel", "なんさい？", HomeUiTheme.FieldLabel, TextAnchor.MiddleLeft);
+            birthLabel.color = HomeUiTheme.FieldLabelOnBackground;
+            birthLabel.fontStyle = FontStyle.Bold;
+            var birthLabelRt = birthLabel.rectTransform;
+            birthLabelRt.anchorMin = new Vector2(0.12f, 0.74f);
+            birthLabelRt.anchorMax = new Vector2(0.88f, 0.79f);
+            birthLabelRt.offsetMin = Vector2.zero;
+            birthLabelRt.offsetMax = Vector2.zero;
+
+            var dropdown = CreateDropdown(content, "BirthYear", new Vector2(680, 80));
+            var ddRt = dropdown.GetComponent<RectTransform>();
+            ddRt.anchorMin = new Vector2(0.5f, 0.66f);
+            ddRt.anchorMax = new Vector2(0.5f, 0.66f);
+            ddRt.anchoredPosition = Vector2.zero;
+
+            var nickLabel = CreateText(content, "NicknameLabel", "ニックネーム", HomeUiTheme.FieldLabel, TextAnchor.MiddleLeft);
+            nickLabel.color = HomeUiTheme.FieldLabelOnBackground;
+            nickLabel.fontStyle = FontStyle.Bold;
+            var nickLabelRt = nickLabel.rectTransform;
+            nickLabelRt.anchorMin = new Vector2(0.12f, 0.58f);
+            nickLabelRt.anchorMax = new Vector2(0.88f, 0.63f);
+            nickLabelRt.offsetMin = Vector2.zero;
+            nickLabelRt.offsetMax = Vector2.zero;
+
+            var nicknameGo = CreateWhiteInputField(content, "Nickname", "ニックネーム（1〜8）", new Vector2(680, 80));
+            var nickRt = nicknameGo.GetComponent<RectTransform>();
+            nickRt.anchorMin = new Vector2(0.5f, 0.50f);
+            nickRt.anchorMax = new Vector2(0.5f, 0.50f);
+            nickRt.anchoredPosition = Vector2.zero;
+            var nickInput = nicknameGo.GetComponent<InputField>();
+
+            var submit = CreateWhiteMenuButton(content, "Submit", "けってい", new Vector2(280, 80));
+            var submitRt = submit.GetComponent<RectTransform>();
+            submitRt.anchorMin = new Vector2(0.5f, 0.08f);
+            submitRt.anchorMax = new Vector2(0.5f, 0.08f);
+            submitRt.anchoredPosition = new Vector2(-160f, 0f);
+
+            var cancel = CreateWhiteMenuButton(content, "Cancel", "もどる", new Vector2(280, 80));
+            var cancelRt = cancel.GetComponent<RectTransform>();
+            cancelRt.anchorMin = new Vector2(0.5f, 0.08f);
+            cancelRt.anchorMax = new Vector2(0.5f, 0.08f);
+            cancelRt.anchoredPosition = new Vector2(160f, 0f);
+
+            var error = CreateErrorPresenter(content);
+
+            var screenGo = new GameObject("RegisterScreen", typeof(UserRegistrationScreenController));
+            screenGo.transform.SetParent(shell.canvas.transform, false);
+            var reg = screenGo.GetComponent<UserRegistrationScreenController>();
+            WireScreenRoot(reg, shell.responsive, shell.fitter);
+            var so = new SerializedObject(reg);
+            so.FindProperty("iconCatalog").objectReferenceValue = iconCatalog;
+            so.FindProperty("backgroundImage").objectReferenceValue = bgImg;
+            so.FindProperty("titleText").objectReferenceValue = title;
+            so.FindProperty("birthYearDropdown").objectReferenceValue = dropdown;
+            so.FindProperty("nicknameInput").objectReferenceValue = nickInput;
+            so.FindProperty("submitButton").objectReferenceValue = submit;
+            so.FindProperty("cancelButton").objectReferenceValue = cancel;
+            so.FindProperty("errorPresenter").objectReferenceValue = error;
+            so.ApplyModifiedPropertiesWithoutUndo();
+
+            SaveScene("GeidaiRegister");
         }
 
         public static void UpdateBuildSettings()
@@ -332,7 +417,7 @@ namespace Geidai.EditorTools
             camGo.transform.SetParent(root.transform, false);
             var cam = camGo.GetComponent<Camera>();
             cam.clearFlags = CameraClearFlags.SolidColor;
-            cam.backgroundColor = HomeBg;
+            cam.backgroundColor = HomeUiTheme.Background;
             cam.orthographic = true;
 
             return (canvas, safeGo.GetComponent<RectTransform>(), canvasGo.GetComponent<ResponsiveCanvasConfigurator>(),
@@ -386,7 +471,7 @@ namespace Geidai.EditorTools
             labelRt.anchorMax = new Vector2(1f, 1f);
             labelRt.offsetMin = new Vector2(140f, 0f);
             labelRt.offsetMax = new Vector2(-24f, 0f);
-            label.color = MenuText;
+            label.color = HomeUiTheme.MenuText;
             label.fontStyle = FontStyle.Bold;
             label.resizeTextForBestFit = false;
 
@@ -410,7 +495,7 @@ namespace Geidai.EditorTools
                 img.sprite = icon;
                 img.type = Image.Type.Simple;
                 img.preserveAspect = true;
-                img.color = MenuText;
+                img.color = HomeUiTheme.MenuText;
             }
             else
             {
@@ -436,11 +521,125 @@ namespace Geidai.EditorTools
             var btn = go.GetComponent<Button>();
             btn.targetGraphic = img;
             ConfigureButtonColors(btn);
-            var text = CreateText(go.transform, "Label", label, 36, TextAnchor.MiddleCenter);
+            var text = CreateText(go.transform, "Label", label, HomeUiTheme.ActionButtonLabel, TextAnchor.MiddleCenter);
             StretchFull(text.rectTransform);
-            text.color = MenuText;
+            text.color = HomeUiTheme.MenuText;
             text.fontStyle = FontStyle.Bold;
             return btn;
+        }
+
+        private static GameObject CreateWhiteInputField(Transform parent, string name, string placeholder, Vector2 size)
+        {
+            var go = new GameObject(name, typeof(RectTransform), typeof(Image), typeof(InputField));
+            go.transform.SetParent(parent, false);
+            go.GetComponent<RectTransform>().sizeDelta = size;
+            var img = go.GetComponent<Image>();
+            img.color = HomeUiTheme.InputFill;
+
+            var text = CreateText(go.transform, "Text", string.Empty, HomeUiTheme.Body, TextAnchor.MiddleLeft);
+            StretchFull(text.rectTransform);
+            text.rectTransform.offsetMin = new Vector2(20f, 4f);
+            text.rectTransform.offsetMax = new Vector2(-20f, -4f);
+            text.color = HomeUiTheme.MenuText;
+
+            var hint = CreateText(go.transform, "Placeholder", placeholder, HomeUiTheme.Placeholder, TextAnchor.MiddleLeft);
+            StretchFull(hint.rectTransform);
+            hint.rectTransform.offsetMin = new Vector2(20f, 4f);
+            hint.rectTransform.offsetMax = new Vector2(-20f, -4f);
+            hint.color = HomeUiTheme.PlaceholderText;
+
+            var input = go.GetComponent<InputField>();
+            input.textComponent = text;
+            input.placeholder = hint;
+            return go;
+        }
+
+        private static Dropdown CreateDropdown(Transform parent, string name, Vector2 size)
+        {
+            var root = new GameObject(name, typeof(RectTransform), typeof(Image), typeof(Dropdown));
+            root.transform.SetParent(parent, false);
+            var rootRt = root.GetComponent<RectTransform>();
+            rootRt.sizeDelta = size;
+            var rootImg = root.GetComponent<Image>();
+            rootImg.color = HomeUiTheme.InputFill;
+
+            var caption = CreateText(root.transform, "Label", "えらんでね", HomeUiTheme.Body, TextAnchor.MiddleCenter);
+            StretchFull(caption.rectTransform);
+            caption.color = HomeUiTheme.MenuText;
+
+            var template = new GameObject("Template", typeof(RectTransform), typeof(Image), typeof(ScrollRect));
+            template.transform.SetParent(root.transform, false);
+            var templateRt = template.GetComponent<RectTransform>();
+            templateRt.anchorMin = new Vector2(0f, 0f);
+            templateRt.anchorMax = new Vector2(1f, 0f);
+            templateRt.pivot = new Vector2(0.5f, 1f);
+            templateRt.sizeDelta = new Vector2(0f, 280f);
+            templateRt.anchoredPosition = Vector2.zero;
+            template.GetComponent<Image>().color = Color.white;
+
+            var viewport = new GameObject("Viewport", typeof(RectTransform), typeof(Image), typeof(Mask));
+            viewport.transform.SetParent(template.transform, false);
+            StretchFull(viewport.GetComponent<RectTransform>());
+            viewport.GetComponent<Image>().color = Color.white;
+            viewport.GetComponent<Mask>().showMaskGraphic = false;
+
+            var content = new GameObject("Content", typeof(RectTransform));
+            content.transform.SetParent(viewport.transform, false);
+            var contentRt = content.GetComponent<RectTransform>();
+            contentRt.anchorMin = new Vector2(0f, 1f);
+            contentRt.anchorMax = new Vector2(1f, 1f);
+            contentRt.pivot = new Vector2(0.5f, 1f);
+            contentRt.sizeDelta = new Vector2(0f, 56f);
+
+            var item = new GameObject("Item", typeof(RectTransform), typeof(Toggle), typeof(Image));
+            item.transform.SetParent(content.transform, false);
+            var itemRt = item.GetComponent<RectTransform>();
+            itemRt.anchorMin = new Vector2(0f, 0.5f);
+            itemRt.anchorMax = new Vector2(1f, 0.5f);
+            itemRt.sizeDelta = new Vector2(0f, 48f);
+            item.GetComponent<Image>().color = new Color(0.96f, 0.97f, 0.99f, 1f);
+
+            var itemBg = new GameObject("Item Background", typeof(RectTransform), typeof(Image));
+            itemBg.transform.SetParent(item.transform, false);
+            StretchFull(itemBg.GetComponent<RectTransform>());
+            itemBg.GetComponent<Image>().color = new Color(0.92f, 0.94f, 0.97f, 1f);
+
+            var check = new GameObject("Item Checkmark", typeof(RectTransform), typeof(Image));
+            check.transform.SetParent(item.transform, false);
+            var checkRt = check.GetComponent<RectTransform>();
+            checkRt.anchorMin = new Vector2(0f, 0.5f);
+            checkRt.anchorMax = new Vector2(0f, 0.5f);
+            checkRt.sizeDelta = new Vector2(24f, 24f);
+            checkRt.anchoredPosition = new Vector2(24f, 0f);
+            check.GetComponent<Image>().color = HomeUiTheme.MenuText;
+
+            var itemLabel = CreateText(item.transform, "Item Label", "Option", HomeUiTheme.FieldLabel, TextAnchor.MiddleLeft);
+            var itemLabelRt = itemLabel.rectTransform;
+            itemLabelRt.anchorMin = Vector2.zero;
+            itemLabelRt.anchorMax = Vector2.one;
+            itemLabelRt.offsetMin = new Vector2(48f, 2f);
+            itemLabelRt.offsetMax = new Vector2(-8f, -2f);
+
+            var toggle = item.GetComponent<Toggle>();
+            toggle.targetGraphic = itemBg.GetComponent<Image>();
+            toggle.graphic = check.GetComponent<Image>();
+            toggle.isOn = true;
+
+            var scroll = template.GetComponent<ScrollRect>();
+            scroll.content = contentRt;
+            scroll.viewport = viewport.GetComponent<RectTransform>();
+            scroll.horizontal = false;
+            scroll.vertical = true;
+            scroll.movementType = ScrollRect.MovementType.Clamped;
+
+            var dropdown = root.GetComponent<Dropdown>();
+            dropdown.targetGraphic = rootImg;
+            dropdown.captionText = caption;
+            dropdown.itemText = itemLabel;
+            dropdown.template = templateRt;
+            template.SetActive(false);
+
+            return dropdown;
         }
 
         private static GameObject CreateProfileBadge(Transform parent)
@@ -469,7 +668,7 @@ namespace Geidai.EditorTools
             nickRt.anchorMax = new Vector2(1f, 1f);
             nickRt.offsetMin = new Vector2(8f, 0f);
             nickRt.offsetMax = new Vector2(-8f, -6f);
-            nick.color = MenuText;
+            nick.color = HomeUiTheme.MenuText;
             nick.fontStyle = FontStyle.Bold;
 
             var segRoot = new GameObject("ProgressSegments", typeof(RectTransform), typeof(HorizontalLayoutGroup));
@@ -534,7 +733,7 @@ namespace Geidai.EditorTools
 
             var title = CreateText(panel.transform, "Title", "かほ のプロフィール", 40, TextAnchor.MiddleLeft);
             title.fontStyle = FontStyle.Bold;
-            title.color = MenuText;
+            title.color = HomeUiTheme.MenuText;
             var titleRt = title.rectTransform;
             titleRt.anchorMin = new Vector2(0.06f, 0.84f);
             titleRt.anchorMax = new Vector2(0.76f, 0.94f);
@@ -595,11 +794,11 @@ namespace Geidai.EditorTools
 
             var labelText = CreateText(row.transform, "Label", label, 28, TextAnchor.MiddleLeft);
             StretchFull(labelText.rectTransform);
-            labelText.color = MenuText;
+            labelText.color = HomeUiTheme.MenuText;
 
             var valueText = CreateText(row.transform, "Value", value, 28, TextAnchor.MiddleRight);
             StretchFull(valueText.rectTransform);
-            valueText.color = MenuText;
+            valueText.color = HomeUiTheme.MenuText;
         }
 
         private static ErrorPresenter CreateErrorPresenter(Transform parent)
@@ -729,7 +928,7 @@ namespace Geidai.EditorTools
             text.font = ResolveUiFont(fontSize);
             text.fontSize = fontSize;
             text.alignment = anchor;
-            text.color = MenuText;
+            text.color = HomeUiTheme.MenuText;
             text.raycastTarget = false;
             return text;
         }

@@ -17,7 +17,7 @@ namespace Geidai.Foundation
     /// </summary>
     public class HomeScreenController : ScreenRootBase
     {
-        private static readonly Color HomeBackgroundColor = new Color(0.478f, 0.580f, 0.722f, 1f);
+        private static readonly Color HomeBackgroundColor = HomeUiTheme.Background;
 
         [Header("U2 Home")]
         [SerializeField] private HomeMenuConfig menuConfig;
@@ -68,8 +68,7 @@ namespace Geidai.Foundation
 
         private void ApplyChromeSprites()
         {
-            if (iconCatalog == null) return;
-            var pill = iconCatalog.Resolve("pill");
+            var pill = HomeUiImageUtil.ResolvePillSprite(iconCatalog);
             if (profileBadge != null) profileBadge.ApplyChrome(pill);
             if (profilePanel != null) profilePanel.Initialize(iconCatalog);
         }
@@ -158,7 +157,7 @@ namespace Geidai.Foundation
                 var view = button.GetComponent<HomeMenuButtonView>();
                 if (view != null)
                 {
-                    view.ApplyChrome(iconCatalog != null ? iconCatalog.Resolve("pill") : null);
+                    view.ApplyChrome(HomeUiImageUtil.ResolvePillSprite(iconCatalog));
                     view.Apply(item.label, iconCatalog != null ? iconCatalog.Resolve(item.iconKey) : null);
                 }
                 else
