@@ -52,12 +52,13 @@ Play で動作確認 → 問題なければ Git にコミット（または変�
 | 画面 | シーンファイル |
 |---|---|
 | ホーム | `Assets/Scenes/Geidai/GeidaiHome.unity` |
+| ゲーム選択 | `Assets/Scenes/Geidai/GeidaiGameSelect.unity` |
 | 設定（ニックネーム等） | `GeidaiRegister.unity` |
 | 録音 | `GeidaiRec.unity` |
 | コレクション | `GeidaiCollection.unity` |
 | 今週のお題 | `GeidaiTheme.unity` |
 | ①音合わせ | `GeidaiGame1.unity` |
-| ゲーム選択（既存） | `Assets/game_Home.unity` |
+| ゲーム選択（旧・参照用） | `Assets/game_Home.unity` |
 
 ### 3.2 よく触るもの（Inspector）
 
@@ -92,7 +93,10 @@ Play で動作確認 → 問題なければ Git にコミット（または変�
 | Label | ボタンに出る文字 |
 | Order | 並び（小さいほど上） |
 | Visible | オフにすると非表示 |
+| iconKey | `Assets/Settings/HomeMenuIconCatalog_Default.asset` のキー（空＝アイコンなし） |
 | Module / 遷移先 | どの画面へ行くか（変えると導線が変わります。迷ったら前本へ） |
+
+**ホーム用プレースホルダー画像**: `Assets/Art/Home/Placeholders/`（PNG を Sprite にして差し替え。`HomeMenuIconCatalog_Default` の Sprite 参照を更新）
 
 ### 4.2 今週のお題
 

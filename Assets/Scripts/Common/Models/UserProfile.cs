@@ -4,7 +4,7 @@ namespace Geidai.Common.Models
 {
     /// <summary>
     /// ユーザープロフィール（BR-01/02）。
-    /// birthYear は 1900〜現在年、nickname は 1〜8 文字。検証は ValidationUtil を用いる。
+    /// birthYear は 1925〜現在年、nickname は 1〜8 文字。検証は ValidationUtil を用いる。
     /// JsonUtility でシリアライズ可能な素直な構造に限定する。
     /// </summary>
     [Serializable]

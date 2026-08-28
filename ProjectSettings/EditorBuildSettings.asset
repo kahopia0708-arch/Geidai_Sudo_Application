@@ -6,12 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: "Assets/Main\u753B\u9762.unity"
-    guid: 49435f7037c77476a947da63c0887347
-  - enabled: 1
-    path: Assets/game_Home.unity
-    guid: dc7e69128e4834e01858a63f9cf78bfe
-  - enabled: 1
     path: Assets/Scenes/Geidai/GeidaiHome.unity
     guid: 8fafafaf20bee48c0aeaeade7d65ee6f
   - enabled: 1
@@ -27,6 +21,9 @@ EditorBuildSettings:
     path: Assets/Scenes/Geidai/GeidaiTheme.unity
     guid: c7d1f4b1d83f7463ebeeaba6b05234fc
   - enabled: 1
+    path: Assets/Scenes/Geidai/GeidaiGameSelect.unity
+    guid: b35ed7c31060f4dbf907d39a85c48ea4
+  - enabled: 1
     path: Assets/Scenes/Geidai/GeidaiGame1.unity
     guid: 4b8370ec59d79449eaf0f7dd251dd1ce
   - enabled: 1
@@ -35,6 +32,12 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Geidai/GeidaiCreate.unity
     guid: 9e32477f085e142938e196854bc8a602
+  - enabled: 0
+    path: "Assets/Main\u753B\u9762.unity"
+    guid: 49435f7037c77476a947da63c0887347
+  - enabled: 0
+    path: Assets/game_Home.unity
+    guid: dc7e69128e4834e01858a63f9cf78bfe
   - enabled: 0
     path: Assets/Home.unity
     guid: b6dbd73e288944561891f0345f82afc4

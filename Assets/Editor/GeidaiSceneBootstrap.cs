@@ -563,58 +563,7 @@ namespace Geidai.EditorTools
 
         public static void BuildRegister()
         {
-            EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
-            var shell = CreateScreenShell("GeidaiRegisterRoot");
-            var content = shell.safeArea;
-
-            var title = CreateText(content, "Title", "せってい", 48, TextAnchor.MiddleCenter);
-            AnchorTopBand(title.rectTransform, 100f, 32f);
-
-            var nicknameGo = new GameObject("Nickname", typeof(RectTransform), typeof(Image), typeof(InputField));
-            nicknameGo.transform.SetParent(content, false);
-            var nickRt = nicknameGo.GetComponent<RectTransform>();
-            nickRt.anchorMin = new Vector2(0.5f, 0.55f);
-            nickRt.anchorMax = new Vector2(0.5f, 0.55f);
-            nickRt.sizeDelta = new Vector2(640, 80);
-            nickRt.anchoredPosition = Vector2.zero;
-            nicknameGo.GetComponent<Image>().color = Color.white;
-            var nickInput = nicknameGo.GetComponent<InputField>();
-            var nickText = CreateText(nicknameGo.transform, "Text", "", 28, TextAnchor.MiddleLeft);
-            StretchFull(nickText.rectTransform);
-            nickText.color = Color.black;
-            nickInput.textComponent = nickText;
-            nickInput.placeholder = CreateText(nicknameGo.transform, "Placeholder", "ニックネーム（1〜8）", 26, TextAnchor.MiddleLeft);
-            StretchFull(((Text)nickInput.placeholder).rectTransform);
-            ((Text)nickInput.placeholder).color = new Color(0.5f, 0.5f, 0.5f, 0.8f);
-
-            var dropdown = CreateDropdown(content, "BirthYear", new Vector2(640, 80));
-            var ddRt = dropdown.GetComponent<RectTransform>();
-            ddRt.anchorMin = new Vector2(0.5f, 0.68f);
-            ddRt.anchorMax = new Vector2(0.5f, 0.68f);
-            ddRt.anchoredPosition = Vector2.zero;
-
-            var submit = CreateButton(content, "Submit", "けってい", new Vector2(280, 90));
-            AnchorBottom(submit.GetComponent<RectTransform>(), 90f, 160f);
-            submit.GetComponent<RectTransform>().anchoredPosition = new Vector2(-160f, 160f);
-            var cancel = CreateButton(content, "Cancel", "もどる", new Vector2(280, 90));
-            AnchorBottom(cancel.GetComponent<RectTransform>(), 90f, 160f);
-            cancel.GetComponent<RectTransform>().anchoredPosition = new Vector2(160f, 160f);
-            var error = CreateErrorPresenter(content);
-            // cancel は UserRegistrationScreenController が OnCancel→GoHome を結線する
-
-            var screenGo = new GameObject("RegisterScreen", typeof(UserRegistrationScreenController));
-            screenGo.transform.SetParent(shell.canvas.transform, false);
-            var reg = screenGo.GetComponent<UserRegistrationScreenController>();
-            WireScreenRoot(reg, shell.responsive, shell.fitter);
-            var so = new SerializedObject(reg);
-            so.FindProperty("birthYearDropdown").objectReferenceValue = dropdown;
-            so.FindProperty("nicknameInput").objectReferenceValue = nickInput;
-            so.FindProperty("submitButton").objectReferenceValue = submit;
-            so.FindProperty("cancelButton").objectReferenceValue = cancel;
-            so.FindProperty("errorPresenter").objectReferenceValue = error;
-            so.ApplyModifiedPropertiesWithoutUndo();
-
-            SaveScene("GeidaiRegister");
+            HomeUiSceneBuilder.BuildRegisterScene();
         }
 
         public static void BuildRec()
@@ -1370,6 +1319,8 @@ namespace Geidai.EditorTools
         {
             var keepDisabled = new HashSet<string>
             {
+                "Assets/Main画面.unity",
+                "Assets/game_Home.unity",
                 "Assets/Home.unity",
                 "Assets/Rec.unity",
                 "Assets/Game01.unity",
@@ -1380,13 +1331,12 @@ namespace Geidai.EditorTools
 
             var enabledNew = new[]
             {
-                "Assets/Main画面.unity",
-                "Assets/game_Home.unity",
                 $"{SceneDir}/GeidaiHome.unity",
                 $"{SceneDir}/GeidaiRegister.unity",
                 $"{SceneDir}/GeidaiRec.unity",
                 $"{SceneDir}/GeidaiCollection.unity",
                 $"{SceneDir}/GeidaiTheme.unity",
+                $"{SceneDir}/GeidaiGameSelect.unity",
                 $"{SceneDir}/GeidaiGame1.unity",
                 $"{SceneDir}/GeidaiLibrary.unity",
                 $"{SceneDir}/GeidaiCreate.unity",

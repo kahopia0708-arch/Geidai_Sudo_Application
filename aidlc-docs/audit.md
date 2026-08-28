@@ -1112,3 +1112,35 @@ featureブランチを作成して続行"
 **Context**: Workflow complete for F-san onboarding documentation
 
 ---
+
+## Workflow Start — Home UI Redesign
+**Timestamp**: 2026-08-28T10:32:00+09:00
+**User Input**: "メイン画面、ホーム画面の整備をまず進めたいです\nfeatureブランチを作成し、AI-DLCで進めましょう\n\n打ち合わせ資料よりスクショ添付\nデザインの適用、必要であれば画像アセット（後でデザイナーさんが差し替える想定）の作成も実施"
+**AI Response**: feature/home-ui-redesign ブランチ作成。Workspace Detection 実行（Brownfield・RE SKIP）。Requirements 質問ファイル home-ui-requirement-questions.md 作成。承認待ち。
+**Context**: INCEPTION - Workspace Detection / Requirements Analysis 開始
+
+---
+
+## Requirements Analysis — Answers Received
+**Timestamp**: 2026-08-28T10:46:00+09:00
+**User Input**: "done"
+**AI Response**: home-ui-requirement-questions.md の全7問回答を受領。Q1=A, Q2=A+プロフィールから設定, Q3=A, Q4=C, Q5=Home起動+未登録→Register, Q6=A, Q7=B。矛盾なし。home-ui-requirements.md 生成。承認ゲート提示。
+**Context**: INCEPTION - Requirements Analysis（承認待ち）
+
+---
+
+## Requirements Analysis — Approved
+**Timestamp**: 2026-08-28T10:47:00+09:00
+**User Input**: "OK"
+**AI Response**: home-ui-requirements.md 承認。Workflow Planning → Code Generation 着手。
+**Context**: INCEPTION - Requirements Analysis 承認
+
+---
+
+## Code Generation — Home UI
+**Timestamp**: 2026-08-28T10:51:00+09:00
+**User Input**: (N/A - 実装)
+**AI Response**: Foundation UI コンポーネント・HomeScreenController 拡張・GameSelectScreenController・HomeUiSceneBuilder・プレースホルダー PNG・HomeMenuConfig 4項目化・Navigation/BuildSettings 更新。Unity メニュー Build Home UI 実行でシーン確定（MCP は EventSystem 修正後、プロジェクト競合で要手動）。
+**Context**: CONSTRUCTION - Code Generation
+
+---

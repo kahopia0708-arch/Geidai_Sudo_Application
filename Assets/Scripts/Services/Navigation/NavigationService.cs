@@ -11,7 +11,7 @@ namespace Geidai.Services.Navigation
     /// SceneId → 実シーン名のマップで型安全に遷移する（FR-02）。
     /// Place は列挙に含めない＝導線から除外（BR-15）。
     /// MCP フォローアップで Geidai* シーンへ切り替え（既存ブラウンフィールド名と衝突回避）。
-    /// GameSelect は既存 game_Home を維持。Boot は既存 Main画面。
+    /// GameSelect は GeidaiGameSelect（2026-08 ホーム UI 整備）。Boot/Main画面 は Build Settings から除外。
     /// </summary>
     public class NavigationService : INavigationService
     {
@@ -24,7 +24,7 @@ namespace Geidai.Services.Navigation
             { SceneId.Collection, "GeidaiCollection" },
             { SceneId.Theme, "GeidaiTheme" },
             { SceneId.Game1, "GeidaiGame1" },
-            { SceneId.GameSelect, "game_Home" },
+            { SceneId.GameSelect, "GeidaiGameSelect" },
             { SceneId.Library, "GeidaiLibrary" },
             { SceneId.Create, "GeidaiCreate" }
         };
