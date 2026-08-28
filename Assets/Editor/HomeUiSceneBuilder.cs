@@ -75,6 +75,7 @@ namespace Geidai.EditorTools
             AddEntry(entries, "gather", gather);
             AddEntry(entries, "create", create);
             AddEntry(entries, "library", library);
+            AddEntry(entries, "settings", LoadSprite($"{ArtDir}/settings_gear.png"));
             so.ApplyModifiedPropertiesWithoutUndo();
             EditorUtility.SetDirty(catalog);
         }
@@ -399,6 +400,29 @@ namespace Geidai.EditorTools
             return btn;
         }
 
+        private static Button CreateIconButton(Transform parent, string name, Sprite icon)
+        {
+            var go = new GameObject(name, typeof(RectTransform), typeof(Image), typeof(Button));
+            go.transform.SetParent(parent, false);
+            var img = go.GetComponent<Image>();
+            if (icon != null)
+            {
+                img.sprite = icon;
+                img.type = Image.Type.Simple;
+                img.preserveAspect = true;
+                img.color = MenuText;
+            }
+            else
+            {
+                img.color = new Color(0f, 0f, 0f, 0f);
+            }
+
+            var btn = go.GetComponent<Button>();
+            btn.targetGraphic = img;
+            ConfigureButtonColors(btn);
+            return btn;
+        }
+
         private static Button CreateWhiteMenuButton(Transform parent, string name, string label, Vector2 size)
         {
             var pill = LoadSprite($"{ArtDir}/menu_button_pill.png");
@@ -475,6 +499,7 @@ namespace Geidai.EditorTools
             var view = go.GetComponent<HomeProfileBadgeView>();
             var vso = new SerializedObject(view);
             vso.FindProperty("button").objectReferenceValue = btn;
+            vso.FindProperty("badgeBackground").objectReferenceValue = img;
             vso.FindProperty("nicknameText").objectReferenceValue = nick;
             vso.FindProperty("progressSegmentsRoot").objectReferenceValue = segRoot.transform;
             vso.ApplyModifiedPropertiesWithoutUndo();
@@ -490,7 +515,7 @@ namespace Geidai.EditorTools
             var blocker = new GameObject("Blocker", typeof(RectTransform), typeof(Image), typeof(Button));
             blocker.transform.SetParent(root.transform, false);
             StretchFull(blocker.GetComponent<RectTransform>());
-            blocker.GetComponent<Image>().color = new Color(0f, 0f, 0f, 0.35f);
+            blocker.GetComponent<Image>().color = new Color(0f, 0f, 0f, 0.55f);
             var blockerBtn = blocker.GetComponent<Button>();
             blockerBtn.transition = Selectable.Transition.None;
 
@@ -501,40 +526,47 @@ namespace Geidai.EditorTools
             panelRt.anchorMax = new Vector2(0.92f, 0.88f);
             panelRt.offsetMin = Vector2.zero;
             panelRt.offsetMax = Vector2.zero;
+            var panelImg = panel.GetComponent<Image>();
             var rounded = LoadSprite($"{ArtDir}/rounded_white.png");
-            panel.GetComponent<Image>().sprite = rounded;
-            panel.GetComponent<Image>().type = rounded != null ? Image.Type.Sliced : Image.Type.Simple;
-            panel.GetComponent<Image>().color = Color.white;
+            panelImg.sprite = rounded;
+            panelImg.type = rounded != null ? Image.Type.Sliced : Image.Type.Simple;
+            panelImg.color = Color.white;
 
-            var title = CreateText(panel.transform, "Title", "かほ のプロフィール", 40, TextAnchor.UpperCenter);
+            var title = CreateText(panel.transform, "Title", "かほ のプロフィール", 40, TextAnchor.MiddleLeft);
             title.fontStyle = FontStyle.Bold;
             title.color = MenuText;
             var titleRt = title.rectTransform;
-            titleRt.anchorMin = new Vector2(0.05f, 0.78f);
-            titleRt.anchorMax = new Vector2(0.95f, 0.95f);
+            titleRt.anchorMin = new Vector2(0.06f, 0.84f);
+            titleRt.anchorMax = new Vector2(0.76f, 0.94f);
             titleRt.offsetMin = Vector2.zero;
             titleRt.offsetMax = Vector2.zero;
 
-            CreateStatRow(panel.transform, "StatSounds", "いままであつめたおと", "—", 0.58f);
-            CreateStatRow(panel.transform, "StatPoints", "いままであつめたポイント", "—", 0.42f);
-            CreateStatRow(panel.transform, "StatUntil", "あたらしい音まであと", "—", 0.26f);
+            CreateStatRow(panel.transform, "StatSounds", "いままであつめたおと", "—", 0.72f);
+            CreateStatRow(panel.transform, "StatPoints", "いままであつめたポイント", "—", 0.60f);
+            CreateStatRow(panel.transform, "StatUntil", "あたらしい音まであと", "—", 0.48f);
 
-            var settings = CreateWhiteMenuButton(panel.transform, "SettingsButton", "せってい", new Vector2(260, 72));
+            var gearSprite = LoadSprite($"{ArtDir}/settings_gear.png");
+            var settings = CreateIconButton(panel.transform, "SettingsButton", gearSprite);
             var sRt = settings.GetComponent<RectTransform>();
-            sRt.anchorMin = new Vector2(0.5f, 0.08f);
-            sRt.anchorMax = new Vector2(0.5f, 0.08f);
-            sRt.anchoredPosition = new Vector2(-150f, 48f);
+            sRt.anchorMin = new Vector2(0.80f, 0.84f);
+            sRt.anchorMax = new Vector2(0.94f, 0.94f);
+            sRt.offsetMin = Vector2.zero;
+            sRt.offsetMax = Vector2.zero;
 
-            var close = CreateWhiteMenuButton(panel.transform, "CloseButton", "とじる", new Vector2(260, 72));
+            var close = CreateWhiteMenuButton(panel.transform, "CloseButton", "とじる", new Vector2(280, 72));
             var cRt = close.GetComponent<RectTransform>();
-            cRt.anchorMin = new Vector2(0.5f, 0.08f);
-            cRt.anchorMax = new Vector2(0.5f, 0.08f);
-            cRt.anchoredPosition = new Vector2(150f, 48f);
+            cRt.anchorMin = new Vector2(0.5f, 0.05f);
+            cRt.anchorMax = new Vector2(0.5f, 0.05f);
+            cRt.pivot = new Vector2(0.5f, 0.5f);
+            cRt.anchoredPosition = Vector2.zero;
 
             var view = root.GetComponent<HomeProfilePanelView>();
             var vso = new SerializedObject(view);
             vso.FindProperty("root").objectReferenceValue = root;
             vso.FindProperty("contentRoot").objectReferenceValue = panel.transform;
+            vso.FindProperty("panelBackground").objectReferenceValue = panelImg;
+            vso.FindProperty("settingsButtonBackground").objectReferenceValue = settings.GetComponent<Image>();
+            vso.FindProperty("closeButtonBackground").objectReferenceValue = close.GetComponent<Image>();
             vso.FindProperty("titleText").objectReferenceValue = title;
             vso.FindProperty("soundsCollectedValueText").objectReferenceValue =
                 panel.transform.Find("StatSounds/Value")?.GetComponent<Text>();

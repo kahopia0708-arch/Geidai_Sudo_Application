@@ -16,10 +16,17 @@ namespace Geidai.Foundation
         public Button Button => _button != null ? _button : (_button = GetComponent<Button>());
 
         private Button _button;
+        private Image _background;
 
         private void Awake()
         {
+            _background = GetComponent<Image>();
             if (labelText != null) UiFontResolver.ApplyTo(labelText, 48);
+        }
+
+        public void ApplyChrome(Sprite pillSprite)
+        {
+            HomeUiImageUtil.ApplyBackground(_background ?? GetComponent<Image>(), pillSprite, Color.white);
         }
 
         public void Apply(string label, Sprite icon)

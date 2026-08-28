@@ -62,7 +62,16 @@ namespace Geidai.Foundation
             if (!EnsureStartupGate()) return;
 
             RefreshProfileUi();
+            ApplyChromeSprites();
             BuildMenu();
+        }
+
+        private void ApplyChromeSprites()
+        {
+            if (iconCatalog == null) return;
+            var pill = iconCatalog.Resolve("pill");
+            if (profileBadge != null) profileBadge.ApplyChrome(pill);
+            if (profilePanel != null) profilePanel.Initialize(iconCatalog);
         }
 
         private void ApplyBackground()
@@ -149,6 +158,7 @@ namespace Geidai.Foundation
                 var view = button.GetComponent<HomeMenuButtonView>();
                 if (view != null)
                 {
+                    view.ApplyChrome(iconCatalog != null ? iconCatalog.Resolve("pill") : null);
                     view.Apply(item.label, iconCatalog != null ? iconCatalog.Resolve(item.iconKey) : null);
                 }
                 else
@@ -184,12 +194,14 @@ namespace Geidai.Foundation
         private void OnProfileBadgeTapped()
         {
             if (profilePanel == null) return;
+            if (profileBadge != null) profileBadge.SetVisible(false);
             profilePanel.Show(LoadNickname());
         }
 
         private void OnProfilePanelClose()
         {
             if (profilePanel != null) profilePanel.Hide();
+            RefreshProfileUi();
         }
 
         private void OnProfileSettingsRequested()

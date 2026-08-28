@@ -8,6 +8,7 @@ namespace Geidai.Foundation
     /// </summary>
     public class HomeProfileBadgeView : MonoBehaviour
     {
+        [SerializeField] private Image badgeBackground;
         [SerializeField] private Button button;
         [SerializeField] private Text nicknameText;
         [SerializeField] private Transform progressSegmentsRoot;
@@ -17,6 +18,12 @@ namespace Geidai.Foundation
         private void Awake()
         {
             if (nicknameText != null) UiFontResolver.ApplyTo(nicknameText, 28);
+        }
+
+        public void ApplyChrome(Sprite pillSprite)
+        {
+            var bg = badgeBackground != null ? badgeBackground : GetComponent<Image>();
+            HomeUiImageUtil.ApplyBackground(bg, pillSprite, Color.white);
         }
 
         public void SetNickname(string nickname)
