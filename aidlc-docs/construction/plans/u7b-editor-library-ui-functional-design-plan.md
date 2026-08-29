@@ -9,7 +9,7 @@
 ## チェックリスト
 - [x] 質問回答（Q1〜Q6 = A）
 - [x] domain-entities / business-rules / business-logic-model / frontend-components 生成
-- [ ] 承認ゲート
+- [x] 承認ゲート
 
 ## スコープ（確認）
 - Editor: WAV→Clip インポート、属性フォーム、カタログ追加／更新、音色語彙 CRUD

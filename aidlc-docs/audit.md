@@ -1295,3 +1295,11 @@ featureブランチを作成してから進める"
 **Context**: CONSTRUCTION - U7b Functional Design 承認待ち
 
 ---
+
+## U7b Functional Design — Approved
+**Timestamp**: 2026-08-29T05:44:30Z
+**User Input**: "OK"
+**AI Response**: U7b FD 承認。NFR Requirements 計画（質問4問）を提示。
+**Context**: CONSTRUCTION - U7b NFR Requirements 質問待ち
+
+---
