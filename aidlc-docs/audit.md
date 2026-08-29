@@ -1287,3 +1287,11 @@ featureブランチを作成してから進める"
 **Context**: CONSTRUCTION - U7b Functional Design
 
 ---
+
+## U7b Functional Design — Artifacts
+**Timestamp**: 2026-08-29T05:44:00Z
+**User Input**: "done"
+**AI Response**: Q1〜Q6=全A。domain-entities / business-rules / business-logic-model / frontend-components 生成。承認ゲート提示。
+**Context**: CONSTRUCTION - U7b Functional Design 承認待ち
+
+---

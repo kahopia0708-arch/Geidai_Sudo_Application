@@ -7,8 +7,8 @@
 **削除ポリシー**: U7a Q1=A（参照中タグは削除不可）を継承
 
 ## チェックリスト
-- [ ] 質問回答
-- [ ] domain-entities / business-rules / business-logic-model / frontend-components 生成
+- [x] 質問回答（Q1〜Q6 = A）
+- [x] domain-entities / business-rules / business-logic-model / frontend-components 生成
 - [ ] 承認ゲート
 
 ## スコープ（確認）
@@ -30,7 +30,7 @@ C) ID を手入力し、既存なら上書き・無ければ追加（単一フ�
 
 X) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: A
 
 ---
 
@@ -44,7 +44,7 @@ C) ユーザーが指定したプロジェクト内パスをそのまま使う�
 
 X) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: A
 
 ---
 
@@ -58,7 +58,7 @@ C) 行タップで別画面（Detail）へ遷移
 
 X) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: A
 
 ---
 
@@ -72,7 +72,7 @@ C) 自由入力テキストフィルタのみ
 
 X) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: A
 
 ---
 
@@ -86,7 +86,7 @@ C) Home と同様の単色スプライト生成ユーティリティで仮画像
 
 X) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: A
 
 ---
 
@@ -100,7 +100,7 @@ C) ロック中は再生ボタン自体を隠す
 
 X) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: A
 
 ---
 
