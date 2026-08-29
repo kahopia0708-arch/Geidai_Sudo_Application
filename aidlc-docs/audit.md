@@ -1359,3 +1359,13 @@ featureブランチを作成してから進める"
 **Context**: CONSTRUCTION - Build and Test 承認待ち
 
 ---
+
+## User Feedback — Editor UX
+**Timestamp**: 2026-08-29T06:09:00Z
+**User Input**: "コンテンツ担当は大人なので、無理にひらがなを使わなくて良い
+視聴はどうやったらできる？
+ベル、ドラムについて画像もサンプルを入れて欲しい"
+**AI Response**: Editor ラベルを漢字表記へ。試聴ボタン追加。demo_bell/demo_drum にサンプル画像を設定。
+**Context**: CONSTRUCTION - U7b follow-up polish
+
+---

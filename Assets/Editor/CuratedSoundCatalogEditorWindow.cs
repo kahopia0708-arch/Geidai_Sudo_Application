@@ -7,6 +7,7 @@ namespace Geidai.EditorTools
 {
     /// <summary>
     /// 制作側音の登録ウィンドウ（US-LIB-04 / IMGUI）。
+    /// コンテンツ担当向けのため、ラベルは通常の日本語表記。
     /// </summary>
     public class CuratedSoundCatalogEditorWindow : EditorWindow
     {
@@ -44,12 +45,14 @@ namespace Geidai.EditorTools
         [MenuItem("Geidai/Library/Curated Sound Catalog")]
         public static void Open()
         {
-            var window = GetWindow<CuratedSoundCatalogEditorWindow>("おとずかん とうろく");
+            var window = GetWindow<CuratedSoundCatalogEditorWindow>("音図鑑 登録");
             window.minSize = new Vector2(880f, 560f);
             window.LoadDefaults();
         }
 
         private void OnEnable() => LoadDefaults();
+
+        private void OnDisable() => EditorAudioPreview.Stop();
 
         private void LoadDefaults()
         {
@@ -64,8 +67,10 @@ namespace Geidai.EditorTools
         private void OnGUI()
         {
             EditorGUILayout.BeginHorizontal();
-            _catalog = (CuratedSoundCatalog)EditorGUILayout.ObjectField("Catalog", _catalog, typeof(CuratedSoundCatalog), false);
-            _timbre = (TimbreTagCatalog)EditorGUILayout.ObjectField("Timbre", _timbre, typeof(TimbreTagCatalog), false);
+            _catalog = (CuratedSoundCatalog)EditorGUILayout.ObjectField(
+                "カタログ", _catalog, typeof(CuratedSoundCatalog), false);
+            _timbre = (TimbreTagCatalog)EditorGUILayout.ObjectField(
+                "音色語彙", _timbre, typeof(TimbreTagCatalog), false);
             EditorGUILayout.EndHorizontal();
 
             if (!string.IsNullOrEmpty(_status))
@@ -81,13 +86,13 @@ namespace Geidai.EditorTools
         private void DrawSoundList()
         {
             EditorGUILayout.BeginVertical(GUILayout.Width(220f));
-            EditorGUILayout.LabelField("とうろくおん", EditorStyles.boldLabel);
-            if (GUILayout.Button("ついか"))
+            EditorGUILayout.LabelField("登録音", EditorStyles.boldLabel);
+            if (GUILayout.Button("追加"))
             {
                 _isNew = true;
                 _selectedId = null;
                 ClearForm();
-                _status = "あたらしい おとを ついか";
+                _status = "新規音を追加します";
             }
 
             _listScroll = EditorGUILayout.BeginScrollView(_listScroll);
@@ -104,6 +109,7 @@ namespace Geidai.EditorTools
                         _selectedId = item.id;
                         LoadForm(item);
                         _status = string.Empty;
+                        EditorAudioPreview.Stop();
                     }
                 }
             }
@@ -114,25 +120,47 @@ namespace Geidai.EditorTools
         private void DrawSoundForm()
         {
             EditorGUILayout.BeginVertical(GUILayout.ExpandWidth(true));
-            EditorGUILayout.LabelField(_isNew ? "しんき" : "へんしゅう", EditorStyles.boldLabel);
+            EditorGUILayout.LabelField(_isNew ? "新規" : "編集", EditorStyles.boldLabel);
             _formScroll = EditorGUILayout.BeginScrollView(_formScroll);
 
             _id = EditorGUILayout.TextField("id *", _id);
             _encyclopediaNumber = EditorGUILayout.IntField("図鑑ナンバー *", _encyclopediaNumber);
             _displayName = EditorGUILayout.TextField("表示名 *", _displayName);
             _reading = EditorGUILayout.TextField("読み", _reading);
+            EditorGUILayout.LabelField("説明");
             _description = EditorGUILayout.TextArea(_description, GUILayout.MinHeight(48f));
             _category = EditorGUILayout.TextField("カテゴリ *", _category);
             DrawTimbrePopup();
-            _basePitchMidi = EditorGUILayout.IntField("基準ピッチ MIDI (-1=未設定)", _basePitchMidi);
+            _basePitchMidi = EditorGUILayout.IntField("基準ピッチ MIDI（-1=未設定）", _basePitchMidi);
             _loudness = (LoudnessBand)EditorGUILayout.EnumPopup("強弱帯", _loudness);
             _duration = (DurationBand)EditorGUILayout.EnumPopup("長さ帯", _duration);
             _pairKey = EditorGUILayout.TextField("pairKey", _pairKey);
             _allowPitchShift = EditorGUILayout.Toggle("allowPitchShift", _allowPitchShift);
-            _difficultyTagsCsv = EditorGUILayout.TextField("difficultyTags (CSV)", _difficultyTagsCsv);
+            _difficultyTagsCsv = EditorGUILayout.TextField("difficultyTags（CSV）", _difficultyTagsCsv);
             _initiallyUnlocked = EditorGUILayout.Toggle("初期解除", _initiallyUnlocked);
             _image = (Sprite)EditorGUILayout.ObjectField("画像", _image, typeof(Sprite), false);
-            _clip = (AudioClip)EditorGUILayout.ObjectField("AudioClip *", _clip, typeof(AudioClip), false);
+
+            EditorGUILayout.Space(4f);
+            EditorGUILayout.LabelField("音声 *", EditorStyles.boldLabel);
+            _clip = (AudioClip)EditorGUILayout.ObjectField("AudioClip", _clip, typeof(AudioClip), false);
+            EditorGUILayout.BeginHorizontal();
+            using (new EditorGUI.DisabledScope(_clip == null))
+            {
+                if (GUILayout.Button("試聴", GUILayout.Height(28f)))
+                {
+                    EditorAudioPreview.Play(_clip);
+                    _status = "試聴を再生中（もう一度押すか「停止」で止められます）";
+                }
+                if (GUILayout.Button("停止", GUILayout.Width(72f), GUILayout.Height(28f)))
+                {
+                    EditorAudioPreview.Stop();
+                    _status = "試聴を停止しました";
+                }
+            }
+            EditorGUILayout.EndHorizontal();
+            EditorGUILayout.HelpBox(
+                "試聴: 上の「試聴」ボタン、または Project で AudioClip を選択して Inspector の再生ボタンでも聞けます。",
+                MessageType.None);
 
             EditorGUILayout.Space(8f);
             EditorGUILayout.LabelField("WAV インポート", EditorStyles.boldLabel);
@@ -140,15 +168,15 @@ namespace Geidai.EditorTools
             _wavPath = EditorGUILayout.TextField(_wavPath);
             if (GUILayout.Button("選択", GUILayout.Width(64f)))
             {
-                string path = EditorUtility.OpenFilePanel("WAV", "", "wav,mp3,ogg,aiff");
+                string path = EditorUtility.OpenFilePanel("音声ファイル", "", "wav,mp3,ogg,aiff");
                 if (!string.IsNullOrEmpty(path)) _wavPath = path;
             }
-            if (GUILayout.Button("とりこむ", GUILayout.Width(80f)))
+            if (GUILayout.Button("取り込み", GUILayout.Width(80f)))
                 ImportWav();
             EditorGUILayout.EndHorizontal();
 
             EditorGUILayout.Space(8f);
-            if (GUILayout.Button("ほぞん", GUILayout.Height(32f)))
+            if (GUILayout.Button("保存", GUILayout.Height(32f)))
                 SaveSound();
 
             EditorGUILayout.EndScrollView();
@@ -183,7 +211,7 @@ namespace Geidai.EditorTools
         private void DrawTimbrePanel()
         {
             EditorGUILayout.BeginVertical(GUILayout.Width(240f));
-            EditorGUILayout.LabelField("おんしょくタグ", EditorStyles.boldLabel);
+            EditorGUILayout.LabelField("音色タグ", EditorStyles.boldLabel);
             if (_timbre != null && _timbre.Tags != null)
             {
                 for (int i = 0; i < _timbre.Tags.Count; i++)
@@ -201,7 +229,7 @@ namespace Geidai.EditorTools
                     if (GUILayout.Button("×", GUILayout.Width(24f)))
                     {
                         var r = CuratedSoundCatalogEditorOps.RemoveTimbreTag(_timbre, _catalog, t.id);
-                        _status = r.IsSuccess ? "タグを けしたよ" : r.Message;
+                        _status = r.IsSuccess ? "タグを削除しました" : r.Message;
                     }
                     EditorGUILayout.EndHorizontal();
                 }
@@ -211,7 +239,7 @@ namespace Geidai.EditorTools
             _tagId = EditorGUILayout.TextField("tag id", _tagId);
             _tagDisplayName = EditorGUILayout.TextField("表示名", _tagDisplayName);
             _tagSortOrder = EditorGUILayout.IntField("sort", _tagSortOrder);
-            if (GUILayout.Button("タグを ほぞん"))
+            if (GUILayout.Button("タグを保存"))
             {
                 var draft = new TimbreTagDefinition
                 {
@@ -220,10 +248,10 @@ namespace Geidai.EditorTools
                     sortOrder = _tagSortOrder
                 };
                 var r = CuratedSoundCatalogEditorOps.SaveTimbreTag(_timbre, draft, _tagReplaceId);
-                _status = r.IsSuccess ? "タグを ほぞんしたよ" : r.Message;
+                _status = r.IsSuccess ? "タグを保存しました" : r.Message;
                 if (r.IsSuccess) _tagReplaceId = draft.id;
             }
-            if (GUILayout.Button("タグ しんきフォーム"))
+            if (GUILayout.Button("タグ新規フォーム"))
             {
                 _tagId = string.Empty;
                 _tagDisplayName = string.Empty;
@@ -238,7 +266,7 @@ namespace Geidai.EditorTools
         {
             if (string.IsNullOrWhiteSpace(_id))
             {
-                _status = "さきに ID を いれてね";
+                _status = "先に ID を入力してください";
                 return;
             }
 
@@ -250,7 +278,7 @@ namespace Geidai.EditorTools
             }
 
             _clip = result.Value;
-            _status = "WAV を とりこんだよ";
+            _status = "WAV を取り込みました";
         }
 
         private void SaveSound()
@@ -266,7 +294,7 @@ namespace Geidai.EditorTools
 
             _isNew = false;
             _selectedId = draft.id;
-            _status = "ほぞんしたよ";
+            _status = "保存しました";
             GUI.FocusControl(null);
         }
 

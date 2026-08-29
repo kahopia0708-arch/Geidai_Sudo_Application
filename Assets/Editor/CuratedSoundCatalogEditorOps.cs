@@ -26,10 +26,10 @@ namespace Geidai.EditorTools
         public static Result<AudioClip> ImportWavToLibrary(string sourcePath, string soundId)
         {
             if (string.IsNullOrWhiteSpace(sourcePath) || !File.Exists(sourcePath))
-                return Result<AudioClip>.Fail(ResultCode.ValidationError, "WAV が みつからないよ");
+                return Result<AudioClip>.Fail(ResultCode.ValidationError, "WAV ファイルが見つかりません");
 
             if (string.IsNullOrWhiteSpace(soundId))
-                return Result<AudioClip>.Fail(ResultCode.ValidationError, "ID を いれてね");
+                return Result<AudioClip>.Fail(ResultCode.ValidationError, "ID を入力してください");
 
             EnsureAudioLibraryFolder();
 
@@ -45,13 +45,13 @@ namespace Geidai.EditorTools
             }
             catch (System.Exception)
             {
-                return Result<AudioClip>.Fail(ResultCode.IOError, "ファイルを コピーできなかったよ");
+                return Result<AudioClip>.Fail(ResultCode.IOError, "ファイルをコピーできませんでした");
             }
 
             AssetDatabase.ImportAsset(dest, ImportAssetOptions.ForceUpdate);
             var clip = AssetDatabase.LoadAssetAtPath<AudioClip>(dest);
             if (clip == null)
-                return Result<AudioClip>.Fail(ResultCode.NotFound, "AudioClip に ならなかったよ");
+                return Result<AudioClip>.Fail(ResultCode.NotFound, "AudioClip として読み込めませんでした");
 
             return Result<AudioClip>.Ok(clip);
         }
@@ -63,7 +63,7 @@ namespace Geidai.EditorTools
             string replaceId)
         {
             if (catalog == null)
-                return Result.Fail(ResultCode.NotFound, "カタログが ないよ");
+                return Result.Fail(ResultCode.NotFound, "カタログが設定されていません");
 
             var validation = CuratedSoundValidation.ValidateForUpsert(
                 draft,
@@ -86,7 +86,7 @@ namespace Geidai.EditorTools
             string replaceId)
         {
             if (catalog == null)
-                return Result.Fail(ResultCode.NotFound, "おんしょくタグが ないよ");
+                return Result.Fail(ResultCode.NotFound, "音色語彙が設定されていません");
 
             var existing = new System.Collections.Generic.List<TimbreTagDefinition>();
             if (catalog.Tags != null)
@@ -128,10 +128,10 @@ namespace Geidai.EditorTools
             string tagId)
         {
             if (timbre == null)
-                return Result.Fail(ResultCode.NotFound, "おんしょくタグが ないよ");
+                return Result.Fail(ResultCode.NotFound, "音色語彙が設定されていません");
 
             if (!CuratedSoundValidation.CanRemoveTag(tagId, timbre, sounds != null ? sounds.Items : null))
-                return Result.Fail(ResultCode.ValidationError, "つかわれている タグは 消せないよ");
+                return Result.Fail(ResultCode.ValidationError, "参照中のタグは削除できません");
 
             var next = new System.Collections.Generic.List<TimbreTagDefinition>();
             if (timbre.Tags != null)

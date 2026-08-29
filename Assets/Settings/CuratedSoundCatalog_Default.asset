@@ -46,7 +46,7 @@ MonoBehaviour:
     displayName: "\u30D9\u30EB"
     reading: 
     description: "\u8A66\u8074\u7528\u306E\u30D9\u30EB\u97F3"
-    imageRef: {fileID: 0}
+    imageRef: {fileID: 21300000, guid: 59f5f1f2ff6e45c48cb97dfef3a1cde0, type: 3}
     timbreTagId: bell
     basePitchMidi: -1
     loudnessBand: 0
@@ -62,7 +62,7 @@ MonoBehaviour:
     displayName: "\u30C9\u30E9\u30E0"
     reading: 
     description: "\u30DF\u30AD\u30B7\u30F3\u30B0\u8A66\u8074\u7528\u306E\u30C9\u30E9\u30E0\u97F3"
-    imageRef: {fileID: 0}
+    imageRef: {fileID: 21300000, guid: cd3d1849ef824e9c8ec908c3bd796d2d, type: 3}
     timbreTagId: drum
     basePitchMidi: -1
     loudnessBand: 0
