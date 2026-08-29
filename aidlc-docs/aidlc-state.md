@@ -5,8 +5,8 @@
 - **Project Type**: Brownfield
 - **Start Date**: 2026-07-15T16:48:08+09:00
 - **Current Phase**: INCEPTION
-- **Current Stage**: INCEPTION — Requirements Analysis（ホーム UI 整備）
-- **Active Workstream**: ホーム／メイン画面デザイン適用（2026-08-28）
+- **Current Stage**: INCEPTION — Requirements Analysis（サウンドライブラリ属性・Editor登録）
+- **Active Workstream**: サウンドライブラリ構築（属性設計・Editor登録・プレイヤー画面）（2026-08-29）
 
 ## Workspace State
 - **Existing Code**: Yes（Unity 6000.4.2f1 / URP / uGUI）
@@ -33,12 +33,29 @@
 | Resiliency Baseline | Yes | Blocking（RTO/RPO・変更管理はユーザー確認待ち） | Requirements Analysis 2026-07-15 |
 | Property-Based Testing | Yes | Full（全PBTルール） | Requirements Analysis 2026-07-15 |
 
-## Active Workstream — ホーム UI 整備（2026-08-28）
+## Active Workstream — サウンドライブラリ構築（2026-08-29）
+- **Request Type**: Enhancement / New capability on existing U7 Library
+- **Brownfield**: Yes（Reverse Engineering 成果物あり → SKIP。既存 `CuratedSoundDefinition` / `GeidaiLibrary` を拡張）
+- **Branch**: `feature/sound-library-attributes`
+- **Requirements Depth**: Comprehensive（属性設計・複数ゲーム共用・Editor ワークフロー・プレイヤー画面）
+- **User Stories**: 評価待ち（プレイヤー画面・コンテンツ担当フローあり → EXECUTE 見込み）
+- [x] Workspace Detection — 2026-08-29
+- [x] Requirements Analysis — sound-library-attributes-requirements.md 承認（2026-08-29、OK）
+- [x] User Stories — 差分承認（2026-08-29、OK）
+- [x] Workflow Planning — execution-plan 承認（2026-08-29、OK）
+- [x] Application Design — 承認（2026-08-29、OK）
+- [x] Units Generation — U7a/U7b 承認（2026-08-29、OK）
+- [x] Construction — U7a Functional Design 承認（2026-08-29）
+- [x] Construction — U7a NFR Requirements 承認（2026-08-29）
+- [x] Construction — U7a NFR Design 承認（2026-08-29）
+- [ ] Construction — U7a Code Generation Part1 計画承認待ち
+- [ ] Operations
+
+## Active Workstream — ホーム UI 整備（2026-08-28）【完了／PR #7】
 - **Request Type**: UI Enhancement / Visual redesign
 - **Brownfield**: Yes（Reverse Engineering 成果物あり → SKIP）
-- **Branch**: `feature/home-ui-redesign`
-- **Requirements Depth**: Standard（導線・統計表示に未確定あり）
-- **User Stories**: 評価待ち（UI 改修・既存 US-NAV-02 拡張見込み）
+- **Branch**: `feature/home-ui-redesign`（マージ済み想定／PR #7）
+- **Requirements Depth**: Standard
 - [x] Workspace Detection — 2026-08-28
 - [x] Requirements Analysis — home-ui-requirements.md 承認（2026-08-28、OK）
 - [x] User Stories — SKIP
@@ -46,7 +63,7 @@
 - [x] Application Design — SKIP（最小 UI コンポーネント）
 - [x] Code Generation — 実装完了（Unity メニュー実行済 2026-08-28）
 - [x] Build and Test — シーン生成済。EditMode / Play Mode は Unity で確認
-- [ ] Operations
+- [x] Operations — PLACEHOLDER（ワークストリーム終端）
 
 ## Active Workstream — Fさん導入ドキュメント（2026-08-19）【完了】
 - **Request Type**: Documentation / onboarding
