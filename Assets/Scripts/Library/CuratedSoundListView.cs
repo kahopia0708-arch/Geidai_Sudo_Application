@@ -11,10 +11,12 @@ namespace Geidai.Library
         [SerializeField] private RectTransform contentRoot;
         [SerializeField] private CuratedSoundItemView itemPrefab;
         [SerializeField] private GameObject emptyState;
+        [SerializeField] private Sprite placeholderSprite;
 
         private readonly List<CuratedSoundItemView> _pool = new List<CuratedSoundItemView>();
 
         public event Action<LibraryItemView> ItemPlayRequested;
+        public event Action<LibraryItemView> ItemSelected;
 
         public void SetItems(IReadOnlyList<LibraryItemView> items)
         {
@@ -28,7 +30,7 @@ namespace Geidai.Library
                 if (i < count)
                 {
                     view.gameObject.SetActive(true);
-                    view.Bind(items[i], OnPlay);
+                    view.Bind(items[i], OnPlay, OnSelect, placeholderSprite);
                 }
                 else
                 {
@@ -45,5 +47,6 @@ namespace Geidai.Library
         }
 
         private void OnPlay(LibraryItemView item) => ItemPlayRequested?.Invoke(item);
+        private void OnSelect(LibraryItemView item) => ItemSelected?.Invoke(item);
     }
 }

@@ -56,5 +56,24 @@ namespace Geidai.Common.Library
         {
             items = newItems != null ? new List<CuratedSoundDefinition>(newItems) : new List<CuratedSoundDefinition>();
         }
+
+        /// <summary>追加または id 一致の置換（Editor Upsert）。</summary>
+        public void Upsert(CuratedSoundDefinition definition, string replaceId = null)
+        {
+            if (definition == null) return;
+            if (items == null) items = new List<CuratedSoundDefinition>();
+
+            string key = !string.IsNullOrEmpty(replaceId) ? replaceId : definition.id;
+            for (int i = 0; i < items.Count; i++)
+            {
+                var existing = items[i];
+                if (existing != null && existing.id == key)
+                {
+                    items[i] = definition;
+                    return;
+                }
+            }
+            items.Add(definition);
+        }
     }
 }
