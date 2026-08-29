@@ -7,7 +7,7 @@
 ## チェックリスト
 - [x] 質問回答（Q1〜Q3 = A）
 - [x] nfr-design-patterns / logical-components 生成
-- [ ] 承認ゲート
+- [x] 承認ゲート
 
 ---
 
