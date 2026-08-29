@@ -330,6 +330,71 @@ namespace Geidai.Library
             return audio;
         }
 
+        /// <summary>
+        /// Edit Mode 用プレビュー。カタログを初期解除状態でグリッド／詳細に載せる（遷移・試聴はしない）。
+        /// </summary>
+        public void BuildEditModePreview()
+        {
+            if (Application.isPlaying)
+            {
+                Reload();
+                return;
+            }
+
+            ApplyTheme();
+            LibraryBootstrap.EnsureCatalogs(curatedCatalog, unlockRules, timbreTagCatalog);
+
+            _validDefs = curatedCatalog != null
+                ? curatedCatalog.ValidItems()
+                : new List<CuratedSoundDefinition>();
+            var unlock = UnlockEvaluator.ApplyInitialUnlocks(UnlockState.Empty(), _validDefs);
+            _items = UnlockEvaluator.Project(_validDefs, unlock, timbreTagCatalog);
+
+            if (listView != null) listView.SetItems(_items);
+
+            if (categoryDropdown != null)
+            {
+                categoryDropdown.ClearOptions();
+                categoryDropdown.AddOptions(LibraryFilterOptions.CategoryLabels(_validDefs));
+                categoryDropdown.value = 0;
+                categoryDropdown.RefreshShownValue();
+            }
+
+            if (timbreDropdown != null)
+            {
+                timbreDropdown.ClearOptions();
+                timbreDropdown.AddOptions(LibraryFilterOptions.TimbreLabels(timbreTagCatalog));
+                timbreDropdown.value = 0;
+                timbreDropdown.RefreshShownValue();
+            }
+
+            if (detailPanel != null)
+            {
+                if (_items.Count > 0)
+                {
+                    _selectedId = _items[0].id;
+                    detailPanel.Show(_items[0], placeholderSprite);
+                }
+                else
+                {
+                    _selectedId = null;
+                    detailPanel.Clear();
+                }
+            }
+
+            SetState(_items.Count == 0 ? LibraryState.Empty : LibraryState.Ready);
+        }
+
+        /// <summary>Edit Mode プレビュー用。グリッドと詳細を空にする。</summary>
+        public void ClearEditModePreview()
+        {
+            if (Application.isPlaying) return;
+            _items = new List<LibraryItemView>();
+            _selectedId = null;
+            listView?.ClearPreview();
+            detailPanel?.Clear();
+        }
+
         private void SetState(LibraryState state) => _state = state;
 
         private void ShowError(string message)

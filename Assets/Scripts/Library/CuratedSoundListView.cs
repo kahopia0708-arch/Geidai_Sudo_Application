@@ -23,10 +23,10 @@ namespace Geidai.Library
         public void SetItems(IReadOnlyList<LibraryItemView> items)
         {
             EnsureGridLayout();
+            RebuildPool(items != null ? items.Count : 0);
 
             int count = items != null ? items.Count : 0;
             if (emptyState != null) emptyState.SetActive(count == 0);
-            EnsurePool(count);
 
             for (int i = 0; i < _pool.Count; i++)
             {
@@ -41,6 +41,13 @@ namespace Geidai.Library
                     view.gameObject.SetActive(false);
                 }
             }
+        }
+
+        /// <summary>Edit Mode プレビュー用。グリッド子を消す。</summary>
+        public void ClearPreview()
+        {
+            RebuildPool(0);
+            if (emptyState != null) emptyState.SetActive(true);
         }
 
         private void EnsureGridLayout()
@@ -71,16 +78,31 @@ namespace Geidai.Library
             fitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
         }
 
-        private void EnsurePool(int count)
+        private void RebuildPool(int count)
         {
-            if (itemPrefab == null || contentRoot == null) return;
-            while (_pool.Count < count)
-                _pool.Add(UnityEngine.Object.Instantiate(itemPrefab, contentRoot));
+            _pool.Clear();
+            if (contentRoot == null) return;
+
+            for (int i = contentRoot.childCount - 1; i >= 0; i--)
+            {
+                var go = contentRoot.GetChild(i).gameObject;
+                if (Application.isPlaying) Destroy(go);
+                else DestroyImmediate(go);
+            }
+
+            if (itemPrefab == null || count <= 0) return;
+
+            for (int i = 0; i < count; i++)
+            {
+                var view = UnityEngine.Object.Instantiate(itemPrefab, contentRoot);
+                if (!Application.isPlaying)
+                    view.gameObject.hideFlags = HideFlags.DontSave;
+                _pool.Add(view);
+            }
         }
 
         private void OnSelect(LibraryItemView item) => ItemSelected?.Invoke(item);
 
-        // 互換: 詳細側から再生要求を上げたい場合に利用可能
         public void RaisePlay(LibraryItemView item) => ItemPlayRequested?.Invoke(item);
     }
 }

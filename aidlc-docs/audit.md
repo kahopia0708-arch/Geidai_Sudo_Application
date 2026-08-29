@@ -1428,3 +1428,19 @@ featureブランチを作成してから進める"
 **Context**: U7b Library UI polish
 
 ---
+
+## Edit Mode Preview Request
+**Timestamp**: 2026-08-29T07:12:51Z
+**User Input**: "Edit Mode プレビュー生成を実装"
+**AI Response**: ホーム／おとずかんの Edit Mode プレビュー生成メニューを実装する。
+**Context**: Designer tooling — runtime-only UI visibility
+
+---
+
+## Edit Mode Preview — Complete
+**Timestamp**: 2026-08-29T07:15:29Z
+**User Input**: "(continuation)"
+**AI Response**: Geidai/UI Preview メニューを追加。Home/Library の Edit Mode 仮置き（DontSave）、Sさん向けガイド追記。検証: homeChildren=4。
+**Context**: Designer tooling shipped
+
+---

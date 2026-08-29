@@ -133,7 +133,10 @@ namespace Geidai.Foundation
             return load.Value.nickname ?? string.Empty;
         }
 
-        /// <summary>可視項目のみを order 昇順で描画する（BR-10）。</summary>
+        /// <summary>
+        /// 可視項目のみを order 昇順で描画する（BR-10）。
+        /// Edit Mode でも呼べる（プレビュー用。遷移は Play 時のみ配線）。
+        /// </summary>
         public void BuildMenu()
         {
             if (menuConfig == null || menuContainer == null || menuButtonPrefab == null)
@@ -143,9 +146,7 @@ namespace Geidai.Foundation
             }
 
             menuContainer.gameObject.SetActive(true);
-
-            for (int i = menuContainer.childCount - 1; i >= 0; i--)
-                Destroy(menuContainer.GetChild(i).gameObject);
+            ClearMenuChildren();
 
             foreach (var item in menuConfig.VisibleSorted())
             {
@@ -153,6 +154,9 @@ namespace Geidai.Foundation
                 button.gameObject.SetActive(true);
                 button.gameObject.name = $"home-menu-{item.moduleId}";
                 button.interactable = item.enabled;
+
+                if (!Application.isPlaying)
+                    button.gameObject.hideFlags = HideFlags.DontSave;
 
                 var view = button.GetComponent<HomeMenuButtonView>();
                 if (view != null)
@@ -166,8 +170,29 @@ namespace Geidai.Foundation
                     if (label != null) label.text = item.label;
                 }
 
-                var captured = item.moduleId;
-                button.onClick.AddListener(() => Navigate(captured));
+                if (Application.isPlaying)
+                {
+                    var captured = item.moduleId;
+                    button.onClick.AddListener(() => Navigate(captured));
+                }
+            }
+        }
+
+        /// <summary>Edit Mode プレビュー用。メニュー子を消す。</summary>
+        public void ClearMenuPreview()
+        {
+            if (menuContainer == null) return;
+            ClearMenuChildren();
+        }
+
+        private void ClearMenuChildren()
+        {
+            if (menuContainer == null) return;
+            for (int i = menuContainer.childCount - 1; i >= 0; i--)
+            {
+                var go = menuContainer.GetChild(i).gameObject;
+                if (Application.isPlaying) Destroy(go);
+                else DestroyImmediate(go);
             }
         }
 

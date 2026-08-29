@@ -39,9 +39,31 @@
 | `Assets/Prefabs/Geidai/` | 使い回し部品（例: ホームメニューボタン） |
 
 3. シーンをダブルクリック → Hierarchy でオブジェクトを選ぶ → Inspector で調整  
-4. 調整したら **Ctrl/Cmd + S** でシーン保存、またはアセット保存  
+4. **実行時に出る項目（ホームメニュー・おとずかんのマス）が見えないとき**は、メニューからプレビューする（次節）  
+5. 調整したら **Ctrl/Cmd + S** でシーン保存、またはアセット保存  
 
 Play で動作確認 → 問題なければ Git にコミット（または変更を前本に共有）。
+
+---
+
+## 2.1 Edit Mode プレビュー（実行時 UI を仮置き）
+
+ホームのメニューボタンやおとずかんのサムネイルは、**Play しないとシーンに現れません**。  
+Edit Mode で見た目を確認するには:
+
+| 操作 | メニュー |
+|---|---|
+| ホームメニューを仮置き | **Geidai → UI Preview → Generate Home Menu** |
+| ホームの仮置きを消す | **Geidai → UI Preview → Clear Home Menu Preview** |
+| おとずかんグリッドを仮置き | **Geidai → UI Preview → Generate Library Grid** |
+| おとずかんの仮置きを消す | **Geidai → UI Preview → Clear Library Grid Preview** |
+
+注意:
+- プレビュー個体はシーンに**保存されません**（誤って Git に乗らないための仕様）
+- **ボタン／マスそのものの見た目** → Prefab（例: `HomeMenuButton.prefab`）を開いて編集
+- **並び・ラベル** → `HomeMenuConfig` など Settings アセット
+- **画面の余白・背景・固定ボタン** → シーン上のオブジェクトを直接編集
+- Play すると実行時ロジックが正式に再生成します
 
 ---
 
