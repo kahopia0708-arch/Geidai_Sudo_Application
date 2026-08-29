@@ -7,7 +7,7 @@
 ## チェックリスト
 - [x] 質問回答（Q1〜Q4 = A）
 - [x] nfr-requirements / tech-stack-decisions 生成
-- [ ] 承認ゲート
+- [x] 承認ゲート
 
 ---
 
