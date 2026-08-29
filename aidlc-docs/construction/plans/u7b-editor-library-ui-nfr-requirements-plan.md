@@ -5,8 +5,8 @@
 **前提**: U7a NFR 継承（オフライン・PII・Unlock AtomicFile・Query 16ms）。Infrastructure SKIP
 
 ## チェックリスト
-- [ ] 質問回答
-- [ ] nfr-requirements / tech-stack-decisions 生成
+- [x] 質問回答（Q1〜Q4 = A）
+- [x] nfr-requirements / tech-stack-decisions 生成
 - [ ] 承認ゲート
 
 ---
@@ -19,7 +19,7 @@ B) 仮想化リスト（大量件数向け）を本ユニットで導入
 
 X) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: A
 
 ---
 
@@ -31,7 +31,7 @@ B) UI Toolkit（UXML/USS）で Editor Window を新規構築
 
 X) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: A
 
 ---
 
@@ -45,7 +45,7 @@ C) コード生成後の手動確認のみ（新規自動テストなし）
 
 X) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: A
 
 ---
 
@@ -57,7 +57,7 @@ B) 失敗時も仮保存し、Inspector で後修正
 
 X) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: A
 
 ---
 
