@@ -1,25 +1,26 @@
 using System;
 using Geidai.Common.Library;
+using Geidai.Foundation;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace Geidai.Library
 {
-    /// <summary>音図鑑の1行。ロック中は試聴不可。行タップで選択。</summary>
-    public class CuratedSoundItemView : MonoBehaviour, IPointerClickHandler
+    /// <summary>
+    /// 音図鑑グリッドの1セル。サムネイルタップで選択（試聴は詳細側）。
+    /// ロック時はシルエット風に暗く表示。
+    /// </summary>
+    public class CuratedSoundItemView : MonoBehaviour
     {
+        [SerializeField] private Button selectButton;
+        [SerializeField] private Image iconImage;
+        [SerializeField] private Image frameImage;
         [SerializeField] private Text numberLabel;
         [SerializeField] private Text nameLabel;
-        [SerializeField] private Text categoryLabel;
-        [SerializeField] private Text lockLabel;
-        [SerializeField] private Button playButton;
-        [SerializeField] private Image lockIcon;
-        [SerializeField] private Image iconImage;
+        [SerializeField] private GameObject lockOverlay;
         [SerializeField] private Sprite placeholderSprite;
 
         private LibraryItemView _item;
-        private Action<LibraryItemView> _onPlay;
         private Action<LibraryItemView> _onSelect;
 
         public void Bind(
@@ -28,42 +29,47 @@ namespace Geidai.Library
             Action<LibraryItemView> onSelect = null,
             Sprite placeholder = null)
         {
+            // onPlay はグリッドでは使わない（詳細の画像タップで再生）。シグネチャ互換のため残す。
             _item = item;
-            _onPlay = onPlay;
             _onSelect = onSelect;
             if (placeholder != null) placeholderSprite = placeholder;
 
-            if (numberLabel != null) numberLabel.text = $"#{item.encyclopediaNumber}";
-            if (nameLabel != null) nameLabel.text = item.displayName ?? string.Empty;
-            if (categoryLabel != null) categoryLabel.text = item.category ?? string.Empty;
+            if (numberLabel != null)
+            {
+                numberLabel.text = item.encyclopediaNumber > 0 ? item.encyclopediaNumber.ToString("000") : string.Empty;
+                numberLabel.color = HomeUiTheme.MenuText;
+            }
+
+            if (nameLabel != null)
+            {
+                nameLabel.text = item.displayName ?? string.Empty;
+                nameLabel.color = HomeUiTheme.MenuText;
+            }
 
             if (iconImage != null)
             {
                 iconImage.sprite = item.image != null ? item.image : placeholderSprite;
                 iconImage.enabled = iconImage.sprite != null;
+                iconImage.preserveAspect = true;
+                // 未解除: シルエット風。解除済み: そのまま
+                iconImage.color = item.isUnlocked
+                    ? Color.white
+                    : new Color(0.12f, 0.14f, 0.18f, 1f);
             }
 
-            bool locked = !item.isUnlocked;
-            if (lockLabel != null)
+            if (frameImage != null)
+                HomeUiImageUtil.ApplyPillFill(frameImage, HomeUiTheme.PanelFill);
+
+            if (lockOverlay != null)
+                lockOverlay.SetActive(!item.isUnlocked);
+
+            if (selectButton != null)
             {
-                lockLabel.gameObject.SetActive(locked);
-                lockLabel.text = locked ? "ロック" : string.Empty;
-            }
-            if (lockIcon != null) lockIcon.enabled = locked;
-            if (playButton != null)
-            {
-                playButton.interactable = !locked;
-                playButton.onClick.RemoveAllListeners();
-                if (!locked) playButton.onClick.AddListener(OnPlayClicked);
+                selectButton.onClick.RemoveAllListeners();
+                selectButton.onClick.AddListener(OnSelectClicked);
             }
         }
 
-        public void OnPointerClick(PointerEventData eventData)
-        {
-            if (eventData != null && eventData.button != PointerEventData.InputButton.Left) return;
-            _onSelect?.Invoke(_item);
-        }
-
-        private void OnPlayClicked() => _onPlay?.Invoke(_item);
+        private void OnSelectClicked() => _onSelect?.Invoke(_item);
     }
 }

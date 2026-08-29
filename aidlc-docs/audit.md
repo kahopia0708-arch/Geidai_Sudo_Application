@@ -1386,3 +1386,45 @@ featureブランチを作成してから進める"
 **Context**: Documentation
 
 ---
+
+## Library UI Redesign Request
+**Timestamp**: 2026-08-29T06:41:00Z
+**User Input**: "おとずかん 画面
+デザインの基調をホーム画面に合わせる
+サムネイルをタップすると、詳細が表示される流れとする"
+**AI Response**: Library UI を HomeUiTheme 基調＋サムネイル→詳細フローに改修する。
+**Context**: U7b follow-up UI
+
+---
+
+## Library UI Redesign — Implementation
+**Timestamp**: 2026-08-29T06:45:13Z
+**User Input**: "(continuation) おとずかん 画面 デザインの基調をホーム画面に合わせる / サムネイル→詳細"
+**AI Response**: CuratedSoundItemView/ListView/DetailPanel/ScreenController をグリッド＋詳細試聴に更新。BuildLibrary をホーム基調で再生成予定（Library のみ）。
+**Context**: U7b Library UI redesign in progress
+
+---
+
+## Library UI Redesign — Complete
+**Timestamp**: 2026-08-29T06:46:32Z
+**User Input**: "(continuation)"
+**AI Response**: グリッド＋詳細ヒーロー試聴・HomeUiTheme 適用。GeidaiLibrary を BuildLibrary のみで再生成。メニューに Build Library Scene を追加。手順書のプレイヤー確認を更新。
+**Context**: U7b Library UI redesign complete; awaiting user review / commit request
+
+---
+
+## Library UI Feedback — Filters / Play / Buttons
+**Timestamp**: 2026-08-29T06:54:18Z
+**User Input**: "画面上部の絞り込み項目、意味がわかりにくい、おそらく階層絞りこみになっている？ラベルや説明が必要\n試聴機能が使えない\n下部ボタンはホームと基調が合っていない、角丸、フォントサイズなど"
+**AI Response**: しゅるい／ねいろの独立フィルタラベル追加、詳細にきくボタン＋Audio保証、下部をpill角丸＋ActionButtonLabelに合わせてBuildLibrary再生成。
+**Context**: U7b Library UI polish
+
+---
+
+## Library UI Feedback — Play/Stop toggle + Background
+**Timestamp**: 2026-08-29T07:01:30Z
+**User Input**: "とめる　が離れたボタンになっているが、きくボタンが再生中は止めるになれば良い\nシーン背景色がホームと違う"
+**AI Response**: きく／とめるトグル化、下部とめる削除、背景を HomeUiTheme のフルブリード＋カメラ色に統一し BuildLibrary 再生成。
+**Context**: U7b Library UI polish
+
+---

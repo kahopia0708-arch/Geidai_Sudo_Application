@@ -14,7 +14,7 @@ using UnityEngine.UI;
 namespace Geidai.Library
 {
     /// <summary>
-    /// 音図鑑画面（US-LIB-01）。フィルタ・詳細・HomeUiTheme（U7b）。
+    /// 音図鑑画面。ホーム基調＋サムネイル→詳細（きく／とめるトグル）。
     /// </summary>
     public class LibraryScreenController : ScreenRootBase
     {
@@ -29,11 +29,11 @@ namespace Geidai.Library
         [SerializeField] private Dropdown categoryDropdown;
         [SerializeField] private Dropdown timbreDropdown;
         [SerializeField] private Button backButton;
-        [SerializeField] private Button stopButton;
         [SerializeField] private GameObject loadingIndicator;
         [SerializeField] private ErrorPresenter errorPresenter;
         [SerializeField] private Image backgroundImage;
         [SerializeField] private Text titleText;
+        [SerializeField] private Sprite placeholderSprite;
 
         private IContentService _content;
         private IProgressionService _progression;
@@ -48,13 +48,22 @@ namespace Geidai.Library
         private string _categoryFilter;
         private string _timbreFilter;
         private string _selectedId;
+        private string _playingId;
         private bool _suppressFilterEvents;
 
         protected override void OnShow()
         {
             EnsureWired();
             ApplyTheme();
+            StopPlayback();
             Reload();
+        }
+
+        protected override void Update()
+        {
+            base.Update();
+            if (_state == LibraryState.Playing && (_audio == null || !_audio.IsPlaying))
+                StopPlayback();
         }
 
         private void EnsureWired()
@@ -63,18 +72,16 @@ namespace Geidai.Library
 
             _content = ServiceRegistry.Resolve<IContentService>();
             _progression = ServiceRegistry.Resolve<IProgressionService>();
-            _audio = ServiceRegistry.Resolve<IAudioService>();
+            _audio = EnsureAudio();
             _nav = ServiceRegistry.Resolve<INavigationService>();
 
             LibraryBootstrap.EnsureCatalogs(curatedCatalog, unlockRules, timbreTagCatalog);
 
             if (listView != null)
-            {
-                listView.ItemPlayRequested += OnPlayRequested;
                 listView.ItemSelected += OnItemSelected;
-            }
+            if (detailPanel != null)
+                detailPanel.SetPlayHandler(OnPlayToggleRequested);
             if (backButton != null) backButton.onClick.AddListener(NavigateHome);
-            if (stopButton != null) stopButton.onClick.AddListener(StopPlayback);
             if (categoryDropdown != null)
                 categoryDropdown.onValueChanged.AddListener(OnCategoryChanged);
             if (timbreDropdown != null)
@@ -86,20 +93,53 @@ namespace Geidai.Library
         private void OnDestroy()
         {
             if (listView != null)
-            {
-                listView.ItemPlayRequested -= OnPlayRequested;
                 listView.ItemSelected -= OnItemSelected;
-            }
         }
 
         private void ApplyTheme()
         {
             if (backgroundImage != null)
                 HomeUiImageUtil.ApplySolidFill(backgroundImage, HomeUiTheme.Background);
+
+            var cam = Camera.main;
+            if (cam != null)
+                cam.backgroundColor = HomeUiTheme.Background;
+
             if (titleText != null)
             {
                 UiFontResolver.ApplyTo(titleText, HomeUiTheme.ScreenTitle);
                 titleText.color = HomeUiTheme.TitleOnBackground;
+            }
+
+            StylePillButton(backButton);
+            StyleDropdown(categoryDropdown);
+            StyleDropdown(timbreDropdown);
+        }
+
+        private static void StylePillButton(Button button)
+        {
+            if (button == null) return;
+            var image = button.GetComponent<Image>();
+            if (image != null)
+                HomeUiImageUtil.ApplyPillFill(image, HomeUiTheme.PanelFill);
+            var label = button.GetComponentInChildren<Text>();
+            if (label != null)
+            {
+                UiFontResolver.ApplyTo(label, HomeUiTheme.ActionButtonLabel);
+                label.color = HomeUiTheme.MenuText;
+                label.fontStyle = FontStyle.Bold;
+            }
+        }
+
+        private static void StyleDropdown(Dropdown dropdown)
+        {
+            if (dropdown == null) return;
+            var image = dropdown.GetComponent<Image>();
+            if (image != null) HomeUiImageUtil.ApplySolidFill(image, HomeUiTheme.InputFill);
+            if (dropdown.captionText != null)
+            {
+                UiFontResolver.ApplyTo(dropdown.captionText, HomeUiTheme.Body);
+                dropdown.captionText.color = HomeUiTheme.MenuText;
             }
         }
 
@@ -201,6 +241,8 @@ namespace Geidai.Library
 
         private void OnItemSelected(LibraryItemView item)
         {
+            if (_state == LibraryState.Playing)
+                StopPlayback();
             _selectedId = item.id;
             RefreshDetail();
         }
@@ -209,19 +251,35 @@ namespace Geidai.Library
         {
             if (detailPanel == null) return;
             if (LibraryFilterOptions.TryGetItem(_items, _selectedId, out var item))
-                detailPanel.Show(item);
+            {
+                bool playing = _state == LibraryState.Playing && _playingId == item.id;
+                detailPanel.Show(item, placeholderSprite, playing);
+            }
             else
+            {
                 detailPanel.Clear();
+            }
         }
 
-        private void OnPlayRequested(LibraryItemView item)
+        private void OnPlayToggleRequested(LibraryItemView item)
         {
+            if (!string.IsNullOrEmpty(item.id) &&
+                LibraryFilterOptions.TryGetItem(_items, item.id, out var fresh))
+                item = fresh;
+
+            if (_state == LibraryState.Playing)
+            {
+                StopPlayback();
+                return;
+            }
+
             if (!item.isUnlocked || item.clip == null)
             {
                 ShowError("まだ きけない おとだよ");
                 return;
             }
 
+            _audio = EnsureAudio();
             if (_audio == null)
             {
                 ShowError("さいせいできなかったよ");
@@ -234,27 +292,42 @@ namespace Geidai.Library
                 ShowError(result.Message);
                 return;
             }
+
+            _playingId = item.id;
             SetState(LibraryState.Playing);
+            detailPanel?.SetPlaying(true);
         }
 
         private void StopPlayback()
         {
             _audio?.Stop();
-            if (_state == LibraryState.Playing) SetState(LibraryState.Ready);
+            _playingId = null;
+            if (_state == LibraryState.Playing)
+                SetState(LibraryState.Ready);
+            detailPanel?.SetPlaying(false);
         }
 
         private void NavigateHome()
         {
-            _audio?.Stop();
+            StopPlayback();
             if (_nav != null) _nav.GoTo(SceneId.Home);
             else OnBackPressed();
         }
 
         public override void OnBackPressed()
         {
-            _audio?.Stop();
+            StopPlayback();
             base.OnBackPressed();
             _nav?.GoBack();
+        }
+
+        private static IAudioService EnsureAudio()
+        {
+            var audio = ServiceRegistry.Resolve<IAudioService>();
+            if (audio != null) return audio;
+            audio = new AudioService();
+            ServiceRegistry.Register<IAudioService>(audio);
+            return audio;
         }
 
         private void SetState(LibraryState state) => _state = state;
