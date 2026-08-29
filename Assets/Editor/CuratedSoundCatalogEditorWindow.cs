@@ -42,6 +42,9 @@ namespace Geidai.EditorTools
         private int _tagSortOrder;
         private string _tagReplaceId;
 
+        private const string DefaultStatusHelp =
+            "試聴は中央の「試聴」ボタン、または Project で AudioClip を選び Inspector の再生でも聞けます。必須項目（*）を埋めて「保存」してください。";
+
         [MenuItem("Geidai/Library/Curated Sound Catalog")]
         public static void Open()
         {
@@ -73,8 +76,10 @@ namespace Geidai.EditorTools
                 "音色語彙", _timbre, typeof(TimbreTagCatalog), false);
             EditorGUILayout.EndHorizontal();
 
-            if (!string.IsNullOrEmpty(_status))
-                EditorGUILayout.HelpBox(_status, MessageType.Info);
+            // 常時同じ高さのステータス欄（空のときヘルプを表示し、出現／消失でレイアウトが跳ねないようにする）
+            string statusText = string.IsNullOrEmpty(_status) ? DefaultStatusHelp : _status;
+            var statusType = string.IsNullOrEmpty(_status) ? MessageType.None : MessageType.Info;
+            EditorGUILayout.HelpBox(statusText, statusType);
 
             EditorGUILayout.BeginHorizontal();
             DrawSoundList();
@@ -158,9 +163,6 @@ namespace Geidai.EditorTools
                 }
             }
             EditorGUILayout.EndHorizontal();
-            EditorGUILayout.HelpBox(
-                "試聴: 上の「試聴」ボタン、または Project で AudioClip を選択して Inspector の再生ボタンでも聞けます。",
-                MessageType.None);
 
             EditorGUILayout.Space(8f);
             EditorGUILayout.LabelField("WAV インポート", EditorStyles.boldLabel);

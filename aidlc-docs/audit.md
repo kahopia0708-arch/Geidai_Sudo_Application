@@ -1369,3 +1369,12 @@ featureブランチを作成してから進める"
 **Context**: CONSTRUCTION - U7b follow-up polish
 
 ---
+
+## User Feedback — Editor status HelpBox
+**Timestamp**: 2026-08-29T06:15:00Z
+**User Input**: "試聴ボタンを押すと i 試聴を再生中、、のメッセージ項目が動的追加され、ページが下にスクロールするのが気になる
+最初からメッセージ項目はUIにあり、ヘルプ的なメッセージを表示しておけば良い"
+**AI Response**: ステータス HelpBox を常時表示し、既定はヘルプ文に切り替える。
+**Context**: U7b Editor polish
+
+---
