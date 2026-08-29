@@ -35,6 +35,8 @@ namespace Geidai.EditorTools
         private const string SoundMatchConfigPath = "Assets/Settings/SoundMatchConfig.asset";
         private const string CuratedSoundCatalogPath = "Assets/Settings/CuratedSoundCatalog_Default.asset";
         private const string UnlockRulesCatalogPath = "Assets/Settings/UnlockRulesCatalog_Default.asset";
+        private const string TimbreTagCatalogPath = "Assets/Settings/TimbreTagCatalog_Default.asset";
+        private const string LibraryPlaceholderPath = "Assets/Art/Library/Icons/placeholder.png";
 
         [MenuItem("Geidai/Scenes/Build All Geidai Scenes")]
         public static void BuildAll()
@@ -109,7 +111,7 @@ namespace Geidai.EditorTools
             camGo.transform.SetParent(root.transform, false);
             var cam = camGo.GetComponent<Camera>();
             cam.clearFlags = CameraClearFlags.SolidColor;
-            cam.backgroundColor = new Color(0.86f, 0.90f, 0.88f);
+            cam.backgroundColor = HomeUiTheme.Background;
             cam.orthographic = true;
 
             return (canvas, safeRt, responsive, fitter, app);
@@ -217,6 +219,35 @@ namespace Geidai.EditorTools
             StretchFull(labelText.rectTransform);
             labelText.color = Color.white;
             labelText.raycastTarget = false;
+            return btn;
+        }
+
+        /// <summary>ホーム基調の角丸白ボタン（pill + ActionButtonLabel）。</summary>
+        private static Button CreatePillButton(Transform parent, string name, string label, Vector2 size)
+        {
+            var go = new GameObject(name, typeof(RectTransform), typeof(Image), typeof(Button));
+            go.transform.SetParent(parent, false);
+            go.GetComponent<RectTransform>().sizeDelta = size;
+            var img = go.GetComponent<Image>();
+            HomeUiImageUtil.ApplyPillFill(img, HomeUiTheme.PanelFill);
+            var btn = go.GetComponent<Button>();
+            btn.targetGraphic = img;
+            btn.transition = Selectable.Transition.ColorTint;
+            var colors = btn.colors;
+            colors.normalColor = Color.white;
+            colors.highlightedColor = new Color(0.95f, 0.95f, 0.95f, 1f);
+            colors.pressedColor = new Color(0.85f, 0.85f, 0.85f, 1f);
+            colors.selectedColor = Color.white;
+            colors.disabledColor = new Color(0.75f, 0.75f, 0.75f, 0.55f);
+            colors.colorMultiplier = 1f;
+            colors.fadeDuration = 0.08f;
+            btn.colors = colors;
+            var labelText = CreateText(go.transform, "Label", label, HomeUiTheme.ActionButtonLabel, TextAnchor.MiddleCenter);
+            StretchFull(labelText.rectTransform);
+            labelText.color = HomeUiTheme.MenuText;
+            labelText.fontStyle = FontStyle.Bold;
+            labelText.raycastTarget = false;
+            UiFontResolver.ApplyTo(labelText, HomeUiTheme.ActionButtonLabel);
             return btn;
         }
 
@@ -938,15 +969,73 @@ namespace Geidai.EditorTools
             SaveScene("GeidaiGame1");
         }
 
+        [MenuItem("Geidai/Scenes/Build Library Scene")]
         public static void BuildLibrary()
         {
+            EnsureFolders();
             EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
             var shell = CreateScreenShell("GeidaiLibraryRoot");
             var content = shell.safeArea;
 
-            var title = CreateText(content, "Title", "おとずかん", 46, TextAnchor.MiddleCenter);
-            AnchorTopBand(title.rectTransform, 90f, 24f);
+            var bgGo = new GameObject("Background", typeof(RectTransform), typeof(Image));
+            bgGo.transform.SetParent(content, false);
+            StretchFull(bgGo.GetComponent<RectTransform>());
+            var bg = bgGo.GetComponent<Image>();
+            HomeUiImageUtil.ApplySolidFill(bg, HomeUiTheme.Background);
+            bg.raycastTarget = false;
+            bgGo.transform.SetAsFirstSibling();
 
+            var title = CreateText(content, "Title", "おとずかん", HomeUiTheme.ScreenTitle, TextAnchor.MiddleCenter);
+            AnchorTopBand(title.rectTransform, 90f, 24f);
+            title.color = HomeUiTheme.TitleOnBackground;
+            UiFontResolver.ApplyTo(title, HomeUiTheme.ScreenTitle);
+
+            // 絞り込みは独立（階層ではない）。ラベルで意味を明示する。
+            var catLabel = CreateText(content, "CategoryFilterLabel", "しゅるい", HomeUiTheme.FieldLabel, TextAnchor.MiddleLeft);
+            catLabel.color = HomeUiTheme.FieldLabelOnBackground;
+            var catLabelRt = catLabel.rectTransform;
+            catLabelRt.anchorMin = new Vector2(0.08f, 1f);
+            catLabelRt.anchorMax = new Vector2(0.08f, 1f);
+            catLabelRt.pivot = new Vector2(0f, 1f);
+            catLabelRt.sizeDelta = new Vector2(300f, 36f);
+            catLabelRt.anchoredPosition = new Vector2(0f, -96f);
+
+            var categoryDropdown = CreateDropdown(content, "CategoryFilter", new Vector2(300f, 56f));
+            HomeUiImageUtil.ApplySolidFill(categoryDropdown.GetComponent<Image>(), HomeUiTheme.InputFill);
+            if (categoryDropdown.captionText != null)
+            {
+                categoryDropdown.captionText.color = HomeUiTheme.MenuText;
+                UiFontResolver.ApplyTo(categoryDropdown.captionText, HomeUiTheme.Body);
+            }
+            var catRt = categoryDropdown.GetComponent<RectTransform>();
+            catRt.anchorMin = new Vector2(0.08f, 1f);
+            catRt.anchorMax = new Vector2(0.08f, 1f);
+            catRt.pivot = new Vector2(0f, 1f);
+            catRt.anchoredPosition = new Vector2(0f, -132f);
+
+            var timLabel = CreateText(content, "TimbreFilterLabel", "ねいろ", HomeUiTheme.FieldLabel, TextAnchor.MiddleRight);
+            timLabel.color = HomeUiTheme.FieldLabelOnBackground;
+            var timLabelRt = timLabel.rectTransform;
+            timLabelRt.anchorMin = new Vector2(0.92f, 1f);
+            timLabelRt.anchorMax = new Vector2(0.92f, 1f);
+            timLabelRt.pivot = new Vector2(1f, 1f);
+            timLabelRt.sizeDelta = new Vector2(300f, 36f);
+            timLabelRt.anchoredPosition = new Vector2(0f, -96f);
+
+            var timbreDropdown = CreateDropdown(content, "TimbreFilter", new Vector2(300f, 56f));
+            HomeUiImageUtil.ApplySolidFill(timbreDropdown.GetComponent<Image>(), HomeUiTheme.InputFill);
+            if (timbreDropdown.captionText != null)
+            {
+                timbreDropdown.captionText.color = HomeUiTheme.MenuText;
+                UiFontResolver.ApplyTo(timbreDropdown.captionText, HomeUiTheme.Body);
+            }
+            var timRt = timbreDropdown.GetComponent<RectTransform>();
+            timRt.anchorMin = new Vector2(0.92f, 1f);
+            timRt.anchorMax = new Vector2(0.92f, 1f);
+            timRt.pivot = new Vector2(1f, 1f);
+            timRt.anchoredPosition = new Vector2(0f, -132f);
+
+            // サムネイルグリッド（ホーム基調の白パネル）
             var listHost = new GameObject(
                 "CuratedSoundList",
                 typeof(RectTransform),
@@ -954,8 +1043,8 @@ namespace Geidai.EditorTools
                 typeof(ScrollRect),
                 typeof(CuratedSoundListView));
             listHost.transform.SetParent(content, false);
-            AnchorCenterBand(listHost.GetComponent<RectTransform>(), 0.84f, 0.20f);
-            listHost.GetComponent<Image>().color = new Color(0.94f, 0.97f, 0.94f, 1f);
+            AnchorCenterBand(listHost.GetComponent<RectTransform>(), 0.78f, 0.40f);
+            HomeUiImageUtil.ApplySolidFill(listHost.GetComponent<Image>(), HomeUiTheme.PanelFill);
 
             var viewport = new GameObject("Viewport", typeof(RectTransform), typeof(Image), typeof(Mask));
             viewport.transform.SetParent(listHost.transform, false);
@@ -966,7 +1055,7 @@ namespace Geidai.EditorTools
             var contentRootGo = new GameObject(
                 "Content",
                 typeof(RectTransform),
-                typeof(VerticalLayoutGroup),
+                typeof(GridLayoutGroup),
                 typeof(ContentSizeFitter));
             contentRootGo.transform.SetParent(viewport.transform, false);
             var contentRt = contentRootGo.GetComponent<RectTransform>();
@@ -974,15 +1063,18 @@ namespace Geidai.EditorTools
             contentRt.anchorMax = new Vector2(1f, 1f);
             contentRt.pivot = new Vector2(0.5f, 1f);
             contentRt.sizeDelta = Vector2.zero;
-            var layout = contentRootGo.GetComponent<VerticalLayoutGroup>();
-            layout.childAlignment = TextAnchor.UpperCenter;
-            layout.childControlHeight = true;
-            layout.childControlWidth = true;
-            layout.childForceExpandHeight = false;
-            layout.childForceExpandWidth = true;
-            layout.spacing = 12f;
-            layout.padding = new RectOffset(12, 12, 12, 12);
-            contentRootGo.GetComponent<ContentSizeFitter>().verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+            var grid = contentRootGo.GetComponent<GridLayoutGroup>();
+            grid.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
+            grid.constraintCount = 3;
+            grid.cellSize = new Vector2(200f, 220f);
+            grid.spacing = new Vector2(16f, 16f);
+            grid.padding = new RectOffset(16, 16, 16, 16);
+            grid.childAlignment = TextAnchor.UpperCenter;
+            grid.startCorner = GridLayoutGroup.Corner.UpperLeft;
+            grid.startAxis = GridLayoutGroup.Axis.Horizontal;
+            var fitter = contentRootGo.GetComponent<ContentSizeFitter>();
+            fitter.horizontalFit = ContentSizeFitter.FitMode.Unconstrained;
+            fitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
 
             var scroll = listHost.GetComponent<ScrollRect>();
             scroll.viewport = viewport.GetComponent<RectTransform>();
@@ -992,36 +1084,125 @@ namespace Geidai.EditorTools
             scroll.movementType = ScrollRect.MovementType.Clamped;
 
             var itemPrefab = CreateCuratedSoundItemPrefab(listHost.transform);
-            var empty = CreateText(content, "EmptyState", "おとが まだ ないよ", 28, TextAnchor.MiddleCenter);
-            empty.rectTransform.anchorMin = new Vector2(0.1f, 0.42f);
-            empty.rectTransform.anchorMax = new Vector2(0.9f, 0.56f);
+            var empty = CreateText(content, "EmptyState", "おとが まだ ないよ", HomeUiTheme.Body, TextAnchor.MiddleCenter);
+            empty.rectTransform.anchorMin = new Vector2(0.1f, 0.50f);
+            empty.rectTransform.anchorMax = new Vector2(0.9f, 0.68f);
             empty.rectTransform.offsetMin = Vector2.zero;
             empty.rectTransform.offsetMax = Vector2.zero;
+            empty.color = HomeUiTheme.TitleOnBackground;
+
+            var placeholder = AssetDatabase.LoadAssetAtPath<Sprite>(LibraryPlaceholderPath);
 
             var listView = listHost.GetComponent<CuratedSoundListView>();
             var soList = new SerializedObject(listView);
             soList.FindProperty("contentRoot").objectReferenceValue = contentRt;
             soList.FindProperty("itemPrefab").objectReferenceValue = itemPrefab;
             soList.FindProperty("emptyState").objectReferenceValue = empty.gameObject;
+            soList.FindProperty("placeholderSprite").objectReferenceValue = placeholder;
+            soList.FindProperty("gridColumns").intValue = 3;
             soList.ApplyModifiedPropertiesWithoutUndo();
 
-            var back = CreateButton(content, "Back", "もどる", new Vector2(240f, 84f));
+            // 詳細: 大きい絵 or「きく」で試聴
+            var detailGo = new GameObject(
+                "DetailPanel",
+                typeof(RectTransform),
+                typeof(Image),
+                typeof(LibraryDetailPanel));
+            detailGo.transform.SetParent(content, false);
+            var detailRt = detailGo.GetComponent<RectTransform>();
+            detailRt.anchorMin = new Vector2(0.06f, 0.12f);
+            detailRt.anchorMax = new Vector2(0.94f, 0.38f);
+            detailRt.offsetMin = Vector2.zero;
+            detailRt.offsetMax = Vector2.zero;
+            HomeUiImageUtil.ApplySolidFill(detailGo.GetComponent<Image>(), HomeUiTheme.PanelFill);
+
+            var detailContent = new GameObject("ContentRoot", typeof(RectTransform));
+            detailContent.transform.SetParent(detailGo.transform, false);
+            StretchFull(detailContent.GetComponent<RectTransform>());
+            detailContent.SetActive(false);
+
+            var heroGo = new GameObject("Hero", typeof(RectTransform), typeof(Image), typeof(Button));
+            heroGo.transform.SetParent(detailContent.transform, false);
+            var heroRt = heroGo.GetComponent<RectTransform>();
+            heroRt.anchorMin = new Vector2(0.04f, 0.22f);
+            heroRt.anchorMax = new Vector2(0.36f, 0.94f);
+            heroRt.offsetMin = Vector2.zero;
+            heroRt.offsetMax = Vector2.zero;
+            var heroImage = heroGo.GetComponent<Image>();
+            heroImage.color = Color.white;
+            heroImage.preserveAspect = true;
+            heroImage.raycastTarget = true;
+            var heroBtn = heroGo.GetComponent<Button>();
+            heroBtn.targetGraphic = heroImage;
+
+            var detailHintPlay = CreateText(detailContent.transform, "PlayHint", "え か 「きく」で おとが なるよ", HomeUiTheme.FieldLabel, TextAnchor.MiddleLeft);
+            detailHintPlay.rectTransform.anchorMin = new Vector2(0.38f, 0.82f);
+            detailHintPlay.rectTransform.anchorMax = new Vector2(0.96f, 0.96f);
+            detailHintPlay.rectTransform.offsetMin = Vector2.zero;
+            detailHintPlay.rectTransform.offsetMax = Vector2.zero;
+            detailHintPlay.color = HomeUiTheme.PlaceholderText;
+
+            var detailTitle = CreateText(detailContent.transform, "DetailTitle", "", HomeUiTheme.PanelTitle, TextAnchor.UpperLeft);
+            detailTitle.rectTransform.anchorMin = new Vector2(0.38f, 0.58f);
+            detailTitle.rectTransform.anchorMax = new Vector2(0.96f, 0.82f);
+            detailTitle.rectTransform.offsetMin = Vector2.zero;
+            detailTitle.rectTransform.offsetMax = Vector2.zero;
+            detailTitle.color = HomeUiTheme.MenuText;
+
+            var detailDesc = CreateText(detailContent.transform, "DetailDescription", "", HomeUiTheme.Body, TextAnchor.UpperLeft);
+            detailDesc.rectTransform.anchorMin = new Vector2(0.38f, 0.28f);
+            detailDesc.rectTransform.anchorMax = new Vector2(0.96f, 0.58f);
+            detailDesc.rectTransform.offsetMin = Vector2.zero;
+            detailDesc.rectTransform.offsetMax = Vector2.zero;
+            detailDesc.color = HomeUiTheme.MenuText;
+
+            var detailMeta = CreateText(detailContent.transform, "DetailMeta", "", HomeUiTheme.FieldLabel, TextAnchor.LowerLeft);
+            detailMeta.rectTransform.anchorMin = new Vector2(0.38f, 0.12f);
+            detailMeta.rectTransform.anchorMax = new Vector2(0.70f, 0.28f);
+            detailMeta.rectTransform.offsetMin = Vector2.zero;
+            detailMeta.rectTransform.offsetMax = Vector2.zero;
+            detailMeta.color = HomeUiTheme.MenuText;
+
+            var play = CreatePillButton(detailContent.transform, "Play", "きく", new Vector2(160f, 64f));
+            var playRt = play.GetComponent<RectTransform>();
+            playRt.anchorMin = new Vector2(0.78f, 0.04f);
+            playRt.anchorMax = new Vector2(0.78f, 0.04f);
+            playRt.pivot = new Vector2(0.5f, 0f);
+            playRt.anchoredPosition = Vector2.zero;
+
+            var detailEmpty = CreateText(detailGo.transform, "DetailEmptyHint", "えを タップして えらんでね", HomeUiTheme.Body, TextAnchor.MiddleCenter);
+            detailEmpty.rectTransform.anchorMin = Vector2.zero;
+            detailEmpty.rectTransform.anchorMax = Vector2.one;
+            detailEmpty.rectTransform.offsetMin = Vector2.zero;
+            detailEmpty.rectTransform.offsetMax = Vector2.zero;
+            detailEmpty.color = HomeUiTheme.PlaceholderText;
+
+            var detail = detailGo.GetComponent<LibraryDetailPanel>();
+            var soDetail = new SerializedObject(detail);
+            soDetail.FindProperty("panelBackground").objectReferenceValue = detailGo.GetComponent<Image>();
+            soDetail.FindProperty("heroImage").objectReferenceValue = heroImage;
+            soDetail.FindProperty("heroButton").objectReferenceValue = heroBtn;
+            soDetail.FindProperty("playButton").objectReferenceValue = play;
+            soDetail.FindProperty("titleLabel").objectReferenceValue = detailTitle;
+            soDetail.FindProperty("hintLabel").objectReferenceValue = detailHintPlay;
+            soDetail.FindProperty("descriptionLabel").objectReferenceValue = detailDesc;
+            soDetail.FindProperty("metaLabel").objectReferenceValue = detailMeta;
+            soDetail.FindProperty("emptyHint").objectReferenceValue = detailEmpty.gameObject;
+            soDetail.FindProperty("contentRoot").objectReferenceValue = detailContent;
+            soDetail.FindProperty("placeholderSprite").objectReferenceValue = placeholder;
+            soDetail.ApplyModifiedPropertiesWithoutUndo();
+
+            var back = CreatePillButton(content, "Back", "もどる", new Vector2(320f, 84f));
             var backRt = back.GetComponent<RectTransform>();
-            backRt.anchorMin = new Vector2(0.28f, 0f);
-            backRt.anchorMax = new Vector2(0.28f, 0f);
+            backRt.anchorMin = new Vector2(0.5f, 0f);
+            backRt.anchorMax = new Vector2(0.5f, 0f);
             backRt.pivot = new Vector2(0.5f, 0f);
             backRt.anchoredPosition = new Vector2(0f, 32f);
-
-            var stop = CreateButton(content, "Stop", "とめる", new Vector2(240f, 84f));
-            var stopRt = stop.GetComponent<RectTransform>();
-            stopRt.anchorMin = new Vector2(0.72f, 0f);
-            stopRt.anchorMax = new Vector2(0.72f, 0f);
-            stopRt.pivot = new Vector2(0.5f, 0f);
-            stopRt.anchoredPosition = new Vector2(0f, 32f);
 
             var error = CreateErrorPresenter(content);
             var catalog = AssetDatabase.LoadAssetAtPath<CuratedSoundCatalog>(CuratedSoundCatalogPath);
             var rules = AssetDatabase.LoadAssetAtPath<UnlockRulesCatalog>(UnlockRulesCatalogPath);
+            var timbres = AssetDatabase.LoadAssetAtPath<TimbreTagCatalog>(TimbreTagCatalogPath);
 
             var screenGo = new GameObject("LibraryScreen", typeof(LibraryScreenController));
             screenGo.transform.SetParent(shell.canvas.transform, false);
@@ -1030,10 +1211,16 @@ namespace Geidai.EditorTools
             var so = new SerializedObject(screen);
             so.FindProperty("curatedCatalog").objectReferenceValue = catalog;
             so.FindProperty("unlockRules").objectReferenceValue = rules;
+            so.FindProperty("timbreTagCatalog").objectReferenceValue = timbres;
             so.FindProperty("listView").objectReferenceValue = listView;
+            so.FindProperty("detailPanel").objectReferenceValue = detail;
+            so.FindProperty("categoryDropdown").objectReferenceValue = categoryDropdown;
+            so.FindProperty("timbreDropdown").objectReferenceValue = timbreDropdown;
             so.FindProperty("backButton").objectReferenceValue = back;
-            so.FindProperty("stopButton").objectReferenceValue = stop;
             so.FindProperty("errorPresenter").objectReferenceValue = error;
+            so.FindProperty("backgroundImage").objectReferenceValue = bg;
+            so.FindProperty("titleText").objectReferenceValue = title;
+            so.FindProperty("placeholderSprite").objectReferenceValue = placeholder;
             so.ApplyModifiedPropertiesWithoutUndo();
 
             SaveScene("GeidaiLibrary");
@@ -1045,59 +1232,61 @@ namespace Geidai.EditorTools
                 "CuratedSoundItemPrefab",
                 typeof(RectTransform),
                 typeof(Image),
-                typeof(LayoutElement),
+                typeof(Button),
                 typeof(CuratedSoundItemView));
             go.transform.SetParent(parent, false);
             go.SetActive(false);
-            go.GetComponent<RectTransform>().sizeDelta = new Vector2(0f, 112f);
-            go.GetComponent<Image>().color = new Color(0.22f, 0.55f, 0.42f, 1f);
-            var element = go.GetComponent<LayoutElement>();
-            element.minHeight = 112f;
-            element.preferredHeight = 112f;
+            go.GetComponent<RectTransform>().sizeDelta = new Vector2(200f, 220f);
+            var frame = go.GetComponent<Image>();
+            HomeUiImageUtil.ApplySolidFill(frame, HomeUiTheme.PanelFill);
+            var select = go.GetComponent<Button>();
+            select.targetGraphic = frame;
+            select.transition = Selectable.Transition.ColorTint;
 
-            var name = CreateText(go.transform, "Name", "おと", 28, TextAnchor.MiddleLeft);
-            name.rectTransform.anchorMin = new Vector2(0.05f, 0.42f);
-            name.rectTransform.anchorMax = new Vector2(0.55f, 0.95f);
+            var iconGo = new GameObject("Icon", typeof(RectTransform), typeof(Image));
+            iconGo.transform.SetParent(go.transform, false);
+            var iconRt = iconGo.GetComponent<RectTransform>();
+            iconRt.anchorMin = new Vector2(0.08f, 0.28f);
+            iconRt.anchorMax = new Vector2(0.92f, 0.92f);
+            iconRt.offsetMin = Vector2.zero;
+            iconRt.offsetMax = Vector2.zero;
+            var iconImage = iconGo.GetComponent<Image>();
+            iconImage.color = Color.white;
+            iconImage.preserveAspect = true;
+            iconImage.raycastTarget = false;
+
+            var number = CreateText(go.transform, "Number", "001", 18, TextAnchor.MiddleCenter);
+            number.rectTransform.anchorMin = new Vector2(0.05f, 0.14f);
+            number.rectTransform.anchorMax = new Vector2(0.95f, 0.28f);
+            number.rectTransform.offsetMin = Vector2.zero;
+            number.rectTransform.offsetMax = Vector2.zero;
+            number.color = HomeUiTheme.MenuText;
+
+            var name = CreateText(go.transform, "Name", "おと", 22, TextAnchor.MiddleCenter);
+            name.rectTransform.anchorMin = new Vector2(0.05f, 0.02f);
+            name.rectTransform.anchorMax = new Vector2(0.95f, 0.16f);
             name.rectTransform.offsetMin = Vector2.zero;
             name.rectTransform.offsetMax = Vector2.zero;
-            name.color = Color.white;
+            name.color = HomeUiTheme.MenuText;
 
-            var category = CreateText(go.transform, "Category", "", 20, TextAnchor.MiddleLeft);
-            category.rectTransform.anchorMin = new Vector2(0.05f, 0.05f);
-            category.rectTransform.anchorMax = new Vector2(0.55f, 0.42f);
-            category.rectTransform.offsetMin = Vector2.zero;
-            category.rectTransform.offsetMax = Vector2.zero;
-            category.color = new Color(0.9f, 0.95f, 0.9f, 1f);
+            var lockOverlay = new GameObject("LockOverlay", typeof(RectTransform), typeof(Image));
+            lockOverlay.transform.SetParent(go.transform, false);
+            StretchFull(lockOverlay.GetComponent<RectTransform>());
+            var lockImg = lockOverlay.GetComponent<Image>();
+            lockImg.color = new Color(0.12f, 0.14f, 0.18f, 0.18f);
+            lockImg.raycastTarget = false;
+            lockOverlay.SetActive(false);
 
-            var lockIconGo = new GameObject("LockIcon", typeof(RectTransform), typeof(Image));
-            lockIconGo.transform.SetParent(go.transform, false);
-            var lockRt = lockIconGo.GetComponent<RectTransform>();
-            lockRt.anchorMin = new Vector2(0.62f, 0.5f);
-            lockRt.anchorMax = new Vector2(0.62f, 0.5f);
-            lockRt.sizeDelta = new Vector2(40f, 40f);
-            lockIconGo.GetComponent<Image>().color = new Color(0.95f, 0.75f, 0.2f, 1f);
-
-            var lockLabel = CreateText(go.transform, "LockLabel", "ロック", 20, TextAnchor.MiddleCenter);
-            lockLabel.rectTransform.anchorMin = new Vector2(0.66f, 0.2f);
-            lockLabel.rectTransform.anchorMax = new Vector2(0.78f, 0.8f);
-            lockLabel.rectTransform.offsetMin = Vector2.zero;
-            lockLabel.rectTransform.offsetMax = Vector2.zero;
-            lockLabel.color = Color.white;
-
-            var play = CreateButton(go.transform, "Play", "きく", new Vector2(130f, 70f));
-            var playRt = play.GetComponent<RectTransform>();
-            playRt.anchorMin = new Vector2(1f, 0.5f);
-            playRt.anchorMax = new Vector2(1f, 0.5f);
-            playRt.pivot = new Vector2(1f, 0.5f);
-            playRt.anchoredPosition = new Vector2(-20f, 0f);
-
+            var placeholder = AssetDatabase.LoadAssetAtPath<Sprite>(LibraryPlaceholderPath);
             var item = go.GetComponent<CuratedSoundItemView>();
             var so = new SerializedObject(item);
+            so.FindProperty("selectButton").objectReferenceValue = select;
+            so.FindProperty("iconImage").objectReferenceValue = iconImage;
+            so.FindProperty("frameImage").objectReferenceValue = frame;
+            so.FindProperty("numberLabel").objectReferenceValue = number;
             so.FindProperty("nameLabel").objectReferenceValue = name;
-            so.FindProperty("categoryLabel").objectReferenceValue = category;
-            so.FindProperty("lockLabel").objectReferenceValue = lockLabel;
-            so.FindProperty("playButton").objectReferenceValue = play;
-            so.FindProperty("lockIcon").objectReferenceValue = lockIconGo.GetComponent<Image>();
+            so.FindProperty("lockOverlay").objectReferenceValue = lockOverlay;
+            so.FindProperty("placeholderSprite").objectReferenceValue = placeholder;
             so.ApplyModifiedPropertiesWithoutUndo();
             return item;
         }

@@ -73,6 +73,17 @@ namespace Geidai.Foundation
             image.type = Image.Type.Sliced;
         }
 
+        /// <summary>ホーム基調の角丸 pill で塗る（無ければ単色矩形）。</summary>
+        public static void ApplyPillFill(Image image, Color color)
+        {
+            if (image == null) return;
+            var pill = ResolvePillSprite();
+            if (pill != null)
+                ApplyBackground(image, pill, color);
+            else
+                ApplySolidFill(image, color);
+        }
+
         /// <summary>角丸スプライトに依存せず矩形を確実に塗る。</summary>
         public static void ApplySolidFill(Image image, Color color)
         {

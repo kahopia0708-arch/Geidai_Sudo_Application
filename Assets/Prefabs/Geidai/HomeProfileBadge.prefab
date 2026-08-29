@@ -589,6 +589,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 314683a4833b146cc82caceb69bcfa47, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Geidai.Foundation::Geidai.Foundation.HomeProfileBadgeView
+  badgeBackground: {fileID: 268129663029626446}
   button: {fileID: 2927210286068954032}
   nicknameText: {fileID: 7194163136056497947}
   progressSegmentsRoot: {fileID: 8841658199834153547}
