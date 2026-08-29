@@ -48,7 +48,8 @@
 - [x] Construction — U7a Functional Design 承認（2026-08-29）
 - [x] Construction — U7a NFR Requirements 承認（2026-08-29）
 - [x] Construction — U7a NFR Design 承認（2026-08-29）
-- [ ] Construction — U7a Code Generation Part1 計画承認待ち
+- [x] Construction — U7a Code Generation Part1 計画承認（2026-08-29、OK）
+- [ ] Construction — U7a Code Generation Part2 完了ゲート待ち
 - [ ] Operations
 
 ## Active Workstream — ホーム UI 整備（2026-08-28）【完了／PR #7】

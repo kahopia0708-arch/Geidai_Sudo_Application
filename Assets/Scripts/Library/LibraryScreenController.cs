@@ -20,6 +20,7 @@ namespace Geidai.Library
         [Header("Catalogs")]
         [SerializeField] private CuratedSoundCatalog curatedCatalog;
         [SerializeField] private UnlockRulesCatalog unlockRules;
+        [SerializeField] private TimbreTagCatalog timbreTagCatalog;
 
         [Header("Views")]
         [SerializeField] private CuratedSoundListView listView;
@@ -51,7 +52,7 @@ namespace Geidai.Library
             _audio = ServiceRegistry.Resolve<IAudioService>();
             _nav = ServiceRegistry.Resolve<INavigationService>();
 
-            LibraryBootstrap.EnsureCatalogs(curatedCatalog, unlockRules);
+            LibraryBootstrap.EnsureCatalogs(curatedCatalog, unlockRules, timbreTagCatalog);
 
             if (listView != null) listView.ItemPlayRequested += OnPlayRequested;
             if (backButton != null) backButton.onClick.AddListener(NavigateHome);
@@ -71,7 +72,7 @@ namespace Geidai.Library
             if (loadingIndicator != null) loadingIndicator.SetActive(true);
 
             _progression?.Reload();
-            LibraryBootstrap.EnsureCatalogs(curatedCatalog, unlockRules);
+            LibraryBootstrap.EnsureCatalogs(curatedCatalog, unlockRules, timbreTagCatalog);
 
             if (_content == null)
             {
@@ -91,7 +92,16 @@ namespace Geidai.Library
             }
 
             var unlock = _progression != null ? _progression.CurrentUnlockState : UnlockState.Empty();
-            _items = UnlockEvaluator.Project(catalogResult.Value.ValidItems(), unlock);
+            TimbreTagCatalog timbres = null;
+            if (_content != null)
+            {
+                var tr = _content.GetTimbreTagCatalog();
+                if (tr.IsSuccess) timbres = tr.Value;
+            }
+
+            var valid = catalogResult.Value.ValidItems();
+            valid = LibraryQuery.SortByEncyclopediaNumber(valid);
+            _items = UnlockEvaluator.Project(valid, unlock, timbres);
 
             if (listView != null) listView.SetItems(_items);
             if (loadingIndicator != null) loadingIndicator.SetActive(false);

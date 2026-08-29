@@ -20,6 +20,12 @@ namespace Geidai.Services.Content
         /// <summary>音図鑑カタログを返す。未設定は Fail(NotFound)。</summary>
         Result<CuratedSoundCatalog> GetCuratedCatalog();
 
+        /// <summary>音色タグ語彙を注入する（U7a）。</summary>
+        void SetTimbreTagCatalog(TimbreTagCatalog catalog);
+
+        /// <summary>音色タグ語彙を返す。未設定は Fail(NotFound)。</summary>
+        Result<TimbreTagCatalog> GetTimbreTagCatalog();
+
         /// <summary>解除条件表を注入する（U7）。</summary>
         void SetUnlockRules(UnlockRulesCatalog rules);
 

@@ -42,14 +42,34 @@ MonoBehaviour:
   m_EditorClassIdentifier: Geidai.Common::Geidai.Common.Library.CuratedSoundCatalog
   items:
   - id: demo_bell
+    encyclopediaNumber: 1
     displayName: "\u30D9\u30EB"
-    category: "\u30C6\u30B9\u30C8"
+    reading: 
     description: "\u8A66\u8074\u7528\u306E\u30D9\u30EB\u97F3"
+    imageRef: {fileID: 0}
+    timbreTagId: bell
+    basePitchMidi: -1
+    loudnessBand: 0
+    durationBand: 0
+    pairKey: 
+    allowPitchShift: 1
+    difficultyTags: []
+    category: "\u30C6\u30B9\u30C8"
     clipRef: {fileID: 8300000, guid: 7084a0aa1c82242e6b159ea85aa39d4d, type: 3}
     initiallyUnlocked: 1
   - id: demo_drum
+    encyclopediaNumber: 2
     displayName: "\u30C9\u30E9\u30E0"
-    category: "\u30C6\u30B9\u30C8"
+    reading: 
     description: "\u30DF\u30AD\u30B7\u30F3\u30B0\u8A66\u8074\u7528\u306E\u30C9\u30E9\u30E0\u97F3"
+    imageRef: {fileID: 0}
+    timbreTagId: drum
+    basePitchMidi: -1
+    loudnessBand: 0
+    durationBand: 0
+    pairKey: 
+    allowPitchShift: 1
+    difficultyTags: []
+    category: "\u30C6\u30B9\u30C8"
     clipRef: {fileID: 8300000, guid: eeeadc4f43e41479fa0152f46f8b26a1, type: 3}
     initiallyUnlocked: 1

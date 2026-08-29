@@ -37,6 +37,21 @@ namespace Geidai.Common.Library
             return null;
         }
 
+        public bool ContainsId(string id) => FindById(id) != null;
+
+        public bool ContainsEncyclopediaNumber(int number, string exceptId = null)
+        {
+            if (number < 1 || items == null) return false;
+            for (int i = 0; i < items.Count; i++)
+            {
+                var item = items[i];
+                if (item == null || !item.IsValid) continue;
+                if (!string.IsNullOrEmpty(exceptId) && item.id == exceptId) continue;
+                if (item.encyclopediaNumber == number) return true;
+            }
+            return false;
+        }
+
         public void SetItems(IEnumerable<CuratedSoundDefinition> newItems)
         {
             items = newItems != null ? new List<CuratedSoundDefinition>(newItems) : new List<CuratedSoundDefinition>();

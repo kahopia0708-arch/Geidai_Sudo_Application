@@ -12,21 +12,21 @@
 
 ## 実行ステップ
 
-- [ ] **Step 0** — 既存 `CuratedSoundDefinition` / Catalog / Unlock テスト／サンプル SO を確認
-- [ ] **Step 1** — `LoudnessBand` / `DurationBand` 列挙を追加
-- [ ] **Step 2** — `TimbreTagDefinition` / `TimbreTagCatalog`（SO・CreateAssetMenu）を追加
-- [ ] **Step 3** — `CuratedSoundDefinition` を新スキーマへ拡張（`UnsetPitchMidi = -1`）。`IsValid` 更新
-- [ ] **Step 4** — `CuratedSoundValidation`（純粋）: 重複 id/number、タグ存在、`CanRemoveTag`
-- [ ] **Step 5** — `CuratedSoundCatalog` に `ContainsId` / `ContainsEncyclopediaNumber` / Upsert 用ヘルパ（必要なら）
-- [ ] **Step 6** — `LibraryQuery`（SortByEncyclopediaNumber / Filter）を追加
-- [ ] **Step 7** — `LibraryItemView` を拡張（number / timbre / image）
-- [ ] **Step 8** — `UnlockEvaluator.Project` が新フィールドを投影（解除ロジック不変）
-- [ ] **Step 9** — `IContentService` / `ContentService` に TimbreTagCatalog Get/Set
-- [ ] **Step 10** — 既定 `TimbreTagCatalog_Default.asset` 生成（bell/drum/environment/voice/other）
-- [ ] **Step 11** — `CuratedSoundCatalog_Default` を新スキーマで再登録（既存ベル／ドラム等）
-- [ ] **Step 12** — EditMode: Validation / LibraryQuery（＋軽量 PBT）/ CanRemove / Unlock ヘルパ更新
-- [ ] **Step 13** — Unity コンパイル確認（MCP 可）。`code-summary.md` 作成
-- [ ] **Step 14** — 本ユニット完了後にコミット（例: `feat(library): サウンド属性スキーマとカタログ API を追加する`）
+- [x] **Step 0** — 既存 `CuratedSoundDefinition` / Catalog / Unlock テスト／サンプル SO を確認
+- [x] **Step 1** — `LoudnessBand` / `DurationBand` 列挙を追加
+- [x] **Step 2** — `TimbreTagDefinition` / `TimbreTagCatalog`（SO・CreateAssetMenu）を追加
+- [x] **Step 3** — `CuratedSoundDefinition` を新スキーマへ拡張（`UnsetPitchMidi = -1`）。`IsValid` 更新
+- [x] **Step 4** — `CuratedSoundValidation`（純粋）: 重複 id/number、タグ存在、`CanRemoveTag`
+- [x] **Step 5** — `CuratedSoundCatalog` に `ContainsId` / `ContainsEncyclopediaNumber` / Upsert 用ヘルパ（必要なら）
+- [x] **Step 6** — `LibraryQuery`（SortByEncyclopediaNumber / Filter）を追加
+- [x] **Step 7** — `LibraryItemView` を拡張（number / timbre / image）
+- [x] **Step 8** — `UnlockEvaluator.Project` が新フィールドを投影（解除ロジック不変）
+- [x] **Step 9** — `IContentService` / `ContentService` に TimbreTagCatalog Get/Set
+- [x] **Step 10** — 既定 `TimbreTagCatalog_Default.asset` 生成（bell/drum/environment/voice/other）
+- [x] **Step 11** — `CuratedSoundCatalog_Default` を新スキーマで再登録（既存ベル／ドラム等）
+- [x] **Step 12** — EditMode: Validation / LibraryQuery（＋軽量 PBT）/ CanRemove / Unlock ヘルパ更新
+- [x] **Step 13** — Unity コンパイル確認（MCP 可）。`code-summary.md` 作成
+- [x] **Step 14** — 本ユニット完了後にコミット（例: `feat(library): サウンド属性スキーマとカタログ API を追加する`）
 
 ## 非対象（U7b）
 Editor Window、Library 画面の絞り込み UI、HomeUiTheme 適用
