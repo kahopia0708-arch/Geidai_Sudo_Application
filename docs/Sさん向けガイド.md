@@ -130,6 +130,21 @@ Play で動作確認 → 問題なければ Git にコミット（または変�
 
 カエルの成長スプライトなどは `GeidaiGame1` シーン内の `ResultEffect` 周りで差し替えます。
 
+### 4.4 音図鑑（制作側の音の登録）
+
+制作側の音・属性・音色タグは、専用ウィンドウから登録します（コード不要）。
+
+→ 詳細は **[音図鑑編集手順書.md](音図鑑編集手順書.md)**
+
+要約:
+
+1. メニュー **Geidai → Library → Curated Sound Catalog**
+2. WAV 取り込み・属性入力・画像・試聴 →「保存」
+3. 音色タグはウィンドウ右ペインで追加／編集（参照中は削除不可）
+4. Play → ホーム「おとずかん」で見え方を確認
+
+アセット: `CuratedSoundCatalog_Default` / `TimbreTagCatalog_Default`、音声は `Assets/Audio/Library/`、画像は `Assets/Art/Library/Icons/`
+
 ---
 
 ## 5. 画像・イラストの入れ方
@@ -195,6 +210,7 @@ A. 直前に触ったシーンを保存せず戻す／Git で差分を確認。�
 ## 9. 関連リンク
 
 - リポジトリ概要: [README.md](../README.md)  
+- **音図鑑の登録・属性編集**: [音図鑑編集手順書.md](音図鑑編集手順書.md)  
 - ゲーム実装・シーン所有: [Fさん向けガイド.md](Fさん向けガイド.md)  
 - 実機確認チェックリスト: `aidlc-docs/construction/build-and-test/device-verification-checklist.md`  
 - ハンドオフ方針（ストーリー）: `aidlc-docs/inception/user-stories/stories.md` の US-TECH-07  

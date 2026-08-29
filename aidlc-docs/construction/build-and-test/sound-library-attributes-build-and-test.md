@@ -141,3 +141,4 @@ Test Runner で次を実行（フィルタ例: `CanRemoveTag` / `TimbreLabels` /
 - コード: `Assets/Scripts/Common/Library/`、`Assets/Scripts/Library/`、`Assets/Editor/CuratedSoundCatalog*`
 - 設計: `aidlc-docs/construction/u7a-schema/`、`u7b-editor-library-ui/`
 - 本ファイル: `aidlc-docs/construction/build-and-test/sound-library-attributes-build-and-test.md`
+- **コンテンツ担当向け手順**: `docs/音図鑑編集手順書.md`

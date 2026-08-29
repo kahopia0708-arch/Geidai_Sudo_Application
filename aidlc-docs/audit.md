@@ -1378,3 +1378,11 @@ featureブランチを作成してから進める"
 **Context**: U7b Editor polish
 
 ---
+
+## Docs Request — Content editor guide
+**Timestamp**: 2026-08-29T06:31:00Z
+**User Input**: "コンテンツ担当向けに音図鑑の編集手順書を作って"
+**AI Response**: コンテンツ担当向け音図鑑編集手順書を作成する。
+**Context**: Documentation
+
+---
