@@ -52,7 +52,7 @@
 - [x] Construction — U7a Code Generation Part2 完了・承認（2026-08-29、OK）→ commit bff9b3d
 - [x] Construction — U7b Functional Design 成果物生成・承認（2026-08-29、OK）
 - [x] Construction — U7b NFR Requirements 成果物生成・承認（2026-08-29、OK）
-- [ ] Construction — U7b NFR Design 質問待ち
+- [x] Construction — U7b NFR Design 成果物生成・承認待ち（2026-08-29）／Infrastructure SKIP
 - [ ] Operations
 
 ## Active Workstream — ホーム UI 整備（2026-08-28）【完了／PR #7】

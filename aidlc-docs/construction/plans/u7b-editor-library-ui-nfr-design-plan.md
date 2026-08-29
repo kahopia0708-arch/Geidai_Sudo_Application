@@ -5,8 +5,8 @@
 **注**: クラウド／キュー等は N/A。Infrastructure Design SKIP。U7a パターン（純粋 Validation／Query）を Editor・UI から呼ぶ。
 
 ## チェックリスト
-- [ ] 質問回答
-- [ ] nfr-design-patterns / logical-components 生成
+- [x] 質問回答（Q1〜Q3 = A）
+- [x] nfr-design-patterns / logical-components 生成
 - [ ] 承認ゲート
 
 ---
@@ -19,7 +19,7 @@ B) `LibraryScreenController` 内の private メソッドのみ（共通化しな
 
 X) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: A
 
 ---
 
@@ -31,7 +31,7 @@ B) すべてを EditorWindow 1 クラスに集約
 
 X) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: A
 
 ---
 
@@ -43,7 +43,7 @@ B) フィルタ変更のたびに常に選択解除
 
 X) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: A
 
 ---
 
