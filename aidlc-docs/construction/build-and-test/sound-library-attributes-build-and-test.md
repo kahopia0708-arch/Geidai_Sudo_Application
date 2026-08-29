@@ -56,9 +56,41 @@
 ### Editor 登録（US-LIB-04）
 1. **Geidai → Library → Curated Sound Catalog** を開く
 2. Catalog / Timbre 既定 SO が選択されていることを確認
-3. 「ついか」→ WAV 選択 → とりこむ → 必須属性入力 → ほぞん
+3. 「追加」→ WAV 選択 → 取り込み → 必須属性入力 → 保存
 4. ID／図鑑ナンバー重複時は保存されずメッセージが出る
-5. 参照中タグの削除が拒否される
+5. 音色タグは下節「音色タグのテスト」に従う
+
+### 音色タグのテスト
+
+#### A. 自動（EditMode）
+Test Runner で次を実行（フィルタ例: `CanRemoveTag` / `TimbreLabels` / `CuratedSoundValidation`）。
+
+| テスト | 確認内容 |
+|---|---|
+| `CanRemoveTag_False_When_Referenced` | 音が参照しているタグは削除不可、未参照は可 |
+| `ValidateForUpsert_*` | 存在しない `timbreTagId` や必須欠落は保存拒否 |
+| `LibraryFilterOptionsTests.TimbreLabels_*` | 「すべて」＋語彙表示名が並ぶ |
+| `LibraryQuery_Filter_By_Category_And_Timbre` | 音色 id で絞り込める |
+
+#### B. 手動（登録ウィンドウ右ペイン「音色タグ」）
+1. **Geidai → Library → Curated Sound Catalog** を開く（右＝音色語彙）
+2. **追加（未使用タグ）**
+   - 「タグ新規フォーム」→ `tag id` 例: `metal`、表示名例: `金属`、sort →「タグを保存」
+   - 一覧に増え、中央の「音色タグ *」ドロップダウンにも出る
+3. **編集**
+   - 一覧のタグ名をクリック → 下のフォームに載る → 表示名を変えて「タグを保存」
+4. **削除（参照あり＝拒否）**
+   - `bell` / `drum` はサンプル音が参照中 → 右の **×** を押すと「参照中のタグは削除できません」系のメッセージ
+5. **削除（参照なし＝成功）**
+   - 手順2で追加した未使用タグの **×** → 消え、`TimbreTagCatalog_Default` が更新される
+6. **音への割当**
+   - 左で音を選び、中央「音色タグ *」を変更 →「保存」
+   - Play Mode の図鑑で音色フィルタに反映されること（次節）
+
+#### C. 手動（プレイヤー図鑑）
+1. Play → おとずかん
+2. 音色ドロップダウンで `ベル` 等を選ぶ → 該当音だけ残る
+3. 「すべて」に戻す → 全件
 
 ### プレイヤー図鑑（US-LIB-01）
 1. Play → ホーム → **おとずかん**
