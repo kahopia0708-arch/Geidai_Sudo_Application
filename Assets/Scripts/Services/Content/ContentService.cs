@@ -13,6 +13,7 @@ namespace Geidai.Services.Content
     {
         private ThemeCatalog _catalog;
         private CuratedSoundCatalog _curatedCatalog;
+        private TimbreTagCatalog _timbreTagCatalog;
         private UnlockRulesCatalog _unlockRules;
         private readonly Func<DateTime> _now;
 
@@ -42,6 +43,18 @@ namespace Geidai.Services.Content
             if (_curatedCatalog == null)
                 return Result<CuratedSoundCatalog>.Fail(ResultCode.NotFound, "おとのずかんが まだ ないよ");
             return Result<CuratedSoundCatalog>.Ok(_curatedCatalog);
+        }
+
+        public void SetTimbreTagCatalog(TimbreTagCatalog catalog)
+        {
+            _timbreTagCatalog = catalog;
+        }
+
+        public Result<TimbreTagCatalog> GetTimbreTagCatalog()
+        {
+            if (_timbreTagCatalog == null)
+                return Result<TimbreTagCatalog>.Fail(ResultCode.NotFound, "おんしょくタグが まだ ないよ");
+            return Result<TimbreTagCatalog>.Ok(_timbreTagCatalog);
         }
 
         public void SetUnlockRules(UnlockRulesCatalog rules)

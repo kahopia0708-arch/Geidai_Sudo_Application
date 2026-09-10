@@ -4,6 +4,7 @@
     "references": [
         "Geidai.Common",
         "Geidai.Services",
+        "Geidai.Foundation",
         "UnityEngine.UI"
     ],
     "includePlatforms": [],

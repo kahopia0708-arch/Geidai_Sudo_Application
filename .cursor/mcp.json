@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "unity": {
+      "command": "/Users/maemoto/.unity/bin/unity",
+      "args": [
+        "mcp"
+      ]
+    }
+  }
+}

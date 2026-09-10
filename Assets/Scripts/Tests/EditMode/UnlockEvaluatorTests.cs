@@ -15,9 +15,14 @@ namespace Geidai.Tests.EditMode
             return new CuratedSoundDefinition
             {
                 id = id,
+                encyclopediaNumber = Mathf.Abs(id.GetHashCode() % 100000) + 1,
                 displayName = id,
+                timbreTagId = "bell",
+                category = "test",
                 clipRef = clip,
-                initiallyUnlocked = initial
+                initiallyUnlocked = initial,
+                allowPitchShift = true,
+                basePitchMidi = CuratedSoundDefinition.UnsetPitchMidi
             };
         }
 

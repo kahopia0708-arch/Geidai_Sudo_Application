@@ -45,10 +45,11 @@
 | U7/U8 コンパイル | Success（Error 0 / Warning 0） |
 | EditMode 全件（21） | 97 Pass / 0 Fail / 0 Skip |
 | Library/Create シーン配線 | 完了（MCP 静的検証 PASS） |
+| サウンドライブラリ属性（U7a/U7b） | コンパイル Error 0。関連 EditMode PASS（2026-08-29）。Play/Editor 手動確認待ち。詳細は `sound-library-attributes-build-and-test.md` |
 | Ready for Operations | 条件付き — Play Mode操作確認・本番素材サイズ計測が残 |
 
 ## 既知のフォローアップ
-1. Play Mode で Library/Create の操作確認
+1. Play Mode で Library/Create の操作確認（属性ワーク分は `sound-library-attributes-build-and-test.md` §3）
 2. 本番カタログ 50〜100 音＋サイズ計測
 3. Game1/Rec → `IProgressionService` 通知配線
 4. （任意）Profiler §E / ストア署名
@@ -65,4 +66,6 @@
 - `performance-test-instructions.md`（Phase C 指標）
 - `build-and-test-summary.md`（本ファイル）
 - **`phase-c-u7-u8-addendum.md`**（Phase C 正の差分）
+- **`sound-library-attributes-build-and-test.md`**（属性ワークストリーム U7a/U7b・2026-08-29）
 - `mcp-scene-wiring-summary.md` / `editmode-results.md` / `device-verification-checklist.md`
+- `home-ui-build-and-test.md`

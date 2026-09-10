@@ -11,13 +11,17 @@ namespace Geidai.Library
     /// </summary>
     public static class LibraryBootstrap
     {
-        public static void EnsureCatalogs(CuratedSoundCatalog curated, UnlockRulesCatalog rules)
+        public static void EnsureCatalogs(
+            CuratedSoundCatalog curated,
+            UnlockRulesCatalog rules,
+            TimbreTagCatalog timbres = null)
         {
             var content = ServiceRegistry.Resolve<IContentService>();
             if (content == null) return;
 
             if (curated != null) content.SetCuratedCatalog(curated);
             if (rules != null) content.SetUnlockRules(rules);
+            if (timbres != null) content.SetTimbreTagCatalog(timbres);
 
             var progression = ServiceRegistry.Resolve<IProgressionService>();
             progression?.ApplyInitialUnlocks();

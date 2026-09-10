@@ -4,6 +4,7 @@ using NUnit.Framework;
 using FsCheck;
 using Geidai.Common.Audio;
 using Geidai.Common.Models;
+using Geidai.Common.Utils;
 
 namespace Geidai.Tests.EditMode
 {
@@ -47,7 +48,8 @@ namespace Geidai.Tests.EditMode
         {
             Prop.ForAll<int>(seed =>
             {
-                int year = 1900 + (Math.Abs(seed) % 200);
+                int age = ValidationUtil.MinAge + (Math.Abs(seed) % (ValidationUtil.MaxAge - ValidationUtil.MinAge + 1));
+                int year = DateTime.Now.Year - age;
                 string nickname = "user" + (Math.Abs(seed) % 100000);
 
                 var p = new UserProfile(year, nickname);

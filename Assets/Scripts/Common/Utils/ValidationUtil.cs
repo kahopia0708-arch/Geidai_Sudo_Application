@@ -9,11 +9,15 @@ namespace Geidai.Common.Utils
     /// </summary>
     public static class ValidationUtil
     {
-        public const int MinBirthYear = 1900;
+        public const int MinBirthYear = 1925;
+        public const int MinAge = 3;
         public const int MinNicknameLength = 1;
         public const int MaxNicknameLength = 8;
 
-        /// <summary>生年（1900〜現在年）。</summary>
+        /// <summary>生年下限（1925）から算出する最大年齢。</summary>
+        public static int MaxAge => DateTime.Now.Year - MinBirthYear;
+
+        /// <summary>生年（1925〜現在年）。</summary>
         public static Result ValidateBirthYear(int birthYear)
         {
             int currentYear = DateTime.Now.Year;
@@ -21,6 +25,17 @@ namespace Geidai.Common.Utils
             {
                 return Result.Fail(ResultCode.ValidationError,
                     $"生年は {MinBirthYear}〜{currentYear} の範囲で入力してください。");
+            }
+            return Result.Ok();
+        }
+
+        /// <summary>年齢（3〜MaxAge さい）。</summary>
+        public static Result ValidateAge(int age)
+        {
+            if (age < MinAge || age > MaxAge)
+            {
+                return Result.Fail(ResultCode.ValidationError,
+                    $"なんさいか {MinAge}〜{MaxAge} さいの なかから えらんでね。");
             }
             return Result.Ok();
         }

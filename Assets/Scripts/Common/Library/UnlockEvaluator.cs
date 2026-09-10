@@ -60,7 +60,8 @@ namespace Geidai.Common.Library
 
         public static List<LibraryItemView> Project(
             IReadOnlyList<CuratedSoundDefinition> catalog,
-            UnlockState state)
+            UnlockState state,
+            TimbreTagCatalog timbreCatalog = null)
         {
             var result = new List<LibraryItemView>();
             if (catalog == null) return result;
@@ -70,7 +71,7 @@ namespace Geidai.Common.Library
             {
                 var def = catalog[i];
                 if (def == null || !def.IsValid) continue;
-                result.Add(LibraryItemView.From(def, s.Contains(def.id)));
+                result.Add(LibraryItemView.From(def, s.Contains(def.id), timbreCatalog));
             }
             return result;
         }

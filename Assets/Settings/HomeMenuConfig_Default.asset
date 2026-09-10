@@ -13,45 +13,27 @@ MonoBehaviour:
   m_Name: HomeMenuConfig_Default
   m_EditorClassIdentifier: Geidai.Foundation::Geidai.Foundation.HomeMenuConfig
   items:
-  - moduleId: 0
-    label: "\u308D\u304F\u304A\u3093"
-    iconKey: frog
+  - moduleId: 1
+    label: "\u304A\u3068\u3042\u3064\u3081"
+    iconKey: gather
     visible: 1
     enabled: 1
     order: 0
-  - moduleId: 1
-    label: "\u30B3\u30EC\u30AF\u30B7\u30E7\u30F3"
-    iconKey: lotus
+  - moduleId: 2
+    label: "\u304A\u3068\u3042\u305D\u3073"
+    iconKey: 
     visible: 1
     enabled: 1
     order: 1
-  - moduleId: 2
-    label: "\u30B2\u30FC\u30E0"
-    iconKey: tadpole
+  - moduleId: 6
+    label: "\u304A\u3068\u3064\u304F\u308A"
+    iconKey: create
     visible: 1
     enabled: 1
     order: 2
-  - moduleId: 3
-    label: "\u3053\u3093\u3057\u3085\u3046\u306E\u304A\u3060\u3044"
-    iconKey: theme
-    visible: 1
-    enabled: 1
-    order: 3
-  - moduleId: 4
-    label: "\u305B\u3063\u3066\u3044"
-    iconKey: gear
-    visible: 1
-    enabled: 1
-    order: 4
   - moduleId: 5
     label: "\u304A\u3068\u305A\u304B\u3093"
     iconKey: library
     visible: 1
     enabled: 1
-    order: 5
-  - moduleId: 6
-    label: "\u304A\u3068\u3065\u304F\u308A"
-    iconKey: create
-    visible: 1
-    enabled: 1
-    order: 6
+    order: 3

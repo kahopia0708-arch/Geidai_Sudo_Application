@@ -37,9 +37,43 @@ namespace Geidai.Common.Library
             return null;
         }
 
+        public bool ContainsId(string id) => FindById(id) != null;
+
+        public bool ContainsEncyclopediaNumber(int number, string exceptId = null)
+        {
+            if (number < 1 || items == null) return false;
+            for (int i = 0; i < items.Count; i++)
+            {
+                var item = items[i];
+                if (item == null || !item.IsValid) continue;
+                if (!string.IsNullOrEmpty(exceptId) && item.id == exceptId) continue;
+                if (item.encyclopediaNumber == number) return true;
+            }
+            return false;
+        }
+
         public void SetItems(IEnumerable<CuratedSoundDefinition> newItems)
         {
             items = newItems != null ? new List<CuratedSoundDefinition>(newItems) : new List<CuratedSoundDefinition>();
+        }
+
+        /// <summary>追加または id 一致の置換（Editor Upsert）。</summary>
+        public void Upsert(CuratedSoundDefinition definition, string replaceId = null)
+        {
+            if (definition == null) return;
+            if (items == null) items = new List<CuratedSoundDefinition>();
+
+            string key = !string.IsNullOrEmpty(replaceId) ? replaceId : definition.id;
+            for (int i = 0; i < items.Count; i++)
+            {
+                var existing = items[i];
+                if (existing != null && existing.id == key)
+                {
+                    items[i] = definition;
+                    return;
+                }
+            }
+            items.Add(definition);
         }
     }
 }
