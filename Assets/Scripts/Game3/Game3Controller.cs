@@ -6,9 +6,8 @@ using Geidai.Services;
 using Geidai.Services.Audio;
 using Geidai.Services.Navigation;
 using Geidai.Services.Storage;
-using Geidai.Services.Content;
 using UnityEngine;
-using static Codice.CM.WorkspaceServer.WorkspaceTreeDataStore;
+
 
 namespace Geidai.Game3
 {
@@ -26,7 +25,6 @@ namespace Geidai.Game3
         private INavigationService _nav;
 
         private AudioBuffer _baseBuffer;
-        private IContentService _content;
 
         private PitchOrderQuestion _currentQuestion;
 
