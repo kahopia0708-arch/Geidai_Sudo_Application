@@ -1,46 +1,63 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using System.Collections;
 
 namespace Geidai.Game3
 {
     [RequireComponent(typeof(RectTransform))]
+    [RequireComponent(typeof(CanvasGroup))]
     public class PitchItemDragHandler :
         MonoBehaviour,
         IBeginDragHandler,
         IDragHandler,
         IEndDragHandler
     {
-        [Header("Animation")]
-        [SerializeField] private float shiftDuration = 0.12f;
-        [SerializeField] private float dropDuration = 0.10f;
-
         private RectTransform _rect;
-        private RectTransform _container;
         private Canvas _canvas;
-        private HorizontalLayoutGroup _layoutGroup;
+        private CanvasGroup _canvasGroup;
+        private PitchItemView _itemView;
 
-        // ドラッグ開始時の各スロット位置
-        private readonly List<Vector2> _slotPositions = new();
+        [Header("Drag UI")]
+        // ドラッグ中・雲配置中の親]
+        [SerializeField] private RectTransform _dragRoot;
 
-        // ドラッグ中の自分以外のPitchItem
-        private readonly List<RectTransform> _otherItems = new();
+        // 最初の下段の置き場所
+        private RectTransform _homeParent;
+        private int _homeSiblingIndex;
 
-        // 各Itemを動かしているCoroutine
-        private readonly Dictionary<RectTransform, Coroutine> _moveCoroutines = new();
+        private Vector2 _homeAnchorMin;
+        private Vector2 _homeAnchorMax;
+        private Vector2 _homePivot;
+        private Vector2 _homeSizeDelta;
+        private Vector3 _homeLocalScale;
 
-        private int _targetIndex;
-        private float _dragY;
-        private bool _dragging;
+        // 現在置かれている雲
+        private CloudSlotView _currentSlot;
+
+        private bool _placedSuccessfully;
+
+        [Header("Wrong Answer Animation")]
+        [SerializeField] private float fallDuration = 0.25f;
+        [SerializeField] private float fallDistance = 120f;
+
+        private bool _returningHome;
 
         private void Awake()
         {
             _rect = GetComponent<RectTransform>();
-            _container = transform.parent as RectTransform;
             _canvas = GetComponentInParent<Canvas>();
-            _layoutGroup = GetComponentInParent<HorizontalLayoutGroup>();
+            _canvasGroup = GetComponent<CanvasGroup>();
+            _itemView = GetComponent<PitchItemView>();
+            // 最初の「下のカード置き場」を保存
+            _homeParent = transform.parent as RectTransform;
+            _homeSiblingIndex = transform.GetSiblingIndex();
+
+            _homeAnchorMin = _rect.anchorMin;
+            _homeAnchorMax = _rect.anchorMax;
+            _homePivot = _rect.pivot;
+            _homeSizeDelta = _rect.sizeDelta;
+            _homeLocalScale = _rect.localScale;
         }
 
         // --------------------------------------------------
@@ -48,50 +65,63 @@ namespace Geidai.Game3
         // --------------------------------------------------
         public void OnBeginDrag(PointerEventData eventData)
         {
-            if (_container == null || _layoutGroup == null)
+            if (_dragRoot == null)
                 return;
-            PitchItemView itemView = GetComponent<PitchItemView>();
-            if (itemView != null)
-                itemView.NotifyDragStarted();
-            // Layout Groupによる配置を確定させる
-            LayoutRebuilder.ForceRebuildLayoutImmediate(_container);
 
-            _slotPositions.Clear();
-            _otherItems.Clear();
-
-            var allItems = new List<RectTransform>();
-
-            // 現在の見た目順にPitchItemを取得
-            for (int i = 0; i < _container.childCount; i++)
+            // ドラッグ開始時にも音を鳴らす
+            if (_itemView != null)
             {
-                Transform child = _container.GetChild(i);
-
-                if (child.GetComponent<PitchItemView>() == null)
-                    continue;
-
-                if (child is RectTransform rect)
-                    allItems.Add(rect);
+                _itemView.NotifyDragStarted();
             }
 
-            // 現在の位置を「スロット」として保存
-            foreach (RectTransform item in allItems)
+            _placedSuccessfully = false;
+
+            // すでに雲に置かれていたなら、
+            // その雲を空けてからドラッグ開始
+            if (_currentSlot != null)
             {
-                _slotPositions.Add(item.anchoredPosition);
+                _currentSlot.Release(_itemView);
+                _currentSlot = null;
             }
 
-            _targetIndex = allItems.IndexOf(_rect);
+            MoveToDragRootPreservingVisual();
 
-            foreach (RectTransform item in allItems)
-            {
-                if (item != _rect)
-                    _otherItems.Add(item);
-            }
+            // ドラッグ中は自分自身がRaycastを邪魔しない
+            _canvasGroup.blocksRaycasts = false;
+        }
 
-            _dragY = _rect.anchoredPosition.y;
-            _dragging = true;
+        // --------------------------------------------------
+        // 見た目の大きさを維持したままCanvas直下へ移す
+        // --------------------------------------------------
+        private void MoveToDragRootPreservingVisual()
+        {
+            Vector3[] corners = new Vector3[4];
+            _rect.GetWorldCorners(corners);
 
-            // ドラッグ中だけ自動レイアウトを停止
-            _layoutGroup.enabled = false;
+            Vector3 worldCenter =
+                (corners[0] + corners[2]) * 0.5f;
+
+            Vector3 localBottomLeft =
+                _dragRoot.InverseTransformPoint(corners[0]);
+
+            Vector3 localTopRight =
+                _dragRoot.InverseTransformPoint(corners[2]);
+
+            Vector2 visualSize = new Vector2(
+                Mathf.Abs(localTopRight.x - localBottomLeft.x),
+                Mathf.Abs(localTopRight.y - localBottomLeft.y)
+            );
+
+            transform.SetParent(_dragRoot, false);
+            transform.SetAsLastSibling();
+
+            _rect.anchorMin = new Vector2(0.5f, 0.5f);
+            _rect.anchorMax = new Vector2(0.5f, 0.5f);
+            _rect.pivot = new Vector2(0.5f, 0.5f);
+
+            _rect.sizeDelta = visualSize;
+            _rect.localScale = Vector3.one;
+            _rect.position = worldCenter;
         }
 
         // --------------------------------------------------
@@ -99,143 +129,163 @@ namespace Geidai.Game3
         // --------------------------------------------------
         public void OnDrag(PointerEventData eventData)
         {
-            if (!_dragging || _canvas == null)
+            if (_dragRoot == null)
                 return;
 
-            // 選択したカードだけ横方向に動かす
-            _rect.anchoredPosition += new Vector2(
-                eventData.delta.x / _canvas.scaleFactor,
-                0f
-            );
-
-            // Y位置は固定
-            _rect.anchoredPosition = new Vector2(
-                _rect.anchoredPosition.x,
-                _dragY
-            );
-
-            int newIndex = FindNearestSlotIndex();
-
-            if (newIndex != _targetIndex)
+            if (RectTransformUtility.ScreenPointToWorldPointInRectangle(
+                _dragRoot,
+                eventData.position,
+                eventData.pressEventCamera,
+                out Vector3 worldPoint))
             {
-                _targetIndex = newIndex;
-
-                // 他のカードを新しい位置へスッと移動
-                AnimateOtherItems();
+                _rect.position = worldPoint;
             }
         }
 
         // --------------------------------------------------
-        // 現在一番近いスロットを探す
+        // CloudSlotへ配置
         // --------------------------------------------------
-        private int FindNearestSlotIndex()
+        public bool TryPlaceInSlot(CloudSlotView slot)
         {
-            int nearestIndex = 0;
-            float nearestDistance = float.MaxValue;
+            if (slot == null || _itemView == null)
+                return false;
 
-            for (int i = 0; i < _slotPositions.Count; i++)
+            // その雲にすでに別カードがあったら、
+            // 既存カードを下へ戻す
+            PitchItemView existingItem = slot.Occupant;
+
+            if (existingItem != null &&
+                existingItem != _itemView)
             {
-                float distance = Mathf.Abs(
-                    _rect.anchoredPosition.x -
-                    _slotPositions[i].x
-                );
+                PitchItemDragHandler existingDrag =
+                    existingItem.GetComponent<PitchItemDragHandler>();
 
-                if (distance < nearestDistance)
+                if (existingDrag != null)
                 {
-                    nearestDistance = distance;
-                    nearestIndex = i;
+                    existingDrag.SendHome();
+                }
+                else
+                {
+                    slot.Release(existingItem);
                 }
             }
 
-            return nearestIndex;
-        }
-
-        // --------------------------------------------------
-        // ドラッグしていないカードを移動
-        // --------------------------------------------------
-        private void AnimateOtherItems()
-        {
-            for (int i = 0; i < _otherItems.Count; i++)
+            // 念のため以前の雲を空ける
+            if (_currentSlot != null &&
+                _currentSlot != slot)
             {
-                RectTransform item = _otherItems[i];
-
-                // ドラッグ中のカードが入る場所を1個空ける
-                int slotIndex =
-                    i < _targetIndex
-                        ? i
-                        : i + 1;
-
-                Vector2 targetPosition =
-                    _slotPositions[slotIndex];
-
-                StartMoveAnimation(
-                    item,
-                    targetPosition,
-                    shiftDuration
-                );
-            }
-        }
-
-        // --------------------------------------------------
-        // 移動Animation開始
-        // --------------------------------------------------
-        private void StartMoveAnimation(
-            RectTransform item,
-            Vector2 target,
-            float duration)
-        {
-            if (_moveCoroutines.TryGetValue(item, out Coroutine current))
-            {
-                if (current != null)
-                    StopCoroutine(current);
+                _currentSlot.Release(_itemView);
             }
 
-            Coroutine routine =
-                StartCoroutine(
-                    MoveTo(item, target, duration)
-                );
+            slot.Accept(_itemView);
+            _currentSlot = slot;
 
-            _moveCoroutines[item] = routine;
+            // CloudSlotの子にはしない。
+            // Canvas上のままCloudSlotの中心へ移動する。
+            RectTransform slotRect =
+                slot.GetComponent<RectTransform>();
+
+            if (slotRect == null)
+                return false;
+
+            Vector3 slotCenter =
+                slotRect.TransformPoint(slotRect.rect.center);
+
+            _rect.position = slotCenter;
+
+            transform.SetAsLastSibling();
+
+            _placedSuccessfully = true;
+
+            return true;
         }
 
         // --------------------------------------------------
-        // スッと移動するAnimation
+        // 少し重なっているCloudSlotを探す
         // --------------------------------------------------
-        private IEnumerator MoveTo(
-            RectTransform item,
-            Vector2 target,
-            float duration)
+        private CloudSlotView FindOverlappingSlot()
         {
-            Vector2 start = item.anchoredPosition;
+            CloudSlotView[] slots =
+                FindObjectsByType<CloudSlotView>();
 
-            float elapsed = 0f;
+            CloudSlotView bestSlot = null;
+            float bestOverlap = 0f;
 
-            while (elapsed < duration)
+            Rect itemRect = GetWorldRect(_rect);
+
+            foreach (CloudSlotView slot in slots)
             {
-                elapsed += Time.unscaledDeltaTime;
+                if (!slot.gameObject.activeInHierarchy)
+                    continue;
 
-                float t = Mathf.Clamp01(
-                    elapsed / duration
-                );
+                RectTransform slotRect =
+                    slot.GetComponent<RectTransform>();
 
-                // Ease Out Cubic
-                // 最初は速く、最後は柔らかく止まる
-                float eased =
-                    1f - Mathf.Pow(1f - t, 3f);
+                if (slotRect == null)
+                    continue;
 
-                item.anchoredPosition =
-                    Vector2.LerpUnclamped(
-                        start,
-                        target,
-                        eased
+                Rect cloudRect =
+                    GetWorldRect(slotRect);
+
+                float overlap =
+                    CalculateOverlapArea(
+                        itemRect,
+                        cloudRect
                     );
 
-                yield return null;
+                if (overlap > bestOverlap)
+                {
+                    bestOverlap = overlap;
+                    bestSlot = slot;
+                }
             }
 
-            item.anchoredPosition = target;
+            float itemArea =
+                itemRect.width * itemRect.height;
 
-            _moveCoroutines.Remove(item);
+            if (itemArea <= 0f)
+                return null;
+
+            float overlapRatio =
+                bestOverlap / itemArea;
+
+            // 15%以上重なっていれば吸着
+            return overlapRatio >= 0.15f
+                ? bestSlot
+                : null;
+        }
+
+        private static Rect GetWorldRect(
+            RectTransform rectTransform)
+        {
+            Vector3[] corners = new Vector3[4];
+            rectTransform.GetWorldCorners(corners);
+
+            return Rect.MinMaxRect(
+                corners[0].x,
+                corners[0].y,
+                corners[2].x,
+                corners[2].y
+            );
+        }
+
+        private static float CalculateOverlapArea(
+            Rect a,
+            Rect b)
+        {
+            float width = Mathf.Max(
+                0f,
+                Mathf.Min(a.xMax, b.xMax) -
+                Mathf.Max(a.xMin, b.xMin)
+            );
+
+            float height = Mathf.Max(
+                0f,
+                Mathf.Min(a.yMax, b.yMax) -
+                Mathf.Max(a.yMin, b.yMin)
+            );
+
+            return width * height;
         }
 
         // --------------------------------------------------
@@ -243,88 +293,135 @@ namespace Geidai.Game3
         // --------------------------------------------------
         public void OnEndDrag(PointerEventData eventData)
         {
-            if (!_dragging)
-                return;
+            _canvasGroup.blocksRaycasts = true;
 
-            _dragging = false;
+            // OnDropが来なくても、
+            // 雲と15%以上重なっていれば吸着
+            if (!_placedSuccessfully)
+            {
+                CloudSlotView overlappingSlot =
+                    FindOverlappingSlot();
 
-            StartCoroutine(FinishDrop());
+                if (overlappingSlot != null)
+                {
+                    TryPlaceInSlot(overlappingSlot);
+                }
+            }
+
+            // どの雲にも置かなかった
+            // → 下の元の位置へ戻す
+            if (!_placedSuccessfully)
+            {
+                SendHome();
+            }
+
+            if (_itemView != null)
+            {
+                _itemView.NotifyDragFinished();
+                _itemView.NotifyOrderChanged();
+            }
         }
 
         // --------------------------------------------------
-        // 最終位置へ収める
+        // 下のカード置き場へ戻す
         // --------------------------------------------------
-        private IEnumerator FinishDrop()
+        public void SendHome()
         {
-            // 掴んでいたカードも最後のスロットへスッと移動
-            Vector2 start = _rect.anchoredPosition;
-            Vector2 target = _slotPositions[_targetIndex];
+            if (_currentSlot != null)
+            {
+                _currentSlot.Release(_itemView);
+                _currentSlot = null;
+            }
+
+            if (_homeParent == null)
+                return;
+
+            transform.SetParent(_homeParent, false);
+
+            _rect.anchorMin = _homeAnchorMin;
+            _rect.anchorMax = _homeAnchorMax;
+            _rect.pivot = _homePivot;
+            _rect.sizeDelta = _homeSizeDelta;
+            _rect.localScale = _homeLocalScale;
+
+            transform.SetSiblingIndex(_homeSiblingIndex);
+
+            LayoutRebuilder.ForceRebuildLayoutImmediate(
+                _homeParent
+            );
+
+            _placedSuccessfully = false;
+        }
+
+        public void FallAndSendHome()
+        {
+            if (_returningHome)
+                return;
+
+            StartCoroutine(FallAndSendHomeCoroutine());
+        }
+
+        private IEnumerator FallAndSendHomeCoroutine()
+        {
+            _returningHome = true;
+            _canvasGroup.blocksRaycasts = false;
+
+            // 今入っている雲を空ける
+            if (_currentSlot != null)
+            {
+                _currentSlot.Release(_itemView);
+                _currentSlot = null;
+            }
+
+            // 現在位置
+            Vector3 startPosition = _rect.position;
+
+            // 元のPitchItemContainerの「高さ」だけ取得
+            Vector3 homeCenter =
+                _homeParent.TransformPoint(
+                    _homeParent.rect.center
+                );
+
+            // Xは現在位置のまま
+            // Yだけ下段の高さへ
+            Vector3 targetPosition = new Vector3(
+                startPosition.x,
+                homeCenter.y,
+                startPosition.z
+            );
 
             float elapsed = 0f;
 
-            while (elapsed < dropDuration)
+            while (elapsed < fallDuration)
             {
                 elapsed += Time.unscaledDeltaTime;
 
                 float t = Mathf.Clamp01(
-                    elapsed / dropDuration
+                    elapsed / fallDuration
                 );
 
-                float eased =
-                    1f - Mathf.Pow(1f - t, 3f);
+                // 重力っぽく加速
+                float eased = t * t;
 
-                _rect.anchoredPosition =
-                    Vector2.LerpUnclamped(
-                        start,
-                        target,
+                _rect.position =
+                    Vector3.LerpUnclamped(
+                        startPosition,
+                        targetPosition,
                         eased
                     );
 
                 yield return null;
             }
 
-            _rect.anchoredPosition = target;
+            _rect.position = targetPosition;
 
-            // 他の移動Coroutineが残っていれば終了
-            foreach (Coroutine routine in _moveCoroutines.Values)
-            {
-                if (routine != null)
-                    StopCoroutine(routine);
-            }
+            // ★ここでは SendHome() しない
+            // 落ちた場所にそのまま残す
 
-            _moveCoroutines.Clear();
+            _placedSuccessfully = false;
 
-            // 最終的なHierarchy順を作る
-            var finalOrder =
-                new List<RectTransform>(_otherItems);
-
-            finalOrder.Insert(
-                _targetIndex,
-                _rect
-            );
-
-            for (int i = 0; i < finalOrder.Count; i++)
-            {
-                finalOrder[i].SetSiblingIndex(i);
-            }
-
-            // 再びHorizontal Layout Groupに任せる
-            if (_layoutGroup != null)
-            {
-                _layoutGroup.enabled = true;
-
-                LayoutRebuilder.ForceRebuildLayoutImmediate(
-                    _container
-                );
-            }
-            //並び替え完了後に正誤判定
-            PitchItemView itemView = GetComponent<PitchItemView>();
-
-            if (itemView != null)
-            {
-                itemView.NotifyOrderChanged();
-                itemView.NotifyDragFinished();
-            }
+            _canvasGroup.blocksRaycasts = true;
+            _returningHome = false;
         }
     }
 }

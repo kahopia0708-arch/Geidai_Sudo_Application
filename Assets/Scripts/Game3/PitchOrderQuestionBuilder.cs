@@ -10,64 +10,82 @@ namespace Geidai.Game3
             int centsStep,
             int seed)
         {
-            // Game3仕様：2〜4音
-            choiceCount = Math.Max(2, Math.Min(4, choiceCount));
-
-            // 0以下は困るので最低1cent
+            choiceCount = Math.Clamp(choiceCount, 2, 4);
             centsStep = Math.Max(1, centsStep);
 
-            var rng = new Random(seed);
+            List<int> cents = BuildPitchValues(
+                choiceCount,
+                centsStep
+            );
 
-            // ──────────────────────
-            // 1. 音高を作る
-            // ──────────────────────
+            Shuffle(cents, seed);
 
-            var cents = new List<int>();
-
-            double center = (choiceCount - 1) / 2.0;
-
-            for (int i = 0; i < choiceCount; i++)
-            {
-                int value =
-                    (int)Math.Round((i - center) * centsStep);
-
-                cents.Add(value);
-            }
-
-            // ──────────────────────
-            // 2. 高い順 / 低い順をランダム決定
-            // ──────────────────────
-
-            PitchOrderDirection direction =
-                rng.Next(0, 2) == 0
-                    ? PitchOrderDirection.Ascending
-                    : PitchOrderDirection.Descending;
-
-            // 3. 最初の並びをシャッフル
-            for (int i = cents.Count - 1; i > 0; i--)
-            {
-                int j = rng.Next(0, i + 1);
-
-                (cents[i], cents[j]) =
-                    (cents[j], cents[i]);
-            }
-
-            // 4. 最初から正解になっていたら崩す
-            bool alreadyCorrect =
-                direction == PitchOrderDirection.Ascending
-                    ? PitchOrderJudge.IsAscending(cents)
-                    : PitchOrderJudge.IsDescending(cents);
-
-            if (alreadyCorrect)
+            // 最初から正解状態になるのを防ぐ
+            if (PitchOrderJudge.IsAscending(cents))
             {
                 (cents[0], cents[1]) =
                     (cents[1], cents[0]);
             }
 
+            // このゲームでは常に低い → 高い順に並べる
             return new PitchOrderQuestion(
-                direction,
+                PitchOrderDirection.Ascending,
                 cents
             );
+        }
+
+        private static List<int> BuildPitchValues(
+            int choiceCount,
+            int step)
+        {
+            switch (choiceCount)
+            {
+                case 2:
+                    return new List<int>
+                    {
+                        0,
+                        step
+                    };
+
+                case 3:
+                    return new List<int>
+                    {
+                        -step,
+                        0,
+                        step
+                    };
+
+                case 4:
+                    return new List<int>
+                    {
+                        -step,
+                        0,
+                        step,
+                        step * 2
+                    };
+
+                default:
+                    return new List<int>
+                    {
+                        0,
+                        step
+                    };
+            }
+        }
+
+        private static void Shuffle(
+            List<int> values,
+            int seed)
+        {
+            Random random = new Random(seed);
+
+            for (int i = values.Count - 1; i > 0; i--)
+            {
+                int j = random.Next(i + 1);
+
+                (values[i], values[j]) =
+                    (values[j], values[i]);
+            }
         }
     }
 }

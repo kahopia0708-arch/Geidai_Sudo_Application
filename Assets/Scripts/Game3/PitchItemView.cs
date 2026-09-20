@@ -33,6 +33,10 @@ namespace Geidai.Game3
         /// </summary>
         public void NotifyDragStarted()
         {
+            if (_controller != null)
+            {
+                _controller.PreviewPitch(_cents);
+            }
             _suppressClick = true;
         }
 
