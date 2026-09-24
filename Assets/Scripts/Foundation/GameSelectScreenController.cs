@@ -14,24 +14,31 @@ namespace Geidai.Foundation
     public class GameSelectScreenController : ScreenRootBase
     {
         [SerializeField] private Button game1Button;
+        [SerializeField] private Button game3Button;
         [SerializeField] private Button backButton;
         [SerializeField] private ErrorPresenter errorPresenter;
 
         private void Awake()
         {
             if (game1Button != null) game1Button.onClick.AddListener(GoGame1);
+            if (game3Button != null) game3Button.onClick.AddListener(GoGame3);
             if (backButton != null) backButton.onClick.AddListener(GoHome);
         }
 
         private void OnDestroy()
         {
             if (game1Button != null) game1Button.onClick.RemoveListener(GoGame1);
+            if (game3Button != null) game3Button.onClick.RemoveListener(GoGame3);
             if (backButton != null) backButton.onClick.RemoveListener(GoHome);
         }
 
         private void GoGame1()
         {
             Navigate(SceneId.Game1);
+        }
+        private void GoGame3()
+        {
+            Navigate(SceneId.Game3);
         }
 
         private void GoHome()

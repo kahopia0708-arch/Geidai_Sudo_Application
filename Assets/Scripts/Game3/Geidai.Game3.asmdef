@@ -1,0 +1,18 @@
+{
+    "name": "Geidai.Game3",
+    "rootNamespace": "",
+    "references": [
+        "GUID:03b15ec4658784efc8eccc0567951858",
+        "GUID:c8579ca135065431da571cb5db1f4f1d",
+        "GUID:2bafac87e7f4b9b418d9448d219b01ab"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
