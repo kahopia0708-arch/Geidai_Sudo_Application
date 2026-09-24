@@ -1,5 +1,4 @@
 using Geidai.Common.Models;
-using Geidai.Common.Results;
 using Geidai.Common.UI;
 using Geidai.Services;
 using Geidai.Services.Audio;
@@ -491,6 +490,11 @@ namespace Geidai.Game3
 
         public void BackToDifficultySelection()
         {
+            // 正誤表示などの処理を止める
+            StopAllCoroutines();
+            _isResolvingAnswer = false;
+            HideResult();
+
             // 再生中の音を止める
             if (_pitch != null)
             {
@@ -529,11 +533,23 @@ namespace Geidai.Game3
         }
         public override void OnBackPressed()
         {
+            // ゲーム中なら、まず難易度選択へ戻る
+            if (gamePanel != null && gamePanel.activeSelf)
+            {
+                BackToDifficultySelection();
+                return;
+            }
+
+            // 難易度選択画面なら、ゲーム選択画面へ戻る
             if (_pitch != null)
+            {
                 _pitch.Stop();
+            }
 
             if (_nav == null)
+            {
                 _nav = ServiceRegistry.Resolve<INavigationService>();
+            }
 
             if (_nav == null)
             {
@@ -541,14 +557,7 @@ namespace Geidai.Game3
                 return;
             }
 
-            Result result = _nav.GoTo(SceneId.Home);
-
-            if (!result.IsSuccess)
-            {
-                UnityEngine.Debug.LogWarning(
-                    $"Game3: Homeへの遷移に失敗しました: {result}"
-                );
-            }
+            _nav.GoTo(SceneId.GameSelect);
         }
     }
 }
