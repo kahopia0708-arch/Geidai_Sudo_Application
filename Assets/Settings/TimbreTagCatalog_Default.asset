@@ -18,13 +18,25 @@ MonoBehaviour:
     sortOrder: 0
   - id: drum
     displayName: "\u30C9\u30E9\u30E0"
-    sortOrder: 1
+    sortOrder: 200
   - id: environment
-    displayName: "\u74B0\u5883\u97F3"
+    displayName: "\u307F\u306E\u307E\u308F\u308A\u306E\u3082\u306E"
     sortOrder: 2
-  - id: voice
-    displayName: "\u58F0"
+  - id: clochette
+    displayName: "\u3059\u305A"
     sortOrder: 3
   - id: other
     displayName: "\u305D\u306E\u307B\u304B"
     sortOrder: 99
+  - id: jouet
+    displayName: "\u304A\u3082\u3061\u3083"
+    sortOrder: 4
+  - id: rare
+    displayName: "\u3081\u305A\u3089\u3057\u3044\u697D\u5668"
+    sortOrder: 5
+  - id: chime
+    displayName: "\u30C1\u30E3\u30A4\u30E0"
+    sortOrder: 6
+  - id: prayer
+    displayName: "\u304A\u3044\u306E\u308A"
+    sortOrder: 7

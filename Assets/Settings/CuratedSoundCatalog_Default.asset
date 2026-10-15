@@ -42,7 +42,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Geidai.Common::Geidai.Common.Library.CuratedSoundCatalog
   items:
   - id: demo_bell
-    encyclopediaNumber: 1
+    encyclopediaNumber: 200
     displayName: "\u30D9\u30EB"
     reading: 
     description: "\u8A66\u8074\u7528\u306E\u30D9\u30EB\u97F3"
@@ -58,7 +58,7 @@ MonoBehaviour:
     clipRef: {fileID: 8300000, guid: 7084a0aa1c82242e6b159ea85aa39d4d, type: 3}
     initiallyUnlocked: 1
   - id: demo_drum
-    encyclopediaNumber: 2
+    encyclopediaNumber: 201
     displayName: "\u30C9\u30E9\u30E0"
     reading: 
     description: "\u30DF\u30AD\u30B7\u30F3\u30B0\u8A66\u8074\u7528\u306E\u30C9\u30E9\u30E0\u97F3"
@@ -72,4 +72,276 @@ MonoBehaviour:
     difficultyTags: []
     category: "\u30C6\u30B9\u30C8"
     clipRef: {fileID: 8300000, guid: eeeadc4f43e41479fa0152f46f8b26a1, type: 3}
+    initiallyUnlocked: 1
+  - id: Bell_01
+    encyclopediaNumber: 1
+    displayName: "\u30C1\u30D9\u30C3\u30C8\u306E\u30D9\u30EB"
+    reading: "\u30C1\u30D9\u30C3\u30C8\u306E\u30D9\u30EB"
+    description: "\u30AC\u30F3\u30BF\u30FC\u3068\u3082\u3088\u3070\u308C\u308B\u3002\u30C1\u30D9\u30C3\u30C8\u306E\u304A\u307C\u3046\u3055\u3093\u304C\u3001\u304A\u3044\u306E\u308A\u3092\u3059\u308B\u3068\u304D\u306B\u3064\u304B\u3046\u3002"
+    imageRef: {fileID: -7493964323910357747, guid: 1fbb1e7a978b24da89581931a7c09383, type: 3}
+    timbreTagId: bell
+    basePitchMidi: 69
+    loudnessBand: 0
+    durationBand: 3
+    pairKey: Bell
+    allowPitchShift: 1
+    difficultyTags: []
+    category: "\u91D1\u5C5E"
+    clipRef: {fileID: 8300000, guid: d21c2c2f9e14f4de884c53d4577f48b0, type: 3}
+    initiallyUnlocked: 1
+  - id: Clochette_01
+    encyclopediaNumber: 2
+    displayName: "\u3088\u304F\u3042\u308B\u9234"
+    reading: "\u3088\u304F\u3042\u308B\u3059\u305A"
+    description: "\u3088\u304F\u307F\u308B\u3001\u3075\u3064\u3046\u306E\u3059\u305A\u3002"
+    imageRef: {fileID: 7010803244233925146, guid: dd0d564ea9df24d3692efe29bd0be982, type: 3}
+    timbreTagId: bell
+    basePitchMidi: 67
+    loudnessBand: 0
+    durationBand: 1
+    pairKey: Clochette
+    allowPitchShift: 1
+    difficultyTags: []
+    category: "\u91D1\u5C5E"
+    clipRef: {fileID: 8300000, guid: c4c6754208001402aaef1289a20c35ac, type: 3}
+    initiallyUnlocked: 1
+  - id: FuwaFuwa_01
+    encyclopediaNumber: 3
+    displayName: "\u30B7\u30F3\u30AE\u30F3\u30B0\u30DC\u30A6\u30EB"
+    reading: 
+    description: "\u3086\u3073\u304C\u3075\u308C\u306A\u3044\u3088\u3046\u306B\u3001\u624B\u306E\u3072\u3089\u306E\u4E0A\u306B\u30DC\u30A6\u30EB\u3092\u304A\u3044\u3066\u3001\u30DC\u30A6\u30EB\u306E\u3075\u3061\u3092\u6728\u306E\u307C\u3046\u3067\u3053\u3059\u308B\u3068\u97F3\u304C\u306A\u308B\u3002"
+    imageRef: {fileID: -3258001512686320773, guid: b9d4d6afd69204acc92863e1e83b3c5f, type: 3}
+    timbreTagId: prayer
+    basePitchMidi: 62
+    loudnessBand: 2
+    durationBand: 3
+    pairKey: FuwaFuwa, Bell
+    allowPitchShift: 1
+    difficultyTags: []
+    category: "\u91D1\u5C5E\u3001\u30DC\u30A6\u30EB"
+    clipRef: {fileID: 8300000, guid: 7cbe985c64e494e60a8e255cb13c3552, type: 3}
+    initiallyUnlocked: 1
+  - id: Funny_01
+    encyclopediaNumber: 4
+    displayName: "\u30D5\u30EC\u30AF\u30B5\u30C8\u30FC\u30F3"
+    reading: 
+    description: "1920\u5E74\u306B\u30A4\u30AE\u30EA\u30B9\u3067\u3064\u304F\u3089\u308C\u305F\u3002\u30A2\u30CB\u30E1\u306E\u4E2D\u3067\u3064\u304B\u308F\u308C\u308B\u3053\u3068\u3082\u3042\u308B\u3002"
+    imageRef: {fileID: -1169740973330394062, guid: ea575df6bafbe4a26add39dc6da1fc4c, type: 3}
+    timbreTagId: rare
+    basePitchMidi: -1
+    loudnessBand: 0
+    durationBand: 0
+    pairKey: Funny
+    allowPitchShift: 0
+    difficultyTags: []
+    category: "\u91D1\u5C5E"
+    clipRef: {fileID: 8300000, guid: 1119e4194be56468d8d58b2b3c314aa1, type: 3}
+    initiallyUnlocked: 1
+  - id: Bell_02
+    encyclopediaNumber: 5
+    displayName: "\u3058\u304D\u306E\u30D9\u30EB"
+    reading: 
+    description: "\u30B3\u30C3\u30D7\u306E\u3088\u3046\u306A\u305D\u3056\u3044\u3067\u3067\u304D\u305F\u30D9\u30EB\u3002\u30A2\u30F3\u30C6\u30A3\u30FC\u30AF\u3084\u3056\u3063\u304B\u3092\u3046\u3063\u3066\u3044\u308B\u304A\u307F\u305B\u3067\u307F\u304B\u3051\u308B\u3002"
+    imageRef: {fileID: 4376603877981877477, guid: 7947bd48e39cf47b6b642be253e2b99b, type: 3}
+    timbreTagId: bell
+    basePitchMidi: 76
+    loudnessBand: 2
+    durationBand: 2
+    pairKey: Bell
+    allowPitchShift: 1
+    difficultyTags: []
+    category: "\u3058\u304D"
+    clipRef: {fileID: 8300000, guid: c5e866defd7f440c98c168104633f272, type: 3}
+    initiallyUnlocked: 1
+  - id: Clochette_02
+    encyclopediaNumber: 6
+    displayName: "\u3057\u3093\u3061\u3085\u3046\u306E\u8DB3\u3059\u305A"
+    reading: 
+    description: "\u3057\u3093\u3061\u3085\u3046\u3067\u3067\u304D\u305F\u3059\u305A\u304C\u3044\u304F\u3064\u3082\u3064\u3089\u306A\u3063\u305F\u3082\u306E\u3002\u30D0\u30EA\u306E\u304A\u3069\u308A\u3067\u3001\u8DB3\u3084\u3066\u304F\u3073\u306B\u307E\u304B\u308C\u308B\u3002"
+    imageRef: {fileID: 6651673845214130001, guid: 4275ea3d68cd448719dffc4db780a2c2, type: 3}
+    timbreTagId: clochette
+    basePitchMidi: -1
+    loudnessBand: 0
+    durationBand: 0
+    pairKey: Clochette, Chime
+    allowPitchShift: 0
+    difficultyTags: []
+    category: "\u91D1\u5C5E"
+    clipRef: {fileID: 8300000, guid: b246761a4beb849b18c15feb47afbbfa, type: 3}
+    initiallyUnlocked: 1
+  - id: Crying_01
+    encyclopediaNumber: 7
+    displayName: "\u3073\u3063\u304F\u308A\u30C1\u30AD\u30F3\uFF08\u30D5\u30EC\u30FC\u30EB\uFF09"
+    reading: 
+    description: "\u304A\u306A\u304B\u3092\u304A\u3059\u3068\u3001\u306B\u308F\u3068\u308A\u306E\u3088\u3046\u306A\u3053\u3048\u3092\u51FA\u3059\u304A\u3082\u3061\u3083\u3002"
+    imageRef: {fileID: -8989639820833222140, guid: fd5c7fd22caee4da388e539b97ac161d, type: 3}
+    timbreTagId: jouet
+    basePitchMidi: -1
+    loudnessBand: 2
+    durationBand: 1
+    pairKey: Crying, jouet
+    allowPitchShift: 1
+    difficultyTags: []
+    category: "\u304A\u3082\u3061\u3083"
+    clipRef: {fileID: 8300000, guid: f945402170f9941afaa77a7ea39c0479, type: 3}
+    initiallyUnlocked: 1
+  - id: Clochette_03
+    encyclopediaNumber: 8
+    displayName: "\u3064\u3061\u3059\u305A"
+    reading: 
+    description: "\u304A\u307F\u3084\u3052\u3084\u3055\u3093\u3067\u3046\u3063\u3066\u3044\u308B\u3059\u305A\u3002"
+    imageRef: {fileID: -1923004107511984543, guid: 739b544d63e58433eb404b4397d5a0c6, type: 3}
+    timbreTagId: clochette
+    basePitchMidi: 68
+    loudnessBand: 2
+    durationBand: 2
+    pairKey: Clochette
+    allowPitchShift: 1
+    difficultyTags: []
+    category: "\u306D\u3093\u3069\u3001\u3068\u3046\u304D"
+    clipRef: {fileID: 8300000, guid: 83b73228115904b5dbf21b1e2069fb09, type: 3}
+    initiallyUnlocked: 1
+  - id: Bell_03
+    encyclopediaNumber: 9
+    displayName: "\u30A2\u30EB\u30DF\u306E\u30D9\u30EB"
+    reading: 
+    description: "\u304A\u3082\u3061\u3083\u3084\u3055\u3093\u3067\u3046\u3063\u3066\u3044\u308B\u3088\u3046\u306A\u5C0F\u3055\u3044\u30D9\u30EB\u3002\u30AF\u30EA\u30B9\u30DE\u30B9\u306B\u305F\u304F\u3055\u3093\u3046\u3089\u308C\u3066\u3044\u308B\u3002"
+    imageRef: {fileID: -4846266241203679823, guid: 425222902e95d417a9b16ae811d858c8, type: 3}
+    timbreTagId: bell
+    basePitchMidi: 76
+    loudnessBand: 1
+    durationBand: 2
+    pairKey: Bell
+    allowPitchShift: 1
+    difficultyTags: []
+    category: "\u30A2\u30EB\u30DF"
+    clipRef: {fileID: 8300000, guid: 11daabbd3fdde40859b385c5049a3271, type: 3}
+    initiallyUnlocked: 1
+  - id: Fuwafuwa_02
+    encyclopediaNumber: 10
+    displayName: "\u30DD\u30C3\u30D7\u30C1\u30E5\u30FC\u30D6"
+    reading: 
+    description: "\u30DD\u30C3\u30D7\u30C1\u30E5\u30FC\u30D6\u3092\u306E\u3070\u3057\u3066\u3001\u4E0A\u306B\u3080\u304B\u3063\u3066\u5186\u3092\u3048\u304C\u304F\u3088\u3046\u306B\u3075\u308A\u307E\u308F\u3059\u3068\u306A\u308B\u3002\u304A\u3082\u3061\u3083\u3084\u3055\u3093\u3084\u3001100\u5186\u30B7\u30E7\u30C3\u30D7\u3067\u3046\u3063\u3066\u3044\u308B\u3002"
+    imageRef: {fileID: 5912774808915128100, guid: 24c0adfe706c943cd8a91404b9175976, type: 3}
+    timbreTagId: jouet
+    basePitchMidi: 76
+    loudnessBand: 1
+    durationBand: 2
+    pairKey: Fuwafuwa
+    allowPitchShift: 1
+    difficultyTags: []
+    category: "\u304A\u3082\u3061\u3083"
+    clipRef: {fileID: 8300000, guid: 3dea8f0e291c44079859f73d5eef614f, type: 3}
+    initiallyUnlocked: 1
+  - id: Poon_11
+    encyclopediaNumber: 11
+    displayName: "\u3059\u3044\u306F\u3093\u304D\u306E\u304A\u304B\u307E"
+    reading: 
+    description: "\u3059\u3044\u306F\u3093\u304D\u306E\u304A\u304B\u307E\u3002\u305F\u305F\u304F\u3082\u306E\u3067\u97F3\u304C\u304B\u308F\u308B\u3002"
+    imageRef: {fileID: -301095153560930422, guid: 5c562f5bc63fd4fe68493211ca0232fa, type: 3}
+    timbreTagId: environment
+    basePitchMidi: 68
+    loudnessBand: 1
+    durationBand: 3
+    pairKey: Poon
+    allowPitchShift: 1
+    difficultyTags: []
+    category: "\u91D1\u5C5E"
+    clipRef: {fileID: 8300000, guid: 2c0e2d167cefa408faa15ba47dcf717f, type: 3}
+    initiallyUnlocked: 1
+  - id: Clochette_04
+    encyclopediaNumber: 12
+    displayName: "\u30A2\u30CB\u30DE\u30EB\u30D9\u30EB"
+    reading: 
+    description: "\u30CD\u30D1\u30FC\u30EB\u3084\u30C1\u30D9\u30C3\u30C8\u3067\u3001\u3069\u3046\u3076\u3064\u306B\u3064\u3051\u3089\u308C\u3066\u3044\u308B\u3059\u305A\u3002"
+    imageRef: {fileID: 5912774808915128100, guid: 24c0adfe706c943cd8a91404b9175976, type: 3}
+    timbreTagId: clochette
+    basePitchMidi: -1
+    loudnessBand: 2
+    durationBand: 2
+    pairKey: Clochette
+    allowPitchShift: 1
+    difficultyTags: []
+    category: "\u91D1\u5C5E"
+    clipRef: {fileID: 8300000, guid: 35609e0d4737348078b9169d53ce7032, type: 3}
+    initiallyUnlocked: 1
+  - id: Chime_01
+    encyclopediaNumber: 14
+    displayName: "\u30C9\u30A2\u30C1\u30E3\u30A4\u30E0"
+    reading: 
+    description: "\u3044\u3048\u3084\u30AB\u30D5\u30A7\u3001\u3056\u3063\u304B\u3084\u3055\u3093\u306A\u3069\u3067\u30C9\u30A2\u306B\u304B\u3051\u3066\u3064\u304B\u308F\u308C\u308B\u5C0F\u3055\u306A\u30C1\u30E3\u30A4\u30E0\u3002"
+    imageRef: {fileID: -4846266241203679823, guid: 425222902e95d417a9b16ae811d858c8, type: 3}
+    timbreTagId: environment
+    basePitchMidi: -1
+    loudnessBand: 1
+    durationBand: 2
+    pairKey: Chime
+    allowPitchShift: 1
+    difficultyTags: []
+    category: "\u91D1\u5C5E"
+    clipRef: {fileID: 8300000, guid: 99e1dff9a428e410f9bc97df1412fa7d, type: 3}
+    initiallyUnlocked: 1
+  - id: Bell_04
+    encyclopediaNumber: 13
+    displayName: "\u30AF\u30EA\u30B9\u30BF\u30EB\u30D9\u30EB"
+    reading: 
+    description: "\u30AC\u30E9\u30B9\u3067\u3067\u304D\u305F\u30D9\u30EB\u3002"
+    imageRef: {fileID: 4376603877981877477, guid: 7947bd48e39cf47b6b642be253e2b99b, type: 3}
+    timbreTagId: bell
+    basePitchMidi: -1
+    loudnessBand: 1
+    durationBand: 2
+    pairKey: Bell
+    allowPitchShift: 1
+    difficultyTags: []
+    category: "\u30AC\u30E9\u30B9"
+    clipRef: {fileID: 8300000, guid: a58c26753d72d4f1ca05500cc120855a, type: 3}
+    initiallyUnlocked: 1
+  - id: Poon_02
+    encyclopediaNumber: 15
+    displayName: "\u3068\u3046\u304D\u306E\u30B9\u30D7\u30FC\u30F3"
+    reading: 
+    description: "\u3064\u3084\u3064\u3084\u3068\u3057\u305F\u3001\u30B3\u30C3\u30D7\u306E\u3088\u3046\u306A\u305D\u3056\u3044\u3067\u3067\u304D\u305F\u30B9\u30D7\u30FC\u30F3\u3002\u3072\u3082\u3067\u3064\u308B\u3057\u3066\u305F\u305F\u304F\u305F\u305F\u3044\u305F\u3068\u304D\u306E\u97F3\u3002"
+    imageRef: {fileID: 21300000, guid: a9360ad9d462045c5bd8eaafe29622a8, type: 3}
+    timbreTagId: environment
+    basePitchMidi: 65
+    loudnessBand: 2
+    durationBand: 2
+    pairKey: Poon
+    allowPitchShift: 1
+    difficultyTags: []
+    category: "\u306D\u3093\u3069\u3001\u3068\u3046\u304D"
+    clipRef: {fileID: 8300000, guid: 29cd62a36ec8545d7b725ee280d0ad99, type: 3}
+    initiallyUnlocked: 1
+  - id: Clochette_05
+    encyclopediaNumber: 16
+    displayName: "\u3066\u3064\u3059\u305A"
+    reading: 
+    description: "\u3066\u3064\u3067\u3067\u304D\u305F\u3059\u305A\u3002\u3044\u308F\u3066\u3051\u3093\u306E\u3067\u3093\u3068\u3046\u3053\u3046\u3052\u3044\u3072\u3093\u3002"
+    imageRef: {fileID: 6666197368843762379, guid: f531f9fc7ac46432c8326619978f1f4b, type: 3}
+    timbreTagId: clochette
+    basePitchMidi: 70
+    loudnessBand: 0
+    durationBand: 0
+    pairKey: Clochette
+    allowPitchShift: 1
+    difficultyTags: []
+    category: "\u9244"
+    clipRef: {fileID: 8300000, guid: f5c9e5ff0d9e7471799f06eabfbe51d6, type: 3}
+    initiallyUnlocked: 1
+  - id: Bell_05
+    encyclopediaNumber: 17
+    displayName: "\u304F\u307E\u3088\u3051\u306E\u30D9\u30EB"
+    reading: 
+    description: "\u3057\u3093\u3061\u3085\u3046\u3067\u3067\u304D\u305F\u30D9\u30EB\u3002\u30CF\u30F3\u30C9\u30D9\u30EB\u3082\u3057\u3093\u3061\u3085\u3046\u3067\u3067\u304D\u3066\u3044\u308B\u3082\u306E\u304C\u304A\u304A\u3044\u3002"
+    imageRef: {fileID: -7493964323910357747, guid: 1fbb1e7a978b24da89581931a7c09383, type: 3}
+    timbreTagId: bell
+    basePitchMidi: 72
+    loudnessBand: 2
+    durationBand: 3
+    pairKey: Bell
+    allowPitchShift: 1
+    difficultyTags: []
+    category: "\u91D1\u5C5E"
+    clipRef: {fileID: 8300000, guid: b5d670f55894d4612a0135b340ec6a53, type: 3}
     initiallyUnlocked: 1
