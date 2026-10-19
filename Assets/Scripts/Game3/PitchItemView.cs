@@ -11,6 +11,10 @@ namespace Geidai.Game3
         private int _cents;
         private Button _button;
 
+        private Image _image;
+        private Sprite _defaultSprite;
+        private Color _defaultColor;
+
         // ドラッグ直後のButtonクリックを無視するため
         private bool _suppressClick;
 
@@ -19,13 +23,35 @@ namespace Geidai.Game3
         private void Awake()
         {
             _button = GetComponent<Button>();
+            _image = GetComponent<Image>();
+
+            if (_image != null)
+            {
+                _defaultSprite = _image.sprite;
+                _defaultColor = _image.color;
+            }
+
             _button.onClick.AddListener(OnClicked);
         }
-
-        public void Setup(Game3Controller controller, int cents)
+        public void Setup(Game3Controller controller,int cents,Sprite soundImage)
         {
             _controller = controller;
             _cents = cents;
+
+            if (_image != null)
+            {
+                if (soundImage != null)
+                {
+                    _image.sprite = soundImage;
+                    _image.color = Color.white;
+                    _image.preserveAspect = true;
+                }
+                else
+                {
+                    _image.sprite = _defaultSprite;
+                    _image.color = _defaultColor;
+                }
+            }
         }
 
         /// <summary>
