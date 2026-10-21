@@ -14,6 +14,7 @@ namespace Geidai.EditorTools
         public const string AudioLibraryFolder = "Assets/Audio/Library";
         public const string DefaultCatalogPath = "Assets/Settings/CuratedSoundCatalog_Default.asset";
         public const string DefaultTimbrePath = "Assets/Settings/TimbreTagCatalog_Default.asset";
+        public const string DefaultUnlockRulesPath = "Assets/Settings/UnlockRulesCatalog_Default.asset";
 
         public static void EnsureAudioLibraryFolder()
         {
@@ -146,6 +147,40 @@ namespace Geidai.EditorTools
             Undo.RecordObject(timbre, "Remove Timbre Tag");
             timbre.SetTags(next);
             EditorUtility.SetDirty(timbre);
+            AssetDatabase.SaveAssets();
+            return Result.Ok();
+        }
+
+        public static Result RemoveSound(
+            CuratedSoundCatalog catalog,
+            UnlockRulesCatalog unlockRules,
+            string soundId)
+        {
+            var validation = CuratedSoundValidation.ValidateForRemove(soundId, catalog, unlockRules);
+            if (!validation.IsSuccess) return validation;
+
+            Undo.RecordObject(catalog, "Remove Curated Sound");
+            if (!catalog.RemoveById(soundId))
+                return Result.Fail(ResultCode.NotFound, "音が みつかりませんでした");
+
+            EditorUtility.SetDirty(catalog);
+            AssetDatabase.SaveAssets();
+            return Result.Ok();
+        }
+
+        public static Result MoveSoundInSortedOrder(
+            CuratedSoundCatalog catalog,
+            string soundId,
+            int direction)
+        {
+            if (catalog == null)
+                return Result.Fail(ResultCode.NotFound, "カタログが設定されていません");
+
+            Undo.RecordObject(catalog, "Reorder Curated Sound");
+            var result = catalog.SwapEncyclopediaNumberWithSortedNeighbor(soundId, direction);
+            if (!result.IsSuccess) return result;
+
+            EditorUtility.SetDirty(catalog);
             AssetDatabase.SaveAssets();
             return Result.Ok();
         }

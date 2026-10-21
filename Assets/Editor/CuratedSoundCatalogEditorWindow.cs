@@ -13,6 +13,7 @@ namespace Geidai.EditorTools
     {
         private CuratedSoundCatalog _catalog;
         private TimbreTagCatalog _timbre;
+        private UnlockRulesCatalog _unlockRules;
         private Vector2 _listScroll;
         private Vector2 _formScroll;
         private string _selectedId;
@@ -65,6 +66,9 @@ namespace Geidai.EditorTools
             if (_timbre == null)
                 _timbre = AssetDatabase.LoadAssetAtPath<TimbreTagCatalog>(
                     CuratedSoundCatalogEditorOps.DefaultTimbrePath);
+            if (_unlockRules == null)
+                _unlockRules = AssetDatabase.LoadAssetAtPath<UnlockRulesCatalog>(
+                    CuratedSoundCatalogEditorOps.DefaultUnlockRulesPath);
         }
 
         private void OnGUI()
@@ -74,6 +78,8 @@ namespace Geidai.EditorTools
                 "カタログ", _catalog, typeof(CuratedSoundCatalog), false);
             _timbre = (TimbreTagCatalog)EditorGUILayout.ObjectField(
                 "音色語彙", _timbre, typeof(TimbreTagCatalog), false);
+            _unlockRules = (UnlockRulesCatalog)EditorGUILayout.ObjectField(
+                "アンロック条件", _unlockRules, typeof(UnlockRulesCatalog), false);
             EditorGUILayout.EndHorizontal();
 
             // 常時同じ高さのステータス欄（空のときヘルプを表示し、出現／消失でレイアウトが跳ねないようにする）
@@ -88,6 +94,18 @@ namespace Geidai.EditorTools
             EditorGUILayout.EndHorizontal();
         }
 
+        private static bool IsInSortedList(
+            System.Collections.Generic.List<CuratedSoundDefinition> sorted,
+            string id)
+        {
+            if (sorted == null || string.IsNullOrEmpty(id)) return false;
+            for (int i = 0; i < sorted.Count; i++)
+            {
+                if (sorted[i] != null && sorted[i].id == id) return true;
+            }
+            return false;
+        }
+
         private void DrawSoundList()
         {
             EditorGUILayout.BeginVertical(GUILayout.Width(220f));
@@ -100,12 +118,15 @@ namespace Geidai.EditorTools
                 _status = "新規音を追加します";
             }
 
+            DrawSoundListReorderButtons();
+
             _listScroll = EditorGUILayout.BeginScrollView(_listScroll);
             if (_catalog != null && _catalog.Items != null)
             {
-                for (int i = 0; i < _catalog.Items.Count; i++)
+                var sorted = LibraryQuery.SortByEncyclopediaNumber(_catalog.Items);
+                for (int i = 0; i < sorted.Count; i++)
                 {
-                    var item = _catalog.Items[i];
+                    var item = sorted[i];
                     if (item == null) continue;
                     string label = $"#{item.encyclopediaNumber} {item.displayName} ({item.id})";
                     if (GUILayout.Button(label, _selectedId == item.id ? EditorStyles.toolbarButton : EditorStyles.miniButton))
@@ -114,6 +135,22 @@ namespace Geidai.EditorTools
                         _selectedId = item.id;
                         LoadForm(item);
                         _status = string.Empty;
+                        EditorAudioPreview.Stop();
+                    }
+                }
+
+                for (int i = 0; i < _catalog.Items.Count; i++)
+                {
+                    var item = _catalog.Items[i];
+                    if (item == null || !item.IsValid) continue;
+                    if (IsInSortedList(sorted, item.id)) continue;
+                    string label = $"[未完了] {item.id}";
+                    if (GUILayout.Button(label, _selectedId == item.id ? EditorStyles.toolbarButton : EditorStyles.miniButton))
+                    {
+                        _isNew = false;
+                        _selectedId = item.id;
+                        LoadForm(item);
+                        _status = "必須項目が足りない音です";
                         EditorAudioPreview.Stop();
                     }
                 }
@@ -181,8 +218,89 @@ namespace Geidai.EditorTools
             if (GUILayout.Button("保存", GUILayout.Height(32f)))
                 SaveSound();
 
+            if (!_isNew && !string.IsNullOrEmpty(_selectedId))
+            {
+                EditorGUILayout.Space(8f);
+                if (GUILayout.Button("削除", GUILayout.Height(28f)))
+                    DeleteSelectedSound();
+            }
+
             EditorGUILayout.EndScrollView();
             EditorGUILayout.EndVertical();
+        }
+
+        private void DrawSoundListReorderButtons()
+        {
+            if (_catalog == null || string.IsNullOrEmpty(_selectedId) || _isNew) return;
+
+            EditorGUILayout.BeginHorizontal();
+            using (new EditorGUI.DisabledScope(!CanMoveSorted(_selectedId, -1)))
+            {
+                if (GUILayout.Button("↑", GUILayout.Width(36f)))
+                    MoveSelectedSound(-1);
+            }
+            using (new EditorGUI.DisabledScope(!CanMoveSorted(_selectedId, 1)))
+            {
+                if (GUILayout.Button("↓", GUILayout.Width(36f)))
+                    MoveSelectedSound(1);
+            }
+            EditorGUILayout.LabelField("図鑑ナンバー順で並べ替え", EditorStyles.miniLabel);
+            EditorGUILayout.EndHorizontal();
+        }
+
+        private bool CanMoveSorted(string soundId, int direction)
+        {
+            if (_catalog == null) return false;
+            var sorted = LibraryQuery.SortByEncyclopediaNumber(_catalog.Items);
+            int index = -1;
+            for (int i = 0; i < sorted.Count; i++)
+            {
+                if (sorted[i].id == soundId)
+                {
+                    index = i;
+                    break;
+                }
+            }
+            if (index < 0) return false;
+            int other = index + direction;
+            return other >= 0 && other < sorted.Count;
+        }
+
+        private void MoveSelectedSound(int direction)
+        {
+            var result = CuratedSoundCatalogEditorOps.MoveSoundInSortedOrder(
+                _catalog, _selectedId, direction);
+            _status = result.IsSuccess ? "並べ替えました" : result.Message;
+        }
+
+        private void DeleteSelectedSound()
+        {
+            if (_catalog == null || string.IsNullOrEmpty(_selectedId)) return;
+
+            string name = _displayName;
+            if (string.IsNullOrEmpty(name)) name = _selectedId;
+            if (!EditorUtility.DisplayDialog(
+                    "音を削除",
+                    $"「{name}」（{_selectedId}）をカタログから削除します。\n音声ファイルは残ります。",
+                    "削除",
+                    "キャンセル"))
+            {
+                return;
+            }
+
+            string deletingId = _selectedId;
+            var result = CuratedSoundCatalogEditorOps.RemoveSound(_catalog, _unlockRules, deletingId);
+            if (!result.IsSuccess)
+            {
+                _status = result.Message;
+                return;
+            }
+
+            _selectedId = null;
+            _isNew = false;
+            ClearForm();
+            _status = "削除しました（音声ファイルはプロジェクトに残っています）";
+            EditorAudioPreview.Stop();
         }
 
         private void DrawTimbrePopup()

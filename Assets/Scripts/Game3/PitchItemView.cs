@@ -1,4 +1,5 @@
 using System.Collections;
+using Geidai.Common.UI;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -20,6 +21,11 @@ namespace Geidai.Game3
         {
             _button = GetComponent<Button>();
             _button.onClick.AddListener(OnClicked);
+        }
+
+        private void OnEnable()
+        {
+            InstrumentFloorShadow.Ensure(transform as RectTransform);
         }
 
         public void Setup(Game3Controller controller, int cents)
