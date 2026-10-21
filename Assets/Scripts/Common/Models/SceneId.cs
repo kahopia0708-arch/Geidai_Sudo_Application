@@ -18,6 +18,7 @@ namespace Geidai.Common.Models
         GameSelect,
         Library,
         Create,
-        Game3
+        Game3,
+        Game2
     }
 }

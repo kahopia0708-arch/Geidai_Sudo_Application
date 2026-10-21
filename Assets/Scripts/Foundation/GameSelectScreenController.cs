@@ -14,6 +14,7 @@ namespace Geidai.Foundation
     public class GameSelectScreenController : ScreenRootBase
     {
         [SerializeField] private Button game1Button;
+        [SerializeField] private Button game2Button;
         [SerializeField] private Button game3Button;
         [SerializeField] private Button backButton;
         [SerializeField] private ErrorPresenter errorPresenter;
@@ -21,6 +22,7 @@ namespace Geidai.Foundation
         private void Awake()
         {
             if (game1Button != null) game1Button.onClick.AddListener(GoGame1);
+            if (game2Button != null) game2Button.onClick.AddListener(GoGame2);
             if (game3Button != null) game3Button.onClick.AddListener(GoGame3);
             if (backButton != null) backButton.onClick.AddListener(GoHome);
         }
@@ -28,6 +30,7 @@ namespace Geidai.Foundation
         private void OnDestroy()
         {
             if (game1Button != null) game1Button.onClick.RemoveListener(GoGame1);
+            if (game2Button != null) game2Button.onClick.RemoveListener(GoGame2);
             if (game3Button != null) game3Button.onClick.RemoveListener(GoGame3);
             if (backButton != null) backButton.onClick.RemoveListener(GoHome);
         }
@@ -36,6 +39,12 @@ namespace Geidai.Foundation
         {
             Navigate(SceneId.Game1);
         }
+
+        private void GoGame2()
+        {
+            Navigate(SceneId.Game2);
+        }
+
         private void GoGame3()
         {
             Navigate(SceneId.Game3);

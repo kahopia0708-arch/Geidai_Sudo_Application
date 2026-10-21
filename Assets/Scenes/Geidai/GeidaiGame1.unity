@@ -908,7 +908,6 @@ GameObject:
   - component: {fileID: 452588277}
   - component: {fileID: 452588276}
   - component: {fileID: 452588275}
-  - component: {fileID: 452588274}
   m_Layer: 0
   m_Name: Back
   m_TagString: Untagged
@@ -936,20 +935,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 36}
   m_SizeDelta: {x: 280, y: 90}
   m_Pivot: {x: 0.5, y: 0}
---- !u!114 &452588274
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 452588272}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 20df58cc4533c42fda8f12315eddf388, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Geidai.Foundation::Geidai.Foundation.BackToHomeButton
-  button: {fileID: 452588275}
-  errorPresenter: {fileID: 795930957}
 --- !u!114 &452588275
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1245,6 +1230,7 @@ MonoBehaviour:
   resultEffect: {fileID: 832919812}
   errorPresenter: {fileID: 795930957}
   emptyState: {fileID: 1515065237}
+  backButton: {fileID: 452588275}
 --- !u!1 &795930956
 GameObject:
   m_ObjectHideFlags: 0
