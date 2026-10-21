@@ -52,13 +52,16 @@ namespace Geidai.Game1
 
         private void EnsureInstrumentShadows()
         {
+            var displaySettings = InstrumentDisplaySettings.LoadRuntime();
             if (choiceViews != null)
             {
                 for (int i = 0; i < choiceViews.Count; i++)
                 {
                     var view = choiceViews[i];
                     if (view == null) continue;
-                    InstrumentFloorShadow.Ensure(view.transform as RectTransform);
+                    InstrumentFloorShadow.Ensure(
+                        view.transform as RectTransform,
+                        displaySettings);
                 }
             }
         }

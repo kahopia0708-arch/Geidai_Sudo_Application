@@ -66,12 +66,13 @@ namespace Geidai.Game3
 
         private void EnsureInstrumentShadows()
         {
+            var displaySettings = InstrumentDisplaySettings.LoadRuntime();
             if (pitchItems == null) return;
             for (int i = 0; i < pitchItems.Count; i++)
             {
                 var item = pitchItems[i];
                 if (item == null) continue;
-                InstrumentFloorShadow.Ensure(item.transform as RectTransform);
+                InstrumentFloorShadow.Ensure(item.transform as RectTransform, displaySettings);
             }
         }
 

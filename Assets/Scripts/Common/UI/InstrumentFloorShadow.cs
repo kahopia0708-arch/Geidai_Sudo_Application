@@ -35,21 +35,29 @@ namespace Geidai.Common.UI
         public void Apply()
         {
             var resolved = settings != null ? settings : InstrumentDisplaySettings.LoadRuntime();
-            if (resolved == null || resolved.shadowSprite == null)
+            var sprite = resolved != null
+                ? resolved.ResolveShadowSprite()
+                : InstrumentDisplaySettings.GetProceduralShadowSprite();
+            if (sprite == null)
                 return;
 
             EnsureShadowObjects();
-            shadowImage.sprite = resolved.shadowSprite;
-            shadowImage.color = resolved.shadowColor;
+            shadowImage.sprite = sprite;
+            shadowImage.color = resolved != null
+                ? resolved.shadowColor
+                : new Color(0.75f, 0.92f, 0.35f, 0.9f);
             shadowImage.raycastTarget = false;
             shadowImage.preserveAspect = true;
 
             shadowRect.SetAsFirstSibling();
+            var size = resolved != null ? resolved.shadowSize : new Vector2(110f, 26f);
+            var inset = resolved != null ? resolved.shadowBottomInset : 10f;
+            // 親の下端から少し下にはみ出す（床の影）
             shadowRect.anchorMin = new Vector2(0.5f, 0f);
             shadowRect.anchorMax = new Vector2(0.5f, 0f);
-            shadowRect.pivot = new Vector2(0.5f, 0.5f);
-            shadowRect.anchoredPosition = new Vector2(0f, resolved.shadowBottomInset);
-            shadowRect.sizeDelta = resolved.shadowSize;
+            shadowRect.pivot = new Vector2(0.5f, 1f);
+            shadowRect.anchoredPosition = new Vector2(0f, -inset);
+            shadowRect.sizeDelta = size;
         }
 
         private void EnsureShadowObjects()
