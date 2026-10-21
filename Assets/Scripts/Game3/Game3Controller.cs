@@ -58,9 +58,21 @@ namespace Geidai.Game3
         protected override void OnShow()
         {
             EnsureWired();
+            EnsureInstrumentShadows();
 
             difficultySelectPanel.SetActive(true);
             gamePanel.SetActive(false);
+        }
+
+        private void EnsureInstrumentShadows()
+        {
+            if (pitchItems == null) return;
+            for (int i = 0; i < pitchItems.Count; i++)
+            {
+                var item = pitchItems[i];
+                if (item == null) continue;
+                InstrumentFloorShadow.Ensure(item.transform as RectTransform);
+            }
         }
 
         private void EnsureWired()

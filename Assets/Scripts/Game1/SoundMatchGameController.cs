@@ -46,7 +46,21 @@ namespace Geidai.Game1
         protected override void OnShow()
         {
             EnsureWired();
+            EnsureInstrumentShadows();
             StartGame();
+        }
+
+        private void EnsureInstrumentShadows()
+        {
+            if (choiceViews != null)
+            {
+                for (int i = 0; i < choiceViews.Count; i++)
+                {
+                    var view = choiceViews[i];
+                    if (view == null) continue;
+                    InstrumentFloorShadow.Ensure(view.transform as RectTransform);
+                }
+            }
         }
 
         private void EnsureWired()

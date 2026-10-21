@@ -7,6 +7,8 @@
 
 困ったら LINE で前本（さとし）へ。C# の編集が必要な変更は前本側の作業になります。
 
+**音合わせ・音並べの楽器の影**（全楽器共通 1 枚）: `Assets/Resources/Geidai/InstrumentDisplaySettings.asset` の Sprite・色・サイズを変える（コード不要）。
+
 ---
 
 ## 1. 役割の境界（やること／やらないこと）
