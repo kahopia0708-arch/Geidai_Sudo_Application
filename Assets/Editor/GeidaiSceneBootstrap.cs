@@ -15,6 +15,7 @@ using Geidai.Rec;
 using Geidai.Collection;
 using Geidai.Theme;
 using Geidai.Game1;
+using Geidai.Game2;
 using Geidai.Library;
 using Geidai.Create;
 using Geidai.Services;
@@ -947,7 +948,6 @@ namespace Geidai.EditorTools
             var error = CreateErrorPresenter(content);
             var back = CreateButton(content, "Back", "もどる", new Vector2(280, 90));
             AnchorBottom(back.GetComponent<RectTransform>(), 90f, 36f);
-            AttachBackToHome(back, error);
             var config = AssetDatabase.LoadAssetAtPath<SoundMatchConfig>(SoundMatchConfigPath);
 
             var screenGo = new GameObject("SoundMatchScreen", typeof(SoundMatchGameController));
@@ -960,6 +960,7 @@ namespace Geidai.EditorTools
             so.FindProperty("resultEffect").objectReferenceValue = effectGo.GetComponent<ResultEffectController>();
             so.FindProperty("errorPresenter").objectReferenceValue = error;
             so.FindProperty("emptyState").objectReferenceValue = empty;
+            so.FindProperty("backButton").objectReferenceValue = back;
             var choicesProp = so.FindProperty("choiceViews");
             choicesProp.arraySize = choices.Count;
             for (int i = 0; i < choices.Count; i++)
@@ -1527,6 +1528,8 @@ namespace Geidai.EditorTools
                 $"{SceneDir}/GeidaiTheme.unity",
                 $"{SceneDir}/GeidaiGameSelect.unity",
                 $"{SceneDir}/GeidaiGame1.unity",
+                $"{SceneDir}/GeidaiGame2.unity",
+                $"{SceneDir}/GeidaiGame3.unity",
                 $"{SceneDir}/GeidaiLibrary.unity",
                 $"{SceneDir}/GeidaiCreate.unity",
             };
@@ -1557,5 +1560,22 @@ namespace Geidai.EditorTools
             EditorBuildSettings.scenes = list.ToArray();
             Debug.Log($"[GeidaiSceneBootstrap] Build settings: {list.Count} scenes.");
         }
+
+        // Game2SceneBuilder 等から利用する薄い公開ラッパー
+        public static (Canvas canvas, RectTransform safeArea, ResponsiveCanvasConfigurator responsive, SafeAreaFitter fitter, AppManager app)
+            CreateScreenShellPublic(string rootName) => CreateScreenShell(rootName);
+
+        public static Text CreateTextPublic(Transform parent, string name, string text, int fontSize, TextAnchor anchor) =>
+            CreateText(parent, name, text, fontSize, anchor);
+
+        public static void StretchFullPublic(RectTransform rt) => StretchFull(rt);
+        public static void AnchorTopBandPublic(RectTransform rt, float height, float topPadding = 24f) => AnchorTopBand(rt, height, topPadding);
+        public static void AnchorBottomPublic(RectTransform rt, float height, float bottomPadding = 24f) => AnchorBottom(rt, height, bottomPadding);
+        public static Button CreateButtonPublic(Transform parent, string name, string label, Vector2 size) => CreateButton(parent, name, label, size);
+        public static ErrorPresenter CreateErrorPresenterPublic(Transform parent) => CreateErrorPresenter(parent);
+        public static void WireScreenRootPublic(ScreenRootBase screen, ResponsiveCanvasConfigurator responsive, SafeAreaFitter fitter) =>
+            WireScreenRoot(screen, responsive, fitter);
+
+        public static void SaveScenePublic(string sceneName) => SaveScene(sceneName);
     }
 }

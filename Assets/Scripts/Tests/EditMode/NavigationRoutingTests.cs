@@ -35,6 +35,8 @@ namespace Geidai.Tests.EditMode
             LogAssert.Expect(LogType.Error, new Regex(@"\[Navigation\] load failed"));
             Assert.DoesNotThrow(() => nav.GoTo(SceneId.Home));
             Assert.DoesNotThrow(() => nav.GoTo(SceneId.Game1));
+            LogAssert.Expect(LogType.Error, new Regex(@"\[Navigation\] load failed"));
+            Assert.DoesNotThrow(() => nav.GoTo(SceneId.Game2));
         }
 
         [Test]

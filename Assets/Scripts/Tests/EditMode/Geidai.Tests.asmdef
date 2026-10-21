@@ -10,7 +10,8 @@
         "Geidai.Theme",
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
-        "Geidai.Game3"
+        "Geidai.Game3",
+        "Geidai.Game2"
     ],
     "includePlatforms": [
         "Editor"
