@@ -80,5 +80,30 @@ namespace Geidai.Common.Library
             }
             return Result.Ok();
         }
+
+        public static bool IsSoundReferencedByUnlockRules(string soundId, UnlockRulesCatalog unlockRules)
+        {
+            if (string.IsNullOrEmpty(soundId) || unlockRules == null) return false;
+            var rules = unlockRules.ValidRules();
+            for (int i = 0; i < rules.Count; i++)
+            {
+                if (rules[i].soundId == soundId) return true;
+            }
+            return false;
+        }
+
+        public static Result ValidateForRemove(
+            string soundId,
+            CuratedSoundCatalog catalog,
+            UnlockRulesCatalog unlockRules)
+        {
+            if (catalog == null)
+                return Result.Fail(ResultCode.NotFound, "カタログが ないよ");
+            if (string.IsNullOrEmpty(soundId) || !catalog.ContainsId(soundId))
+                return Result.Fail(ResultCode.NotFound, "音が みつからないよ");
+            if (IsSoundReferencedByUnlockRules(soundId, unlockRules))
+                return Result.Fail(ResultCode.ValidationError, "アンロック条件で つかわれているから さくじょできないよ");
+            return Result.Ok();
+        }
     }
 }
