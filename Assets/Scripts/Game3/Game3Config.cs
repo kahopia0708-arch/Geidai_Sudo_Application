@@ -1,4 +1,5 @@
 ﻿using Geidai.Common.Game;
+using Geidai.Common.Library;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -55,15 +56,17 @@ namespace Geidai.Game3
                 }
             };
 
-        [Tooltip("音ならべで優先して使用するカタログ音")]
+
+
+        [Tooltip("音ならべで使用する音図鑑カタログ")]
         [SerializeField]
-        private List<AudioClip> catalogClips = new List<AudioClip>();
+        private CuratedSoundCatalog curatedCatalog;
+
+        public CuratedSoundCatalog CuratedCatalog
+            => curatedCatalog;
 
         public IReadOnlyList<Game3DifficultySetting> Difficulties
             => difficulties;
-
-        public IReadOnlyList<AudioClip> CatalogClips
-            => catalogClips;
 
         public Game3DifficultySetting GetDifficulty(int index)
         {

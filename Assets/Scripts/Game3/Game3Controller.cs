@@ -34,6 +34,8 @@ namespace Geidai.Game3
         private PitchOrderQuestion _currentQuestion;
         private int _questionIndex = 0;
 
+        private bool _isPlayingHint;
+
         [Header("Cloud UI")]
         [SerializeField]
         private RectTransform cloudArea;
@@ -47,6 +49,10 @@ namespace Geidai.Game3
         [Header("PitchItem UI")]
         [SerializeField]
         private List<PitchItemView> pitchItems = new List<PitchItemView>();
+        private Sprite _baseImage;
+
+        [Header("Hint UI")]
+
 
         [Header("Result UI")]
         [SerializeField] private Text resultText;
@@ -273,24 +279,49 @@ namespace Geidai.Game3
         }
         private bool TryLoadBaseSound()
         {
-            // 1. Game3Configに設定されたカタログ音を優先
-            if (config != null &&
-                config.CatalogClips != null &&
-                config.CatalogClips.Count > 0)
+            _baseImage = null;
+            // 1. 音図鑑から、ピッチ変更可能な音を探す
+            if (config != null && config.CuratedCatalog != null)
             {
-                foreach (var clip in config.CatalogClips)
+                var items = config.CuratedCatalog.ValidItems();
+
+                var candidates = new List<Geidai.Common.Library.CuratedSoundDefinition>();
+
+                foreach (var item in items)
                 {
-                    if (clip == null)
+                    if (item == null)
                         continue;
 
-                    var buffer = BufferFromClip(clip);
+                    // 音程を扱える素材だけ使う
+                    if (!item.allowPitchShift)
+                        continue;
+
+                    if (!item.HasBasePitch)
+                        continue;
+
+                    if (item.clipRef == null)
+                        continue;
+                    if (item.imageRef == null)
+                        continue;
+
+                    candidates.Add(item);
+                }
+
+                if (candidates.Count > 0)
+                {
+                    var selected =
+                        candidates[UnityEngine.Random.Range(0, candidates.Count)];
+
+                    var buffer = BufferFromClip(selected.clipRef);
 
                     if (buffer != null)
                     {
                         _baseBuffer = buffer;
+                        _baseImage = selected.imageRef;
 
                         Debug.Log(
-                            $"Game3: カタログ音を使用します ({clip.name})"
+                            $"Game3: 音図鑑から基準音を選択しました " +
+                            $"({selected.displayName})"
                         );
 
                         return true;
@@ -298,7 +329,7 @@ namespace Geidai.Game3
                 }
             }
 
-            // 2. カタログ音が無ければユーザー録音
+            // 2. 音図鑑に使える音が無ければユーザー録音
             if (_storage != null)
             {
                 var listResult = _storage.ListSounds();
@@ -350,7 +381,37 @@ namespace Geidai.Game3
 
             return new AudioBuffer(data);
         }
+        public void PlayAnswerHint()
+        {
+            if (_currentQuestion == null)
+                return;
 
+            if (_isResolvingAnswer || _isPlayingHint)
+                return;
+
+            StartCoroutine(PlayAnswerHintCoroutine());
+        }
+
+        private IEnumerator PlayAnswerHintCoroutine()
+        {
+            _isPlayingHint = true;
+
+            // 今の問題で使っている音程を正解順に並べる
+            List<int> answer =
+                new List<int>(_currentQuestion.InitialOrder);
+
+            answer.Sort(); // 低い → 高い
+
+            foreach (int cents in answer)
+            {
+                _pitch.Play(cents);
+
+                yield return new WaitForSecondsRealtime(1.5f);
+            }
+
+            _pitch.Stop();
+            _isPlayingHint = false;
+        }
         public void PreviewPitch(int cents)
         {
             if (_pitch == null)
@@ -376,7 +437,8 @@ namespace Geidai.Game3
 
                     view.Setup(
                         this,
-                        _currentQuestion.InitialOrder[i]
+                        _currentQuestion.InitialOrder[i],
+                        _baseImage
                     );
                 }
                 else
@@ -506,6 +568,7 @@ namespace Geidai.Game3
             // 正誤表示などの処理を止める
             StopAllCoroutines();
             _isResolvingAnswer = false;
+            _isPlayingHint = false;
             HideResult();
 
             // 再生中の音を止める

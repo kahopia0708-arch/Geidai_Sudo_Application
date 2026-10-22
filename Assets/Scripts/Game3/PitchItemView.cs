@@ -12,7 +12,11 @@ namespace Geidai.Game3
         private int _cents;
         private Button _button;
 
-        // ƒhƒ‰ƒbƒO’¼Œã‚ÌButtonƒNƒŠƒbƒN‚ğ–³‹‚·‚é‚½‚ß
+        private Image _image;
+        private Sprite _defaultSprite;
+        private Color _defaultColor;
+
+        // ï¿½hï¿½ï¿½ï¿½bï¿½Oï¿½ï¿½ï¿½ï¿½ï¿½Buttonï¿½Nï¿½ï¿½ï¿½bï¿½Nï¿½ğ–³ï¿½ï¿½ï¿½ï¿½é‚½ï¿½ï¿½
         private bool _suppressClick;
 
         public int Cents => _cents;
@@ -20,22 +24,45 @@ namespace Geidai.Game3
         private void Awake()
         {
             _button = GetComponent<Button>();
+            _image = GetComponent<Image>();
+
+            if (_image != null)
+            {
+                _defaultSprite = _image.sprite;
+                _defaultColor = _image.color;
+            }
+
             _button.onClick.AddListener(OnClicked);
         }
 
-        private void OnEnable()
+            private void OnEnable()
         {
             InstrumentFloorShadow.Ensure(transform as RectTransform);
         }
 
-        public void Setup(Game3Controller controller, int cents)
+        public void Setup(Game3Controller controller, int cents, Sprite soundImage)
         {
             _controller = controller;
             _cents = cents;
+
+            if (_image != null)
+            {
+                if (soundImage != null)
+                {
+                    _image.sprite = soundImage;
+                    _image.color = Color.white;
+                    _image.preserveAspect = true;
+                }
+                else
+                {
+                    _image.sprite = _defaultSprite;
+                    _image.color = _defaultColor;
+                }
+            }
         }
 
         /// <summary>
-        /// ƒhƒ‰ƒbƒO‚ªn‚Ü‚Á‚½‚±‚Æ‚ğ’Ê’m‚·‚éB
+        /// ï¿½hï¿½ï¿½ï¿½bï¿½Oï¿½ï¿½ï¿½nï¿½Ü‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ‚ï¿½Ê’mï¿½ï¿½ï¿½ï¿½B
         /// </summary>
         public void NotifyDragStarted()
         {
@@ -47,8 +74,8 @@ namespace Geidai.Game3
         }
 
         /// <summary>
-        /// ƒhƒ‰ƒbƒOˆ—‚ªŠ®‘S‚ÉI‚í‚Á‚½ŒãA
-        /// Ÿ‚ÌƒtƒŒ[ƒ€‚©‚çÄ‚ÑƒNƒŠƒbƒN‚ğ‹–‰Â‚·‚éB
+        /// ï¿½hï¿½ï¿½ï¿½bï¿½Oï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Sï¿½ÉIï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½A
+        /// ï¿½ï¿½ï¿½Ìƒtï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ÑƒNï¿½ï¿½ï¿½bï¿½Nï¿½ï¿½ï¿½ï¿½ï¿½Â‚ï¿½ï¿½ï¿½B
         /// </summary>
         public void NotifyDragFinished()
         {
@@ -63,7 +90,7 @@ namespace Geidai.Game3
 
         private void OnClicked()
         {
-            // ƒhƒ‰ƒbƒO‚É‚æ‚Á‚Ä”­¶‚µ‚½ƒNƒŠƒbƒN‚È‚ç‰¹‚ğ–Â‚ç‚³‚È‚¢
+            // ï¿½hï¿½ï¿½ï¿½bï¿½Oï¿½É‚ï¿½ï¿½ï¿½Ä”ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½bï¿½Nï¿½È‚ç‰¹ï¿½ï¿½Â‚ç‚³ï¿½È‚ï¿½
             if (_suppressClick)
                 return;
 
