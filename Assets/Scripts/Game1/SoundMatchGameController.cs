@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using Geidai.Common.Game;
 using Geidai.Common.Models;
 using Geidai.Common.Results;
@@ -32,6 +33,7 @@ namespace Geidai.Game1
         [SerializeField] private ResultEffectController resultEffect;
         [SerializeField] private ErrorPresenter errorPresenter;
         [SerializeField] private GameObject emptyState;
+        [SerializeField] private Button backButton;
 
         private IStorageService _storage;
         private IPitchVariationService _pitch;
@@ -43,10 +45,41 @@ namespace Geidai.Game1
         private string _baseSoundId = string.Empty;
         private State _state = State.Loading;
 
+        private void Awake()
+        {
+            if (backButton != null)
+            {
+                backButton.onClick.RemoveListener(OnBackPressed);
+                backButton.onClick.AddListener(OnBackPressed);
+            }
+        }
+
+        private void OnDestroy()
+        {
+            if (backButton != null) backButton.onClick.RemoveListener(OnBackPressed);
+        }
+
         protected override void OnShow()
         {
             EnsureWired();
+            EnsureInstrumentShadows();
             StartGame();
+        }
+
+        private void EnsureInstrumentShadows()
+        {
+            var displaySettings = InstrumentDisplaySettings.LoadRuntime();
+            if (choiceViews != null)
+            {
+                for (int i = 0; i < choiceViews.Count; i++)
+                {
+                    var view = choiceViews[i];
+                    if (view == null) continue;
+                    InstrumentFloorShadow.Ensure(
+                        view.transform as RectTransform,
+                        displaySettings);
+                }
+            }
         }
 
         private void EnsureWired()
@@ -242,7 +275,7 @@ namespace Geidai.Game1
                 return;
             }
 
-            Result result = _nav.GoTo(SceneId.Home);
+            Result result = _nav.GoTo(SceneId.GameSelect);
             if (!result.IsSuccess && errorPresenter != null) errorPresenter.ShowFromResult(result);
         }
     }

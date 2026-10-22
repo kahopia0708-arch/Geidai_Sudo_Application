@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Geidai.Common.Game;
+using Geidai.Common.UI;
 
 namespace Geidai.Game1
 {
@@ -36,6 +37,11 @@ namespace Geidai.Game1
         private void Awake()
         {
             _rt = transform as RectTransform;
+        }
+
+        private void OnEnable()
+        {
+            InstrumentFloorShadow.Ensure(_rt != null ? _rt : transform as RectTransform);
         }
 
         public void Setup(SoundMatchGameController controller, ChoiceSpec spec, int index)

@@ -65,6 +65,41 @@ namespace Geidai.Tests.EditMode
         }
 
         [Test]
+        public void ValidateForRemove_Rejects_When_Referenced_By_UnlockRules()
+        {
+            var catalog = ScriptableObject.CreateInstance<CuratedSoundCatalog>();
+            catalog.SetItems(new List<CuratedSoundDefinition> { Sound("a", 1) });
+            var unlock = ScriptableObject.CreateInstance<UnlockRulesCatalog>();
+            unlock.SetRules(new[]
+            {
+                new UnlockRule { soundId = "a", kind = UnlockConditionKind.GameClear }
+            });
+
+            Assert.IsFalse(CuratedSoundValidation.ValidateForRemove("a", catalog, unlock).IsSuccess);
+            Assert.IsTrue(CuratedSoundValidation.ValidateForRemove("b", catalog, unlock).IsSuccess == false);
+            Assert.IsTrue(CuratedSoundValidation.ValidateForRemove("a", catalog, null).IsSuccess);
+        }
+
+        [Test]
+        public void Catalog_RemoveById_And_SwapEncyclopediaNumber()
+        {
+            var catalog = ScriptableObject.CreateInstance<CuratedSoundCatalog>();
+            var a = Sound("a", 1);
+            var b = Sound("b", 2);
+            catalog.SetItems(new List<CuratedSoundDefinition> { a, b });
+
+            Assert.IsTrue(catalog.RemoveById("a"));
+            Assert.IsFalse(catalog.ContainsId("a"));
+            Assert.IsFalse(catalog.RemoveById("missing"));
+
+            catalog.SetItems(new List<CuratedSoundDefinition> { Sound("a", 10), Sound("b", 20) });
+            Assert.IsTrue(catalog.SwapEncyclopediaNumberWithSortedNeighbor("a", 1).IsSuccess);
+            Assert.AreEqual(20, catalog.FindById("a").encyclopediaNumber);
+            Assert.AreEqual(10, catalog.FindById("b").encyclopediaNumber);
+            Assert.IsFalse(catalog.SwapEncyclopediaNumberWithSortedNeighbor("a", -1).IsSuccess);
+        }
+
+        [Test]
         public void LibraryQuery_Sorts_By_EncyclopediaNumber()
         {
             var items = new List<CuratedSoundDefinition> { Sound("b", 3), Sound("a", 1), Sound("c", 2) };

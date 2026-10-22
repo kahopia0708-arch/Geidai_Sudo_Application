@@ -23,6 +23,11 @@ namespace Geidai.EditorTools
         private const string HomeMenuConfigPath = "Assets/Settings/HomeMenuConfig_Default.asset";
         private const string IconCatalogPath = "Assets/Settings/HomeMenuIconCatalog_Default.asset";
 
+        /// <summary>ホーム <see cref="VerticalLayoutGroup"/> と同じ行サイズ・間隔。</summary>
+        public const float MenuButtonHeight = 120f;
+        public const float MenuVerticalSpacing = 28f;
+        public static readonly Vector2 MenuButtonSize = new Vector2(680f, MenuButtonHeight);
+
         [MenuItem("Geidai/Scenes/Build Home UI (Redesign)")]
         public static void BuildAllHomeUi()
         {
@@ -151,7 +156,7 @@ namespace Geidai.EditorTools
             menuRt.offsetMin = Vector2.zero;
             menuRt.offsetMax = Vector2.zero;
             var vlg = menuContainerGo.GetComponent<VerticalLayoutGroup>();
-            vlg.spacing = 28;
+            vlg.spacing = MenuVerticalSpacing;
             vlg.padding = new RectOffset(8, 8, 8, 8);
             vlg.childAlignment = TextAnchor.UpperCenter;
             vlg.childControlHeight = false;
@@ -201,6 +206,100 @@ namespace Geidai.EditorTools
             SaveScene("GeidaiHome");
         }
 
+        public static RectTransform EnsureGameMenuContainer(Transform safeArea)
+        {
+            const string containerName = "GameMenuContainer";
+            var existing = safeArea.Find(containerName);
+            if (existing != null)
+            {
+                ConfigureGameMenuContainer(existing.GetComponent<RectTransform>(),
+                    existing.GetComponent<VerticalLayoutGroup>());
+                return existing as RectTransform;
+            }
+
+            var go = new GameObject(containerName, typeof(RectTransform), typeof(VerticalLayoutGroup));
+            go.transform.SetParent(safeArea, false);
+            var rt = go.GetComponent<RectTransform>();
+            var vlg = go.GetComponent<VerticalLayoutGroup>();
+            ConfigureGameMenuContainer(rt, vlg);
+            return rt;
+        }
+
+        private static void ConfigureGameMenuContainer(RectTransform rt, VerticalLayoutGroup vlg)
+        {
+            if (rt == null) return;
+            rt.anchorMin = new Vector2(0.06f, 0.10f);
+            rt.anchorMax = new Vector2(0.94f, 0.82f);
+            rt.offsetMin = Vector2.zero;
+            rt.offsetMax = Vector2.zero;
+            if (vlg == null) return;
+            vlg.spacing = MenuVerticalSpacing;
+            vlg.padding = new RectOffset(8, 8, 8, 8);
+            vlg.childAlignment = TextAnchor.UpperCenter;
+            vlg.childControlHeight = false;
+            vlg.childControlWidth = true;
+            vlg.childForceExpandWidth = true;
+            vlg.childForceExpandHeight = false;
+        }
+
+        public static void ApplyHomeMenuRowSize(RectTransform row)
+        {
+            if (row == null) return;
+            row.sizeDelta = MenuButtonSize;
+        }
+
+        [MenuItem("Geidai/Scenes/Fix Game Select Menu Layout")]
+        public static void FixGameSelectMenuLayout()
+        {
+            var scenePath = $"{SceneDir}/GeidaiGameSelect.unity";
+            EditorSceneManager.OpenScene(scenePath);
+            var safeArea = GameObject.Find("SafeArea")?.transform;
+            if (safeArea == null)
+            {
+                Debug.LogError("[HomeUiSceneBuilder] SafeArea not found in Game Select scene.");
+                return;
+            }
+
+            var container = EnsureGameMenuContainer(safeArea);
+            ReparentGameSelectRow(container, "Game1Button", 0);
+            ReparentGameSelectRow(container, "Game2Button", 1);
+            ReparentGameSelectRow(container, "Game3Button", 2);
+            ApplyGameSelectMenuLabelTypography();
+
+            EditorSceneManager.MarkSceneDirty(safeArea.gameObject.scene);
+            EditorSceneManager.SaveOpenScenes();
+            Debug.Log("[HomeUiSceneBuilder] Game Select menu layout aligned with Home (spacing 28, height 120).");
+        }
+
+        private static void ReparentGameSelectRow(Transform container, string buttonName, int siblingIndex)
+        {
+            var go = GameObject.Find(buttonName);
+            if (go == null) return;
+            go.transform.SetParent(container, false);
+            go.transform.SetSiblingIndex(siblingIndex);
+            ApplyHomeMenuRowSize(go.GetComponent<RectTransform>());
+        }
+
+        public static void ApplyGameSelectMenuLabelTypography()
+        {
+            ApplyMenuButtonLabelTypography("Game1Button");
+            ApplyMenuButtonLabelTypography("Game2Button");
+            ApplyMenuButtonLabelTypography("Game3Button");
+        }
+
+        private static void ApplyMenuButtonLabelTypography(string buttonName)
+        {
+            var go = GameObject.Find(buttonName);
+            if (go == null) return;
+            var label = go.GetComponentInChildren<Text>();
+            if (label == null) return;
+            label.fontSize = HomeUiTheme.MenuButtonLabel;
+            label.font = ResolveUiFont(HomeUiTheme.MenuButtonLabel);
+            label.fontStyle = FontStyle.Bold;
+            label.color = HomeUiTheme.MenuText;
+            label.alignment = TextAnchor.MiddleCenter;
+        }
+
         public static void BuildGameSelectScene()
         {
             EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
@@ -220,11 +319,10 @@ namespace Geidai.EditorTools
             titleRt.offsetMin = Vector2.zero;
             titleRt.offsetMax = Vector2.zero;
 
-            var game1 = CreateWhiteMenuButton(content, "Game1Button", "① おとあわせ", new Vector2(680, 100));
-            var g1Rt = game1.GetComponent<RectTransform>();
-            g1Rt.anchorMin = new Vector2(0.5f, 0.55f);
-            g1Rt.anchorMax = new Vector2(0.5f, 0.55f);
-            g1Rt.anchoredPosition = Vector2.zero;
+            var menuContainer = EnsureGameMenuContainer(content);
+            var game1 = CreateWhiteMenuButton(menuContainer, "Game1Button", "① おとあわせ", MenuButtonSize, HomeUiTheme.MenuButtonLabel);
+            var game2 = CreateWhiteMenuButton(menuContainer, "Game2Button", "② しんけいすいじゃく", MenuButtonSize, HomeUiTheme.MenuButtonLabel);
+            var game3 = CreateWhiteMenuButton(menuContainer, "Game3Button", "③ おとならべ", MenuButtonSize, HomeUiTheme.MenuButtonLabel);
 
             var back = CreateWhiteMenuButton(content, "BackButton", "ホームにもどる", new Vector2(320, 80));
             var backRt = back.GetComponent<RectTransform>();
@@ -240,6 +338,8 @@ namespace Geidai.EditorTools
             WireScreenRoot(ctrl, shell.responsive, shell.fitter);
             var so = new SerializedObject(ctrl);
             so.FindProperty("game1Button").objectReferenceValue = game1;
+            so.FindProperty("game2Button").objectReferenceValue = game2;
+            so.FindProperty("game3Button").objectReferenceValue = game3;
             so.FindProperty("backButton").objectReferenceValue = back;
             so.FindProperty("errorPresenter").objectReferenceValue = error;
             so.ApplyModifiedPropertiesWithoutUndo();
@@ -465,7 +565,7 @@ namespace Geidai.EditorTools
             iconImg.preserveAspect = true;
             iconImg.raycastTarget = false;
 
-            var label = CreateText(go.transform, "Label", "メニュー", 48, TextAnchor.MiddleLeft);
+            var label = CreateText(go.transform, "Label", "メニュー", HomeUiTheme.MenuButtonLabel, TextAnchor.MiddleLeft);
             var labelRt = label.rectTransform;
             labelRt.anchorMin = new Vector2(0f, 0f);
             labelRt.anchorMax = new Vector2(1f, 1f);
@@ -508,7 +608,12 @@ namespace Geidai.EditorTools
             return btn;
         }
 
-        private static Button CreateWhiteMenuButton(Transform parent, string name, string label, Vector2 size)
+        private static Button CreateWhiteMenuButton(
+            Transform parent,
+            string name,
+            string label,
+            Vector2 size,
+            int labelFontSize = HomeUiTheme.ActionButtonLabel)
         {
             var pill = LoadSprite($"{ArtDir}/menu_button_pill.png");
             var go = new GameObject(name, typeof(RectTransform), typeof(Image), typeof(Button));
@@ -521,7 +626,7 @@ namespace Geidai.EditorTools
             var btn = go.GetComponent<Button>();
             btn.targetGraphic = img;
             ConfigureButtonColors(btn);
-            var text = CreateText(go.transform, "Label", label, HomeUiTheme.ActionButtonLabel, TextAnchor.MiddleCenter);
+            var text = CreateText(go.transform, "Label", label, labelFontSize, TextAnchor.MiddleCenter);
             StretchFull(text.rectTransform);
             text.color = HomeUiTheme.MenuText;
             text.fontStyle = FontStyle.Bold;

@@ -1,4 +1,5 @@
 using System.Collections;
+using Geidai.Common.UI;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,7 +16,7 @@ namespace Geidai.Game3
         private Sprite _defaultSprite;
         private Color _defaultColor;
 
-        // ƒhƒ‰ƒbƒO’¼Œã‚ÌButtonƒNƒŠƒbƒN‚ğ–³‹‚·‚é‚½‚ß
+        // ï¿½hï¿½ï¿½ï¿½bï¿½Oï¿½ï¿½ï¿½ï¿½ï¿½Buttonï¿½Nï¿½ï¿½ï¿½bï¿½Nï¿½ğ–³ï¿½ï¿½ï¿½ï¿½é‚½ï¿½ï¿½
         private bool _suppressClick;
 
         public int Cents => _cents;
@@ -33,7 +34,13 @@ namespace Geidai.Game3
 
             _button.onClick.AddListener(OnClicked);
         }
-        public void Setup(Game3Controller controller,int cents,Sprite soundImage)
+
+            private void OnEnable()
+        {
+            InstrumentFloorShadow.Ensure(transform as RectTransform);
+        }
+
+        public void Setup(Game3Controller controller, int cents, Sprite soundImage)
         {
             _controller = controller;
             _cents = cents;
@@ -55,7 +62,7 @@ namespace Geidai.Game3
         }
 
         /// <summary>
-        /// ƒhƒ‰ƒbƒO‚ªn‚Ü‚Á‚½‚±‚Æ‚ğ’Ê’m‚·‚éB
+        /// ï¿½hï¿½ï¿½ï¿½bï¿½Oï¿½ï¿½ï¿½nï¿½Ü‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ‚ï¿½Ê’mï¿½ï¿½ï¿½ï¿½B
         /// </summary>
         public void NotifyDragStarted()
         {
@@ -67,8 +74,8 @@ namespace Geidai.Game3
         }
 
         /// <summary>
-        /// ƒhƒ‰ƒbƒOˆ—‚ªŠ®‘S‚ÉI‚í‚Á‚½ŒãA
-        /// Ÿ‚ÌƒtƒŒ[ƒ€‚©‚çÄ‚ÑƒNƒŠƒbƒN‚ğ‹–‰Â‚·‚éB
+        /// ï¿½hï¿½ï¿½ï¿½bï¿½Oï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Sï¿½ÉIï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½A
+        /// ï¿½ï¿½ï¿½Ìƒtï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ÑƒNï¿½ï¿½ï¿½bï¿½Nï¿½ï¿½ï¿½ï¿½ï¿½Â‚ï¿½ï¿½ï¿½B
         /// </summary>
         public void NotifyDragFinished()
         {
@@ -83,7 +90,7 @@ namespace Geidai.Game3
 
         private void OnClicked()
         {
-            // ƒhƒ‰ƒbƒO‚É‚æ‚Á‚Ä”­¶‚µ‚½ƒNƒŠƒbƒN‚È‚ç‰¹‚ğ–Â‚ç‚³‚È‚¢
+            // ï¿½hï¿½ï¿½ï¿½bï¿½Oï¿½É‚ï¿½ï¿½ï¿½Ä”ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½bï¿½Nï¿½È‚ç‰¹ï¿½ï¿½Â‚ç‚³ï¿½È‚ï¿½
             if (_suppressClick)
                 return;
 

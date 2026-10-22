@@ -131,7 +131,7 @@ Test Runner で次を実行（フィルタ例: `CanRemoveTag` / `TimbreLabels` /
 - [x] `GeidaiLibrary` 再生成（BuildLibrary / Build All）
 - [x] EditMode（本ワーク関連）PASS
 - [ ] Play Mode: 図鑑フィルタ・詳細・試聴
-- [ ] Editor Window: WAV→属性→保存／タグ CRUD
+- [ ] Editor Window: WAV→属性→保存／タグ CRUD／音の削除・↑↓ 並べ替え
 - [ ] Create からカタログ読取スモーク
 - [ ] （任意）Android/iOS 展示ビルド
 
