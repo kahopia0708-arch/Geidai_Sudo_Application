@@ -53,7 +53,7 @@ namespace Geidai.Common.Game
             var buffer = BufferFromClip(selected.clipRef);
             if (buffer == null) return false;
 
-            var sprite = selected.imageRef != null ? selected.imageRef : placeholderTarget;
+            var sprite = selected.imageRef != null ? selected.imageRef : null;
             selection = new SoundMatchBaseSelection(buffer, selected.id, sprite);
             return true;
         }

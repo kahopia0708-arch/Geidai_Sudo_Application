@@ -6,7 +6,7 @@ using UnityEngine.UI;
 namespace Geidai.Game1
 {
     /// <summary>
-    /// 左の睡蓮上のお手本カエル。タップで口を開けてお手本の音を出す。
+    /// 左の師匠。タップでお手本の音。
     /// </summary>
     public class FrogTargetView : MonoBehaviour, IPointerClickHandler
     {
@@ -40,6 +40,7 @@ namespace Geidai.Game1
 
         public void OpenMouth()
         {
+            if (_mouthOpen == null) return;
             Game1MouthVisual.SetOpen(targetImage, _mouthOpen, _mouthClosed);
         }
 

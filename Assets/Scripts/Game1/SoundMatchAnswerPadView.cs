@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Geidai.Game1
 {
     /// <summary>
-    /// 右側の空き睡蓮（答えを置く場所）。おたまをここに重ねて離すと答え合わせが始まる。
+    /// 弟子側（答えを置く場所）。楽器を重ねると吸着して答え合わせが始まる。
     /// </summary>
     public class SoundMatchAnswerPadView : MonoBehaviour
     {

@@ -13,6 +13,7 @@ namespace Geidai.Game1
         {
             if (image == null || closedSprite == null) return;
             image.sprite = closedSprite;
+            image.enabled = true;
             Game1CharacterImage.Apply(image);
         }
 
@@ -22,6 +23,7 @@ namespace Geidai.Game1
             var sprite = openSprite != null ? openSprite : closedFallback;
             if (sprite == null) return;
             image.sprite = sprite;
+            image.enabled = true;
             Game1CharacterImage.Apply(image);
         }
 

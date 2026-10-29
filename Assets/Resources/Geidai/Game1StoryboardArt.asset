@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1b2c3d4e5f6478990abcdef12345679, type: 3}
+  m_Name: Game1StoryboardArt
+  m_EditorClassIdentifier: Geidai.Game1::Geidai.Game1.Game1StoryboardArt
+  wizardMaster: {fileID: 21300000, guid: fb75f039c5fc34669aa24c435412c5eb, type: 3}
+  wizardApprentice: {fileID: 21300000, guid: 32d5c0ad6b7c846bcacbf23b481aba5a, type: 3}

@@ -61,9 +61,9 @@
 |---|---|
 | [docs/Sさん向けガイド.md](docs/Sさん向けガイド.md) | **デザイン変更・お題/設定の差し替え手順**（Sさん向け） |
 | [docs/Fさん向けガイド.md](docs/Fさん向けガイド.md) | **ゲーム実装・音楽理論・シーン所有**（Fさん向け） |
+| [docs/project/](docs/project/) | **企画・仕様・打ち合わせの正本**（`プロジェクト概要.md`・`input/` PDF） |
 | `aidlc-docs/` | AI-DLC の要件・設計・Construction 記録（実装者向け） |
 | `aidlc-docs/construction/build-and-test/` | ビルド・テスト・実機確認チェックリスト |
-| 企画の正（Google Drive） | `プロジェクト概要.md` および `input/`（リポジトリには複製しない） |
 
 ---
 
@@ -84,4 +84,4 @@
 
 - **オフライン専用**（サーバー通信・課金・Place 共有は MVP 対象外）  
 - `Geidai/Scenes/Build All Geidai Scenes` は骨組み再生成用。Sさんがシーン上で直した見た目が消えます  
-- 企画・仕様の最新は Google Drive の資料を正とする（`.cursor/rules/project-reference.mdc`）
+- 企画・仕様の正は **`docs/project/`**（`.cursor/rules/project-reference.mdc`）

@@ -13,7 +13,6 @@ namespace Geidai.EditorTools
     {
         private const string ScenePath = "Assets/Scenes/Geidai/GeidaiGame1.unity";
         private const string LilyPath = "Assets/Art/Game/Game1_Placeholder_LilyPad.png";
-        private const string FrogPath = "Assets/Art/Game/Game1_Placeholder_Frog.png";
         private const string TadpolePath = "Assets/Art/Game/Game1_Placeholder_Tadpole.png";
 
         [MenuItem("Geidai/Game1/Apply Storyboard Pond Layout")]
@@ -28,7 +27,7 @@ namespace Geidai.EditorTools
             }
 
             var lily = LoadSprite(LilyPath);
-            var frogSprite = LoadSprite(FrogPath);
+            var frogSprite = LoadSprite(Game1ArtPaths.WizardMaster);
             var tadpoleSprite = LoadSprite(TadpolePath);
 
             EnsureWater(playArea);
@@ -177,10 +176,7 @@ namespace Geidai.EditorTools
                 snap = snapGo.GetComponent<RectTransform>();
             }
 
-            snap.anchorMin = new Vector2(0.5f, 0.55f);
-            snap.anchorMax = new Vector2(0.5f, 0.55f);
-            snap.sizeDelta = Game1StoryboardLayout.AnswerSnapSize;
-            snap.anchoredPosition = Vector2.zero;
+            Game1StoryboardLayout.ApplyAnswerSnapLayout(snap);
 
             var answer = padRoot.GetComponent<SoundMatchAnswerPadView>();
             var so = new SerializedObject(answer);

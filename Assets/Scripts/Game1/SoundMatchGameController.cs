@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Geidai.Common.Game;
+using Geidai.Common.Library;
 using Geidai.Common.Models;
 using Geidai.Common.Results;
 using Geidai.Common.UI;
@@ -14,7 +15,7 @@ using Geidai.Services.Storage;
 namespace Geidai.Game1
 {
     /// <summary>
-    /// ①音合わせ。右睡蓮へおたまを置くと答え合わせ（カエル→おたまの順再生）→判定。
+    /// ①音合わせ。弟子へ図鑑楽器をドラッグすると答え合わせ（師匠→楽器の順再生）→判定。
     /// 正解後は次の問題／メニューを選ぶ。不正解はメッセージ後におたまが池へアニメで戻る。
     /// 音再生中もタップ・ドラッグはブロックしない（操作は並行）。
     /// </summary>
@@ -62,29 +63,37 @@ namespace Geidai.Game1
         private GameSession _session;
         private AudioBuffer _baseBuffer;
         private string _baseSoundId = string.Empty;
-        private Sprite _choiceDisplaySprite;
-        private Sprite _choiceOpenSprite;
         private Sprite _targetDisplaySprite;
-        private Sprite _targetOpenSprite;
-        private Sprite _evolvedChoiceSprite;
+        private Sprite _wizardMasterSprite;
+        private Sprite _wizardApprenticeSprite;
+        private Sprite _choiceFallbackSprite;
         private State _state = State.Loading;
         private Coroutine _matchCoroutine;
         private Coroutine _frogDemoCoroutine;
         private readonly Dictionary<ChoiceItemView, Coroutine> _choiceDemoCoroutines = new();
         private Coroutine _wrongAnswerCoroutine;
+        private RectTransform _wizardStage;
+        private RectTransform _apprenticeStage;
+        private SoundMatchChoicePresentation[] _currentChoicePresentations = System.Array.Empty<SoundMatchChoicePresentation>();
 
         internal bool HasAnswerPad => answerPad != null;
 
         internal SoundMatchConfig Config => config;
 
+        internal RectTransform ChoicePoolParent => _playArea;
+
         internal void ApplyStoryboardReferences(
-            FrogTargetView demoFrog,
+            FrogTargetView demoWizard,
             SoundMatchAnswerPadView pad,
-            RectTransform playArea)
+            RectTransform playArea,
+            RectTransform wizardStage,
+            RectTransform apprenticeStage)
         {
-            frog = demoFrog;
+            frog = demoWizard;
             answerPad = pad;
             _playArea = playArea;
+            _wizardStage = wizardStage;
+            _apprenticeStage = apprenticeStage;
         }
 
         private void Awake()
@@ -106,6 +115,9 @@ namespace Geidai.Game1
         protected override void OnShow()
         {
             EnsureWired();
+            var bootstrap = GetComponent<SoundMatchStoryboardUiBootstrap>();
+            if (bootstrap != null)
+                bootstrap.EnsureStoryboardBuilt();
             EnsureInstrumentShadows();
             if (resultEffect != null && _playArea != null)
                 resultEffect.EnsureOverlayRoot(_playArea);
@@ -141,11 +153,20 @@ namespace Geidai.Game1
         private void RefreshDisplaySpritesFromConfig()
         {
             if (config == null) return;
-            _targetDisplaySprite = config.PlaceholderTargetSprite;
-            _targetOpenSprite = config.PlaceholderTargetOpenSprite;
-            _choiceDisplaySprite = config.PlaceholderChoiceSprite;
-            _choiceOpenSprite = config.PlaceholderChoiceOpenSprite;
-            _evolvedChoiceSprite = config.PlaceholderTargetSprite;
+            _wizardMasterSprite = Game1WizardArt.ResolveMaster(config);
+            _wizardApprenticeSprite = Game1WizardArt.ResolveApprentice(config);
+            _choiceFallbackSprite = config.PlaceholderChoiceSprite;
+            _targetDisplaySprite = SanitizeTargetDisplaySprite(_targetDisplaySprite);
+            if (_targetDisplaySprite == null)
+                _targetDisplaySprite = SanitizeTargetDisplaySprite(_choiceFallbackSprite);
+        }
+
+        private Sprite SanitizeTargetDisplaySprite(Sprite sprite)
+        {
+            return Game1LegacyTadpoleMotif.ResolveInstrumentSprite(
+                config,
+                sprite,
+                Game1LegacyTadpoleMotif.FirstCatalogInstrumentSprite(config));
         }
 
         /// <summary>ゲームを開始する（素材選択・フォールバック集約＋出題生成）。</summary>
@@ -175,15 +196,24 @@ namespace Geidai.Game1
             if (resultEffect != null)
             {
                 if (_playArea != null) resultEffect.EnsureOverlayRoot(_playArea);
+                resultEffect.HideResultSummary();
                 resultEffect.ResetGrowth(_targetDisplaySprite);
                 resultEffect.HideCorrectCelebration();
             }
+
+            ResetAllChoiceInteractionState();
             PresentCurrent();
         }
 
-        private Sprite ResolveEvolvedSprite()
+        private void ResetAllChoiceInteractionState()
         {
-            return config != null ? config.PlaceholderTargetSprite : _targetDisplaySprite;
+            if (choiceViews == null) return;
+            for (int i = 0; i < choiceViews.Count; i++)
+            {
+                var view = choiceViews[i];
+                if (view == null) continue;
+                view.PrepareForPoolHome(_playArea);
+            }
         }
 
         private bool TryLoadBase(int seedValue)
@@ -197,6 +227,8 @@ namespace Geidai.Game1
             {
                 _baseBuffer = fromCatalog.Buffer;
                 _baseSoundId = fromCatalog.SoundId;
+                _targetDisplaySprite = fromCatalog.DisplaySprite;
+                _targetDisplaySprite = SanitizeTargetDisplaySprite(_targetDisplaySprite);
                 RefreshDisplaySpritesFromConfig();
                 return true;
             }
@@ -260,6 +292,8 @@ namespace Geidai.Game1
 
             _state = State.Playing;
             StopAllPreviewDemos();
+            if (_baseBuffer != null && _pitch != null)
+                _pitch.SetBase(_baseBuffer);
             if (resultEffect != null)
             {
                 if (_playArea != null) resultEffect.EnsureOverlayRoot(_playArea);
@@ -267,26 +301,34 @@ namespace Geidai.Game1
                 resultEffect.HideWrongMessage();
             }
             if (frog != null)
-                frog.Setup(this, _targetDisplaySprite, _targetOpenSprite);
-            RefreshDisplaySpritesFromConfig();
-            _evolvedChoiceSprite = ResolveEvolvedSprite();
+            {
+                RefreshDisplaySpritesFromConfig();
+                frog.Setup(this, _wizardMasterSprite, null);
+            }
+            else
+            {
+                RefreshDisplaySpritesFromConfig();
+            }
+            if (_wizardStage != null)
+                Game1WizardHeldInstrument.Hide(_wizardStage);
+
+            var choicePresentations = BuildChoicePresentationsForCurrent(q);
 
             for (int i = 0; i < choiceViews.Count; i++)
             {
                 var view = choiceViews[i];
                 if (view == null) continue;
+                view.SetInputLocked(false);
                 if (i < q.choices.Count)
                 {
                     view.gameObject.SetActive(true);
-                    view.Setup(
-                        this,
-                        q.choices[i],
-                        i,
-                        _choiceDisplaySprite,
-                        _evolvedChoiceSprite,
-                        _choiceOpenSprite);
-                    view.ApplyPoolHomeLayout(i);
-                    view.SetAsTadpole(_choiceDisplaySprite);
+                    var presentation = i < choicePresentations.Length
+                        ? choicePresentations[i]
+                        : new SoundMatchChoicePresentation(_targetDisplaySprite, _baseSoundId);
+                    var sprite = ResolveChoiceDisplaySprite(presentation);
+                    view.Setup(this, q.choices[i], i, sprite, sprite, null);
+                    view.ApplyPoolHomeLayout(i, q.choices.Count);
+                    view.SetInstrument(sprite);
                 }
                 else
                 {
@@ -295,7 +337,106 @@ namespace Geidai.Game1
             }
         }
 
-        /// <summary>カエルタップ：口を開けてお手本の音。</summary>
+        private SoundMatchChoicePresentation[] BuildChoicePresentationsForCurrent(Question q)
+        {
+            if (q == null || _session == null)
+                return System.Array.Empty<SoundMatchChoicePresentation>();
+
+            int effectiveSeed = seed != 0 ? seed : System.Environment.TickCount;
+            effectiveSeed = unchecked(effectiveSeed + _session.currentIndex * 997);
+            var presentations = SoundMatchChoiceCatalogSprites.BuildForQuestion(
+                config != null ? config.CuratedCatalog : null,
+                SanitizeTargetDisplaySprite(_targetDisplaySprite),
+                _baseSoundId,
+                q.choices.Count,
+                q.correctIndex,
+                effectiveSeed);
+            _currentChoicePresentations = presentations;
+            return presentations;
+        }
+
+        private Sprite ResolveChoiceDisplaySprite(SoundMatchChoicePresentation presentation)
+        {
+            var fromPresentation = Game1LegacyTadpoleMotif.ResolveInstrumentSprite(
+                config,
+                presentation.Sprite,
+                null);
+            if (fromPresentation != null) return fromPresentation;
+
+            return SanitizeTargetDisplaySprite(_targetDisplaySprite);
+        }
+
+        private bool TryResolveBuffer(string soundId, out AudioBuffer buffer)
+        {
+            buffer = null;
+            if (!string.IsNullOrEmpty(soundId) && soundId == _baseSoundId && _baseBuffer != null)
+            {
+                buffer = _baseBuffer;
+                return true;
+            }
+
+            if (config?.CuratedCatalog == null || string.IsNullOrEmpty(soundId))
+                return false;
+
+            foreach (var item in config.CuratedCatalog.ValidItems())
+            {
+                if (item == null || item.id != soundId) continue;
+                buffer = SoundMatchBaseSoundSelector.BufferFromClip(item.clipRef);
+                return buffer != null;
+            }
+
+            return false;
+        }
+
+        private void PlayTargetPitch(int cents)
+        {
+            if (_pitch == null) return;
+            if (_baseBuffer != null)
+                _pitch.Play(_baseBuffer, cents);
+            else
+                _pitch.Play(cents);
+        }
+
+        private void PlayChoicePitch(int choiceIndex, int cents)
+        {
+            if (_pitch == null) return;
+            string soundId = _baseSoundId;
+            if (choiceIndex >= 0 &&
+                choiceIndex < _currentChoicePresentations.Length &&
+                !string.IsNullOrEmpty(_currentChoicePresentations[choiceIndex].SoundId))
+            {
+                soundId = _currentChoicePresentations[choiceIndex].SoundId;
+            }
+
+            int playbackCents = ResolveChoicePlaybackCents(soundId, cents);
+            if (TryResolveBuffer(soundId, out var buffer))
+                _pitch.Play(buffer, playbackCents);
+            else if (_baseBuffer != null)
+                _pitch.Play(_baseBuffer, cents);
+            else
+                _pitch.Play(cents);
+        }
+
+        /// <summary>
+        /// 図鑑 clip の基準 MIDI と今回のお手本音の差を、出題セントに加算する。
+        /// </summary>
+        private int ResolveChoicePlaybackCents(string soundId, int questionCents)
+        {
+            if (config?.CuratedCatalog == null || string.IsNullOrEmpty(soundId))
+                return questionCents;
+
+            var baseDef = config.CuratedCatalog.FindById(_baseSoundId);
+            var choiceDef = config.CuratedCatalog.FindById(soundId);
+            if (baseDef == null || choiceDef == null)
+                return questionCents;
+            if (!baseDef.HasBasePitch || !choiceDef.HasBasePitch)
+                return questionCents;
+
+            int midiDelta = choiceDef.basePitchMidi - baseDef.basePitchMidi;
+            return questionCents + midiDelta * 100;
+        }
+
+        /// <summary>師匠タップ：お手本の音。</summary>
         public void OnDemoFrogTapped(FrogTargetView view)
         {
             if (!CanPreviewSound() || _session == null || view == null) return;
@@ -358,7 +499,7 @@ namespace Geidai.Game1
             try
             {
                 view.OpenMouth();
-                _pitch.Play(q.targetCents);
+                PlayTargetPitch(q.targetCents);
                 yield return WaitForPreviewPlayback();
             }
             finally
@@ -374,7 +515,7 @@ namespace Geidai.Game1
             try
             {
                 view.OpenMouth();
-                _pitch.Play(view.Cents);
+                PlayChoicePitch(view.Index, view.Cents);
                 yield return WaitForPreviewPlayback();
             }
             finally
@@ -398,7 +539,7 @@ namespace Geidai.Game1
 
         private IEnumerator PlayPitchAndWait(int cents)
         {
-            _pitch.Play(cents);
+            PlayTargetPitch(cents);
             yield return WaitForPitchPlayback();
         }
 
@@ -407,14 +548,14 @@ namespace Geidai.Game1
         {
             var q = _session != null ? _session.Current : null;
             if (q == null || _pitch == null) return;
-            _pitch.Play(q.targetCents);
+            PlayTargetPitch(q.targetCents);
         }
 
         /// <summary>選択肢の確認再生（口アニメなし・内部用）。</summary>
-        public void PreviewChoice(int cents)
+        public void PreviewChoice(int choiceIndex, int cents)
         {
             if (_pitch == null) return;
-            _pitch.Play(cents);
+            PlayChoicePitch(choiceIndex, cents);
         }
 
         /// <summary>おたまを右の睡蓮に置いたとき：答え合わせ（カエル→おたまの順再生）を開始。</summary>
@@ -438,7 +579,6 @@ namespace Geidai.Game1
             if (!pad.AcceptsDrop(view.transform as RectTransform, screenPos, cam))
             {
                 view.ResetPosition();
-                view.SetAsTadpole(_choiceDisplaySprite);
                 return;
             }
 
@@ -446,7 +586,6 @@ namespace Geidai.Game1
                 _playArea = view.transform.parent as RectTransform;
 
             ReturnOtherChoicesToPool(view);
-            view.SnapOverAnchor(pad.SnapAnchor, _playArea, cam);
             StopMatchCoroutine();
             if (_wrongAnswerCoroutine != null)
             {
@@ -454,7 +593,15 @@ namespace Geidai.Game1
                 _wrongAnswerCoroutine = null;
             }
 
-            _matchCoroutine = StartCoroutine(RunAnswerMatch(view));
+            _matchCoroutine = StartCoroutine(RunAnswerMatchAfterSnap(view));
+        }
+
+        private IEnumerator RunAnswerMatchAfterSnap(ChoiceItemView view)
+        {
+            var pad = answerPad;
+            if (pad != null && pad.SnapAnchor != null)
+                yield return view.AnimateMagnetSnap(pad.SnapAnchor, 0.2f);
+            yield return RunAnswerMatch(view);
         }
 
         private void ReturnOtherChoicesToPool(ChoiceItemView active)
@@ -465,7 +612,6 @@ namespace Geidai.Game1
                 var c = choiceViews[i];
                 if (c == null || c == active) continue;
                 c.ResetPosition();
-                c.SetAsTadpole(_choiceDisplaySprite);
             }
         }
 
@@ -481,13 +627,11 @@ namespace Geidai.Game1
 
             StopAllPreviewDemos();
 
-            // 1. お手本（左のカエル）の音
+            // 1. 師匠のお手本の音
             if (frog != null)
             {
-                frog.OpenMouth();
-                _pitch.Play(q.targetCents);
+                PlayTargetPitch(q.targetCents);
                 yield return WaitForPitchPlayback();
-                frog.CloseMouth();
             }
             else
             {
@@ -497,17 +641,18 @@ namespace Geidai.Game1
             if (gapBetweenMatchSoundsSeconds > 0f)
                 yield return new WaitForSeconds(gapBetweenMatchSoundsSeconds);
 
-            // 2. 右睡蓮上のおたまの音
-            view.OpenMouth();
-            _pitch.Play(view.Cents);
+            // 2. 弟子の手元の楽器の音（図鑑 clip ＋ ピッチ）
+            PlayChoicePitch(view.Index, view.Cents);
             yield return WaitForPitchPlayback();
-            view.CloseMouth();
 
             bool correct = view.Index == q.correctIndex;
 
             if (correct)
             {
-                view.EvolveToFrog();
+                if (_wizardStage != null)
+                    Game1WizardHeldInstrument.Reveal(_wizardStage, SanitizeTargetDisplaySprite(_targetDisplaySprite));
+
+                view.ConfirmHeldMatch();
                 _session.MarkCorrect();
                 yield return view.RunCelebratePulse();
 
@@ -519,7 +664,7 @@ namespace Geidai.Game1
                     resultEffect.EnsureOverlayRoot(_playArea);
                     resultEffect.ShowCorrectCelebration(
                         "せいかい！ おとが あいました",
-                        "おたまが カエルに なったよ。つぎは どうする？",
+                        "おんが ぴったり！ つぎは どうする？",
                         OnCorrectNextQuestion,
                         OnCorrectReturnToMenu);
                 }
@@ -535,7 +680,6 @@ namespace Geidai.Game1
 
         private IEnumerator HandleWrongAnswer(ChoiceItemView view)
         {
-            view.SetAsTadpole(_choiceDisplaySprite);
             if (resultEffect != null)
             {
                 resultEffect.EnsureOverlayRoot(_playArea);
@@ -556,12 +700,24 @@ namespace Geidai.Game1
         {
             if (_state != State.AwaitingProgressChoice || _session == null) return;
             if (resultEffect != null) resultEffect.HideCorrectCelebration();
+            ReturnAllChoicesToPoolHome();
             _session.Advance();
             _state = State.Playing;
             if (_session.IsFinished)
                 ShowResult();
             else
                 PresentCurrent();
+        }
+
+        private void ReturnAllChoicesToPoolHome()
+        {
+            if (choiceViews == null) return;
+            for (int i = 0; i < choiceViews.Count; i++)
+            {
+                var view = choiceViews[i];
+                if (view == null) continue;
+                view.PrepareForPoolHome(_playArea);
+            }
         }
 
         private void OnCorrectReturnToMenu()
@@ -598,8 +754,25 @@ namespace Geidai.Game1
         private void ShowResult()
         {
             _state = State.Result;
+            StopMatchCoroutine();
+            StopAllPreviewDemos();
+            FinalizeChoicesForSessionEnd();
+            if (_wizardStage != null)
+                Game1WizardHeldInstrument.Hide(_wizardStage);
             if (resultEffect != null && _session != null)
                 resultEffect.ShowResult(_session.correctCount, _session.Total);
+        }
+
+        private void FinalizeChoicesForSessionEnd()
+        {
+            ReturnAllChoicesToPoolHome();
+            if (choiceViews == null) return;
+            for (int i = 0; i < choiceViews.Count; i++)
+            {
+                var view = choiceViews[i];
+                if (view == null) continue;
+                view.FinalizeForSessionEnd(_playArea);
+            }
         }
 
         private void ShowEmpty()
@@ -624,6 +797,7 @@ namespace Geidai.Game1
             {
                 resultEffect.HideCorrectCelebration();
                 resultEffect.HideWrongMessage();
+                resultEffect.HideResultSummary();
             }
 
             if (_pitch != null) _pitch.Stop();

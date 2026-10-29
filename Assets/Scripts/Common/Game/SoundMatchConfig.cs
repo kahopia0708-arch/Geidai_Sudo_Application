@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Geidai.Common.Library;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Geidai.Common.Game
 {
@@ -34,10 +35,14 @@ namespace Geidai.Common.Game
         [Tooltip("音合わせの出題素材（音図鑑）。優先して使用する。")]
         [SerializeField] private CuratedSoundCatalog curatedCatalog;
 
-        [Tooltip("図鑑音に imageRef が無いときのお手本（カエル）暫定スプライト。")]
-        [SerializeField] private Sprite placeholderTargetSprite;
+        [Tooltip("師匠（魔法使い）。Game1_音合わせ_魔法使い師匠①[輪郭弱め].png")]
+        [FormerlySerializedAs("placeholderTargetSprite")]
+        [SerializeField] private Sprite wizardMasterSprite;
 
-        [Tooltip("選択肢（おたま）の暫定スプライト。図鑑 imageRef が無いときに使う。")]
+        [Tooltip("弟子。Game1_音合わせ_魔法使い弟子①[輪郭弱め].png")]
+        [SerializeField] private Sprite wizardApprenticeSprite;
+
+        [Tooltip("選択肢（図鑑楽器）の暫定スプライト。図鑑 imageRef が無いときに使う。")]
         [SerializeField] private Sprite placeholderChoiceSprite;
 
         [Tooltip("睡蓮パッドの暫定スプライト。")]
@@ -52,8 +57,8 @@ namespace Geidai.Common.Game
         /// <summary>出題数（>=1 にクランプ）。</summary>
         public int QuestionCount => Mathf.Max(1, questionCount);
 
-        /// <summary>選択肢数（>=2 にクランプ）。</summary>
-        public int ChoiceCount => Mathf.Max(2, choiceCount);
+        /// <summary>選択肢数（3〜6 にクランプ。仕様 8/18）。</summary>
+        public int ChoiceCount => Mathf.Clamp(choiceCount, 3, 6);
 
         /// <summary>難易度段階（読み取り専用）。</summary>
         public IReadOnlyList<DifficultyLevel> Difficulties => difficulties;
@@ -63,7 +68,12 @@ namespace Geidai.Common.Game
 
         public CuratedSoundCatalog CuratedCatalog => curatedCatalog;
 
-        public Sprite PlaceholderTargetSprite => placeholderTargetSprite;
+        public Sprite PlaceholderTargetSprite => wizardMasterSprite;
+
+        /// <summary>師匠スプライト（<see cref="PlaceholderTargetSprite"/> と同一参照）。</summary>
+        public Sprite WizardMasterSprite => wizardMasterSprite;
+
+        public Sprite WizardApprenticeSprite => wizardApprenticeSprite;
 
         public Sprite PlaceholderChoiceSprite => placeholderChoiceSprite;
 

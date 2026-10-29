@@ -10,7 +10,7 @@ namespace Geidai.Game1
     public class ResultEffectController : MonoBehaviour
     {
         private const string DefaultCorrectBanner = "せいかい！ おとが あいました";
-        private const string DefaultCorrectBody = "おたまが カエルに なったよ";
+        private const string DefaultCorrectBody = "おんが ぴったり！ つぎは どうする？";
         private const string DefaultWrongMessage = "おとが ちがうよ。もういちど きいてみよう";
 
         /// <summary>正解ポップアップ（メッセージ＋ボタン一体）。睡蓮を隠さないよう下寄せ。</summary>
@@ -18,6 +18,8 @@ namespace Geidai.Game1
         private static readonly Vector2 CorrectPanelAnchorMax = new Vector2(0.92f, 0.28f);
 
         [Header("正解演出（カエル成長）")]
+        [Tooltip("OFF = 魔法使い UI（師匠の楽器 Reveal のみ）。ON = 旧カエル／おたま成長。")]
+        [SerializeField] private bool legacyGrowthEnabled;
         [SerializeField] private Image frogImage;
         [SerializeField] private Sprite[] growthStages;
 
@@ -51,6 +53,13 @@ namespace Geidai.Game1
         public void ResetGrowth(Sprite targetSprite)
         {
             if (frogImage == null) return;
+            if (!ShouldUseLegacyGrowth())
+            {
+                HideGrowthImage();
+                return;
+            }
+
+            frogImage.enabled = true;
             if (growthStages != null && growthStages.Length > 0)
                 frogImage.sprite = growthStages[0];
             else if (targetSprite != null)
@@ -94,6 +103,13 @@ namespace Geidai.Game1
             BringFeedbackToFront();
         }
 
+        public void SetLegacyGrowthEnabled(bool enabled)
+        {
+            legacyGrowthEnabled = enabled;
+            if (!enabled)
+                HideGrowthImage();
+        }
+
         public void HideCorrectCelebration()
         {
             if (correctFeedback != null) correctFeedback.SetActive(false);
@@ -134,8 +150,14 @@ namespace Geidai.Game1
             if (resultText != null) resultText.text = $"{total} もん ちゅう {correctCount} もん せいかい！";
         }
 
+        public void HideResultSummary()
+        {
+            if (resultPanel != null) resultPanel.SetActive(false);
+        }
+
         private void AdvanceGrowthStage()
         {
+            if (!ShouldUseLegacyGrowth()) return;
             if (frogImage == null || growthStages == null || growthStages.Length == 0) return;
             int next = Mathf.Min(growthStages.Length - 1, GetCurrentGrowthIndex() + 1);
             frogImage.sprite = growthStages[next];
@@ -151,6 +173,21 @@ namespace Geidai.Game1
             }
 
             return 0;
+        }
+
+        private bool ShouldUseLegacyGrowth()
+        {
+            if (!legacyGrowthEnabled || frogImage == null) return false;
+            var parent = frogImage.transform.parent;
+            if (parent != null && parent.name == "Frog") return false;
+            return true;
+        }
+
+        private void HideGrowthImage()
+        {
+            if (frogImage == null) return;
+            frogImage.sprite = null;
+            frogImage.enabled = false;
         }
 
         private void HideTransient()

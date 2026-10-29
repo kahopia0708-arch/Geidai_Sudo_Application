@@ -15,11 +15,11 @@ namespace Geidai.EditorTools
     {
         private const string ConfigPath = "Assets/Settings/SoundMatchConfig.asset";
         private const string CatalogPath = "Assets/Settings/CuratedSoundCatalog_Default.asset";
-        private const string FrogPath = "Assets/Art/Game/Game1_Placeholder_Frog.png";
         private const string TadpolePath = "Assets/Art/Game/Game1_Placeholder_Tadpole.png";
         private const string FrogOpenPath = "Assets/Art/Game/Game1_Placeholder_Frog_Open.png";
         private const string TadpoleOpenPath = "Assets/Art/Game/Game1_Placeholder_Tadpole_Open.png";
         private const string ScenePath = "Assets/Scenes/Geidai/GeidaiGame1.unity";
+        private const string StoryboardArtResourcesPath = "Assets/Resources/Geidai/Game1StoryboardArt.asset";
 
         [MenuItem("Geidai/Game1/Apply Placeholder Art And Catalog")]
         public static void ApplyAll()
@@ -40,34 +40,53 @@ namespace Geidai.EditorTools
             }
 
             var catalog = AssetDatabase.LoadAssetAtPath<CuratedSoundCatalog>(CatalogPath);
-            var frog = LoadSprite(FrogPath);
+            var wizard = Game1WizardArt.LoadFirstSpriteAtAssetPath(Game1ArtPaths.WizardMaster);
             var tadpole = LoadSprite(TadpolePath);
             var frogOpen = LoadSprite(FrogOpenPath);
             var tadpoleOpen = LoadSprite(TadpoleOpenPath);
+            var apprentice = Game1WizardArt.LoadFirstSpriteAtAssetPath(Game1ArtPaths.WizardApprentice);
 
             var so = new SerializedObject(config);
             so.FindProperty("curatedCatalog").objectReferenceValue = catalog;
-            so.FindProperty("placeholderTargetSprite").objectReferenceValue = frog;
+            so.FindProperty("wizardMasterSprite").objectReferenceValue = wizard;
+            so.FindProperty("wizardApprenticeSprite").objectReferenceValue = apprentice;
             so.FindProperty("placeholderChoiceSprite").objectReferenceValue = tadpole;
             so.FindProperty("placeholderTargetOpenSprite").objectReferenceValue = frogOpen;
             so.FindProperty("placeholderChoiceOpenSprite").objectReferenceValue = tadpoleOpen;
             so.ApplyModifiedPropertiesWithoutUndo();
             EditorUtility.SetDirty(config);
+            ApplyResourcesStoryboardArt(wizard, apprentice);
+        }
+
+        private static void ApplyResourcesStoryboardArt(Sprite wizard, Sprite apprentice)
+        {
+            var art = AssetDatabase.LoadAssetAtPath<Game1StoryboardArt>(StoryboardArtResourcesPath);
+            if (art == null)
+            {
+                Debug.LogWarning($"[Geidai] Missing {StoryboardArtResourcesPath}");
+                return;
+            }
+
+            var so = new SerializedObject(art);
+            so.FindProperty("wizardMaster").objectReferenceValue = wizard;
+            so.FindProperty("wizardApprentice").objectReferenceValue = apprentice;
+            so.ApplyModifiedPropertiesWithoutUndo();
+            EditorUtility.SetDirty(art);
         }
 
         private static void ApplyScene()
         {
             var scene = EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);
-            var frogSprite = LoadSprite(FrogPath);
+            var wizardSprite = Game1WizardArt.LoadFirstSpriteAtAssetPath(Game1ArtPaths.WizardMaster);
             var tadpoleSprite = LoadSprite(TadpolePath);
 
             var frogViews = Object.FindObjectsByType<FrogTargetView>(FindObjectsInactive.Include, FindObjectsSortMode.None);
             foreach (var frog in frogViews)
             {
                 var img = frog.GetComponent<Image>();
-                if (img != null && frogSprite != null)
+                if (img != null && wizardSprite != null)
                 {
-                    img.sprite = frogSprite;
+                    img.sprite = wizardSprite;
                     Game1CharacterImage.Apply(img);
                 }
 
@@ -80,10 +99,10 @@ namespace Geidai.EditorTools
             foreach (var choice in choices)
             {
                 var img = choice.GetComponent<Image>();
-                if (img != null && tadpoleSprite != null)
+                if (img != null)
                 {
-                    img.sprite = tadpoleSprite;
-                    Game1CharacterImage.Apply(img);
+                    img.sprite = null;
+                    img.enabled = false;
                 }
 
                 var so = new SerializedObject(choice);
@@ -110,11 +129,11 @@ namespace Geidai.EditorTools
                 }
 
                 var stages = so.FindProperty("growthStages");
-                if (stages.arraySize == 0 && frogSprite != null && tadpoleSprite != null)
+                if (stages.arraySize == 0 && wizardSprite != null && tadpoleSprite != null)
                 {
                     stages.arraySize = 2;
                     stages.GetArrayElementAtIndex(0).objectReferenceValue = tadpoleSprite;
-                    stages.GetArrayElementAtIndex(1).objectReferenceValue = frogSprite;
+                    stages.GetArrayElementAtIndex(1).objectReferenceValue = wizardSprite;
                 }
 
                 so.ApplyModifiedPropertiesWithoutUndo();
