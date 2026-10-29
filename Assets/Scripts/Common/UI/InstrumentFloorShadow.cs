@@ -60,6 +60,22 @@ namespace Geidai.Common.UI
             shadowRect.sizeDelta = size;
         }
 
+        /// <summary>影の表示／非表示（Game1: ドラッグ中・弟子の手元では OFF）。</summary>
+        public static void SetVisible(RectTransform host, bool visible)
+        {
+            if (host == null) return;
+            var component = host.GetComponent<InstrumentFloorShadow>();
+            if (component == null) return;
+            component.SetShadowVisible(visible);
+        }
+
+        private void SetShadowVisible(bool visible)
+        {
+            EnsureShadowObjects();
+            if (shadowRect != null)
+                shadowRect.gameObject.SetActive(visible);
+        }
+
         private void EnsureShadowObjects()
         {
             if (shadowImage != null && shadowRect != null) return;

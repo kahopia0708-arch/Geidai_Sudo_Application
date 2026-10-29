@@ -667,6 +667,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Geidai.Game1::Geidai.Game1.ChoiceItemView
   previewButton: {fileID: 630687983}
   canvasGroup: {fileID: 421494729}
+  choiceImage: {fileID: 421494731}
 --- !u!225 &421494729
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -712,16 +713,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.55, g: 0.75, b: 0.9, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: b5306661c4964a5188564b34c2fa954e, type: 3}
   m_Type: 0
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -930,11 +931,11 @@ RectTransform:
   - {fileID: 1628138461}
   m_Father: {fileID: 1642255483}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0}
-  m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 36}
-  m_SizeDelta: {x: 280, y: 90}
-  m_Pivot: {x: 0.5, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 24, y: -24}
+  m_SizeDelta: {x: 200, y: 72}
+  m_Pivot: {x: 0, y: 1}
 --- !u!114 &452588275
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1181,6 +1182,7 @@ GameObject:
   m_Component:
   - component: {fileID: 758838547}
   - component: {fileID: 758838548}
+  - component: {fileID: 758838550}
   m_Layer: 0
   m_Name: SoundMatchScreen
   m_TagString: Untagged
@@ -1223,6 +1225,7 @@ MonoBehaviour:
   difficultyIndex: 1
   seed: 0
   frog: {fileID: 1516243521}
+  answerPad: {fileID: 0}
   choiceViews:
   - {fileID: 2006674092}
   - {fileID: 421494728}
@@ -1231,6 +1234,19 @@ MonoBehaviour:
   errorPresenter: {fileID: 795930957}
   emptyState: {fileID: 1515065237}
   backButton: {fileID: 452588275}
+--- !u!114 &758838550
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 758838546}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d87c1e59f009415ab3b84267f03a5376, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Geidai.Game1::Geidai.Game1.SoundMatchStoryboardUiBootstrap
+  controller: {fileID: 758838548}
 --- !u!1 &795930956
 GameObject:
   m_ObjectHideFlags: 0
@@ -1309,8 +1325,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eece20ef3983a4c4c9aa39d5a48c4a39, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Geidai.Game1::Geidai.Game1.ResultEffectController
-  frogImage: {fileID: 0}
-  growthStages: []
+  frogImage: {fileID: 1516243523}
+  growthStages:
+  - {fileID: 21300000, guid: b5306661c4964a5188564b34c2fa954e, type: 3}
+  - {fileID: 21300000, guid: 60ba72f0526c40579fd48d66fbafbd72, type: 3}
   correctFeedback: {fileID: 0}
   retryFeedback: {fileID: 0}
   resultPanel: {fileID: 1907795153}
@@ -1402,6 +1420,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Geidai.Game1::Geidai.Game1.ChoiceItemView
   previewButton: {fileID: 1993762263}
   canvasGroup: {fileID: 988260107}
+  choiceImage: {fileID: 988260109}
 --- !u!225 &988260107
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -1447,16 +1466,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.55, g: 0.75, b: 0.9, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: b5306661c4964a5188564b34c2fa954e, type: 3}
   m_Type: 0
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -1942,8 +1961,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: "\u304A\u305F\u307E\u3092 \u30BF\u30C3\u30D7\u3067 \u304D\u3044\u3066\u3001\u30AB\u30A8\u30EB\u3078
-    \u30C9\u30E9\u30C3\u30B0\u3057\u3066\u306D"
+  m_Text: "\u53F3\u306E \u7761\u84EE\u3078 \u304A\u305F\u307E\u3092 \u7F6E\u304F\u3068 \u3042\u3044\u3066\u5408\u308F\u305B\uFF08\u30AB\u30A8\u30EB\u2192\u304A\u305F\u307E\u306E\u304A\u3068\uFF09\u3002\u305B\u3044\u3053\u3046\u3067 \u304A\u305F\u307E \u304C \u30AB\u30A8\u30EB\u306B\u9032\u5316"
 --- !u!222 &1439228185
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2433,6 +2451,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Geidai.Game1::Geidai.Game1.FrogTargetView
   previewButton: {fileID: 425635384}
   dropArea: {fileID: 1516243522}
+  targetImage: {fileID: 1516243523}
 --- !u!224 &1516243522
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2466,16 +2485,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.4, g: 0.7, b: 0.4, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 60ba72f0526c40579fd48d66fbafbd72, type: 3}
   m_Type: 0
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -3339,6 +3358,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Geidai.Game1::Geidai.Game1.ChoiceItemView
   previewButton: {fileID: 1794933630}
   canvasGroup: {fileID: 2006674093}
+  choiceImage: {fileID: 2006674095}
 --- !u!225 &2006674093
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -3384,16 +3404,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.55, g: 0.75, b: 0.9, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: b5306661c4964a5188564b34c2fa954e, type: 3}
   m_Type: 0
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1

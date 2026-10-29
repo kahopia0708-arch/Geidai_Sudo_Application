@@ -240,4 +240,4 @@ A. 直前に触ったシーンを保存せず戻す／Git で差分を確認。�
 - ゲーム実装・シーン所有: [Fさん向けガイド.md](Fさん向けガイド.md)  
 - 実機確認チェックリスト: `aidlc-docs/construction/build-and-test/device-verification-checklist.md`  
 - ハンドオフ方針（ストーリー）: `aidlc-docs/inception/user-stories/stories.md` の US-TECH-07  
-- 企画の正: Google Drive の `プロジェクト概要.md`（リポジトリ外）
+- 企画の正: [`docs/project/プロジェクト概要.md`](project/プロジェクト概要.md)

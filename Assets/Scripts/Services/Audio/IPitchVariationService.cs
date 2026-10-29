@@ -24,5 +24,8 @@ namespace Geidai.Services.Audio
 
         /// <summary>現在再生中か。</summary>
         bool IsPlaying { get; }
+
+        /// <summary>再生中 clip の残り秒数（非再生時は 0）。pitch による伸縮込み。</summary>
+        float PlaybackSecondsRemaining { get; }
     }
 }
