@@ -12,12 +12,15 @@ namespace Geidai.Common.Audio
         public const float PaddingBeforeSeconds = 0.03f;
         public const float PaddingAfterSeconds = 0.12f;
         public const float DefaultMaxGameplaySeconds = 1.6f;
+        /// <summary>切り出し末尾のフェード（リバーブ／ディレイの長い尾を急切りしない）。</summary>
+        public const float FadeOutSeconds = 0.12f;
 
         public static float[] TrimForGameplay(
             float[] samples,
             int sampleRate = AudioBuffer.SampleRate,
             float amplitudeThreshold = DefaultAmplitudeThreshold,
-            float maxSeconds = DefaultMaxGameplaySeconds)
+            float maxSeconds = DefaultMaxGameplaySeconds,
+            float fadeOutSeconds = FadeOutSeconds)
         {
             if (samples == null || samples.Length == 0 || sampleRate <= 0)
                 return samples ?? Array.Empty<float>();
@@ -43,7 +46,11 @@ namespace Geidai.Common.Audio
             }
 
             if (end < start)
-                return CopyHead(samples, Math.Min(samples.Length, (int)(maxSeconds * sampleRate)));
+            {
+                var head = CopyHead(samples, Math.Min(samples.Length, (int)(maxSeconds * sampleRate)));
+                ApplyFadeOut(head, sampleRate, fadeOutSeconds);
+                return head;
+            }
 
             int padBefore = (int)(PaddingBeforeSeconds * sampleRate);
             int padAfter = (int)(PaddingAfterSeconds * sampleRate);
@@ -57,7 +64,30 @@ namespace Geidai.Common.Audio
 
             var trimmed = new float[length];
             Array.Copy(samples, start, trimmed, 0, length);
+            ApplyFadeOut(trimmed, sampleRate, fadeOutSeconds);
             return trimmed;
+        }
+
+        /// <summary>バッファ末尾をコサインカーブで 0 へ落とす。</summary>
+        public static void ApplyFadeOut(float[] buffer, int sampleRate, float fadeOutSeconds = FadeOutSeconds)
+        {
+            if (buffer == null || buffer.Length == 0 || sampleRate <= 0 || fadeOutSeconds <= 0f)
+                return;
+
+            int fadeSamples = Math.Min(buffer.Length, Math.Max(1, (int)(fadeOutSeconds * sampleRate)));
+            int fadeStart = buffer.Length - fadeSamples;
+            if (fadeSamples == 1)
+            {
+                buffer[buffer.Length - 1] = 0f;
+                return;
+            }
+
+            for (int i = 0; i < fadeSamples; i++)
+            {
+                float t = i / (float)(fadeSamples - 1);
+                float gain = 0.5f * (1f + (float)Math.Cos(Math.PI * t));
+                buffer[fadeStart + i] *= gain;
+            }
         }
 
         private static float[] CopyHead(float[] samples, int count)

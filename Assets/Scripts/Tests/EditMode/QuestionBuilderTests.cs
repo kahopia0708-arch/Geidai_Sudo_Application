@@ -4,6 +4,7 @@ using NUnit.Framework;
 using FsCheck;
 using UnityEngine;
 using Geidai.Common.Game;
+using Geidai.Common.Library;
 
 namespace Geidai.Tests.EditMode
 {
@@ -134,6 +135,53 @@ namespace Geidai.Tests.EditMode
             var list = QuestionBuilder.BuildQuestions("base", null, 0, 1);
             Assert.IsNotNull(list);
             Assert.AreEqual(0, list.Count);
+        }
+
+        [Test]
+        public void BuildQuestions_WithCatalog_AssignsDistinctBaseSoundIdsWhenPossible()
+        {
+            var clip = AudioClip.Create("c", 4410, 1, 44100, false);
+            var tex = new Texture2D(2, 2);
+            var sprite = Sprite.Create(tex, new Rect(0, 0, 2, 2), new Vector2(0.5f, 0.5f));
+            var catalog = ScriptableObject.CreateInstance<CuratedSoundCatalog>();
+            catalog.SetItems(new List<CuratedSoundDefinition>
+            {
+                MakeCatalogItem("a", clip, sprite, 1),
+                MakeCatalogItem("b", clip, sprite, 2),
+                MakeCatalogItem("c", clip, sprite, 3),
+            });
+
+            var config = ScriptableObject.CreateInstance<SoundMatchConfig>();
+            config.SetValues(3, 3,
+                new List<DifficultyLevel> { new DifficultyLevel("ふつう", 100) }, null);
+
+            var list = QuestionBuilder.BuildQuestions("fallback", config, 0, 99, catalog);
+            Assert.AreEqual(3, list.Count);
+            Assert.AreNotEqual(list[0].baseSoundId, list[1].baseSoundId);
+            Assert.AreNotEqual(list[1].baseSoundId, list[2].baseSoundId);
+
+            UnityEngine.Object.DestroyImmediate(clip);
+            UnityEngine.Object.DestroyImmediate(tex);
+            UnityEngine.Object.DestroyImmediate(catalog);
+            UnityEngine.Object.DestroyImmediate(config);
+        }
+
+        private static CuratedSoundDefinition MakeCatalogItem(
+            string id,
+            AudioClip clip,
+            Sprite image,
+            int number)
+        {
+            return new CuratedSoundDefinition
+            {
+                id = id,
+                encyclopediaNumber = number,
+                displayName = id,
+                timbreTagId = "t",
+                category = "c",
+                clipRef = clip,
+                imageRef = image,
+            };
         }
     }
 }

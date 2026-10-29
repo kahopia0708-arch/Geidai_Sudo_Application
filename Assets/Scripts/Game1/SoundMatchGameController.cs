@@ -183,7 +183,12 @@ namespace Geidai.Game1
 
             _pitch.SetBase(_baseBuffer);
 
-            var questions = QuestionBuilder.BuildQuestions(_baseSoundId, config, difficultyIndex, effectiveSeed);
+            var questions = QuestionBuilder.BuildQuestions(
+                _baseSoundId,
+                config,
+                difficultyIndex,
+                effectiveSeed,
+                config != null ? config.CuratedCatalog : null);
             if (questions == null || questions.Count == 0)
             {
                 ShowEmpty();
@@ -292,6 +297,7 @@ namespace Geidai.Game1
 
             _state = State.Playing;
             StopAllPreviewDemos();
+            ApplyQuestionBase(q);
             if (_baseBuffer != null && _pitch != null)
                 _pitch.SetBase(_baseBuffer);
             if (resultEffect != null)
@@ -364,6 +370,28 @@ namespace Geidai.Game1
             if (fromPresentation != null) return fromPresentation;
 
             return SanitizeTargetDisplaySprite(_targetDisplaySprite);
+        }
+
+        /// <summary>現在の問の図鑑素材（音色・表示）を _base* に反映する。</summary>
+        private void ApplyQuestionBase(Question q)
+        {
+            if (q == null) return;
+
+            if (!string.IsNullOrEmpty(q.baseSoundId) &&
+                config?.CuratedCatalog != null)
+            {
+                var def = config.CuratedCatalog.FindById(q.baseSoundId);
+                if (def?.clipRef != null)
+                {
+                    var buf = SoundMatchBaseSoundSelector.BufferFromClip(def.clipRef);
+                    if (buf != null)
+                    {
+                        _baseSoundId = q.baseSoundId;
+                        _baseBuffer = buf;
+                        _targetDisplaySprite = SanitizeTargetDisplaySprite(def.imageRef);
+                    }
+                }
+            }
         }
 
         private bool TryResolveBuffer(string soundId, out AudioBuffer buffer)

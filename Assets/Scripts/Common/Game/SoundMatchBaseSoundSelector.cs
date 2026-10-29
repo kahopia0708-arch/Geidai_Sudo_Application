@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Geidai.Common.Library;
 using Geidai.Common.Models;
 using UnityEngine;
@@ -32,30 +33,69 @@ namespace Geidai.Common.Game
             int seedValue,
             out SoundMatchBaseSelection selection)
         {
+            return TrySelectFromCatalog(catalog, placeholderTarget, seedValue, null, out selection);
+        }
+
+        /// <param name="excludeSoundIds">同一ゲーム内で既に使った id を避ける（候補不足時は無視して再抽選）。</param>
+        public static bool TrySelectFromCatalog(
+            CuratedSoundCatalog catalog,
+            Sprite placeholderTarget,
+            int seedValue,
+            IReadOnlyCollection<string> excludeSoundIds,
+            out SoundMatchBaseSelection selection)
+        {
             selection = default;
             if (catalog == null) return false;
 
-            var items = catalog.ValidItems();
-            var candidates = new List<CuratedSoundDefinition>();
-            foreach (var item in items)
-            {
-                if (item == null) continue;
-                if (!item.allowPitchShift) continue;
-                if (!item.HasBasePitch) continue;
-                if (item.clipRef == null) continue;
-                candidates.Add(item);
-            }
-
+            var candidates = CollectGameplayCandidates(catalog);
             if (candidates.Count == 0) return false;
 
-            int pick = new System.Random(seedValue).Next(0, candidates.Count);
-            var selected = candidates[pick];
+            var pool = FilterExcluded(candidates, excludeSoundIds);
+            if (pool.Count == 0)
+                pool = candidates;
+
+            int pick = new System.Random(seedValue).Next(0, pool.Count);
+            var selected = pool[pick];
             var buffer = BufferFromClip(selected.clipRef);
             if (buffer == null) return false;
 
             var sprite = selected.imageRef != null ? selected.imageRef : null;
             selection = new SoundMatchBaseSelection(buffer, selected.id, sprite);
             return true;
+        }
+
+        private static List<CuratedSoundDefinition> CollectGameplayCandidates(CuratedSoundCatalog catalog)
+        {
+            var candidates = new List<CuratedSoundDefinition>();
+            foreach (var item in catalog.ValidItems())
+            {
+                if (item == null) continue;
+                if (!item.allowPitchShift) continue;
+                if (item.clipRef == null) continue;
+                if (item.imageRef == null) continue;
+                candidates.Add(item);
+            }
+
+            return candidates;
+        }
+
+        private static List<CuratedSoundDefinition> FilterExcluded(
+            List<CuratedSoundDefinition> candidates,
+            IReadOnlyCollection<string> excludeSoundIds)
+        {
+            if (excludeSoundIds == null || excludeSoundIds.Count == 0)
+                return candidates;
+
+            var pool = new List<CuratedSoundDefinition>();
+            for (int i = 0; i < candidates.Count; i++)
+            {
+                var item = candidates[i];
+                if (item == null || string.IsNullOrEmpty(item.id)) continue;
+                if (excludeSoundIds.Contains(item.id)) continue;
+                pool.Add(item);
+            }
+
+            return pool;
         }
 
         public static AudioBuffer BufferFromClip(AudioClip clip)
