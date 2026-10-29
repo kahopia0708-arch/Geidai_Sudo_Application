@@ -692,7 +692,7 @@ namespace Geidai.Game1
                     resultEffect.EnsureOverlayRoot(_playArea);
                     resultEffect.ShowCorrectCelebration(
                         "せいかい！ おとが あいました",
-                        "おんが ぴったり！ つぎは どうする？",
+                        "おとが ぴったり！ つぎは どうする？",
                         OnCorrectNextQuestion,
                         OnCorrectReturnToMenu);
                 }

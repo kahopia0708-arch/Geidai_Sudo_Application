@@ -346,8 +346,7 @@ namespace Geidai.Game1
             if (hintTr == null) return;
             var text = hintTr.GetComponent<Text>();
             if (text == null) return;
-            text.text =
-                "おんが なっている どうぐを タップで きいて、弟子の てもとへ ドラッグ。師匠 → どうぐ の おと で あわせてね";
+            text.text = string.Empty;
             var rt = hintTr as RectTransform;
             if (rt != null)
             {
