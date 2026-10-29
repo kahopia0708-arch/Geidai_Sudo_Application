@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Geidai.Common.Library;
 using UnityEngine;
 
 namespace Geidai.Common.Game
@@ -30,6 +31,24 @@ namespace Geidai.Common.Game
         [Tooltip("保存音が 0 件のときに使う出題素材（任意）。無ければフォールバック表示。")]
         [SerializeField] private AudioClip fallbackClip;
 
+        [Tooltip("音合わせの出題素材（音図鑑）。優先して使用する。")]
+        [SerializeField] private CuratedSoundCatalog curatedCatalog;
+
+        [Tooltip("図鑑音に imageRef が無いときのお手本（カエル）暫定スプライト。")]
+        [SerializeField] private Sprite placeholderTargetSprite;
+
+        [Tooltip("選択肢（おたま）の暫定スプライト。図鑑 imageRef が無いときに使う。")]
+        [SerializeField] private Sprite placeholderChoiceSprite;
+
+        [Tooltip("睡蓮パッドの暫定スプライト。")]
+        [SerializeField] private Sprite placeholderLilyPadSprite;
+
+        [Tooltip("お手本カエル・口を開けた暫定スプライト。")]
+        [SerializeField] private Sprite placeholderTargetOpenSprite;
+
+        [Tooltip("おたまじゃくし・口を開けた暫定スプライト。")]
+        [SerializeField] private Sprite placeholderChoiceOpenSprite;
+
         /// <summary>出題数（>=1 にクランプ）。</summary>
         public int QuestionCount => Mathf.Max(1, questionCount);
 
@@ -41,6 +60,18 @@ namespace Geidai.Common.Game
 
         /// <summary>保存音 0 件時のフォールバック素材（無ければ null）。</summary>
         public AudioClip FallbackClip => fallbackClip;
+
+        public CuratedSoundCatalog CuratedCatalog => curatedCatalog;
+
+        public Sprite PlaceholderTargetSprite => placeholderTargetSprite;
+
+        public Sprite PlaceholderChoiceSprite => placeholderChoiceSprite;
+
+        public Sprite PlaceholderLilyPadSprite => placeholderLilyPadSprite;
+
+        public Sprite PlaceholderTargetOpenSprite => placeholderTargetOpenSprite;
+
+        public Sprite PlaceholderChoiceOpenSprite => placeholderChoiceOpenSprite;
 
         /// <summary>
         /// 指定 index の難易度を返す（範囲外/未設定は既定 "ふつう"=100 セント）。centsStep は >=1 にクランプ。

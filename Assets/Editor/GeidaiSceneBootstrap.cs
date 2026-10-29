@@ -896,7 +896,7 @@ namespace Geidai.EditorTools
             soFrog.FindProperty("dropArea").objectReferenceValue = frogRt;
             soFrog.ApplyModifiedPropertiesWithoutUndo();
 
-            var hint = CreateText(content, "Hint", "おたまを タップで きいて、カエルへ ドラッグしてね", 24, TextAnchor.MiddleCenter);
+            var hint = CreateText(content, "Hint", "おたまを カエルの そばへ ドラッグすると、おとがあわせが はじまるよ（カエル→おたまのおと）", 24, TextAnchor.MiddleCenter);
             hint.rectTransform.anchorMin = new Vector2(0.05f, 0.48f);
             hint.rectTransform.anchorMax = new Vector2(0.95f, 0.55f);
             hint.rectTransform.offsetMin = Vector2.zero;
@@ -946,8 +946,8 @@ namespace Geidai.EditorTools
             empty.SetActive(false);
 
             var error = CreateErrorPresenter(content);
-            var back = CreateButton(content, "Back", "もどる", new Vector2(280, 90));
-            AnchorBottom(back.GetComponent<RectTransform>(), 90f, 36f);
+            var back = CreateButton(content, "Back", "もどる", new Vector2(200, 72));
+            Game1StoryboardLayout.ApplyBackButtonLayout(back.GetComponent<RectTransform>());
             var config = AssetDatabase.LoadAssetAtPath<SoundMatchConfig>(SoundMatchConfigPath);
 
             var screenGo = new GameObject("SoundMatchScreen", typeof(SoundMatchGameController));

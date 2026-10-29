@@ -1,51 +1,66 @@
+using System.Collections;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace Geidai.Game1
 {
     /// <summary>
-    /// お手本（カエル）＋ドロップ領域（U6 / P5 / US-GAME1-04）。
-    /// タップでお手本ピッチを確認再生、選択肢のドロップ先（当たり判定）を提供する。
-    /// 見た目・演出は Sさん が調整可能（US-TECH-07）。
+    /// 左の睡蓮上のお手本カエル。タップで口を開けてお手本の音を出す。
     /// </summary>
-    public class FrogTargetView : MonoBehaviour
+    public class FrogTargetView : MonoBehaviour, IPointerClickHandler
     {
-        [Tooltip("お手本を確認再生するボタン（未設定なら再生ボタンなし）。")]
         [SerializeField] private Button previewButton;
-
-        [Tooltip("ドロップ判定に使う領域（未設定なら自身の RectTransform）。")]
-        [SerializeField] private RectTransform dropArea;
+        [SerializeField] private Image targetImage;
 
         private SoundMatchGameController _controller;
+        private Sprite _mouthClosed;
+        private Sprite _mouthOpen;
 
-        public void Setup(SoundMatchGameController controller)
+        public Image TargetImage => targetImage;
+
+        public void Setup(
+            SoundMatchGameController controller,
+            Sprite frogSprite,
+            Sprite frogOpenSprite)
         {
             _controller = controller;
-            if (dropArea == null) dropArea = transform as RectTransform;
+            _mouthClosed = frogSprite;
+            _mouthOpen = frogOpenSprite;
+            if (targetImage == null) targetImage = GetComponent<Image>();
+
+            Game1MouthVisual.SetClosed(targetImage, _mouthClosed);
+            Game1CharacterImage.Apply(targetImage);
 
             if (previewButton != null)
             {
-                previewButton.onClick.RemoveListener(OnPreview);
-                previewButton.onClick.AddListener(OnPreview);
+                previewButton.gameObject.SetActive(false);
             }
         }
 
-        private void OnDestroy()
+        public void OpenMouth()
         {
-            if (previewButton != null) previewButton.onClick.RemoveListener(OnPreview);
+            Game1MouthVisual.SetOpen(targetImage, _mouthOpen, _mouthClosed);
         }
 
-        private void OnPreview()
+        public void CloseMouth()
         {
-            if (_controller != null) _controller.PreviewTarget();
+            Game1MouthVisual.SetClosed(targetImage, _mouthClosed);
         }
 
-        /// <summary>指定スクリーン座標がドロップ領域内かを返す。</summary>
-        public bool ContainsScreenPoint(Vector2 screenPos, Camera cam)
+        public void OnPointerClick(PointerEventData eventData)
         {
-            if (dropArea == null) dropArea = transform as RectTransform;
-            if (dropArea == null) return false;
-            return RectTransformUtility.RectangleContainsScreenPoint(dropArea, screenPos, cam);
+            if (_controller == null) return;
+            _controller.OnDemoFrogTapped(this);
+        }
+
+        public IEnumerator AnimateMouthWhile(IEnumerator whilePlaying)
+        {
+            return Game1MouthVisual.HoldOpenWhile(
+                targetImage,
+                _mouthClosed,
+                _mouthOpen,
+                whilePlaying);
         }
     }
 }
