@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using Geidai.Common.UI;
 using UnityEngine;
 using UnityEngine.UI;

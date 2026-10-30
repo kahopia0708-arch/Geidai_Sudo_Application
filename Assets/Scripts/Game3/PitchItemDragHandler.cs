@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using System.Collections;
@@ -19,10 +19,10 @@ namespace Geidai.Game3
         private PitchItemView _itemView;
 
         [Header("Drag UI")]
-        // ƒhƒ‰ƒbƒO’†E‰_”z’u’†‚Ìe]
+        // ãƒ‰ãƒ©ãƒƒã‚°ä¸­ãƒ»é›²é…ç½®ä¸­ã®è¦ª]
         [SerializeField] private RectTransform _dragRoot;
 
-        // Å‰‚Ì‰º’i‚Ì’u‚«êŠ
+        // æœ€åˆã®ä¸‹æ®µã®ç½®ãå ´æ‰€
         private RectTransform _homeParent;
         private int _homeSiblingIndex;
         private Vector3 _homeWorldPosition;
@@ -34,16 +34,16 @@ namespace Geidai.Game3
         private Vector3 _homeLocalScale;
         private Vector2 _homeAnchoredPosition;
 
-        // Œ»İ’u‚©‚ê‚Ä‚¢‚é‰_
+        // ç¾åœ¨ç½®ã‹ã‚Œã¦ã„ã‚‹é›²
         private CloudSlotView _currentSlot;
 
         private bool _placedSuccessfully;
 
-        //‰_‚Ìã‚Ì’u‚«êŠ
+        //é›²ã®ä¸Šã®ç½®ãå ´æ‰€
         [Header("Cloud Placement")]
         [SerializeField] private float placedYOffset = 65f;
 
-        //‰_’…’n
+        //é›²ç€åœ°
         [Header("Cloud Landing")]
         [SerializeField] private float landingDuration = 0.28f;
         [SerializeField] private float dropZoneAbove = 1.0f;
@@ -64,7 +64,7 @@ namespace Geidai.Game3
             _canvas = GetComponentInParent<Canvas>();
             _canvasGroup = GetComponent<CanvasGroup>();
             _itemView = GetComponent<PitchItemView>();
-            // Å‰‚Ìu‰º‚ÌƒJ[ƒh’u‚«êv‚ğ•Û‘¶
+            // æœ€åˆã®ã€Œä¸‹ã®ã‚«ãƒ¼ãƒ‰ç½®ãå ´ã€ã‚’ä¿å­˜
             _homeParent = transform.parent as RectTransform;
             _homeSiblingIndex = transform.GetSiblingIndex();
 
@@ -85,14 +85,14 @@ namespace Geidai.Game3
             _homePositionSaved = true;
         }
         // --------------------------------------------------
-        // ƒhƒ‰ƒbƒOŠJn
+        // ãƒ‰ãƒ©ãƒƒã‚°é–‹å§‹
         // --------------------------------------------------
         public void OnBeginDrag(PointerEventData eventData)
         {
             if (_dragRoot == null)
                 return;
 
-            // ƒhƒ‰ƒbƒOŠJn‚É‚à‰¹‚ğ–Â‚ç‚·
+            // ãƒ‰ãƒ©ãƒƒã‚°é–‹å§‹æ™‚ã«ã‚‚éŸ³ã‚’é³´ã‚‰ã™
             if (_itemView != null)
             {
                 _itemView.NotifyDragStarted();
@@ -100,8 +100,8 @@ namespace Geidai.Game3
 
             _placedSuccessfully = false;
 
-            // ‚·‚Å‚É‰_‚É’u‚©‚ê‚Ä‚¢‚½‚È‚çA
-            // ‚»‚Ì‰_‚ğ‹ó‚¯‚Ä‚©‚çƒhƒ‰ƒbƒOŠJn
+            // ã™ã§ã«é›²ã«ç½®ã‹ã‚Œã¦ã„ãŸãªã‚‰ã€
+            // ãã®é›²ã‚’ç©ºã‘ã¦ã‹ã‚‰ãƒ‰ãƒ©ãƒƒã‚°é–‹å§‹
             if (_currentSlot != null)
             {
                 _currentSlot.Release(_itemView);
@@ -110,12 +110,12 @@ namespace Geidai.Game3
 
             MoveToDragRootPreservingVisual();
 
-            // ƒhƒ‰ƒbƒO’†‚Í©•ª©g‚ªRaycast‚ğ×–‚‚µ‚È‚¢
+            // ãƒ‰ãƒ©ãƒƒã‚°ä¸­ã¯è‡ªåˆ†è‡ªèº«ãŒRaycastã‚’é‚ªé­”ã—ãªã„
             _canvasGroup.blocksRaycasts = false;
         }
 
         // --------------------------------------------------
-        // Œ©‚½–Ú‚Ì‘å‚«‚³‚ğˆÛ‚µ‚½‚Ü‚ÜCanvas’¼‰º‚ÖˆÚ‚·
+        // è¦‹ãŸç›®ã®å¤§ãã•ã‚’ç¶­æŒã—ãŸã¾ã¾Canvasç›´ä¸‹ã¸ç§»ã™
         // --------------------------------------------------
         private void MoveToDragRootPreservingVisual()
         {
@@ -149,7 +149,7 @@ namespace Geidai.Game3
         }
 
         // --------------------------------------------------
-        // ƒhƒ‰ƒbƒO’†
+        // ãƒ‰ãƒ©ãƒƒã‚°ä¸­
         // --------------------------------------------------
         public void OnDrag(PointerEventData eventData)
         {
@@ -167,15 +167,15 @@ namespace Geidai.Game3
         }
 
         // --------------------------------------------------
-        // CloudSlot‚Ö”z’u
+        // CloudSlotã¸é…ç½®
         // --------------------------------------------------
         public bool TryPlaceInSlot(CloudSlotView slot)
         {
             if (slot == null || _itemView == null)
                 return false;
 
-            // ‚»‚Ì‰_‚É‚·‚Å‚É•ÊƒJ[ƒh‚ª‚ ‚Á‚½‚çA
-            // Šù‘¶ƒJ[ƒh‚ğ‰º‚Ö–ß‚·
+            // ãã®é›²ã«ã™ã§ã«åˆ¥ã‚«ãƒ¼ãƒ‰ãŒã‚ã£ãŸã‚‰ã€
+            // æ—¢å­˜ã‚«ãƒ¼ãƒ‰ã‚’ä¸‹ã¸æˆ»ã™
             PitchItemView existingItem = slot.Occupant;
 
             if (existingItem != null &&
@@ -194,26 +194,26 @@ namespace Geidai.Game3
                 }
             }
 
-            // ”O‚Ì‚½‚ßˆÈ‘O‚Ì‰_‚ğ‹ó‚¯‚é
+            // å¿µã®ãŸã‚ä»¥å‰ã®é›²ã‚’ç©ºã‘ã‚‹
             if (_currentSlot != null &&
                 _currentSlot != slot)
             {
                 _currentSlot.Release(_itemView);
             }
 
-            // CloudSlot‚Ìq‚É‚Í‚µ‚È‚¢B
-            // Canvasã‚Ì‚Ü‚ÜCloudSlot‚Ì’†S‚ÖˆÚ“®‚·‚éB
+            // CloudSlotã®å­ã«ã¯ã—ãªã„ã€‚
+            // Canvasä¸Šã®ã¾ã¾CloudSlotã®ä¸­å¿ƒã¸ç§»å‹•ã™ã‚‹ã€‚
             RectTransform slotRect = slot.GetComponent<RectTransform>();
 
             if (slotRect == null)
                 return false;
 
-            // ‰_‚Ö‚Ì”z’u‚ğ—\–ñ
+            // é›²ã¸ã®é…ç½®ã‚’äºˆç´„
             slot.Accept(_itemView);
             _currentSlot = slot;
             _landingSlot = slot;
 
-            // ’…’nˆÊ’u‚ğ‹L˜^‚·‚é‚¾‚¯B‚Ü‚¾ˆÚ“®‚µ‚È‚¢
+            // ç€åœ°ä½ç½®ã‚’è¨˜éŒ²ã™ã‚‹ã ã‘ã€‚ã¾ã ç§»å‹•ã—ãªã„
             _landingTarget = slotRect.TransformPoint(
                 slotRect.rect.center + Vector2.up * placedYOffset
             );
@@ -223,7 +223,7 @@ namespace Geidai.Game3
         }
 
         // --------------------------------------------------
-        // ­‚µd‚È‚Á‚Ä‚¢‚éCloudSlot‚ğ’T‚·
+        // å°‘ã—é‡ãªã£ã¦ã„ã‚‹CloudSlotã‚’æ¢ã™
         // --------------------------------------------------
         private CloudSlotView FindOverlappingSlot()
         {
@@ -248,14 +248,14 @@ namespace Geidai.Game3
 
                 Rect cloudRect = GetWorldRect(slotRect);
 
-                // ¶‰E‚Ì”»’è
+                // å·¦å³ã®åˆ¤å®š
                 float horizontalMargin = itemRect.width * 0.2f;
 
                 if (itemCenter.x < cloudRect.xMin - horizontalMargin ||
                     itemCenter.x > cloudRect.xMax + horizontalMargin)
                     continue;
 
-                // ‰_‚Ìã•ûŒü‚Ö”»’è”ÍˆÍ‚ğŠg’£
+                // é›²ã®ä¸Šæ–¹å‘ã¸åˆ¤å®šç¯„å›²ã‚’æ‹¡å¼µ
                 float minY = cloudRect.yMin;
                 float maxY = cloudRect.yMax
                     + itemRect.height * dropZoneAbove;
@@ -263,7 +263,7 @@ namespace Geidai.Game3
                 if (itemCenter.y < minY || itemCenter.y > maxY)
                     continue;
 
-                // Å‚à‹ß‚¢‰_‚ğ‘I‘ğ
+                // æœ€ã‚‚è¿‘ã„é›²ã‚’é¸æŠ
                 float distance =
                     Mathf.Abs(itemCenter.x - cloudRect.center.x) +
                     Mathf.Abs(
@@ -315,15 +315,15 @@ namespace Geidai.Game3
         }
 
         // --------------------------------------------------
-        // ƒhƒ‰ƒbƒOI—¹
+        // ãƒ‰ãƒ©ãƒƒã‚°çµ‚äº†
         // --------------------------------------------------
 
         public void OnEndDrag(PointerEventData eventData)
         {
             _canvasGroup.blocksRaycasts = true;
 
-            // OnDrop‚Å”z’u‚³‚ê‚Ä‚¢‚È‚¢ê‡A
-            // ‰_‚Ìã‘¤‚àŠÜ‚ß‚½”»’è‚ğs‚¤
+            // OnDropã§é…ç½®ã•ã‚Œã¦ã„ãªã„å ´åˆã€
+            // é›²ã®ä¸Šå´ã‚‚å«ã‚ãŸåˆ¤å®šã‚’è¡Œã†
             if (!_placedSuccessfully)
             {
                 CloudSlotView overlappingSlot = FindOverlappingSlot();
@@ -336,12 +336,12 @@ namespace Geidai.Game3
 
             if (_placedSuccessfully)
             {
-                // —£‚µ‚½ˆÊ’u‚©‚ç‰_‚ÉŒü‚©‚Á‚Ä—‰º
+                // é›¢ã—ãŸä½ç½®ã‹ã‚‰é›²ã«å‘ã‹ã£ã¦è½ä¸‹
                 _landingCoroutine = StartCoroutine(AnimateLanding());
             }
             else
             {
-                // ‰_‚ªŒ©‚Â‚©‚ç‚È‚¯‚ê‚ÎŒ³‚ÌˆÊ’u‚É–ß‚·
+                // é›²ãŒè¦‹ã¤ã‹ã‚‰ãªã‘ã‚Œã°å…ƒã®ä½ç½®ã«æˆ»ã™
                 SendHome();
 
                 if (_itemView != null)
@@ -368,10 +368,10 @@ namespace Geidai.Game3
 
                 float t = Mathf.Clamp01(elapsed / duration);
 
-                // ‰¡•ûŒü‚ÍŠŠ‚ç‚©‚ÉˆÊ’u‡‚í‚¹
+                // æ¨ªæ–¹å‘ã¯æ»‘ã‚‰ã‹ã«ä½ç½®åˆã‚ã›
                 float smooth = t * t * (3f - 2f * t);
 
-                // ã‚©‚ç—‚¿‚éê‡‚Íd—Í‚Ì‚æ‚¤‚É‰Á‘¬
+                // ä¸Šã‹ã‚‰è½ã¡ã‚‹å ´åˆã¯é‡åŠ›ã®ã‚ˆã†ã«åŠ é€Ÿ
                 float vertical = start.y > target.y
                     ? t * t
                     : smooth;
@@ -387,23 +387,23 @@ namespace Geidai.Game3
 
             _rect.position = target;
 
-            // ’…’nŒã‚É‰_‚Ì”w–Ê‚ÖˆÚ“®
+            // ç€åœ°å¾Œã«é›²ã®èƒŒé¢ã¸ç§»å‹•
             transform.SetParent(_landingSlot.transform.parent, true);
             transform.SetAsFirstSibling();
 
             _canvasGroup.blocksRaycasts = true;
 
-            // ’…’n‚ÌÕŒ‚‚Å‰_‚ğ‚Û‚æ‚ñ‚Æ“®‚©‚·
+            // ç€åœ°ã®è¡æ’ƒã§é›²ã‚’ã½ã‚ˆã‚“ã¨å‹•ã‹ã™
             _landingSlot.PlayBounce();
 
             _landingCoroutine = null;
 
-            // ’…’n‚µ‚Ä‚©‚ç³Œë”»’è
+            // ç€åœ°ã—ã¦ã‹ã‚‰æ­£èª¤åˆ¤å®š
             if (_itemView != null)
                 _itemView.NotifyOrderChanged();
         }
         // --------------------------------------------------
-        // ‰º‚ÌƒJ[ƒh’u‚«ê‚Ö–ß‚·
+        // ä¸‹ã®ã‚«ãƒ¼ãƒ‰ç½®ãå ´ã¸æˆ»ã™
         // --------------------------------------------------
         public void SendHome()
         {
@@ -460,14 +460,14 @@ namespace Geidai.Game3
                 _landingCoroutine = null;
             }
 
-            // ‰_‚Ìè—L‚ğ‰ğœ
+            // é›²ã®å æœ‰ã‚’è§£é™¤
             if (_currentSlot != null)
             {
                 _currentSlot.Release(_itemView);
                 _currentSlot = null;
             }
 
-            // ‰ŠúˆÊ’u‚ª–¢‹L˜^‚È‚ç‘¦À‚É–ß‚·
+            // åˆæœŸä½ç½®ãŒæœªè¨˜éŒ²ãªã‚‰å³åº§ã«æˆ»ã™
             if (_homeParent == null || _dragRoot == null)
             {
                 SendHome();
@@ -476,7 +476,7 @@ namespace Geidai.Game3
                 yield break;
             }
 
-            // ‘O–Ê‚ÌDragLayer‚ÉˆÚ“®
+            // å‰é¢ã®DragLayerã«ç§»å‹•
             MoveToDragRootPreservingVisual();
 
             Vector3 startPosition = _rect.position;
@@ -493,7 +493,7 @@ namespace Geidai.Game3
 
                 float t = Mathf.Clamp01(elapsed / duration);
 
-                // ‚ä‚Á‚­‚è“®‚«n‚ßA’…’n‚ÉŒ¸‘¬
+                // ã‚†ã£ãã‚Šå‹•ãå§‹ã‚ã€ç€åœ°æ™‚ã«æ¸›é€Ÿ
                 float eased = t * t * (3f - 2f * t);
 
                 _rect.position = Vector3.Lerp(
@@ -505,7 +505,7 @@ namespace Geidai.Game3
                 yield return null;
             }
 
-            // Œ³‚Ì”z’u‚Ö–ß‚·
+            // å…ƒã®é…ç½®ã¸æˆ»ã™
             SendHome();
 
             _canvasGroup.blocksRaycasts = true;
