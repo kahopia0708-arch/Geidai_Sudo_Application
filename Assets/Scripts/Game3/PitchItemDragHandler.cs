@@ -25,20 +25,35 @@ namespace Geidai.Game3
         // 最初の下段の置き場所
         private RectTransform _homeParent;
         private int _homeSiblingIndex;
-
+        private Vector3 _homeWorldPosition;
+        private bool _homePositionSaved;
         private Vector2 _homeAnchorMin;
         private Vector2 _homeAnchorMax;
         private Vector2 _homePivot;
         private Vector2 _homeSizeDelta;
         private Vector3 _homeLocalScale;
+        private Vector2 _homeAnchoredPosition;
 
         // 現在置かれている雲
         private CloudSlotView _currentSlot;
 
         private bool _placedSuccessfully;
 
+        //雲の上の置き場所
+        [Header("Cloud Placement")]
+        [SerializeField] private float placedYOffset = 65f;
+
+        //雲着地
+        [Header("Cloud Landing")]
+        [SerializeField] private float landingDuration = 0.28f;
+        [SerializeField] private float dropZoneAbove = 1.0f;
+
+        private Coroutine _landingCoroutine;
+        private CloudSlotView _landingSlot;
+        private Vector3 _landingTarget;
+
         [Header("Wrong Answer Animation")]
-        [SerializeField] private float fallDuration = 0.25f;
+        [SerializeField] private float fallDuration = 0.7f;
         [SerializeField] private float fallDistance = 120f;
 
         private bool _returningHome;
@@ -58,8 +73,17 @@ namespace Geidai.Game3
             _homePivot = _rect.pivot;
             _homeSizeDelta = _rect.sizeDelta;
             _homeLocalScale = _rect.localScale;
+            _homeAnchoredPosition = _rect.anchoredPosition;
         }
+        public void CaptureHomePosition()
+        {
+            if (transform.parent != _homeParent ||
+                !gameObject.activeInHierarchy)
+                return;
 
+            _homeWorldPosition = _rect.position;
+            _homePositionSaved = true;
+        }
         // --------------------------------------------------
         // ドラッグ開始
         // --------------------------------------------------
@@ -177,26 +201,24 @@ namespace Geidai.Game3
                 _currentSlot.Release(_itemView);
             }
 
-            slot.Accept(_itemView);
-            _currentSlot = slot;
-
             // CloudSlotの子にはしない。
             // Canvas上のままCloudSlotの中心へ移動する。
-            RectTransform slotRect =
-                slot.GetComponent<RectTransform>();
+            RectTransform slotRect = slot.GetComponent<RectTransform>();
 
             if (slotRect == null)
                 return false;
 
-            Vector3 slotCenter =
-                slotRect.TransformPoint(slotRect.rect.center);
+            // 雲への配置を予約
+            slot.Accept(_itemView);
+            _currentSlot = slot;
+            _landingSlot = slot;
 
-            _rect.position = slotCenter;
-
-            transform.SetAsLastSibling();
+            // 着地位置を記録するだけ。まだ移動しない
+            _landingTarget = slotRect.TransformPoint(
+                slotRect.rect.center + Vector2.up * placedYOffset
+            );
 
             _placedSuccessfully = true;
-
             return true;
         }
 
@@ -205,13 +227,13 @@ namespace Geidai.Game3
         // --------------------------------------------------
         private CloudSlotView FindOverlappingSlot()
         {
-            CloudSlotView[] slots =
-                FindObjectsByType<CloudSlotView>();
-
-            CloudSlotView bestSlot = null;
-            float bestOverlap = 0f;
+            CloudSlotView[] slots = FindObjectsByType<CloudSlotView>();
 
             Rect itemRect = GetWorldRect(_rect);
+            Vector2 itemCenter = itemRect.center;
+
+            CloudSlotView bestSlot = null;
+            float bestDistance = float.MaxValue;
 
             foreach (CloudSlotView slot in slots)
             {
@@ -224,35 +246,39 @@ namespace Geidai.Game3
                 if (slotRect == null)
                     continue;
 
-                Rect cloudRect =
-                    GetWorldRect(slotRect);
+                Rect cloudRect = GetWorldRect(slotRect);
 
-                float overlap =
-                    CalculateOverlapArea(
-                        itemRect,
-                        cloudRect
-                    );
+                // 左右の判定
+                float horizontalMargin = itemRect.width * 0.2f;
 
-                if (overlap > bestOverlap)
+                if (itemCenter.x < cloudRect.xMin - horizontalMargin ||
+                    itemCenter.x > cloudRect.xMax + horizontalMargin)
+                    continue;
+
+                // 雲の上方向へ判定範囲を拡張
+                float minY = cloudRect.yMin;
+                float maxY = cloudRect.yMax
+                    + itemRect.height * dropZoneAbove;
+
+                if (itemCenter.y < minY || itemCenter.y > maxY)
+                    continue;
+
+                // 最も近い雲を選択
+                float distance =
+                    Mathf.Abs(itemCenter.x - cloudRect.center.x) +
+                    Mathf.Abs(
+                        itemCenter.y -
+                        (cloudRect.center.y + placedYOffset)
+                    ) * 0.25f;
+
+                if (distance < bestDistance)
                 {
-                    bestOverlap = overlap;
+                    bestDistance = distance;
                     bestSlot = slot;
                 }
             }
 
-            float itemArea =
-                itemRect.width * itemRect.height;
-
-            if (itemArea <= 0f)
-                return null;
-
-            float overlapRatio =
-                bestOverlap / itemArea;
-
-            // 15%以上重なっていれば吸着
-            return overlapRatio >= 0.15f
-                ? bestSlot
-                : null;
+            return bestSlot;
         }
 
         private static Rect GetWorldRect(
@@ -291,16 +317,16 @@ namespace Geidai.Game3
         // --------------------------------------------------
         // ドラッグ終了
         // --------------------------------------------------
+
         public void OnEndDrag(PointerEventData eventData)
         {
             _canvasGroup.blocksRaycasts = true;
 
-            // OnDropが来なくても、
-            // 雲と15%以上重なっていれば吸着
+            // OnDropで配置されていない場合、
+            // 雲の上側も含めた判定を行う
             if (!_placedSuccessfully)
             {
-                CloudSlotView overlappingSlot =
-                    FindOverlappingSlot();
+                CloudSlotView overlappingSlot = FindOverlappingSlot();
 
                 if (overlappingSlot != null)
                 {
@@ -308,25 +334,85 @@ namespace Geidai.Game3
                 }
             }
 
-            // どの雲にも置かなかった
-            // → 下の元の位置へ戻す
-            if (!_placedSuccessfully)
+            if (_placedSuccessfully)
             {
+                // 離した位置から雲に向かって落下
+                _landingCoroutine = StartCoroutine(AnimateLanding());
+            }
+            else
+            {
+                // 雲が見つからなければ元の位置に戻す
                 SendHome();
+
+                if (_itemView != null)
+                    _itemView.NotifyOrderChanged();
             }
 
             if (_itemView != null)
-            {
                 _itemView.NotifyDragFinished();
-                _itemView.NotifyOrderChanged();
-            }
         }
 
+        private IEnumerator AnimateLanding()
+        {
+            _canvasGroup.blocksRaycasts = false;
+
+            Vector3 start = _rect.position;
+            Vector3 target = _landingTarget;
+
+            float elapsed = 0f;
+            float duration = Mathf.Max(0.05f, landingDuration);
+
+            while (elapsed < duration)
+            {
+                elapsed += Time.unscaledDeltaTime;
+
+                float t = Mathf.Clamp01(elapsed / duration);
+
+                // 横方向は滑らかに位置合わせ
+                float smooth = t * t * (3f - 2f * t);
+
+                // 上から落ちる場合は重力のように加速
+                float vertical = start.y > target.y
+                    ? t * t
+                    : smooth;
+
+                _rect.position = new Vector3(
+                    Mathf.Lerp(start.x, target.x, smooth),
+                    Mathf.Lerp(start.y, target.y, vertical),
+                    Mathf.Lerp(start.z, target.z, smooth)
+                );
+
+                yield return null;
+            }
+
+            _rect.position = target;
+
+            // 着地後に雲の背面へ移動
+            transform.SetParent(_landingSlot.transform.parent, true);
+            transform.SetAsFirstSibling();
+
+            _canvasGroup.blocksRaycasts = true;
+
+            // 着地の衝撃で雲をぽよんと動かす
+            _landingSlot.PlayBounce();
+
+            _landingCoroutine = null;
+
+            // 着地してから正誤判定
+            if (_itemView != null)
+                _itemView.NotifyOrderChanged();
+        }
         // --------------------------------------------------
         // 下のカード置き場へ戻す
         // --------------------------------------------------
         public void SendHome()
         {
+            if (_landingCoroutine != null)
+            {
+                StopCoroutine(_landingCoroutine);
+                _landingCoroutine = null;
+                _canvasGroup.blocksRaycasts = true;
+            }
             if (_currentSlot != null)
             {
                 _currentSlot.Release(_itemView);
@@ -343,6 +429,7 @@ namespace Geidai.Game3
             _rect.pivot = _homePivot;
             _rect.sizeDelta = _homeSizeDelta;
             _rect.localScale = _homeLocalScale;
+            _rect.anchoredPosition = _homeAnchoredPosition;
 
             transform.SetSiblingIndex(_homeSiblingIndex);
 
@@ -361,67 +448,69 @@ namespace Geidai.Game3
             StartCoroutine(FallAndSendHomeCoroutine());
         }
 
+
         private IEnumerator FallAndSendHomeCoroutine()
         {
             _returningHome = true;
             _canvasGroup.blocksRaycasts = false;
 
-            // 今入っている雲を空ける
+            if (_landingCoroutine != null)
+            {
+                StopCoroutine(_landingCoroutine);
+                _landingCoroutine = null;
+            }
+
+            // 雲の占有を解除
             if (_currentSlot != null)
             {
                 _currentSlot.Release(_itemView);
                 _currentSlot = null;
             }
 
-            // 現在位置
+            // 初期位置が未記録なら即座に戻す
+            if (_homeParent == null || _dragRoot == null)
+            {
+                SendHome();
+                _canvasGroup.blocksRaycasts = true;
+                _returningHome = false;
+                yield break;
+            }
+
+            // 前面のDragLayerに移動
+            MoveToDragRootPreservingVisual();
+
             Vector3 startPosition = _rect.position;
-
-            // 元のPitchItemContainerの「高さ」だけ取得
-            Vector3 homeCenter =
-                _homeParent.TransformPoint(
-                    _homeParent.rect.center
-                );
-
-            // Xは現在位置のまま
-            // Yだけ下段の高さへ
-            Vector3 targetPosition = new Vector3(
-                startPosition.x,
-                homeCenter.y,
-                startPosition.z
-            );
+            Vector3 targetPosition = _homePositionSaved
+                ? _homeWorldPosition
+                : _homeParent.TransformPoint(_homeParent.rect.center);
 
             float elapsed = 0f;
+            float duration = Mathf.Max(0.01f, fallDuration);
 
-            while (elapsed < fallDuration)
+            while (elapsed < duration)
             {
                 elapsed += Time.unscaledDeltaTime;
 
-                float t = Mathf.Clamp01(
-                    elapsed / fallDuration
+                float t = Mathf.Clamp01(elapsed / duration);
+
+                // ゆっくり動き始め、着地時に減速
+                float eased = t * t * (3f - 2f * t);
+
+                _rect.position = Vector3.Lerp(
+                    startPosition,
+                    targetPosition,
+                    eased
                 );
-
-                // 重力っぽく加速
-                float eased = t * t;
-
-                _rect.position =
-                    Vector3.LerpUnclamped(
-                        startPosition,
-                        targetPosition,
-                        eased
-                    );
 
                 yield return null;
             }
 
-            _rect.position = targetPosition;
-
-            // ★ここでは SendHome() しない
-            // 落ちた場所にそのまま残す
-
-            _placedSuccessfully = false;
+            // 元の配置へ戻す
+            SendHome();
 
             _canvasGroup.blocksRaycasts = true;
             _returningHome = false;
         }
+
     }
 }

@@ -46,6 +46,10 @@ namespace Geidai.Game3
         [SerializeField]
         private Vector2 cloudEndPosition = new Vector2(150f, 150f);
 
+        [Header("Home Slots")]
+        [SerializeField]
+        private List<RectTransform> homeSlots = new List<RectTransform>();
+
         [Header("PitchItem UI")]
         [SerializeField]
         private List<PitchItemView> pitchItems = new List<PitchItemView>();
@@ -61,6 +65,8 @@ namespace Geidai.Game3
 
         [SerializeField] private float clearDisplaySeconds = 1.2f;
         private bool _isResolvingAnswer;
+
+        
         protected override void OnShow()
         {
             EnsureWired();
@@ -419,11 +425,24 @@ namespace Geidai.Game3
 
             _pitch.Play(cents);
         }
+
         private void PresentQuestion()
         {
             if (_currentQuestion == null)
                 return;
 
+            int count = _currentQuestion.InitialOrder.Count;
+
+            // 使用するHomeSlotのみ表示
+            for (int i = 0; i < homeSlots.Count; i++)
+            {
+                if (homeSlots[i] != null)
+                {
+                    homeSlots[i].gameObject.SetActive(i < count);
+                }
+            }
+
+            // 楽器の設定
             for (int i = 0; i < pitchItems.Count; i++)
             {
                 var view = pitchItems[i];
@@ -431,7 +450,7 @@ namespace Geidai.Game3
                 if (view == null)
                     continue;
 
-                if (i < _currentQuestion.InitialOrder.Count)
+                if (i < count)
                 {
                     view.gameObject.SetActive(true);
 
@@ -446,7 +465,23 @@ namespace Geidai.Game3
                     view.gameObject.SetActive(false);
                 }
             }
+
+            // レイアウト更新
+            Canvas.ForceUpdateCanvases();
+
+            // 前回追加した初期位置記録がある場合
+            foreach (var item in pitchItems)
+            {
+                if (item == null || !item.gameObject.activeInHierarchy)
+                    continue;
+
+                var drag = item.GetComponent<PitchItemDragHandler>();
+
+                if (drag != null)
+                    drag.CaptureHomePosition();
+            }
         }
+
         private IEnumerator HandleCorrectAnswer()
         {
             _isResolvingAnswer = true;
@@ -501,6 +536,7 @@ namespace Geidai.Game3
 
                 _isResolvingAnswer = false;
 
+                
                 yield break;
             }
 
@@ -517,6 +553,7 @@ namespace Geidai.Game3
         {
             _isResolvingAnswer = true;
 
+            
             ShowResult("不正解");
 
             // 今作った「真下に落ちる」アニメーション
