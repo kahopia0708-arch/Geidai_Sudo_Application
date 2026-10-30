@@ -47,10 +47,16 @@ namespace Geidai.Services.Audio
                 EnsureRig();
                 _base = baseBuffer;
 
-                if (_clip == null || _clip.samples != baseBuffer.Samples.Length)
-                    _clip = AudioClip.Create("pitch_variation", baseBuffer.Samples.Length, AudioBuffer.Channels, AudioBuffer.SampleRate, false);
+                var trimmed = GameAudioTrim.TrimForGameplay(baseBuffer.Samples);
+                if (_clip == null || _clip.samples != trimmed.Length)
+                    _clip = AudioClip.Create(
+                        "pitch_variation",
+                        trimmed.Length,
+                        AudioBuffer.Channels,
+                        AudioBuffer.SampleRate,
+                        false);
 
-                _clip.SetData(baseBuffer.Samples, 0);
+                _clip.SetData(trimmed, 0);
                 _source.clip = _clip;
                 return Result.Ok();
             }
@@ -94,5 +100,15 @@ namespace Geidai.Services.Audio
         }
 
         public bool IsPlaying => _source != null && _source.isPlaying;
+
+        public float PlaybackSecondsRemaining
+        {
+            get
+            {
+                if (_source == null || _clip == null || !_source.isPlaying) return 0f;
+                float total = _clip.length / Mathf.Max(_source.pitch, 0.001f);
+                return Mathf.Max(0f, total - _source.time);
+            }
+        }
     }
 }

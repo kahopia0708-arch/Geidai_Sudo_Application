@@ -58,6 +58,30 @@ namespace Geidai.Common.UI
 
         public bool IsOpen => root != null && root.activeSelf;
 
+        /// <summary>ランタイム生成 UI から参照を配線する（Editor シーンと同様）。</summary>
+        public void Initialize(GameObject rootPanel, Text title, Text message, Button yes, Button no)
+        {
+            root = rootPanel;
+            titleText = title;
+            messageText = message;
+            yesButton = yes;
+            noButton = no;
+
+            if (yesButton != null)
+            {
+                yesButton.onClick.RemoveListener(HandleYes);
+                yesButton.onClick.AddListener(HandleYes);
+            }
+
+            if (noButton != null)
+            {
+                noButton.onClick.RemoveListener(HandleNo);
+                noButton.onClick.AddListener(HandleNo);
+            }
+
+            Hide();
+        }
+
         private void HandleYes()
         {
             Hide();

@@ -16,11 +16,11 @@
 - **Reverse Engineering Needed**: Yes（概要把握レベル・ユーザー指示）
 - **Workspace Root**: /Users/maemoto/Documents/GitHub/Geidai_Sudo_Application
 
-## Reference Source (動的参照)
+## Reference Source (企画・構想)
 - **Rule**: `.cursor/rules/project-reference.mdc`（alwaysApply）
-- **Root**: `/Users/maemoto/Library/CloudStorage/GoogleDrive-.../202607.藝大_須藤さん`
-- **Summary**: `.../プロジェクト概要.md`（最終更新 2026-07-30）
-- **企画・構想の正の入力源。各ステージ着手時に最新版を動的に読む。**
+- **Root（正本）**: `docs/project/`
+- **Summary**: `docs/project/プロジェクト概要.md`（Drive 同期: `scripts/sync-project-docs-from-drive.sh`）
+- **各ステージ着手時にリポジトリ内の最新版を読む。**
 
 ## Code Location Rules
 - **Application Code**: ワークスペースルート（NEVER in aidlc-docs/）

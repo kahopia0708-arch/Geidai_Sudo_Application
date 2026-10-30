@@ -24,3 +24,10 @@ MonoBehaviour:
   - label: "\u3068\u3066\u3082\u96E3\u3057\u3044"
     centsStep: 20
   fallbackClip: {fileID: 0}
+  curatedCatalog: {fileID: 11400000, guid: 16d94e0b03d1e4f91873ac04ec7e55ee, type: 2}
+  wizardMasterSprite: {fileID: 21300000, guid: fb75f039c5fc34669aa24c435412c5eb, type: 3}
+  wizardApprenticeSprite: {fileID: 21300000, guid: 32d5c0ad6b7c846bcacbf23b481aba5a, type: 3}
+  placeholderChoiceSprite: {fileID: 21300000, guid: b5306661c4964a5188564b34c2fa954e, type: 3}
+  placeholderLilyPadSprite: {fileID: 21300000, guid: a1c2d3e4f5a6478990abcdef12345678, type: 3}
+  placeholderTargetOpenSprite: {fileID: 21300000, guid: e1f2a3b4c5d647899876543210fedcba, type: 3}
+  placeholderChoiceOpenSprite: {fileID: 21300000, guid: f2e3b4c5d6e74890876543210abcdef1, type: 3}

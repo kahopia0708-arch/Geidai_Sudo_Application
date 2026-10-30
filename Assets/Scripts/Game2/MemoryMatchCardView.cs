@@ -18,6 +18,12 @@ namespace Geidai.Game2
         private int _index = -1;
         private bool _faceUp;
         private bool _matched;
+        private Sprite _cardFaceSprite;
+        private Sprite _cardBackSprite;
+        private bool _showLabels = true;
+
+        private static readonly Color DefaultBackColor = new Color(0.25f, 0.4f, 0.65f);
+        private static readonly Color DefaultFrontFallbackColor = new Color(0.92f, 0.94f, 0.98f);
 
         public int Index => _index;
         public bool IsFaceUp => _faceUp;
@@ -26,14 +32,20 @@ namespace Geidai.Game2
 
         public event Action<int> Clicked;
 
+        private Image _rootImage;
+
         private void Awake()
         {
             if (cardButton == null) cardButton = GetComponent<Button>();
+            _rootImage = GetComponent<Image>();
             if (cardButton != null)
             {
                 cardButton.onClick.RemoveListener(OnClick);
                 cardButton.onClick.AddListener(OnClick);
             }
+
+            if (frontImage != null && frontImage.gameObject != gameObject)
+                frontImage.gameObject.SetActive(false);
         }
 
         private void OnDestroy()
@@ -41,10 +53,13 @@ namespace Geidai.Game2
             if (cardButton != null) cardButton.onClick.RemoveListener(OnClick);
         }
 
-        public void Bind(int index, MemoryMatchCardSpec spec)
+        public void Bind(int index, MemoryMatchCardSpec spec, Sprite cardFaceSprite, Sprite cardBackSprite, bool showLabels)
         {
             _index = index;
             _spec = spec;
+            _cardFaceSprite = cardFaceSprite;
+            _cardBackSprite = cardBackSprite;
+            _showLabels = showLabels;
             _faceUp = false;
             _matched = false;
             RefreshVisual();
@@ -73,15 +88,57 @@ namespace Geidai.Game2
         private void RefreshVisual()
         {
             bool showFront = _faceUp || _matched;
-            if (backImage != null) backImage.enabled = !showFront;
+
+            if (_rootImage != null)
+                _rootImage.enabled = false;
+
+            if (backImage != null)
+            {
+                bool showBack = !showFront;
+                if (backImage.gameObject != gameObject)
+                    backImage.gameObject.SetActive(showBack);
+                backImage.enabled = showBack;
+                if (showBack)
+                {
+                    if (_cardBackSprite != null)
+                    {
+                        backImage.sprite = _cardBackSprite;
+                        backImage.color = Color.white;
+                        backImage.preserveAspect = true;
+                    }
+                    else
+                    {
+                        backImage.sprite = null;
+                        backImage.color = DefaultBackColor;
+                    }
+                }
+            }
+
             if (frontImage != null)
             {
+                if (frontImage.gameObject != gameObject)
+                    frontImage.gameObject.SetActive(showFront);
                 frontImage.enabled = showFront;
-                if (showFront && _spec.Image != null) frontImage.sprite = _spec.Image;
+                if (showFront)
+                {
+                    if (_cardFaceSprite != null)
+                    {
+                        frontImage.sprite = _cardFaceSprite;
+                        frontImage.color = Color.white;
+                        frontImage.preserveAspect = true;
+                    }
+                    else
+                    {
+                        frontImage.sprite = null;
+                        frontImage.color = DefaultFrontFallbackColor;
+                    }
+                }
             }
+
             if (labelText != null)
             {
-                labelText.enabled = showFront;
+                bool showLabel = showFront && _showLabels;
+                labelText.enabled = showLabel;
                 labelText.text = _spec.DisplayName ?? string.Empty;
             }
         }

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Geidai.Common.Library;
 
 namespace Geidai.Common.Game
 {
@@ -58,16 +59,41 @@ namespace Geidai.Common.Game
 
         /// <summary>
         /// 1 ゲーム分の問題列を生成する（questionCount 問）。各問は seed+i で決定的。
+        /// catalog がある場合、問ごとに別の図鑑 id（音色）を割り当てる。
         /// </summary>
-        public static List<Question> BuildQuestions(string baseSoundId, SoundMatchConfig config, int difficultyIndex, int seed)
+        public static List<Question> BuildQuestions(
+            string fallbackBaseSoundId,
+            SoundMatchConfig config,
+            int difficultyIndex,
+            int seed,
+            CuratedSoundCatalog catalog = null)
         {
             var list = new List<Question>();
             if (config == null) return list;
 
             DifficultyLevel diff = config.GetDifficulty(difficultyIndex);
             int count = config.QuestionCount;
+            var usedSoundIds = new HashSet<string>();
+
             for (int i = 0; i < count; i++)
+            {
+                string baseSoundId = fallbackBaseSoundId ?? string.Empty;
+                if (catalog != null &&
+                    SoundMatchBaseSoundSelector.TrySelectFromCatalog(
+                        catalog,
+                        null,
+                        unchecked(seed + i * 9973),
+                        usedSoundIds,
+                        out var selected))
+                {
+                    baseSoundId = selected.SoundId;
+                    if (!string.IsNullOrEmpty(baseSoundId))
+                        usedSoundIds.Add(baseSoundId);
+                }
+
                 list.Add(Build(baseSoundId, config, diff, unchecked(seed + i)));
+            }
+
             return list;
         }
     }

@@ -26,12 +26,13 @@ namespace Geidai.Tests.EditMode
         }
 
         [Test]
-        public void ChoiceCount_Is_Clamped_To_Min_Two()
+        public void ChoiceCount_Is_Clamped_To_Three_To_Six()
         {
-            Assert.AreEqual(2, Make(5, 1, null).ChoiceCount);
-            Assert.AreEqual(2, Make(5, 0, null).ChoiceCount);
-            Assert.AreEqual(2, Make(5, -3, null).ChoiceCount);
+            Assert.AreEqual(3, Make(5, 1, null).ChoiceCount);
+            Assert.AreEqual(3, Make(5, 0, null).ChoiceCount);
+            Assert.AreEqual(3, Make(5, 2, null).ChoiceCount);
             Assert.AreEqual(4, Make(5, 4, null).ChoiceCount);
+            Assert.AreEqual(6, Make(5, 9, null).ChoiceCount);
         }
 
         [Test]
