@@ -10,7 +10,7 @@ namespace Geidai.Game1
     public class ResultEffectController : MonoBehaviour
     {
         private const string DefaultCorrectBanner = "せいかい！ おとが あいました";
-        private const string DefaultCorrectBody = "おんが ぴったり！ つぎは どうする？";
+        private const string DefaultCorrectBody = "おとが ぴったり！ つぎは どうする？";
         private const string DefaultWrongMessage = "おとが ちがうよ。もういちど きいてみよう";
 
         /// <summary>正解ポップアップ（メッセージ＋ボタン一体）。睡蓮を隠さないよう下寄せ。</summary>
