@@ -91,11 +91,22 @@ namespace Geidai.Common.Game
             {
                 var item = candidates[i];
                 if (item == null || string.IsNullOrEmpty(item.id)) continue;
-                if (excludeSoundIds.Contains(item.id)) continue;
+                if (IsExcludedId(excludeSoundIds, item.id)) continue;
                 pool.Add(item);
             }
 
             return pool;
+        }
+
+        private static bool IsExcludedId(IReadOnlyCollection<string> excludeSoundIds, string id)
+        {
+            if (excludeSoundIds == null || excludeSoundIds.Count == 0) return false;
+            foreach (var excluded in excludeSoundIds)
+            {
+                if (excluded == id) return true;
+            }
+
+            return false;
         }
 
         public static AudioBuffer BufferFromClip(AudioClip clip)
