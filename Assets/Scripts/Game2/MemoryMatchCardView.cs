@@ -1,5 +1,7 @@
 using System;
+using System.Collections;
 using Geidai.Common.Game;
+using Geidai.Common.UI;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -35,11 +37,14 @@ namespace Geidai.Game2
         public event Action<int> Clicked;
 
         private Image _rootImage;
+        private RectTransform _motionRoot;
+        private Coroutine _motionRoutine;
 
         private void Awake()
         {
             if (cardButton == null) cardButton = GetComponent<Button>();
             _rootImage = GetComponent<Image>();
+            _motionRoot = transform as RectTransform;
             if (cardButton != null)
             {
                 cardButton.onClick.RemoveListener(OnClick);
@@ -78,6 +83,52 @@ namespace Geidai.Game2
         {
             _faceUp = faceUp;
             RefreshVisual();
+        }
+
+        public void PlayFlipReveal()
+        {
+            if (_motionRoot == null) return;
+            StopMotion();
+            _motionRoutine = StartCoroutine(FlipRevealRoutine());
+        }
+
+        public void PlayMismatchShake()
+        {
+            if (_motionRoot == null) return;
+            StopMotion();
+            _motionRoutine = StartCoroutine(MismatchShakeRoutine());
+        }
+
+        public void PlayMatchPop()
+        {
+            if (_motionRoot == null) return;
+            StopMotion();
+            _motionRoutine = StartCoroutine(MatchPopRoutine());
+        }
+
+        private void StopMotion()
+        {
+            if (_motionRoutine == null) return;
+            StopCoroutine(_motionRoutine);
+            _motionRoutine = null;
+        }
+
+        private IEnumerator FlipRevealRoutine()
+        {
+            yield return GeidaiUiMotion.FlipRevealScale(_motionRoot, 0.22f);
+            _motionRoutine = null;
+        }
+
+        private IEnumerator MismatchShakeRoutine()
+        {
+            yield return GeidaiUiMotion.ZShake(_motionRoot, 6f, 0.34f, 4);
+            _motionRoutine = null;
+        }
+
+        private IEnumerator MatchPopRoutine()
+        {
+            yield return GeidaiUiMotion.ScalePop(_motionRoot, 1.1f, 0.24f);
+            _motionRoutine = null;
         }
 
         public void SetAsEmptySlot()
@@ -145,8 +196,10 @@ namespace Geidai.Game2
                     }
                     else
                     {
-                        backImage.sprite = null;
-                        backImage.color = DefaultBackColor;
+                        var fallback = Game2CardArt.ResolvePlaceholderCardBack();
+                        backImage.sprite = fallback;
+                        backImage.color = fallback != null ? Color.white : DefaultBackColor;
+                        backImage.preserveAspect = true;
                     }
                 }
             }

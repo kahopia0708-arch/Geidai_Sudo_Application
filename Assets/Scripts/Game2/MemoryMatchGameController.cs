@@ -277,6 +277,7 @@ namespace Geidai.Game2
             if (card.IsEmptySlot || card.IsMatched || card.IsFaceUp) return;
 
             card.SetFaceUp(true);
+            card.PlayFlipReveal();
             PlayClip(card.Spec.Clip);
 
             if (!_firstPickIndex.HasValue)
@@ -296,10 +297,14 @@ namespace Geidai.Game2
             if (match)
             {
                 _matchedPairs++;
+                a.PlayMatchPop();
+                b.PlayMatchPop();
                 StartCoroutine(ClearMatchedPairSlots(first, index));
             }
             else
             {
+                a.PlayMismatchShake();
+                b.PlayMismatchShake();
                 float delay = config != null ? config.MismatchHideDelaySeconds : 0.9f;
                 StartCoroutine(HideMismatch(first, index, delay));
             }

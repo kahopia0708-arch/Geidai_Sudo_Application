@@ -1,6 +1,8 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+using Geidai.Common.UI;
 
 namespace Geidai.Game1
 {
@@ -42,6 +44,7 @@ namespace Geidai.Game1
         private Action _onNextQuestion;
         private Action _onMenu;
         private bool _uiBuilt;
+        private Coroutine _feedbackMotion;
 
         public void EnsureOverlayRoot(RectTransform playArea)
         {
@@ -101,6 +104,7 @@ namespace Geidai.Game1
 
             AdvanceGrowthStage();
             BringFeedbackToFront();
+            PlayFeedbackMotion(correctChoicePanel != null ? correctChoicePanel.transform as RectTransform : null, true);
         }
 
         public void SetLegacyGrowthEnabled(bool enabled)
@@ -112,6 +116,7 @@ namespace Geidai.Game1
 
         public void HideCorrectCelebration()
         {
+            StopFeedbackMotion();
             if (correctFeedback != null) correctFeedback.SetActive(false);
             if (correctChoicePanel != null) correctChoicePanel.SetActive(false);
             _onNextQuestion = null;
@@ -135,10 +140,12 @@ namespace Geidai.Game1
             }
 
             BringFeedbackToFront();
+            PlayFeedbackMotion(retryFeedback != null ? retryFeedback.transform as RectTransform : null, false);
         }
 
         public void HideWrongMessage()
         {
+            StopFeedbackMotion();
             if (retryFeedback != null) retryFeedback.SetActive(false);
         }
 
@@ -364,6 +371,22 @@ namespace Geidai.Game1
             rt.anchorMax = CorrectPanelAnchorMax;
             rt.offsetMin = Vector2.zero;
             rt.offsetMax = Vector2.zero;
+        }
+
+        private void PlayFeedbackMotion(RectTransform target, bool successPop)
+        {
+            StopFeedbackMotion();
+            if (target == null) return;
+            _feedbackMotion = StartCoroutine(successPop
+                ? GeidaiUiMotion.ScalePop(target, 1.06f, 0.3f)
+                : GeidaiUiMotion.HorizontalWiggle(target, 18f, 0.42f, 3));
+        }
+
+        private void StopFeedbackMotion()
+        {
+            if (_feedbackMotion == null) return;
+            StopCoroutine(_feedbackMotion);
+            _feedbackMotion = null;
         }
     }
 }

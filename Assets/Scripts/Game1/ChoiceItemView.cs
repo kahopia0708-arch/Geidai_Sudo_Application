@@ -1,4 +1,5 @@
 using System.Collections;
+using Geidai.Common.UI;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -392,6 +393,18 @@ namespace Geidai.Game1
             }
 
             _controller.OnChoiceDropped(this, eventData.position);
+        }
+
+        public void PlayTapWiggle()
+        {
+            if (_rt == null || _isHeldOnApprentice) return;
+            StopCoroutine(nameof(TapWiggleRoutine));
+            StartCoroutine(TapWiggleRoutine());
+        }
+
+        private IEnumerator TapWiggleRoutine()
+        {
+            yield return GeidaiUiMotion.HorizontalWiggle(_rt, 10f, 0.32f, 2);
         }
 
         public void OnPointerClick(PointerEventData eventData)
