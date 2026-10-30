@@ -13,5 +13,8 @@ MonoBehaviour:
   m_Name: MemoryMatchConfig
   m_EditorClassIdentifier: Geidai.Common::Geidai.Common.Game.MemoryMatchConfig
   pairCount: 4
+  showCardLabels: 0
+  cardFaceSprite: {fileID: 21300000, guid: 1895bde33d5e4ecf98f33701bdd45106, type: 3}
+  cardBackSprite: {fileID: 0}
   mismatchHideDelaySeconds: 0.9
   matchPauseSeconds: 0.35

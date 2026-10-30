@@ -35,16 +35,16 @@ namespace Geidai.EditorTools
 
             var status = GeidaiSceneBootstrap.CreateTextPublic(content, "Status", "", 26, TextAnchor.MiddleCenter);
             var statusRt = status.rectTransform;
-            statusRt.anchorMin = new Vector2(0.05f, 0.78f);
-            statusRt.anchorMax = new Vector2(0.95f, 0.84f);
+            statusRt.anchorMin = new Vector2(0.05f, 0.76f);
+            statusRt.anchorMax = new Vector2(0.95f, 0.82f);
             statusRt.offsetMin = Vector2.zero;
             statusRt.offsetMax = Vector2.zero;
 
             var gridGo = new GameObject("CardGrid", typeof(RectTransform), typeof(GridLayoutGroup));
             gridGo.transform.SetParent(content, false);
             var gridRt = gridGo.GetComponent<RectTransform>();
-            gridRt.anchorMin = new Vector2(0.05f, 0.22f);
-            gridRt.anchorMax = new Vector2(0.95f, 0.76f);
+            gridRt.anchorMin = new Vector2(0.05f, 0.2f);
+            gridRt.anchorMax = new Vector2(0.95f, 0.74f);
             gridRt.offsetMin = Vector2.zero;
             gridRt.offsetMax = Vector2.zero;
             var grid = gridGo.GetComponent<GridLayoutGroup>();
@@ -65,8 +65,8 @@ namespace Geidai.EditorTools
             empty.SetActive(false);
 
             var error = GeidaiSceneBootstrap.CreateErrorPresenterPublic(content);
-            var back = GeidaiSceneBootstrap.CreateButtonPublic(content, "Back", "もどる", new Vector2(280, 90));
-            GeidaiSceneBootstrap.AnchorBottomPublic(back.GetComponent<RectTransform>(), 90f, 36f);
+            var back = GeidaiSceneBootstrap.CreateButtonPublic(content, "Back", "もどる", new Vector2(200, 72));
+            Game2ScreenLayout.ApplyBackButton(back.GetComponent<RectTransform>());
 
             var config = AssetDatabase.LoadAssetAtPath<MemoryMatchConfig>(MemoryMatchConfigPath);
             var catalog = AssetDatabase.LoadAssetAtPath<CuratedSoundCatalog>(CuratedSoundCatalogPath);
@@ -81,6 +81,7 @@ namespace Geidai.EditorTools
             so.FindProperty("cardGrid").objectReferenceValue = gridRt;
             so.FindProperty("cardPrefab").objectReferenceValue = cardPrefab.GetComponent<MemoryMatchCardView>();
             so.FindProperty("statusText").objectReferenceValue = status;
+            so.FindProperty("titleText").objectReferenceValue = title;
             so.FindProperty("emptyState").objectReferenceValue = empty;
             so.FindProperty("errorPresenter").objectReferenceValue = error;
             so.FindProperty("backButton").objectReferenceValue = back;
