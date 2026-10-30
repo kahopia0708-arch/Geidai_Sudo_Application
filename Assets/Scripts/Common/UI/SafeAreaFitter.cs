@@ -59,6 +59,9 @@ namespace Geidai.Common.UI
                 _rect.anchorMin = anchorMin;
                 _rect.anchorMax = anchorMax;
             }
+
+            _rect.offsetMin = Vector2.zero;
+            _rect.offsetMax = Vector2.zero;
         }
     }
 }

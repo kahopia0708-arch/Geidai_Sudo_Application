@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using Geidai.Common.Config;
 using Geidai.Common.UI;
 using Geidai.Common.Utils;
 using Geidai.Services;
@@ -32,6 +33,13 @@ namespace Geidai.Foundation
         private void OnDestroy()
         {
             if (beginButton != null) beginButton.onClick.RemoveListener(OnBeginTapped);
+        }
+
+        protected override void OnShow()
+        {
+            var exhibition = ExhibitionSettingsProvider.Current;
+            if (exhibition != null && exhibition.IsExhibitionMode && exhibition.SkipBootScreen && State == BootState.Idle)
+                OnBeginTapped();
         }
 
         /// <summary>「はじめる」タップ起点（明示的開始 / Q2=A）。</summary>

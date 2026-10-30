@@ -19,6 +19,7 @@ namespace Geidai.Game2
 
         private static readonly Color PresetNormal = new Color(0.95f, 0.97f, 1f);
         private static readonly Color PresetSelected = new Color(0.72f, 0.86f, 1f);
+        private static readonly Color CanvasBackdropColor = new Color(0.88f, 0.93f, 0.98f);
 
         public static MemoryMatchUiHandles EnsureChrome(
             RectTransform contentRoot,
@@ -36,6 +37,7 @@ namespace Geidai.Game2
             Game2ScreenLayout.ApplyTitle(titleText != null ? titleText.rectTransform : null, titleText);
 
             EnsureCloudBackground(contentRoot);
+            GeidaiUiLayout.EnsureCanvasBackdrop(contentRoot, CanvasBackdropColor);
             EnsurePairCountPopup(contentRoot, controller, font, handles);
             handles.ChangePairCountButton = EnsureChangePairCountButton(contentRoot, controller, font);
 
@@ -49,8 +51,18 @@ namespace Geidai.Game2
 
         public static void SetPairCountPopupVisible(MemoryMatchUiHandles handles, bool visible)
         {
-            if (handles?.PairCountPopupRoot != null)
-                handles.PairCountPopupRoot.SetActive(visible);
+            if (handles?.PairCountPopupRoot == null) return;
+            if (visible)
+            {
+                var rt = handles.PairCountPopupRoot.transform as RectTransform;
+                if (rt != null)
+                {
+                    GeidaiUiLayout.StretchFull(rt);
+                    rt.SetAsLastSibling();
+                }
+            }
+
+            handles.PairCountPopupRoot.SetActive(visible);
         }
 
         public static void SetChangePairCountVisible(Button button, bool visible)
@@ -131,13 +143,15 @@ namespace Geidai.Game2
             Font font,
             MemoryMatchUiHandles handles)
         {
-            var popupRoot = parent.Find(PairCountPopupName) as RectTransform;
+            var overlayRoot = GeidaiUiLayout.ResolveCanvasOverlayRoot(parent) ?? parent;
+            var popupRoot = overlayRoot.Find(PairCountPopupName) as RectTransform
+                ?? parent.Find(PairCountPopupName) as RectTransform;
             if (popupRoot == null)
             {
                 var popupGo = new GameObject(PairCountPopupName, typeof(RectTransform), typeof(Image));
-                popupGo.transform.SetParent(parent, false);
+                popupGo.transform.SetParent(overlayRoot, false);
                 popupRoot = popupGo.GetComponent<RectTransform>();
-                GeidaiStretchRect.Full(popupRoot);
+                GeidaiUiLayout.StretchFull(popupRoot);
                 popupGo.GetComponent<Image>().color = new Color(0f, 0f, 0f, 0.5f);
 
                 var box = new GameObject("Box", typeof(RectTransform), typeof(Image));
@@ -177,6 +191,7 @@ namespace Geidai.Game2
                 GeidaiStretchRect.Full(label.rectTransform);
             }
 
+            MountFullScreenOverlay(parent, popupRoot);
             handles.PairCountPopupRoot = popupRoot.gameObject;
             handles.PopupConfirmButton = popupRoot.Find("Box/" + PopupConfirmName)?.GetComponent<Button>();
             if (handles.PopupConfirmButton != null)
@@ -309,9 +324,11 @@ namespace Geidai.Game2
         {
             yesLabel = null;
             noLabel = null;
-            var existing = parent.Find(ConfirmDialogName);
+            var overlayRoot = GeidaiUiLayout.ResolveCanvasOverlayRoot(parent) ?? parent;
+            var existing = overlayRoot.Find(ConfirmDialogName) ?? parent.Find(ConfirmDialogName);
             if (existing != null)
             {
+                MountFullScreenOverlay(parent, existing as RectTransform);
                 yesLabel = existing.Find("Box/Yes/Text")?.GetComponent<Text>();
                 noLabel = existing.Find("Box/No/Text")?.GetComponent<Text>();
                 var existingDialog = existing.GetComponent<ConfirmDialog>();
@@ -347,8 +364,8 @@ namespace Geidai.Game2
             noLabel = null;
 
             var panel = new GameObject(ConfirmDialogName, typeof(RectTransform), typeof(Image), typeof(ConfirmDialog));
-            panel.transform.SetParent(parent, false);
-            GeidaiStretchRect.Full(panel.GetComponent<RectTransform>());
+            panel.transform.SetParent(GeidaiUiLayout.ResolveCanvasOverlayRoot(parent) ?? parent, false);
+            GeidaiUiLayout.StretchFull(panel.GetComponent<RectTransform>());
             panel.GetComponent<Image>().color = new Color(0, 0, 0, 0.45f);
             panel.SetActive(false);
 
@@ -417,6 +434,15 @@ namespace Geidai.Game2
             text.text = label;
             GeidaiStretchRect.Full(text.rectTransform);
             return go.GetComponent<Button>();
+        }
+
+        private static void MountFullScreenOverlay(RectTransform contentRoot, RectTransform overlay)
+        {
+            if (contentRoot == null || overlay == null) return;
+            var root = GeidaiUiLayout.ResolveCanvasOverlayRoot(contentRoot) ?? contentRoot;
+            if (overlay.parent != root)
+                overlay.SetParent(root, false);
+            GeidaiUiLayout.StretchFull(overlay);
         }
     }
 }

@@ -35,6 +35,22 @@ namespace Geidai.Foundation
             if (backButton != null) backButton.onClick.RemoveListener(GoHome);
         }
 
+        protected override void OnShow()
+        {
+            EnsureBackButtonVisible();
+        }
+
+        private void EnsureBackButtonVisible()
+        {
+            if (backButton != null)
+                backButton.gameObject.SetActive(true);
+        }
+
+        public override void OnBackPressed()
+        {
+            GoHome();
+        }
+
         private void GoGame1()
         {
             Navigate(SceneId.Game1);

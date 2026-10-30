@@ -55,6 +55,7 @@ namespace Geidai.Game2
         private Sprite _cardBackSprite;
         private bool _showCardLabels;
         private GridLayoutGroup _gridLayout;
+        private Vector2Int _lastScreenSize;
 
         private void Awake()
         {
@@ -71,8 +72,20 @@ namespace Geidai.Game2
             ClearCards();
         }
 
+        private void Update()
+        {
+            var size = new Vector2Int(Screen.width, Screen.height);
+            if (size == _lastScreenSize) return;
+            _lastScreenSize = size;
+
+            if (_deck.Count == 0 || cardGrid == null) return;
+            MemoryMatchUiBootstrap.ApplyPlayAreaLayout(cardGrid);
+            ApplyGridForDeck();
+        }
+
         protected override void OnShow()
         {
+            _lastScreenSize = new Vector2Int(Screen.width, Screen.height);
             EnsureWired();
             _hasStartedOnce = false;
             _phase = Phase.Setup;
@@ -218,6 +231,8 @@ namespace Geidai.Game2
             if (cardGrid == null) return;
             if (_gridLayout == null) _gridLayout = cardGrid.GetComponent<GridLayoutGroup>();
             if (_gridLayout == null) _gridLayout = cardGrid.gameObject.AddComponent<GridLayoutGroup>();
+            if (cardGrid.GetComponent<RectMask2D>() == null)
+                cardGrid.gameObject.AddComponent<RectMask2D>();
             MemoryMatchGridLayout.ApplyFittedToArea(_gridLayout, cardGrid, _deck.Count);
         }
 
@@ -259,9 +274,10 @@ namespace Geidai.Game2
 
             if (index < 0 || index >= _cards.Count) return;
             var card = _cards[index];
-            if (card.IsMatched || card.IsFaceUp) return;
+            if (card.IsEmptySlot || card.IsMatched || card.IsFaceUp) return;
 
             card.SetFaceUp(true);
+            card.PlayFlipReveal();
             PlayClip(card.Spec.Clip);
 
             if (!_firstPickIndex.HasValue)
@@ -280,22 +296,30 @@ namespace Geidai.Game2
 
             if (match)
             {
-                a.SetMatched(true);
-                b.SetMatched(true);
                 _matchedPairs++;
-                StartCoroutine(AfterMatchPause());
+                a.PlayMatchPop();
+                b.PlayMatchPop();
+                StartCoroutine(ClearMatchedPairSlots(first, index));
             }
             else
             {
+                a.PlayMismatchShake();
+                b.PlayMismatchShake();
                 float delay = config != null ? config.MismatchHideDelaySeconds : 0.9f;
                 StartCoroutine(HideMismatch(first, index, delay));
             }
         }
 
-        private IEnumerator AfterMatchPause()
+        private IEnumerator ClearMatchedPairSlots(int firstIndex, int secondIndex)
         {
             float pause = config != null ? config.MatchPauseSeconds : 0.35f;
             if (pause > 0f) yield return new WaitForSeconds(pause);
+
+            if (firstIndex >= 0 && firstIndex < _cards.Count)
+                _cards[firstIndex].SetAsEmptySlot();
+            if (secondIndex >= 0 && secondIndex < _cards.Count)
+                _cards[secondIndex].SetAsEmptySlot();
+
             _busy = false;
 
             if (_matchedPairs >= _targetPairs)

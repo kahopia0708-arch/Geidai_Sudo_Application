@@ -58,6 +58,9 @@ namespace Geidai.Game1
         public static void Reveal(RectTransform wizardStage, Sprite sprite)
         {
             SetSprite(wizardStage, sprite);
+            var held = wizardStage != null ? wizardStage.Find(ChildName) as RectTransform : null;
+            if (held != null)
+                Geidai.Common.UI.InstrumentFloorShadow.SetVisible(held, false);
         }
     }
 }
