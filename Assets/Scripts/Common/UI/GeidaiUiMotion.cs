@@ -88,25 +88,31 @@ namespace Geidai.Common.UI
             if (target == null) yield break;
             Vector3 baseScale = target.localScale;
             float half = Mathf.Max(0.04f, durationSeconds * 0.5f);
-            float elapsed = 0f;
-            while (elapsed < half)
+            try
             {
-                elapsed += Time.unscaledDeltaTime;
-                float u = Mathf.Clamp01(elapsed / half);
-                target.localScale = new Vector3(baseScale.x * Mathf.Lerp(1f, 0.05f, u), baseScale.y, baseScale.z);
-                yield return null;
-            }
+                float elapsed = 0f;
+                while (elapsed < half)
+                {
+                    elapsed += Time.unscaledDeltaTime;
+                    float u = Mathf.Clamp01(elapsed / half);
+                    target.localScale = new Vector3(baseScale.x * Mathf.Lerp(1f, 0.05f, u), baseScale.y, baseScale.z);
+                    yield return null;
+                }
 
-            elapsed = 0f;
-            while (elapsed < half)
+                elapsed = 0f;
+                while (elapsed < half)
+                {
+                    elapsed += Time.unscaledDeltaTime;
+                    float u = Mathf.Clamp01(elapsed / half);
+                    target.localScale = new Vector3(baseScale.x * Mathf.Lerp(0.05f, 1f, u), baseScale.y, baseScale.z);
+                    yield return null;
+                }
+            }
+            finally
             {
-                elapsed += Time.unscaledDeltaTime;
-                float u = Mathf.Clamp01(elapsed / half);
-                target.localScale = new Vector3(baseScale.x * Mathf.Lerp(0.05f, 1f, u), baseScale.y, baseScale.z);
-                yield return null;
+                if (target != null)
+                    target.localScale = baseScale;
             }
-
-            target.localScale = baseScale;
         }
     }
 }

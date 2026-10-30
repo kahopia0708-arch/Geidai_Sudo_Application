@@ -39,12 +39,14 @@ namespace Geidai.Game2
         private Image _rootImage;
         private RectTransform _motionRoot;
         private Coroutine _motionRoutine;
+        private Vector3 _layoutLocalScale = Vector3.one;
 
         private void Awake()
         {
             if (cardButton == null) cardButton = GetComponent<Button>();
             _rootImage = GetComponent<Image>();
             _motionRoot = transform as RectTransform;
+            CaptureLayoutScale();
             if (cardButton != null)
             {
                 cardButton.onClick.RemoveListener(OnClick);
@@ -70,6 +72,7 @@ namespace Geidai.Game2
             _faceUp = false;
             _matched = false;
             _emptySlot = false;
+            StopMotion();
             RefreshVisual();
             SetInteractable(true);
         }
@@ -81,7 +84,11 @@ namespace Geidai.Game2
 
         public void SetFaceUp(bool faceUp)
         {
+            if (_faceUp == faceUp)
+                return;
             _faceUp = faceUp;
+            if (!faceUp)
+                StopMotion();
             RefreshVisual();
         }
 
@@ -106,11 +113,30 @@ namespace Geidai.Game2
             _motionRoutine = StartCoroutine(MatchPopRoutine());
         }
 
+        private void CaptureLayoutScale()
+        {
+            if (_motionRoot == null) return;
+            _layoutLocalScale = _motionRoot.localScale;
+            if (_layoutLocalScale.sqrMagnitude < 0.0001f)
+                _layoutLocalScale = Vector3.one;
+        }
+
+        private void ResetMotionTransform()
+        {
+            if (_motionRoot == null) return;
+            _motionRoot.localScale = _layoutLocalScale;
+            _motionRoot.localRotation = Quaternion.identity;
+        }
+
         private void StopMotion()
         {
-            if (_motionRoutine == null) return;
-            StopCoroutine(_motionRoutine);
-            _motionRoutine = null;
+            if (_motionRoutine != null)
+            {
+                StopCoroutine(_motionRoutine);
+                _motionRoutine = null;
+            }
+
+            ResetMotionTransform();
         }
 
         private IEnumerator FlipRevealRoutine()
@@ -133,6 +159,7 @@ namespace Geidai.Game2
 
         public void SetAsEmptySlot()
         {
+            StopMotion();
             _emptySlot = true;
             _matched = true;
             _faceUp = false;
