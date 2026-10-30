@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using Geidai.Common.Config;
 using Geidai.Common.Models;
 using Geidai.Common.Results;
 using Geidai.Common.UI;
@@ -139,7 +140,8 @@ namespace Geidai.Foundation
         /// </summary>
         public void BuildMenu()
         {
-            if (menuConfig == null || menuContainer == null || menuButtonPrefab == null)
+            var activeConfig = ResolveMenuConfig();
+            if (activeConfig == null || menuContainer == null || menuButtonPrefab == null)
             {
                 SafeLogger.Warn("[Home] menu not fully wired; skip build.");
                 return;
@@ -148,7 +150,7 @@ namespace Geidai.Foundation
             menuContainer.gameObject.SetActive(true);
             ClearMenuChildren();
 
-            foreach (var item in menuConfig.VisibleSorted())
+            foreach (var item in activeConfig.VisibleSorted())
             {
                 var button = Instantiate(menuButtonPrefab, menuContainer);
                 button.gameObject.SetActive(true);
@@ -176,6 +178,19 @@ namespace Geidai.Foundation
                     button.onClick.AddListener(() => Navigate(captured));
                 }
             }
+        }
+
+        private HomeMenuConfig ResolveMenuConfig()
+        {
+            var exhibition = ExhibitionSettingsProvider.Current;
+            if (exhibition != null && exhibition.IsExhibitionMode
+                && !string.IsNullOrEmpty(exhibition.HomeMenuConfigResourcesPath))
+            {
+                var alt = Resources.Load<HomeMenuConfig>(exhibition.HomeMenuConfigResourcesPath);
+                if (alt != null) return alt;
+            }
+
+            return menuConfig;
         }
 
         /// <summary>Edit Mode プレビュー用。メニュー子を消す。</summary>
@@ -230,6 +245,8 @@ namespace Geidai.Foundation
 
         private void OnProfileSettingsRequested()
         {
+            if (ExhibitionSettingsProvider.IsActive) return;
+
             var nav = ServiceRegistry.Resolve<INavigationService>();
             if (nav == null) return;
 

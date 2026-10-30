@@ -82,6 +82,8 @@ namespace Geidai.Game1
 
         internal RectTransform ChoicePoolParent => _playArea;
 
+        internal int ActiveChoiceCount => choiceViews != null ? choiceViews.Count : 0;
+
         internal void ApplyStoryboardReferences(
             FrogTargetView demoWizard,
             SoundMatchAnswerPadView pad,

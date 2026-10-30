@@ -11,7 +11,8 @@
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
         "Geidai.Game3",
-        "Geidai.Game2"
+        "Geidai.Game2",
+        "UnityEngine.UI"
     ],
     "includePlatforms": [
         "Editor"

@@ -18,6 +18,7 @@ namespace Geidai.Game2
         private int _index = -1;
         private bool _faceUp;
         private bool _matched;
+        private bool _emptySlot;
         private Sprite _cardFaceSprite;
         private Sprite _cardBackSprite;
         private bool _showLabels = true;
@@ -28,6 +29,7 @@ namespace Geidai.Game2
         public int Index => _index;
         public bool IsFaceUp => _faceUp;
         public bool IsMatched => _matched;
+        public bool IsEmptySlot => _emptySlot;
         public MemoryMatchCardSpec Spec => _spec;
 
         public event Action<int> Clicked;
@@ -62,14 +64,29 @@ namespace Geidai.Game2
             _showLabels = showLabels;
             _faceUp = false;
             _matched = false;
+            _emptySlot = false;
             RefreshVisual();
             SetInteractable(true);
+        }
+
+        public void RebindIndex(int index)
+        {
+            _index = index;
         }
 
         public void SetFaceUp(bool faceUp)
         {
             _faceUp = faceUp;
             RefreshVisual();
+        }
+
+        public void SetAsEmptySlot()
+        {
+            _emptySlot = true;
+            _matched = true;
+            _faceUp = false;
+            RefreshVisual();
+            SetInteractable(false);
         }
 
         public void SetMatched(bool matched)
@@ -82,11 +99,31 @@ namespace Geidai.Game2
 
         public void SetInteractable(bool interactable)
         {
-            if (cardButton != null) cardButton.interactable = interactable && !_matched;
+            if (cardButton != null)
+                cardButton.interactable = interactable && !_matched && !_emptySlot;
         }
 
         private void RefreshVisual()
         {
+            if (_emptySlot)
+            {
+                if (_rootImage != null) _rootImage.enabled = false;
+                if (backImage != null)
+                {
+                    if (backImage.gameObject != gameObject)
+                        backImage.gameObject.SetActive(false);
+                    backImage.enabled = false;
+                }
+                if (frontImage != null)
+                {
+                    if (frontImage.gameObject != gameObject)
+                        frontImage.gameObject.SetActive(false);
+                    frontImage.enabled = false;
+                }
+                if (labelText != null) labelText.enabled = false;
+                return;
+            }
+
             bool showFront = _faceUp || _matched;
 
             if (_rootImage != null)
@@ -145,7 +182,7 @@ namespace Geidai.Game2
 
         private void OnClick()
         {
-            if (_matched) return;
+            if (_matched || _emptySlot) return;
             Clicked?.Invoke(_index);
         }
     }
