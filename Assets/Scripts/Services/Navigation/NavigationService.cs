@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
+using Geidai.Common.Config;
 using Geidai.Common.Models;
 using Geidai.Common.Results;
 using Geidai.Common.Utils;
@@ -37,6 +38,10 @@ namespace Geidai.Services.Navigation
 
         public Result GoTo(SceneId sceneId)
         {
+            var exhibition = ExhibitionSettingsProvider.Current;
+            if (exhibition != null && exhibition.IsSceneBlocked(sceneId))
+                return Result.Fail(ResultCode.NotFound, "展示モードではこの画面は利用できません。");
+
             if (!SceneMap.TryGetValue(sceneId, out var sceneName))
                 return Result.Fail(ResultCode.NotFound, $"シーン未定義: {sceneId}");
 

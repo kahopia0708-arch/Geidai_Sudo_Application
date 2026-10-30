@@ -17,6 +17,7 @@ namespace Geidai.Game2
         private static Sprite _cachedCloud;
         private static Sprite _cachedCardFace;
         private static Sprite _cachedCardBack;
+        private static Sprite _cachedPlaceholderBack;
 
         public static Sprite ResolveCloud()
         {
@@ -56,6 +57,34 @@ namespace Geidai.Game2
             _cachedCardBack = Resources.Load<Sprite>(ResourcesCardBackPath);
             if (_cachedCardBack != null) return _cachedCardBack;
             return LoadFirstSpriteAtAssetPath(Game2ArtPaths.CardBackPattern);
+        }
+
+        /// <summary>裏面素材未到着時の仮模様（#23 着稿まで）。</summary>
+        public static Sprite ResolvePlaceholderCardBack()
+        {
+            if (_cachedPlaceholderBack != null) return _cachedPlaceholderBack;
+
+            const int w = 128;
+            const int h = 168;
+            var tex = new Texture2D(w, h, TextureFormat.RGBA32, false);
+            var baseCol = new Color(0.22f, 0.38f, 0.62f, 1f);
+            var stripe = new Color(0.28f, 0.46f, 0.72f, 1f);
+            for (int y = 0; y < h; y++)
+            {
+                for (int x = 0; x < w; x++)
+                {
+                    bool diag = ((x + y) / 12) % 2 == 0;
+                    tex.SetPixel(x, y, diag ? stripe : baseCol);
+                }
+            }
+
+            tex.Apply();
+            _cachedPlaceholderBack = Sprite.Create(
+                tex,
+                new Rect(0f, 0f, w, h),
+                new Vector2(0.5f, 0.5f),
+                100f);
+            return _cachedPlaceholderBack;
         }
 
         public static Sprite LoadFirstSpriteAtAssetPath(string assetPath)

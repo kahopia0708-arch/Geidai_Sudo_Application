@@ -1,5 +1,7 @@
 using System;
+using System.Collections;
 using Geidai.Common.Game;
+using Geidai.Common.UI;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,6 +20,7 @@ namespace Geidai.Game2
         private int _index = -1;
         private bool _faceUp;
         private bool _matched;
+        private bool _emptySlot;
         private Sprite _cardFaceSprite;
         private Sprite _cardBackSprite;
         private bool _showLabels = true;
@@ -28,16 +31,22 @@ namespace Geidai.Game2
         public int Index => _index;
         public bool IsFaceUp => _faceUp;
         public bool IsMatched => _matched;
+        public bool IsEmptySlot => _emptySlot;
         public MemoryMatchCardSpec Spec => _spec;
 
         public event Action<int> Clicked;
 
         private Image _rootImage;
+        private RectTransform _motionRoot;
+        private Coroutine _motionRoutine;
+        private Vector3 _layoutLocalScale = Vector3.one;
 
         private void Awake()
         {
             if (cardButton == null) cardButton = GetComponent<Button>();
             _rootImage = GetComponent<Image>();
+            _motionRoot = transform as RectTransform;
+            CaptureLayoutScale();
             if (cardButton != null)
             {
                 cardButton.onClick.RemoveListener(OnClick);
@@ -62,14 +71,100 @@ namespace Geidai.Game2
             _showLabels = showLabels;
             _faceUp = false;
             _matched = false;
+            _emptySlot = false;
+            StopMotion();
             RefreshVisual();
             SetInteractable(true);
         }
 
+        public void RebindIndex(int index)
+        {
+            _index = index;
+        }
+
         public void SetFaceUp(bool faceUp)
         {
+            if (_faceUp == faceUp)
+                return;
             _faceUp = faceUp;
+            if (!faceUp)
+                StopMotion();
             RefreshVisual();
+        }
+
+        public void PlayFlipReveal()
+        {
+            if (_motionRoot == null) return;
+            StopMotion();
+            _motionRoutine = StartCoroutine(FlipRevealRoutine());
+        }
+
+        public void PlayMismatchShake()
+        {
+            if (_motionRoot == null) return;
+            StopMotion();
+            _motionRoutine = StartCoroutine(MismatchShakeRoutine());
+        }
+
+        public void PlayMatchPop()
+        {
+            if (_motionRoot == null) return;
+            StopMotion();
+            _motionRoutine = StartCoroutine(MatchPopRoutine());
+        }
+
+        private void CaptureLayoutScale()
+        {
+            if (_motionRoot == null) return;
+            _layoutLocalScale = _motionRoot.localScale;
+            if (_layoutLocalScale.sqrMagnitude < 0.0001f)
+                _layoutLocalScale = Vector3.one;
+        }
+
+        private void ResetMotionTransform()
+        {
+            if (_motionRoot == null) return;
+            _motionRoot.localScale = _layoutLocalScale;
+            _motionRoot.localRotation = Quaternion.identity;
+        }
+
+        private void StopMotion()
+        {
+            if (_motionRoutine != null)
+            {
+                StopCoroutine(_motionRoutine);
+                _motionRoutine = null;
+            }
+
+            ResetMotionTransform();
+        }
+
+        private IEnumerator FlipRevealRoutine()
+        {
+            yield return GeidaiUiMotion.FlipRevealScale(_motionRoot, 0.22f);
+            _motionRoutine = null;
+        }
+
+        private IEnumerator MismatchShakeRoutine()
+        {
+            yield return GeidaiUiMotion.ZShake(_motionRoot, 6f, 0.34f, 4);
+            _motionRoutine = null;
+        }
+
+        private IEnumerator MatchPopRoutine()
+        {
+            yield return GeidaiUiMotion.ScalePop(_motionRoot, 1.1f, 0.24f);
+            _motionRoutine = null;
+        }
+
+        public void SetAsEmptySlot()
+        {
+            StopMotion();
+            _emptySlot = true;
+            _matched = true;
+            _faceUp = false;
+            RefreshVisual();
+            SetInteractable(false);
         }
 
         public void SetMatched(bool matched)
@@ -82,11 +177,31 @@ namespace Geidai.Game2
 
         public void SetInteractable(bool interactable)
         {
-            if (cardButton != null) cardButton.interactable = interactable && !_matched;
+            if (cardButton != null)
+                cardButton.interactable = interactable && !_matched && !_emptySlot;
         }
 
         private void RefreshVisual()
         {
+            if (_emptySlot)
+            {
+                if (_rootImage != null) _rootImage.enabled = false;
+                if (backImage != null)
+                {
+                    if (backImage.gameObject != gameObject)
+                        backImage.gameObject.SetActive(false);
+                    backImage.enabled = false;
+                }
+                if (frontImage != null)
+                {
+                    if (frontImage.gameObject != gameObject)
+                        frontImage.gameObject.SetActive(false);
+                    frontImage.enabled = false;
+                }
+                if (labelText != null) labelText.enabled = false;
+                return;
+            }
+
             bool showFront = _faceUp || _matched;
 
             if (_rootImage != null)
@@ -108,8 +223,10 @@ namespace Geidai.Game2
                     }
                     else
                     {
-                        backImage.sprite = null;
-                        backImage.color = DefaultBackColor;
+                        var fallback = Game2CardArt.ResolvePlaceholderCardBack();
+                        backImage.sprite = fallback;
+                        backImage.color = fallback != null ? Color.white : DefaultBackColor;
+                        backImage.preserveAspect = true;
                     }
                 }
             }
@@ -145,7 +262,7 @@ namespace Geidai.Game2
 
         private void OnClick()
         {
-            if (_matched) return;
+            if (_matched || _emptySlot) return;
             Clicked?.Invoke(_index);
         }
     }

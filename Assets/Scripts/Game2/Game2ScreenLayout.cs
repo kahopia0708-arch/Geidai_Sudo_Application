@@ -53,8 +53,16 @@ namespace Geidai.Game2
         public static void ApplyCardGridForPlay(RectTransform cardGrid)
         {
             if (cardGrid == null) return;
-            cardGrid.anchorMin = new Vector2(0.02f, 0.04f);
-            cardGrid.anchorMax = new Vector2(0.98f, 0.90f);
+            float bottom = 0.04f;
+            float top = 0.90f;
+            if (Geidai.Common.UI.GeidaiUiLayout.IsPortraitTallScreen)
+            {
+                bottom = 0.08f;
+                top = 0.86f;
+            }
+
+            cardGrid.anchorMin = new Vector2(0.02f, bottom);
+            cardGrid.anchorMax = new Vector2(0.98f, top);
             cardGrid.offsetMin = Vector2.zero;
             cardGrid.offsetMax = Vector2.zero;
         }

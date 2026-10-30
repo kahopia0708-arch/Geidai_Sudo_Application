@@ -1,4 +1,5 @@
 using System.Collections;
+using Geidai.Common.UI;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -115,10 +116,8 @@ namespace Geidai.Game1
             SetInputLocked(false);
             RestoreCanvasGroupForInteraction();
             ReparentToPool();
-            ApplyPoolAnchorSizing();
-
-            float x = Game1StoryboardLayout.ChoiceX(slotIndex, choiceCount);
-            _rt.anchoredPosition = new Vector2(x, 0f);
+            float poolW = _poolParent != null ? _poolParent.rect.width : 0f;
+            Game1StoryboardLayout.ApplyChoicePoolSlot(_rt, slotIndex, choiceCount, poolW);
             _rt.localRotation = Quaternion.identity;
             _originalPos = _rt.anchoredPosition;
             CaptureBaseTransform();
@@ -128,6 +127,16 @@ namespace Geidai.Game1
         public void ApplyPoolHomeLayout(int slotIndex)
         {
             ApplyPoolHomeLayout(slotIndex, 3);
+        }
+
+        /// <summary>画面向き変更などで池スロットだけ再計算（弟子保持中は位置を変えない）。</summary>
+        public void RefreshPoolLayout(int slotIndex, int choiceCount, float poolWidth)
+        {
+            if (_rt == null || _isHeldOnApprentice) return;
+            BindChoicePoolParent(_controller);
+            if (_poolParent == null || _rt.parent != _poolParent) return;
+            Game1StoryboardLayout.ApplyChoicePoolSlot(_rt, slotIndex, choiceCount, poolWidth);
+            _originalPos = _rt.anchoredPosition;
         }
 
         public void SetInstrument(Sprite instrumentSprite)
@@ -351,6 +360,7 @@ namespace Geidai.Game1
             _rt.anchoredPosition = Vector2.zero;
             _rt.localRotation = Quaternion.identity;
             _rt.localScale = _baseScale;
+            Game1StoryboardLayout.ApplyHeldInstrumentDisplaySize(_rt);
             SetInstrumentShadowVisible(false);
         }
 
@@ -383,6 +393,18 @@ namespace Geidai.Game1
             }
 
             _controller.OnChoiceDropped(this, eventData.position);
+        }
+
+        public void PlayTapWiggle()
+        {
+            if (_rt == null || _isHeldOnApprentice) return;
+            StopCoroutine(nameof(TapWiggleRoutine));
+            StartCoroutine(TapWiggleRoutine());
+        }
+
+        private IEnumerator TapWiggleRoutine()
+        {
+            yield return GeidaiUiMotion.HorizontalWiggle(_rt, 10f, 0.32f, 2);
         }
 
         public void OnPointerClick(PointerEventData eventData)
@@ -421,10 +443,9 @@ namespace Geidai.Game1
             ReparentToPool();
             if (_rt != null && _poolParent != null && _rt.parent == _poolParent)
             {
-                _rt.anchorMin = new Vector2(0.5f, Game1StoryboardLayout.ChoicePoolAnchorY);
-                _rt.anchorMax = new Vector2(0.5f, Game1StoryboardLayout.ChoicePoolAnchorY);
-                _rt.sizeDelta = Game1StoryboardLayout.ChoiceSize;
-                _rt.anchoredPosition = _originalPos;
+                int count = _controller != null ? Mathf.Max(1, _controller.ActiveChoiceCount) : 3;
+                Game1StoryboardLayout.ApplyChoicePoolSlot(_rt, _index, count, _poolParent.rect.width);
+                _originalPos = _rt.anchoredPosition;
             }
             else if (_rt != null)
             {
@@ -457,11 +478,8 @@ namespace Geidai.Game1
         private void ApplyPoolAnchorSizing()
         {
             if (_rt == null || _poolParent == null || _rt.parent != _poolParent) return;
-            _rt.anchorMin = new Vector2(0.5f, Game1StoryboardLayout.ChoicePoolAnchorY);
-            _rt.anchorMax = new Vector2(0.5f, Game1StoryboardLayout.ChoicePoolAnchorY);
-            _rt.pivot = new Vector2(0.5f, 0.5f);
-            _rt.sizeDelta = Game1StoryboardLayout.ChoiceSize;
-            _rt.localScale = _baseScale;
+            int count = _controller != null ? Mathf.Max(1, _controller.ActiveChoiceCount) : 3;
+            Game1StoryboardLayout.ApplyChoicePoolSlot(_rt, _index, count, _poolParent.rect.width);
         }
 
         private void RestoreCanvasGroupForInteraction()

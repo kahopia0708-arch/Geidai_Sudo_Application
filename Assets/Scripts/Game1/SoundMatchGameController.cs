@@ -82,6 +82,8 @@ namespace Geidai.Game1
 
         internal RectTransform ChoicePoolParent => _playArea;
 
+        internal int ActiveChoiceCount => choiceViews != null ? choiceViews.Count : 0;
+
         internal void ApplyStoryboardReferences(
             FrogTargetView demoWizard,
             SoundMatchAnswerPadView pad,
@@ -476,6 +478,7 @@ namespace Geidai.Game1
         public void OnChoiceTapped(ChoiceItemView view)
         {
             if (!CanPreviewSound() || view == null) return;
+            view.PlayTapWiggle();
             StopAllPreviewDemos();
             var co = StartCoroutine(PlayChoiceDemo(view));
             _choiceDemoCoroutines[view] = co;
@@ -682,6 +685,7 @@ namespace Geidai.Game1
 
                 view.ConfirmHeldMatch();
                 _session.MarkCorrect();
+                yield return WiggleApprenticeStage();
                 yield return view.RunCelebratePulse();
 
                 if (delayBeforeCorrectChoiceSeconds > 0f)
@@ -708,6 +712,7 @@ namespace Geidai.Game1
 
         private IEnumerator HandleWrongAnswer(ChoiceItemView view)
         {
+            yield return WiggleApprenticeStage();
             if (resultEffect != null)
             {
                 resultEffect.EnsureOverlayRoot(_playArea);
@@ -809,6 +814,12 @@ namespace Geidai.Game1
             if (emptyState != null) emptyState.SetActive(true);
             if (errorPresenter != null)
                 errorPresenter.ShowWarning("つかえる おとが ないよ。おとずかん か ろくおんを かくにんしてね");
+        }
+
+        private IEnumerator WiggleApprenticeStage()
+        {
+            if (_apprenticeStage == null) yield break;
+            yield return GeidaiUiMotion.HorizontalWiggle(_apprenticeStage, 16f, 0.4f, 3);
         }
 
         public override void OnBackPressed()

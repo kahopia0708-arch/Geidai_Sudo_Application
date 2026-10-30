@@ -13,6 +13,8 @@ namespace Geidai.Game1
     {
         [SerializeField] private SoundMatchGameController controller;
 
+        private Vector2Int _lastScreenSize;
+
         private void Awake()
         {
             EnsureStoryboardBuilt();
@@ -20,8 +22,22 @@ namespace Geidai.Game1
 
         private void Start()
         {
+            _lastScreenSize = new Vector2Int(Screen.width, Screen.height);
             // 実機（iPad 等）で SafeArea 確定後に再配置する。
             EnsureStoryboardBuilt();
+        }
+
+        private void Update()
+        {
+            var size = new Vector2Int(Screen.width, Screen.height);
+            if (size == _lastScreenSize) return;
+            _lastScreenSize = size;
+
+            if (controller == null)
+                controller = GetComponent<SoundMatchGameController>();
+            var playArea = FindPlayArea();
+            if (playArea == null || controller == null) return;
+            RepositionChoices(playArea, controller);
         }
 
         /// <summary>魔法使い UI を構築（冪等）。Controller.OnShow からも呼ぶ。</summary>
@@ -42,6 +58,9 @@ namespace Geidai.Game1
 
             ApplyStoryboardScale(playArea, controller);
             EnsureStageBackground(playArea);
+            Geidai.Common.UI.GeidaiUiLayout.EnsureCanvasBackdrop(
+                playArea,
+                Game1StoryboardLayout.StageBackground);
             var back = playArea.Find("Back") as RectTransform;
             Game1StoryboardLayout.ApplyBackButtonLayout(back);
 
@@ -364,15 +383,10 @@ namespace Geidai.Game1
         {
             var choices = playArea.GetComponentsInChildren<ChoiceItemView>(true);
             int count = choices.Length;
+            float poolW = playArea.rect.width;
             for (int i = 0; i < choices.Length; i++)
             {
-                var rt = choices[i].transform as RectTransform;
-                if (rt == null) continue;
-                rt.sizeDelta = Game1StoryboardLayout.ChoiceSize;
-                rt.anchorMin = new Vector2(0.5f, Game1StoryboardLayout.ChoicePoolAnchorY);
-                rt.anchorMax = new Vector2(0.5f, Game1StoryboardLayout.ChoicePoolAnchorY);
-                float x = Game1StoryboardLayout.ChoiceX(i, count);
-                rt.anchoredPosition = new Vector2(x, 0f);
+                choices[i].RefreshPoolLayout(i, count, poolW);
             }
         }
     }

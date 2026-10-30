@@ -1,3 +1,4 @@
+using Geidai.Common.Config;
 using Geidai.Common.Models;
 using Geidai.Common.Results;
 
@@ -36,6 +37,9 @@ namespace Geidai.Foundation
 
             if (loadResult.Code == ResultCode.NotFound)
             {
+                var exhibition = ExhibitionSettingsProvider.Current;
+                if (exhibition != null && exhibition.IsExhibitionMode && exhibition.AllowHomeWithoutProfile)
+                    return new StartupDecision(SceneId.Home, false);
                 return new StartupDecision(SceneId.Register, false);
             }
 
