@@ -10,8 +10,8 @@
 ---
 
 ## Prerequisites（前提）
-- **エンジン**: Unity `6000.4.2f1`（Unity 6・URP）※ `ProjectSettings/ProjectVersion.txt` と一致必須
-- **エディタ拡張**: 公式 Unity AI Assistant（`com.unity.ai.assistant`）＝Unity MCP Server（`user-unity-mcp`）で検証に利用（任意）
+- **エンジン**: Unity `6000.6.x`（Unity 6.6・URP）※ `ProjectSettings/ProjectVersion.txt` と一致必須
+- **エディタ拡張（任意）**: 公式 Unity AI Assistant `com.unity.ai.assistant` **2.21.0-pre.2 以上**（Unity 6.6 の UAC0020 対応）。Unity MCP Server（Cursor `user-unity-mcp`）利用時のみ。展示ビルド・CI には不要
 - **必須パッケージ**（`Packages/manifest.json` で解決）:
   - `com.unity.inputsystem`（Input System / Home の Input Actions を使用）
   - `com.unity.textmeshpro`（TextMesh Pro）
