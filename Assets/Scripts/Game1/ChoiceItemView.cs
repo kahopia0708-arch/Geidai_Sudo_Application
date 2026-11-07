@@ -48,6 +48,8 @@ namespace Geidai.Game1
         private int _returnHomeGeneration;
         private bool _dragVisualActive;
         private bool _previewScaleActive;
+        /// <summary>弟子へ吸着アニメ中は池の浮遊・初期位置スナップを止める。</summary>
+        private bool _magnetSnapPending;
         private Vector2 _basePivot;
         private Vector3 _baseScale;
         private float _baseZRotation;
@@ -328,25 +330,41 @@ namespace Geidai.Game1
             _rt.anchoredPosition = target;
         }
 
+        /// <summary>吸着コルーチン開始前に呼ぶ（ドロップ直後の池へ戻る見え方を防ぐ）。</summary>
+        public void PrepareMagnetSnap()
+        {
+            _magnetSnapPending = true;
+        }
+
         public IEnumerator AnimateMagnetSnap(RectTransform anchor, float durationSeconds)
         {
-            EndDragVisualImmediate();
-            if (_rt == null || anchor == null) yield break;
-            Vector3 start = _rt.position;
-            Vector3 end = anchor.position;
-            float duration = Mathf.Max(0.08f, durationSeconds);
-            float elapsed = 0f;
-            while (elapsed < duration)
+            _magnetSnapPending = true;
+            try
             {
-                elapsed += Time.unscaledDeltaTime;
-                float t = Mathf.Clamp01(elapsed / duration);
-                t = t * t * (3f - 2f * t);
-                _rt.position = Vector3.Lerp(start, end, t);
-                yield return null;
-            }
+                EndDragVisualImmediate();
+                if (_rt == null || anchor == null)
+                    yield break;
 
-            _rt.position = end;
-            AttachToSnapAnchor(anchor);
+                Vector3 start = _rt.position;
+                Vector3 end = anchor.position;
+                float duration = Mathf.Max(0.08f, durationSeconds);
+                float elapsed = 0f;
+                while (elapsed < duration)
+                {
+                    elapsed += Time.unscaledDeltaTime;
+                    float t = Mathf.Clamp01(elapsed / duration);
+                    t = t * t * (3f - 2f * t);
+                    _rt.position = Vector3.Lerp(start, end, t);
+                    yield return null;
+                }
+
+                _rt.position = end;
+                AttachToSnapAnchor(anchor);
+            }
+            finally
+            {
+                _magnetSnapPending = false;
+            }
         }
 
         /// <summary>弟子の手元スナップに親子付け（ローカル原点＝手の位置）。</summary>
@@ -439,7 +457,9 @@ namespace Geidai.Game1
         private void ApplyIdleBobIfInPool()
         {
             if (_rt == null || _poolParent == null || _rt.parent != _poolParent) return;
-            if (_isHeldOnApprentice || _inputLocked || _dragVisualActive || _previewScaleActive) return;
+            if (_isHeldOnApprentice || _inputLocked || _dragVisualActive || _previewScaleActive ||
+                _magnetSnapPending)
+                return;
 
             float amp = Game1StoryboardLayout.ChoiceIdleBobAmplitudePixels;
             float period = Game1StoryboardLayout.ChoiceIdleBobPeriodSeconds;
@@ -480,6 +500,7 @@ namespace Geidai.Game1
 
         public void ResetPosition()
         {
+            _magnetSnapPending = false;
             _isHeldOnApprentice = false;
             EndDragVisualImmediate();
             BindChoicePoolParent(_controller);

@@ -628,6 +628,7 @@ namespace Geidai.Game1
             if (_playArea == null)
                 _playArea = view.transform.parent as RectTransform;
 
+            view.PrepareMagnetSnap();
             ReturnOtherChoicesToPool(view);
             StopMatchCoroutine();
             if (_wrongAnswerCoroutine != null)
