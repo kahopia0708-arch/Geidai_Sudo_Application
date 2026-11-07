@@ -1,10 +1,9 @@
 using System.Collections;
+using Geidai.Common.Game;
 using Geidai.Common.UI;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using Geidai.Common.Game;
-using Geidai.Common.UI;
 
 namespace Geidai.Game1
 {
@@ -48,6 +47,7 @@ namespace Geidai.Game1
         private bool _useInstrumentFeel = true;
         private int _returnHomeGeneration;
         private bool _dragVisualActive;
+        private bool _previewScaleActive;
         private Vector2 _basePivot;
         private Vector3 _baseScale;
         private float _baseZRotation;
@@ -137,6 +137,7 @@ namespace Geidai.Game1
             if (_poolParent == null || _rt.parent != _poolParent) return;
             Game1StoryboardLayout.ApplyChoicePoolSlot(_rt, slotIndex, choiceCount, poolWidth);
             _originalPos = _rt.anchoredPosition;
+            CaptureBaseTransform();
         }
 
         public void SetInstrument(Sprite instrumentSprite)
@@ -357,7 +358,7 @@ namespace Geidai.Game1
             _rt.anchorMin = new Vector2(0.5f, 0.5f);
             _rt.anchorMax = new Vector2(0.5f, 0.5f);
             _rt.pivot = new Vector2(0.5f, 0.5f);
-            _rt.anchoredPosition = Vector2.zero;
+            _rt.anchoredPosition = Game1StoryboardLayout.HeldInstrumentSnapLocalOffset;
             _rt.localRotation = Quaternion.identity;
             _rt.localScale = _baseScale;
             Game1StoryboardLayout.ApplyHeldInstrumentDisplaySize(_rt);
@@ -395,16 +396,58 @@ namespace Geidai.Game1
             _controller.OnChoiceDropped(this, eventData.position);
         }
 
-        public void PlayTapWiggle()
+        public void BeginPreviewScale()
         {
             if (_rt == null || _isHeldOnApprentice) return;
-            StopCoroutine(nameof(TapWiggleRoutine));
-            StartCoroutine(TapWiggleRoutine());
+            _previewScaleActive = true;
+            StopCoroutine(nameof(PreviewScaleRoutine));
+            StartCoroutine(PreviewScaleRoutine());
         }
 
-        private IEnumerator TapWiggleRoutine()
+        public void EndPreviewScale()
         {
-            yield return GeidaiUiMotion.HorizontalWiggle(_rt, 10f, 0.32f, 2);
+            _previewScaleActive = false;
+            StopCoroutine(nameof(PreviewScaleRoutine));
+            if (_rt != null && !_dragVisualActive && !_isHeldOnApprentice)
+                _rt.localScale = _baseScale;
+        }
+
+        private IEnumerator PreviewScaleRoutine()
+        {
+            if (_rt == null) yield break;
+            Vector3 baseScale = _baseScale;
+            float peak = Game1StoryboardLayout.ChoicePreviewScalePeak;
+            const float rise = 0.1f;
+            float t = 0f;
+            while (t < rise)
+            {
+                t += Time.unscaledDeltaTime;
+                if (_rt == null) yield break;
+                _rt.localScale = baseScale * Mathf.Lerp(1f, peak, Mathf.Clamp01(t / rise));
+                yield return null;
+            }
+
+            if (_rt != null)
+                _rt.localScale = baseScale * peak;
+        }
+
+        private void LateUpdate()
+        {
+            ApplyIdleBobIfInPool();
+        }
+
+        private void ApplyIdleBobIfInPool()
+        {
+            if (_rt == null || _poolParent == null || _rt.parent != _poolParent) return;
+            if (_isHeldOnApprentice || _inputLocked || _dragVisualActive || _previewScaleActive) return;
+
+            float amp = Game1StoryboardLayout.ChoiceIdleBobAmplitudePixels;
+            float period = Game1StoryboardLayout.ChoiceIdleBobPeriodSeconds;
+            float phase = _index * 0.65f;
+            float bob = Mathf.Sin((Time.unscaledTime + phase) * Mathf.PI * 2f / period) * amp;
+            var pos = _originalPos;
+            pos.y += bob;
+            _rt.anchoredPosition = pos;
         }
 
         public void OnPointerClick(PointerEventData eventData)

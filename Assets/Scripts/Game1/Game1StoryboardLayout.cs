@@ -9,15 +9,26 @@ namespace Geidai.Game1
     {
         public static readonly Color StageBackground = new Color(0.55f, 0.78f, 0.95f, 1f);
 
-        public static readonly Vector2 WizardAnchor = new Vector2(0.26f, 0.58f);
-        public static readonly Vector2 ApprenticeAnchor = new Vector2(0.74f, 0.58f);
+        /// <summary>師匠・弟子の足元ライン（同一 Y）。</summary>
+        public static readonly float CharacterBaselineAnchorY = 0.55f;
+        public static readonly Vector2 WizardAnchor = new Vector2(0.26f, CharacterBaselineAnchorY);
+        public static readonly Vector2 ApprenticeAnchor = new Vector2(0.74f, CharacterBaselineAnchorY);
         public static readonly Vector2 WizardCharacterSize = new Vector2(520f, 520f);
+        public static readonly float CharacterStageHeight = 520f;
         /// <summary>師匠高さの約60%（須藤さん FB 2026-10-30）。</summary>
         public static readonly Vector2 ApprenticeCharacterSize = new Vector2(312f, 312f);
         /// <summary>師匠・弟子が手元に持ったときの図鑑楽器（同一サイズ）。</summary>
         public static readonly Vector2 HeldInstrumentSize = new Vector2(200f, 200f);
-        /// <summary>師匠の左手付近（WizardStage 内・正規化座標＋オフセット）。</summary>
-        public static readonly Vector2 HeldInstrumentAnchor = new Vector2(0.68f, 0.55f);
+        /// <summary>足元（WizardStage 下端）から師匠手元楽器を上げる量（師匠身長の比率）。</summary>
+        public const float WizardHeldRaiseFractionOfWizardHeight = 0.20f;
+
+        private const float HeldInstrumentAnchorYNominal = 0.55f;
+
+        /// <summary>師匠の左手付近（WizardStage 内・正規化座標）。足元基準で身長の25%だけ上げる。</summary>
+        public static readonly Vector2 HeldInstrumentAnchor = new Vector2(
+            0.68f,
+            HeldInstrumentAnchorYNominal + WizardHeldRaiseFractionOfWizardHeight);
+
         public static readonly Vector2 HeldInstrumentOffset = new Vector2(72f, 72f);
 
         public static void ApplyHeldInstrumentLayout(RectTransform heldInstrument)
@@ -31,8 +42,29 @@ namespace Geidai.Game1
         }
 
         public static readonly Vector2 ChoiceSize = new Vector2(280f, 280f);
-        /// <summary>弟子の手の上（AnswerPad 内・正規化座標）。Snap の sizeDelta は <see cref="HeldInstrumentSize"/>。</summary>
-        public static readonly Vector2 AnswerSnapAnchor = new Vector2(0.22f, 0.64f);
+
+        /// <summary>足元（AnswerPad 下端＝弟子の脚）から吸着を下げる量（弟子身長の比率）。</summary>
+        public const float HeldSnapLowerFractionOfApprenticeHeight = 0.25f;
+
+        private static readonly float HeldSnapLowerPixelsFromFeet =
+            ApprenticeCharacterSize.y * HeldSnapLowerFractionOfApprenticeHeight;
+
+        private const float AnswerSnapAnchorXNominal = 0.22f;
+        private const float AnswerSnapAnchorYNominal = 0.72f;
+        private const float HeldInstrumentSnapLocalOffsetYNominal = 72f;
+
+        /// <summary>弟子吸着を右へずらす量（AnswerPad 幅に対する比率）。</summary>
+        public const float ApprenticeHeldSnapShiftRightFraction = 0.10f;
+
+        /// <summary>弟子の手付近（AnswerPad 内・正規化座標）。足元基準で <see cref="HeldSnapLowerFractionOfApprenticeHeight"/> 分だけ下げる。</summary>
+        public static readonly Vector2 AnswerSnapAnchor = new Vector2(
+            AnswerSnapAnchorXNominal + ApprenticeHeldSnapShiftRightFraction,
+            AnswerSnapAnchorYNominal - HeldSnapLowerPixelsFromFeet / CharacterStageHeight);
+
+        /// <summary>吸着後、スナップからのローカルオフセット（足元基準で同率だけ下げる）。</summary>
+        public static readonly Vector2 HeldInstrumentSnapLocalOffset = new Vector2(
+            0f,
+            HeldInstrumentSnapLocalOffsetYNominal - HeldSnapLowerPixelsFromFeet);
 
         /// <summary>互換。ApplyAnswerSnapLayout を使う。</summary>
         public static readonly Vector2 AnswerSnapAnchored = Vector2.zero;
@@ -59,6 +91,31 @@ namespace Geidai.Game1
         public static readonly float[] ChoicePoolX6 = { -650f, -390f, -130f, 130f, 390f, 650f };
 
         public const float ChoicePoolAnchorY = 0.22f;
+
+        public const float ChoicePreviewScalePeak = 1.14f;
+        public const float ChoiceIdleBobAmplitudePixels = 7f;
+        public const float ChoiceIdleBobPeriodSeconds = 3.1f;
+
+        public static void ApplyCharacterStage(RectTransform stage, Vector2 anchor)
+        {
+            if (stage == null) return;
+            stage.anchorMin = anchor;
+            stage.anchorMax = anchor;
+            stage.pivot = new Vector2(0.5f, 0f);
+            stage.sizeDelta = new Vector2(CharacterStageHeight, CharacterStageHeight);
+            stage.anchoredPosition = Vector2.zero;
+        }
+
+        /// <summary>ステージ内で足元を揃えたキャラ画像。</summary>
+        public static void ApplyCharacterPortraitBottom(RectTransform portrait, Vector2 size)
+        {
+            if (portrait == null) return;
+            portrait.anchorMin = new Vector2(0.5f, 0f);
+            portrait.anchorMax = new Vector2(0.5f, 0f);
+            portrait.pivot = new Vector2(0.5f, 0f);
+            portrait.sizeDelta = size;
+            portrait.anchoredPosition = Vector2.zero;
+        }
 
         /// <summary>旧・睡蓮レイアウト（互換）。</summary>
         public const float WaterSurfaceAnchorY = 0.67f;
