@@ -55,7 +55,7 @@ namespace Geidai.Game1
         [SerializeField] private float previewMouthCloseEarlySeconds = 0.15f;
 
         private IStorageService _storage;
-        private IPitchVariationService _pitch;
+        private CatalogClipPlayer _catalogClips;
         private INavigationService _nav;
         private Canvas _canvas;
         private RectTransform _playArea;
@@ -146,7 +146,8 @@ namespace Geidai.Game1
         {
             _storage = ServiceRegistry.Resolve<IStorageService>();
             _nav = ServiceRegistry.Resolve<INavigationService>();
-            _pitch = Game1Bootstrap.EnsurePitchVariationService();
+            if (_catalogClips == null)
+                _catalogClips = new CatalogClipPlayer(gameObject);
             if (_canvas == null) _canvas = GetComponentInParent<Canvas>();
             if (_playArea == null && choiceViews != null && choiceViews.Count > 0 && choiceViews[0] != null)
                 _playArea = choiceViews[0].transform.parent as RectTransform;
@@ -182,8 +183,6 @@ namespace Geidai.Game1
                 ShowEmpty();
                 return;
             }
-
-            _pitch.SetBase(_baseBuffer);
 
             var questions = QuestionBuilder.BuildQuestions(
                 _baseSoundId,
@@ -300,8 +299,6 @@ namespace Geidai.Game1
             _state = State.Playing;
             StopAllPreviewDemos();
             ApplyQuestionBase(q);
-            if (_baseBuffer != null && _pitch != null)
-                _pitch.SetBase(_baseBuffer);
             if (resultEffect != null)
             {
                 if (_playArea != null) resultEffect.EnsureOverlayRoot(_playArea);
@@ -396,40 +393,41 @@ namespace Geidai.Game1
             }
         }
 
-        private bool TryResolveBuffer(string soundId, out AudioBuffer buffer)
+        private bool TryResolveCatalogClip(string soundId, out AudioClip clip)
         {
-            buffer = null;
-            if (!string.IsNullOrEmpty(soundId) && soundId == _baseSoundId && _baseBuffer != null)
+            clip = null;
+            if (string.IsNullOrEmpty(soundId))
+                soundId = _baseSoundId;
+
+            if (config?.CuratedCatalog != null && !string.IsNullOrEmpty(soundId))
             {
-                buffer = _baseBuffer;
-                return true;
+                var def = config.CuratedCatalog.FindById(soundId);
+                if (def?.clipRef != null)
+                {
+                    clip = def.clipRef;
+                    return true;
+                }
             }
 
-            if (config?.CuratedCatalog == null || string.IsNullOrEmpty(soundId))
-                return false;
-
-            foreach (var item in config.CuratedCatalog.ValidItems())
+            if (config?.FallbackClip != null)
             {
-                if (item == null || item.id != soundId) continue;
-                buffer = SoundMatchBaseSoundSelector.BufferFromClip(item.clipRef);
-                return buffer != null;
+                clip = config.FallbackClip;
+                return true;
             }
 
             return false;
         }
 
-        private void PlayTargetPitch(int cents)
+        private void PlayTargetCatalogClip()
         {
-            if (_pitch == null) return;
-            if (_baseBuffer != null)
-                _pitch.Play(_baseBuffer, cents);
-            else
-                _pitch.Play(cents);
+            if (_catalogClips == null || !_catalogClips.IsReady) return;
+            if (TryResolveCatalogClip(_baseSoundId, out var clip))
+                _catalogClips.Play(clip);
         }
 
-        private void PlayChoicePitch(int choiceIndex, int cents)
+        private void PlayChoiceCatalogClip(int choiceIndex)
         {
-            if (_pitch == null) return;
+            if (_catalogClips == null || !_catalogClips.IsReady) return;
             string soundId = _baseSoundId;
             if (choiceIndex >= 0 &&
                 choiceIndex < _currentChoicePresentations.Length &&
@@ -438,32 +436,8 @@ namespace Geidai.Game1
                 soundId = _currentChoicePresentations[choiceIndex].SoundId;
             }
 
-            int playbackCents = ResolveChoicePlaybackCents(soundId, cents);
-            if (TryResolveBuffer(soundId, out var buffer))
-                _pitch.Play(buffer, playbackCents);
-            else if (_baseBuffer != null)
-                _pitch.Play(_baseBuffer, cents);
-            else
-                _pitch.Play(cents);
-        }
-
-        /// <summary>
-        /// 図鑑 clip の基準 MIDI と今回のお手本音の差を、出題セントに加算する。
-        /// </summary>
-        private int ResolveChoicePlaybackCents(string soundId, int questionCents)
-        {
-            if (config?.CuratedCatalog == null || string.IsNullOrEmpty(soundId))
-                return questionCents;
-
-            var baseDef = config.CuratedCatalog.FindById(_baseSoundId);
-            var choiceDef = config.CuratedCatalog.FindById(soundId);
-            if (baseDef == null || choiceDef == null)
-                return questionCents;
-            if (!baseDef.HasBasePitch || !choiceDef.HasBasePitch)
-                return questionCents;
-
-            int midiDelta = choiceDef.basePitchMidi - baseDef.basePitchMidi;
-            return questionCents + midiDelta * 100;
+            if (TryResolveCatalogClip(soundId, out var clip))
+                _catalogClips.Play(clip);
         }
 
         /// <summary>師匠タップ：お手本の音。</summary>
@@ -510,6 +484,7 @@ namespace Geidai.Game1
             _choiceDemoCoroutines.Clear();
             CloseAllPreviewMouths();
             EndAllChoicePreviewScale();
+            _catalogClips?.Stop();
         }
 
         private void EndAllChoicePreviewScale()
@@ -536,11 +511,11 @@ namespace Geidai.Game1
         private IEnumerator PlayTargetDemo(FrogTargetView view)
         {
             var q = _session != null ? _session.Current : null;
-            if (q == null || _pitch == null) yield break;
+            if (q == null || _catalogClips == null) yield break;
             try
             {
                 view.OpenMouth();
-                PlayTargetPitch(q.targetCents);
+                PlayTargetCatalogClip();
                 yield return WaitForPreviewPlayback();
             }
             finally
@@ -552,12 +527,12 @@ namespace Geidai.Game1
 
         private IEnumerator PlayChoiceDemo(ChoiceItemView view)
         {
-            if (_pitch == null) yield break;
+            if (_catalogClips == null) yield break;
             try
             {
                 view.BeginPreviewScale();
                 view.OpenMouth();
-                PlayChoicePitch(view.Index, view.Cents);
+                PlayChoiceCatalogClip(view.Index);
                 yield return WaitForPreviewPlayback();
             }
             finally
@@ -571,34 +546,34 @@ namespace Geidai.Game1
         private IEnumerator WaitForPreviewPlayback()
         {
             yield return null;
-            while (_pitch != null && _pitch.IsPlaying)
+            while (_catalogClips != null && _catalogClips.IsPlaying)
             {
                 if (previewMouthCloseEarlySeconds > 0f &&
-                    _pitch.PlaybackSecondsRemaining <= previewMouthCloseEarlySeconds)
+                    _catalogClips.PlaybackSecondsRemaining <= previewMouthCloseEarlySeconds)
                     break;
                 yield return null;
             }
         }
 
-        private IEnumerator PlayPitchAndWait(int cents)
+        private IEnumerator PlayTargetCatalogAndWait()
         {
-            PlayTargetPitch(cents);
-            yield return WaitForPitchPlayback();
+            PlayTargetCatalogClip();
+            yield return WaitForCatalogClipPlayback();
         }
 
         /// <summary>お手本（カエル）の確認再生（口アニメなし・内部用）。</summary>
         public void PreviewTarget()
         {
             var q = _session != null ? _session.Current : null;
-            if (q == null || _pitch == null) return;
-            PlayTargetPitch(q.targetCents);
+            if (q == null || _catalogClips == null) return;
+            PlayTargetCatalogClip();
         }
 
         /// <summary>選択肢の確認再生（口アニメなし・内部用）。</summary>
         public void PreviewChoice(int choiceIndex, int cents)
         {
-            if (_pitch == null) return;
-            PlayChoicePitch(choiceIndex, cents);
+            if (_catalogClips == null) return;
+            PlayChoiceCatalogClip(choiceIndex);
         }
 
         /// <summary>おたまを右の睡蓮に置いたとき：答え合わせ（カエル→おたまの順再生）を開始。</summary>
@@ -662,7 +637,7 @@ namespace Geidai.Game1
         private IEnumerator RunAnswerMatch(ChoiceItemView view)
         {
             var q = _session != null ? _session.Current : null;
-            if (q == null || _pitch == null)
+            if (q == null || _catalogClips == null)
             {
                 view.ResetPosition();
                 _matchCoroutine = null;
@@ -674,20 +649,20 @@ namespace Geidai.Game1
             // 1. 師匠のお手本の音
             if (frog != null)
             {
-                PlayTargetPitch(q.targetCents);
-                yield return WaitForPitchPlayback();
+                PlayTargetCatalogClip();
+                yield return WaitForCatalogClipPlayback();
             }
             else
             {
-                yield return PlayPitchAndWait(q.targetCents);
+                yield return PlayTargetCatalogAndWait();
             }
 
             if (gapBetweenMatchSoundsSeconds > 0f)
                 yield return new WaitForSeconds(gapBetweenMatchSoundsSeconds);
 
-            // 2. 弟子の手元の楽器の音（図鑑 clip ＋ ピッチ）
-            PlayChoicePitch(view.Index, view.Cents);
-            yield return WaitForPitchPlayback();
+            // 2. 弟子の手元の楽器の音（図鑑 clip 原音）
+            PlayChoiceCatalogClip(view.Index);
+            yield return WaitForCatalogClipPlayback();
 
             bool correct = view.Index == q.correctIndex;
 
@@ -772,10 +747,10 @@ namespace Geidai.Game1
             OnBackPressed();
         }
 
-        private IEnumerator WaitForPitchPlayback()
+        private IEnumerator WaitForCatalogClipPlayback()
         {
             yield return null;
-            while (_pitch != null && _pitch.IsPlaying)
+            while (_catalogClips != null && _catalogClips.IsPlaying)
                 yield return null;
         }
 
@@ -852,7 +827,7 @@ namespace Geidai.Game1
                 resultEffect.HideResultSummary();
             }
 
-            if (_pitch != null) _pitch.Stop();
+            _catalogClips?.Stop();
             if (_nav == null) _nav = ServiceRegistry.Resolve<INavigationService>();
             if (_nav == null)
             {
