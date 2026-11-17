@@ -478,7 +478,6 @@ namespace Geidai.Game1
         public void OnChoiceTapped(ChoiceItemView view)
         {
             if (!CanPreviewSound() || view == null) return;
-            view.PlayTapWiggle();
             StopAllPreviewDemos();
             var co = StartCoroutine(PlayChoiceDemo(view));
             _choiceDemoCoroutines[view] = co;
@@ -510,6 +509,17 @@ namespace Geidai.Game1
 
             _choiceDemoCoroutines.Clear();
             CloseAllPreviewMouths();
+            EndAllChoicePreviewScale();
+        }
+
+        private void EndAllChoicePreviewScale()
+        {
+            if (choiceViews == null) return;
+            for (int i = 0; i < choiceViews.Count; i++)
+            {
+                if (choiceViews[i] != null)
+                    choiceViews[i].EndPreviewScale();
+            }
         }
 
         private void CloseAllPreviewMouths()
@@ -545,12 +555,14 @@ namespace Geidai.Game1
             if (_pitch == null) yield break;
             try
             {
+                view.BeginPreviewScale();
                 view.OpenMouth();
                 PlayChoicePitch(view.Index, view.Cents);
                 yield return WaitForPreviewPlayback();
             }
             finally
             {
+                view.EndPreviewScale();
                 view.CloseMouth();
                 _choiceDemoCoroutines.Remove(view);
             }
@@ -616,6 +628,7 @@ namespace Geidai.Game1
             if (_playArea == null)
                 _playArea = view.transform.parent as RectTransform;
 
+            view.PrepareMagnetSnap();
             ReturnOtherChoicesToPool(view);
             StopMatchCoroutine();
             if (_wrongAnswerCoroutine != null)

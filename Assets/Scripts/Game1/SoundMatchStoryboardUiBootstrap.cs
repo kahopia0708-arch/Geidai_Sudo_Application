@@ -98,12 +98,16 @@ namespace Geidai.Game1
             var wizard = Game1WizardArt.ResolveMaster(config);
             var apprentice = Game1WizardArt.ResolveApprentice(config);
 
-            var masterStage = playArea.Find("WizardStage");
+            var masterStage = playArea.Find("WizardStage") as RectTransform;
             if (masterStage != null)
             {
-                var masterTr = masterStage.Find("WizardMaster");
+                Game1StoryboardLayout.ApplyCharacterStage(masterStage, Game1StoryboardLayout.WizardAnchor);
+                var masterTr = masterStage.Find("WizardMaster") as RectTransform;
                 if (masterTr != null)
                 {
+                    Game1StoryboardLayout.ApplyCharacterPortraitBottom(
+                        masterTr,
+                        Game1StoryboardLayout.WizardCharacterSize);
                     var img = masterTr.GetComponent<Image>();
                     if (img != null && wizard != null)
                     {
@@ -118,12 +122,18 @@ namespace Geidai.Game1
                 }
             }
 
-            var apprenticeStage = playArea.Find("ApprenticeStage");
+            var apprenticeStage = playArea.Find("ApprenticeStage") as RectTransform;
             if (apprenticeStage != null)
             {
-                var appTr = apprenticeStage.Find("Apprentice");
+                Game1StoryboardLayout.ApplyCharacterStage(
+                    apprenticeStage,
+                    Game1StoryboardLayout.ApprenticeAnchor);
+                var appTr = apprenticeStage.Find("Apprentice") as RectTransform;
                 if (appTr != null)
                 {
+                    Game1StoryboardLayout.ApplyCharacterPortraitBottom(
+                        appTr,
+                        Game1StoryboardLayout.ApprenticeCharacterSize);
                     var appImg = appTr.GetComponent<Image>();
                     if (appImg != null && apprentice != null)
                     {
@@ -223,10 +233,7 @@ namespace Geidai.Game1
             }
 
             rt.gameObject.SetActive(true);
-            rt.anchorMin = anchor;
-            rt.anchorMax = anchor;
-            rt.sizeDelta = Game1StoryboardLayout.WizardCharacterSize;
-            rt.anchoredPosition = Vector2.zero;
+            Game1StoryboardLayout.ApplyCharacterStage(rt, anchor);
             return rt;
         }
 
@@ -248,10 +255,7 @@ namespace Geidai.Game1
                 go = tr.gameObject;
             }
 
-            tr.anchorMin = new Vector2(0.5f, 0.5f);
-            tr.anchorMax = new Vector2(0.5f, 0.5f);
-            tr.sizeDelta = Game1StoryboardLayout.WizardCharacterSize;
-            tr.anchoredPosition = Vector2.zero;
+            Game1StoryboardLayout.ApplyCharacterPortraitBottom(tr, Game1StoryboardLayout.WizardCharacterSize);
 
             var img = go.GetComponent<Image>();
             if (wizardSprite != null)
@@ -286,10 +290,9 @@ namespace Geidai.Game1
                 apprenticeTr = appGo.GetComponent<RectTransform>();
             }
 
-            apprenticeTr.anchorMin = new Vector2(0.5f, 0.5f);
-            apprenticeTr.anchorMax = new Vector2(0.5f, 0.5f);
-            apprenticeTr.sizeDelta = Game1StoryboardLayout.ApprenticeCharacterSize;
-            apprenticeTr.anchoredPosition = Vector2.zero;
+            Game1StoryboardLayout.ApplyCharacterPortraitBottom(
+                apprenticeTr,
+                Game1StoryboardLayout.ApprenticeCharacterSize);
             var appImg = apprenticeTr.GetComponent<Image>();
             if (apprenticeSprite != null)
             {
