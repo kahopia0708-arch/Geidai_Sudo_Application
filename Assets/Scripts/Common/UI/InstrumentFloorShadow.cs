@@ -35,9 +35,11 @@ namespace Geidai.Common.UI
         public void Apply()
         {
             var resolved = settings != null ? settings : InstrumentDisplaySettings.LoadRuntime();
+            resolved?.EnsureShadowSpriteWired();
             var sprite = resolved != null
                 ? resolved.ResolveShadowSprite()
-                : InstrumentDisplaySettings.GetProceduralShadowSprite();
+                : InstrumentDisplaySettings.LoadShadowSpriteFromResources()
+                    ?? InstrumentDisplaySettings.GetProceduralShadowSprite();
             if (sprite == null)
                 return;
 

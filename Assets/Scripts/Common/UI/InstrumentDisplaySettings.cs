@@ -14,6 +14,9 @@ namespace Geidai.Common.UI
     {
         public const string ResourcesPath = "Geidai/InstrumentDisplaySettings";
 
+        /// <summary>須藤さん影素材（Resources 配置。SO 参照が切れても Play で復帰できる）。</summary>
+        public const string ShadowSpriteResourcesPath = "Geidai/InstrumentShadow";
+
         [Tooltip("全楽器共通の影スプライト（差し替え可）")]
         public Sprite shadowSprite;
 
@@ -26,18 +29,41 @@ namespace Geidai.Common.UI
 
         private static InstrumentDisplaySettings _cached;
         private static Sprite _proceduralShadowSprite;
+        private static Sprite _resourcesShadowSprite;
 
         public static InstrumentDisplaySettings LoadRuntime()
         {
             if (_cached != null) return _cached;
             _cached = Resources.Load<InstrumentDisplaySettings>(ResourcesPath);
+            _cached?.EnsureShadowSpriteWired();
             return _cached;
         }
 
-        /// <summary>設定の Sprite、なければ共通フォールバック。</summary>
+        /// <summary>SO の参照が Missing でも Resources の正式素材を使う。</summary>
+        public void EnsureShadowSpriteWired()
+        {
+            if (shadowSprite != null) return;
+            shadowSprite = LoadShadowSpriteFromResources();
+        }
+
+        public static Sprite LoadShadowSpriteFromResources()
+        {
+            if (_resourcesShadowSprite != null) return _resourcesShadowSprite;
+            _resourcesShadowSprite = Resources.Load<Sprite>(ShadowSpriteResourcesPath);
+            return _resourcesShadowSprite;
+        }
+
+        /// <summary>設定の Sprite、なければ Resources、最後に暫定プロシージャル。</summary>
         public Sprite ResolveShadowSprite()
         {
             if (shadowSprite != null) return shadowSprite;
+            var fromResources = LoadShadowSpriteFromResources();
+            if (fromResources != null)
+            {
+                shadowSprite = fromResources;
+                return fromResources;
+            }
+
             return GetProceduralShadowSprite();
         }
 

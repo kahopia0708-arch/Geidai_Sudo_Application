@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace Geidai.Game2
 {
-    /// <summary>神経衰弱画面のランタイム UI（雲・枚数ポップアップ・クリア確認）。</summary>
+    /// <summary>神経衰弱画面のランタイム UI（枚数ポップアップ・クリア確認）。</summary>
     public static class MemoryMatchUiBootstrap
     {
         private const string CloudName = "Game2CloudBackground";
@@ -19,7 +19,7 @@ namespace Geidai.Game2
 
         private static readonly Color PresetNormal = new Color(0.95f, 0.97f, 1f);
         private static readonly Color PresetSelected = new Color(0.72f, 0.86f, 1f);
-        private static readonly Color CanvasBackdropColor = new Color(0.88f, 0.93f, 0.98f);
+        private static readonly Color CanvasBackdropColor = new Color(0.55f, 0.78f, 0.95f, 1f);
 
         public static MemoryMatchUiHandles EnsureChrome(
             RectTransform contentRoot,
@@ -36,7 +36,7 @@ namespace Geidai.Game2
             Game2ScreenLayout.ApplyBackButton(backButton != null ? backButton.GetComponent<RectTransform>() : null);
             Game2ScreenLayout.ApplyTitle(titleText != null ? titleText.rectTransform : null, titleText);
 
-            EnsureCloudBackground(contentRoot);
+            HideLegacyCloudLayer(contentRoot);
             GeidaiUiLayout.EnsureCanvasBackdrop(contentRoot, CanvasBackdropColor);
             EnsurePairCountPopup(contentRoot, controller, font, handles);
             handles.ChangePairCountButton = EnsureChangePairCountButton(contentRoot, controller, font);
@@ -109,32 +109,13 @@ namespace Geidai.Game2
             if (start != null) start.gameObject.SetActive(false);
         }
 
-        private static void EnsureCloudBackground(RectTransform parent)
+        /// <summary>旧シーンの雲レイヤーを無効化（#41 単色背景）。</summary>
+        private static void HideLegacyCloudLayer(RectTransform parent)
         {
-            var existing = parent.Find(CloudName) as RectTransform;
-            if (existing == null)
-            {
-                var go = new GameObject(CloudName, typeof(RectTransform), typeof(Image));
-                go.transform.SetParent(parent, false);
-                go.transform.SetAsFirstSibling();
-                existing = go.GetComponent<RectTransform>();
-                GeidaiStretchRect.Full(existing);
-            }
-
-            var img = existing.GetComponent<Image>();
-            var cloud = Game2CardArt.ResolveCloud();
-            if (cloud != null)
-            {
-                img.sprite = cloud;
-                img.color = Color.white;
-                img.preserveAspect = true;
-                img.type = Image.Type.Simple;
-            }
-            else
-            {
-                img.sprite = null;
-                img.color = new Color(0.88f, 0.93f, 0.98f);
-            }
+            if (parent == null) return;
+            var existing = parent.Find(CloudName);
+            if (existing != null)
+                existing.gameObject.SetActive(false);
         }
 
         private static void EnsurePairCountPopup(
