@@ -13,11 +13,11 @@ using UnityEngine.UI;
 namespace Geidai.Game3
 {
     /// <summary>
-    /// ‡B‰¹‚È‚ç‚×‚Ì“Š‡B
+    /// ï¿½Bï¿½ï¿½ï¿½È‚ï¿½×‚Ì“ï¿½ï¿½ï¿½ï¿½B
     /// </summary>
     public class Game3Controller : ScreenRootBase
     {
-        [Header("İ’è")]
+        [Header("ï¿½İ’ï¿½")]
         [SerializeField] private Game3Config config;
 
         [Header("Screen UI")]
@@ -101,13 +101,13 @@ namespace Geidai.Game3
         {
             if (config == null)
             {
-                Debug.LogError("Game3: Game3Config‚ªİ’è‚³‚ê‚Ä‚¢‚Ü‚¹‚ñ");
+                Debug.LogError("Game3: Game3Configï¿½ï¿½ï¿½İ’è‚³ï¿½ï¿½Ä‚ï¿½ï¿½Ü‚ï¿½ï¿½ï¿½");
                 return;
             }
 
             if (!TryLoadBaseSound())
             {
-                Debug.LogWarning("Game3: g—p‚Å‚«‚é‰¹‘fŞ‚ª‚ ‚è‚Ü‚¹‚ñ");
+                Debug.LogWarning("Game3: ï¿½gï¿½pï¿½Å‚ï¿½ï¿½é‰¹ï¿½fï¿½Ş‚ï¿½ï¿½ï¿½ï¿½ï¿½Ü‚ï¿½ï¿½ï¿½");
                 return;
             }
 
@@ -115,13 +115,13 @@ namespace Geidai.Game3
 
             if (!result.IsSuccess)
             {
-                Debug.LogWarning("Game3: Šî€‰¹‚Ìİ’è‚É¸”s‚µ‚Ü‚µ‚½");
+                Debug.LogWarning("Game3: ï¿½î€ï¿½ï¿½ï¿½Ìİ’ï¿½Éï¿½ï¿½sï¿½ï¿½ï¿½Ü‚ï¿½ï¿½ï¿½");
                 return;
             }
 
-            Debug.Log("Game3: Šî€‰¹‚Ì€”õ‚ª‚Å‚«‚Ü‚µ‚½");
+            Debug.Log("Game3: ï¿½î€ï¿½ï¿½ï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚ï¿½ï¿½Ü‚ï¿½ï¿½ï¿½");
 
-            // ƒQ[ƒ€ŠJn‚Í1–â–Ú
+            // ï¿½Qï¿½[ï¿½ï¿½ï¿½Jï¿½nï¿½ï¿½ï¿½ï¿½1ï¿½ï¿½ï¿½
             _questionIndex = 0;
 
             StartQuestion();
@@ -131,10 +131,10 @@ namespace Geidai.Game3
             int questionCount =
                 config.GetQuestionCount(difficultyIndex);
 
-            // ‘S–âI—¹
+            // ï¿½Sï¿½ï¿½Iï¿½ï¿½
             if (_questionIndex >= questionCount)
             {
-                Debug.Log("Game3: ‘S–âƒNƒŠƒAI");
+                Debug.Log("Game3: ï¿½Sï¿½ï¿½Nï¿½ï¿½ï¿½Aï¿½I");
                 return;
             }
 
@@ -170,7 +170,7 @@ namespace Geidai.Game3
         {
             count = Mathf.Clamp(count, 2, 4);
 
-            // g—p‚·‚é‰_‚¾‚¯•\¦
+            // ï¿½gï¿½pï¿½ï¿½ï¿½ï¿½_ï¿½ï¿½ï¿½ï¿½ï¿½\ï¿½ï¿½
             for (int i = 0; i < cloudSlots.Count; i++)
             {
                 if (cloudSlots[i] != null)
@@ -179,7 +179,7 @@ namespace Geidai.Game3
                 }
             }
 
-            // ¶‰º ¨ ‰Eã‚É‹Ï“™”z’u
+            // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Eï¿½ï¿½É‹Ï“ï¿½ï¿½zï¿½u
             for (int i = 0; i < count; i++)
             {
                 if (cloudSlots[i] == null)
@@ -215,13 +215,13 @@ namespace Geidai.Game3
                 if (slot == null)
                 {
                     Debug.LogWarning(
-                        $"Game3: {slotRect.name} ‚É CloudSlotView ‚ª‚ ‚è‚Ü‚¹‚ñ"
+                        $"Game3: {slotRect.name} ï¿½ï¿½ CloudSlotView ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ü‚ï¿½ï¿½ï¿½"
                     );
 
                     return false;
                 }
 
-                // ‚Ü‚¾‰½‚à’u‚©‚ê‚Ä‚¢‚È‚¢‰_‚ª‚ ‚é
+                // ï¿½Ü‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½uï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½È‚ï¿½ï¿½_ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
                 if (slot.Occupant == null)
                 {
                     return false;
@@ -237,7 +237,7 @@ namespace Geidai.Game3
             if (_currentQuestion == null)
                 return;
 
-            // ‘S‚Ä‚Ì‰_‚ª–„‚Ü‚é‚Ü‚Å‚Í”»’è‚µ‚È‚¢
+            // ï¿½Sï¿½Ä‚Ì‰_ï¿½ï¿½ï¿½ï¿½ï¿½Ü‚ï¿½Ü‚Å‚Í”ï¿½ï¿½è‚µï¿½È‚ï¿½
             if (!TryGetCurrentCloudOrder(
                 out List<int> currentOrder))
             {
@@ -280,7 +280,7 @@ namespace Geidai.Game3
         private bool TryLoadBaseSound()
         {
             _baseImage = null;
-            // 1. ‰¹}ŠÓ‚©‚çAƒsƒbƒ`•ÏX‰Â”\‚È‰¹‚ğ’T‚·
+            // 1. ï¿½ï¿½ï¿½}ï¿½Ó‚ï¿½ï¿½ï¿½Aï¿½sï¿½bï¿½`ï¿½ÏXï¿½Â”\ï¿½È‰ï¿½ï¿½ï¿½Tï¿½ï¿½
             if (config != null && config.CuratedCatalog != null)
             {
                 var items = config.CuratedCatalog.ValidItems();
@@ -292,7 +292,7 @@ namespace Geidai.Game3
                     if (item == null)
                         continue;
 
-                    // ‰¹’ö‚ğˆµ‚¦‚é‘fŞ‚¾‚¯g‚¤
+                    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½fï¿½Ş‚ï¿½ï¿½ï¿½ï¿½gï¿½ï¿½
                     if (!item.allowPitchShift)
                         continue;
 
@@ -317,19 +317,14 @@ namespace Geidai.Game3
                     if (buffer != null)
                     {
                         _baseBuffer = buffer;
-                        _baseImage = selected.imageRef;
-
-                        Debug.Log(
-                            $"Game3: ‰¹}ŠÓ‚©‚çŠî€‰¹‚ğ‘I‘ğ‚µ‚Ü‚µ‚½ " +
-                            $"({selected.displayName})"
-                        );
-
+                        _baseImage = selected.imageRef;                       
                         return true;
                     }
+                    
                 }
             }
 
-            // 2. ‰¹}ŠÓ‚Ég‚¦‚é‰¹‚ª–³‚¯‚ê‚Îƒ†[ƒU[˜^‰¹
+            // 2. ï¿½ï¿½ï¿½}ï¿½Ó‚Égï¿½ï¿½ï¿½é‰¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îƒï¿½ï¿½[ï¿½Uï¿½[ï¿½^ï¿½ï¿½
             if (_storage != null)
             {
                 var listResult = _storage.ListSounds();
@@ -355,7 +350,7 @@ namespace Geidai.Game3
                             _baseBuffer = bufferResult.Value;
 
                             Debug.Log(
-                                $"Game3: ƒ†[ƒU[‰¹‚ğg—p‚µ‚Ü‚· ({item.meta.id})"
+                                $"Game3: ï¿½ï¿½ï¿½[ï¿½Uï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½gï¿½pï¿½ï¿½ï¿½Ü‚ï¿½ ({item.meta.id})"
                             );
 
                             return true;
@@ -368,9 +363,9 @@ namespace Geidai.Game3
         }
         private static AudioBuffer BufferFromClip(AudioClip clip)
         {
-            // „Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ
-            // 1. ƒJƒ^ƒƒO‰¹clip‚ğbuffer‚É•ÏŠ·
-            // „Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ
+            // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+            // 1. ï¿½Jï¿½^ï¿½ï¿½ï¿½Oï¿½ï¿½clipï¿½ï¿½bufferï¿½É•ÏŠï¿½
+            // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
             if (clip == null || clip.samples <= 0)
                 return null;
 
@@ -396,11 +391,11 @@ namespace Geidai.Game3
         {
             _isPlayingHint = true;
 
-            // ¡‚Ì–â‘è‚Åg‚Á‚Ä‚¢‚é‰¹’ö‚ğ³‰ğ‡‚É•À‚×‚é
+            // ï¿½ï¿½ï¿½Ì–ï¿½ï¿½Ågï¿½ï¿½ï¿½Ä‚ï¿½ï¿½é‰¹ï¿½ï¿½ï¿½ğ³‰ï¿½ï¿½ï¿½ï¿½É•ï¿½ï¿½×‚ï¿½
             List<int> answer =
                 new List<int>(_currentQuestion.InitialOrder);
 
-            answer.Sort(); // ’á‚¢ ¨ ‚‚¢
+            answer.Sort(); // ï¿½á‚¢ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
             foreach (int cents in answer)
             {
@@ -451,31 +446,31 @@ namespace Geidai.Game3
         {
             _isResolvingAnswer = true;
 
-            Debug.Log("Game3: ³‰ğI");
+            Debug.Log("Game3: ï¿½ï¿½ï¿½ï¿½ï¿½I");
 
-            ShowResult("³‰ğI");
+            ShowResult("ï¿½ï¿½ï¿½ï¿½ï¿½I");
 
             yield return new WaitForSecondsRealtime(
                 resultDisplaySeconds
             );
 
-            // ƒJ[ƒh‚ğ‰º’i‚Ö–ß‚·
+            // ï¿½Jï¿½[ï¿½hï¿½ï¿½ï¿½ï¿½ï¿½iï¿½Ö–ß‚ï¿½
             ResetPitchItemsForNextQuestion();
 
-            // Ÿ‚Ì–â‘è”Ô†‚Ö
+            // ï¿½ï¿½ï¿½Ì–ï¿½ï¿½Ôï¿½ï¿½ï¿½
             _questionIndex++;
 
             int questionCount =
                 config.GetQuestionCount(difficultyIndex);
 
             // -----------------------------
-            // ‘S–âI—¹
+            // ï¿½Sï¿½ï¿½Iï¿½ï¿½
             // -----------------------------
             if (_questionIndex >= questionCount)
             {
-                Debug.Log("Game3: ‘S–âƒNƒŠƒAI");
+                Debug.Log("Game3: ï¿½Sï¿½ï¿½Nï¿½ï¿½ï¿½Aï¿½I");
 
-                ShowResult("‘S–âƒNƒŠƒAI");
+                ShowResult("ï¿½Sï¿½ï¿½Nï¿½ï¿½ï¿½Aï¿½I");
 
                 yield return new WaitForSecondsRealtime(
                     clearDisplaySeconds
@@ -483,17 +478,17 @@ namespace Geidai.Game3
 
                 HideResult();
 
-                // ƒQ[ƒ€ó‘Ô‚ğƒŠƒZƒbƒg
+                // ï¿½Qï¿½[ï¿½ï¿½ï¿½ï¿½Ô‚ï¿½ï¿½ï¿½ï¿½Zï¿½bï¿½g
                 _currentQuestion = null;
                 _questionIndex = 0;
 
-                // ƒQ[ƒ€‰æ–Ê‚ğ•Â‚¶‚é
+                // ï¿½Qï¿½[ï¿½ï¿½ï¿½ï¿½Ê‚ï¿½Â‚ï¿½ï¿½ï¿½
                 if (gamePanel != null)
                 {
                     gamePanel.SetActive(false);
                 }
 
-                // “ïˆÕ“x‘I‘ğ‰æ–Ê‚Ö–ß‚é
+                // ï¿½ï¿½Õ“xï¿½Iï¿½ï¿½ï¿½ï¿½Ê‚Ö–ß‚ï¿½
                 if (difficultySelectPanel != null)
                 {
                     difficultySelectPanel.SetActive(true);
@@ -505,7 +500,7 @@ namespace Geidai.Game3
             }
 
             // -----------------------------
-            // ‚Ü‚¾Ÿ‚Ì–â‘è‚ª‚ ‚é
+            // ï¿½Ü‚ï¿½ï¿½ï¿½ï¿½Ì–ï¿½è‚ªï¿½ï¿½ï¿½ï¿½
             // -----------------------------
             HideResult();
 
@@ -517,9 +512,9 @@ namespace Geidai.Game3
         {
             _isResolvingAnswer = true;
 
-            ShowResult("•s³‰ğ");
+            ShowResult("ï¿½sï¿½ï¿½ï¿½ï¿½");
 
-            // ¡ì‚Á‚½u^‰º‚É—‚¿‚évƒAƒjƒ[ƒVƒ‡ƒ“
+            // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½uï¿½^ï¿½ï¿½ï¿½É—ï¿½ï¿½ï¿½ï¿½ï¿½vï¿½Aï¿½jï¿½ï¿½ï¿½[ï¿½Vï¿½ï¿½ï¿½ï¿½
             ReturnAllPitchItemsHome();
 
             yield return new WaitForSecondsRealtime(
@@ -565,19 +560,19 @@ namespace Geidai.Game3
 
         public void BackToDifficultySelection()
         {
-            // ³Œë•\¦‚È‚Ç‚Ìˆ—‚ğ~‚ß‚é
+            // ï¿½ï¿½ï¿½ï¿½\ï¿½ï¿½ï¿½È‚Ç‚Ìï¿½ï¿½ï¿½ï¿½ï¿½ï¿½~ï¿½ß‚ï¿½
             StopAllCoroutines();
             _isResolvingAnswer = false;
             _isPlayingHint = false;
             HideResult();
 
-            // Ä¶’†‚Ì‰¹‚ğ~‚ß‚é
+            // ï¿½Äï¿½ï¿½ï¿½ï¿½Ì‰ï¿½ï¿½ï¿½ï¿½~ï¿½ß‚ï¿½
             if (_pitch != null)
             {
                 _pitch.Stop();
             }
 
-            // PitchItem‚ğ‘S•”Œ³‚Ì‰º’i‚Ö–ß‚·
+            // PitchItemï¿½ï¿½Sï¿½ï¿½ï¿½ï¿½ï¿½Ì‰ï¿½ï¿½iï¿½Ö–ß‚ï¿½
             foreach (PitchItemView item in pitchItems)
             {
                 if (item == null)
@@ -592,11 +587,11 @@ namespace Geidai.Game3
                 }
             }
 
-            // Œ»İ‚Ì–â‘è‚ğƒŠƒZƒbƒg
+            // ï¿½ï¿½ï¿½İ‚Ì–ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Zï¿½bï¿½g
             _currentQuestion = null;
             _questionIndex = 0;
 
-            // ƒQ[ƒ€‰æ–Ê ¨ “ïˆÕ“x‘I‘ğ‰æ–Ê
+            // ï¿½Qï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½Õ“xï¿½Iï¿½ï¿½ï¿½ï¿½ï¿½
             if (gamePanel != null)
             {
                 gamePanel.SetActive(false);
@@ -609,14 +604,14 @@ namespace Geidai.Game3
         }
         public override void OnBackPressed()
         {
-            // ƒQ[ƒ€’†‚È‚çA‚Ü‚¸“ïˆÕ“x‘I‘ğ‚Ö–ß‚é
+            // ï¿½Qï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½È‚ï¿½Aï¿½Ü‚ï¿½ï¿½ï¿½Õ“xï¿½Iï¿½ï¿½ï¿½Ö–ß‚ï¿½
             if (gamePanel != null && gamePanel.activeSelf)
             {
                 BackToDifficultySelection();
                 return;
             }
 
-            // “ïˆÕ“x‘I‘ğ‰æ–Ê‚È‚çAƒQ[ƒ€‘I‘ğ‰æ–Ê‚Ö–ß‚é
+            // ï¿½ï¿½Õ“xï¿½Iï¿½ï¿½ï¿½ï¿½Ê‚È‚ï¿½Aï¿½Qï¿½[ï¿½ï¿½ï¿½Iï¿½ï¿½ï¿½ï¿½Ê‚Ö–ß‚ï¿½
             if (_pitch != null)
             {
                 _pitch.Stop();
