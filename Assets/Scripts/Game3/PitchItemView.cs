@@ -16,7 +16,7 @@ namespace Geidai.Game3
         private Sprite _defaultSprite;
         private Color _defaultColor;
 
-        // �h���b�O�����Button�N���b�N�𖳎����邽��
+       
         private bool _suppressClick;
 
         public int Cents => _cents;
@@ -59,11 +59,10 @@ namespace Geidai.Game3
                     _image.color = _defaultColor;
                 }
             }
+            SetShadowVisible(true);
         }
 
-        /// <summary>
-        /// �h���b�O���n�܂������Ƃ�ʒm����B
-        /// </summary>
+      
         public void NotifyDragStarted()
         {
             if (_controller != null)
@@ -73,10 +72,7 @@ namespace Geidai.Game3
             _suppressClick = true;
         }
 
-        /// <summary>
-        /// �h���b�O���������S�ɏI�������A
-        /// ���̃t���[������ĂуN���b�N��������B
-        /// </summary>
+       
         public void NotifyDragFinished()
         {
             StartCoroutine(EnableClickNextFrame());
@@ -90,7 +86,7 @@ namespace Geidai.Game3
 
         private void OnClicked()
         {
-            // �h���b�O�ɂ���Ĕ��������N���b�N�Ȃ特��炳�Ȃ�
+           
             if (_suppressClick)
                 return;
 
@@ -99,7 +95,14 @@ namespace Geidai.Game3
 
             _controller.PreviewPitch(_cents);
         }
+        public void SetShadowVisible(bool visible)
+        {
+            RectTransform rect = transform as RectTransform;
+            if (rect == null) return;
 
+            InstrumentFloorShadow.Ensure(rect);
+            InstrumentFloorShadow.SetVisible(rect, visible);
+        }
         public void NotifyOrderChanged()
         {
             if (_controller == null)

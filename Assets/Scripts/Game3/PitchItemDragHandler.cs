@@ -100,6 +100,8 @@ namespace Geidai.Game3
 
             _placedSuccessfully = false;
 
+            _itemView?.SetShadowVisible(false);
+
             // すでに雲に置かれていたなら、
             // その雲を空けてからドラッグ開始
             if (_currentSlot != null)
@@ -219,6 +221,10 @@ namespace Geidai.Game3
             );
 
             _placedSuccessfully = true;
+
+            _itemView.SetShadowVisible(false);
+
+
             return true;
         }
 
@@ -438,6 +444,8 @@ namespace Geidai.Game3
             );
 
             _placedSuccessfully = false;
+
+            _itemView?.SetShadowVisible(true);
         }
 
         public void FallAndSendHome()

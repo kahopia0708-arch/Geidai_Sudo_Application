@@ -56,7 +56,7 @@ namespace Geidai.Game3
         private Sprite _baseImage;
 
         [Header("Hint UI")]
-
+        [SerializeField] private WizardHintEdgeVisual wizardHintEdge;
 
         [Header("Result UI")]
         [SerializeField] private Text resultText;
@@ -66,7 +66,8 @@ namespace Geidai.Game3
         [SerializeField] private float clearDisplaySeconds = 1.2f;
         private bool _isResolvingAnswer;
 
-        
+        [SerializeField] private WizardReactionEffect wizardReaction;
+
         protected override void OnShow()
         {
             EnsureWired();
@@ -107,13 +108,13 @@ namespace Geidai.Game3
         {
             if (config == null)
             {
-                Debug.LogError("Game3: Game3Configが設定されていません");
+                //Debug.LogError("Game3: Game3Configが設定されていません");
                 return;
             }
 
             if (!TryLoadBaseSound())
             {
-                Debug.LogWarning("Game3: 使用できる音素材がありません");
+                //Debug.LogWarning("Game3: 使用できる音素材がありません");
                 return;
             }
 
@@ -121,11 +122,11 @@ namespace Geidai.Game3
 
             if (!result.IsSuccess)
             {
-                Debug.LogWarning("Game3: 基準音の設定に失敗しました");
+                //Debug.LogWarning("Game3: 基準音の設定に失敗しました");
                 return;
             }
 
-            Debug.Log("Game3: 基準音の準備ができました");
+            //Debug.Log("Game3: 基準音の準備ができました");
 
             // ゲーム開始時は1問目
             _questionIndex = 0;
@@ -393,11 +394,17 @@ namespace Geidai.Game3
         {
             _isPlayingHint = true;
 
-            // 今の問題で使っている音程を正解順に並べる
+            // ヒント開始：輪郭を実線にする
+            if (wizardHintEdge != null)
+            {
+                wizardHintEdge.SetPlaying(true);
+            }
+
+            // 正解の音程を低い順に並べる
             List<int> answer =
                 new List<int>(_currentQuestion.InitialOrder);
 
-            answer.Sort(); // 低い → 高い
+            answer.Sort();
 
             foreach (int cents in answer)
             {
@@ -407,6 +414,13 @@ namespace Geidai.Game3
             }
 
             _pitch.Stop();
+
+            // ヒント終了：ぼやけた輪郭に戻す
+            if (wizardHintEdge != null)
+            {
+                wizardHintEdge.SetPlaying(false);
+            }
+
             _isPlayingHint = false;
         }
         public void PreviewPitch(int cents)
@@ -477,9 +491,11 @@ namespace Geidai.Game3
         {
             _isResolvingAnswer = true;
 
-            Debug.Log("Game3: 正解！");
+           
 
             ShowResult("正解！");
+
+            wizardReaction?.PlayCorrect();
 
             yield return new WaitForSecondsRealtime(
                 resultDisplaySeconds
@@ -499,7 +515,7 @@ namespace Geidai.Game3
             // -----------------------------
             if (_questionIndex >= questionCount)
             {
-                Debug.Log("Game3: 全問クリア！");
+                //Debug.Log("Game3: 全問クリア！");
 
                 ShowResult("全問クリア！");
 
@@ -546,6 +562,8 @@ namespace Geidai.Game3
 
             
             ShowResult("不正解");
+
+            wizardReaction?.PlayWrong();
 
             // 今作った「真下に落ちる」アニメーション
             ReturnAllPitchItemsHome();
@@ -595,10 +613,17 @@ namespace Geidai.Game3
         {
             // 正誤表示などの処理を止める
             StopAllCoroutines();
+
+            wizardReaction?.Clear();
+
+
             _isResolvingAnswer = false;
             _isPlayingHint = false;
             HideResult();
-
+            if (wizardHintEdge != null)
+            {
+                wizardHintEdge.SetPlaying(false);
+            }
             // 再生中の音を止める
             if (_pitch != null)
             {
