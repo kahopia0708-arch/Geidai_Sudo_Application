@@ -27,9 +27,11 @@ namespace Geidai.Game3
         [SerializeField] private int difficultyIndex = 1;
         private IStorageService _storage;
         private IPitchVariationService _pitch;
+        private Game3PitchPlayer _catalogPitchPlayer;
         private INavigationService _nav;
 
         private AudioBuffer _baseBuffer;
+        private AudioClip _baseClip;
 
         private PitchOrderQuestion _currentQuestion;
         private int _questionIndex = 0;
@@ -57,6 +59,11 @@ namespace Geidai.Game3
 
         [Header("Hint UI")]
         [SerializeField] private WizardHintEdgeVisual wizardHintEdge;
+
+        [Header("Hint Playback")]
+        [SerializeField, Min(0.1f)] private float hintMaxNoteSeconds = 1.5f;
+        [SerializeField, Min(0f)] private float hintReleaseSeconds = 0.15f;
+        [SerializeField, Min(0f)] private float hintGapSeconds = 0.08f;
 
         [Header("Result UI")]
         [SerializeField] private Text resultText;
@@ -94,6 +101,7 @@ namespace Geidai.Game3
             _storage = ServiceRegistry.Resolve<IStorageService>();
             _nav = ServiceRegistry.Resolve<INavigationService>();
             _pitch = Game3Bootstrap.EnsurePitchVariationService();
+            _catalogPitchPlayer ??= new Game3PitchPlayer();
         }
         public void SelectDifficulty(int index)
         {
@@ -118,9 +126,11 @@ namespace Geidai.Game3
                 return;
             }
 
-            var result = _pitch.SetBase(_baseBuffer);
+            bool baseReady = _baseClip != null
+                ? _catalogPitchPlayer.SetBase(_baseClip)
+                : _pitch != null && _pitch.SetBase(_baseBuffer).IsSuccess;
 
-            if (!result.IsSuccess)
+            if (!baseReady)
             {
                 //Debug.LogWarning("Game3: 基準音の設定に失敗しました");
                 return;
@@ -287,6 +297,8 @@ namespace Geidai.Game3
         private bool TryLoadBaseSound()
         {
             _baseImage = null;
+            _baseClip = null;
+            _baseBuffer = null;
             // 1. 音図鑑から、ピッチ変更可能な音を探す
             if (config != null && config.CuratedCatalog != null)
             {
@@ -319,15 +331,11 @@ namespace Geidai.Game3
                     var selected =
                         candidates[UnityEngine.Random.Range(0, candidates.Count)];
 
-                    var buffer = BufferFromClip(selected.clipRef);
-
-                    if (buffer != null)
-                    {
-                        _baseBuffer = buffer;
-                        _baseImage = selected.imageRef;
-
-                        return true;
-                    }
+                    // Game3 は図鑑の元 AudioClip を直接再生する。
+                    // 48,000 Hz の素材を AudioBuffer(44,100 Hz) に変換しない。
+                    _baseClip = selected.clipRef;
+                    _baseImage = selected.imageRef;
+                    return true;
                 }
             }
 
@@ -364,21 +372,6 @@ namespace Geidai.Game3
 
             return false;
         }
-        private static AudioBuffer BufferFromClip(AudioClip clip)
-        {
-            // ─────────────────────────────
-            // 1. カタログ音clipをbufferに変換
-            // ─────────────────────────────
-            if (clip == null || clip.samples <= 0)
-                return null;
-
-            var data = new float[clip.samples * clip.channels];
-
-            if (!clip.GetData(data, 0))
-                return null;
-
-            return new AudioBuffer(data);
-        }
         public void PlayAnswerHint()
         {
             if (_currentQuestion == null)
@@ -408,12 +401,19 @@ namespace Geidai.Game3
 
             foreach (int cents in answer)
             {
-                _pitch.Play(cents);
-
-                yield return new WaitForSecondsRealtime(1.5f);
+                if (_baseClip != null && _catalogPitchPlayer != null)
+                {
+                    yield return PlayCatalogHintPitch(cents);
+                }
+                else
+                {
+                    PlayBasePitch(cents);
+                    yield return new WaitForSecondsRealtime(
+                        Mathf.Max(0.1f, hintMaxNoteSeconds));
+                }
             }
 
-            _pitch.Stop();
+            StopBasePitch();
 
             // ヒント終了：ぼやけた輪郭に戻す
             if (wizardHintEdge != null)
@@ -425,10 +425,65 @@ namespace Geidai.Game3
         }
         public void PreviewPitch(int cents)
         {
-            if (_pitch == null)
+            if (_isPlayingHint || _isResolvingAnswer)
                 return;
 
-            _pitch.Play(cents);
+            PlayBasePitch(cents);
+        }
+
+        private IEnumerator PlayCatalogHintPitch(int cents)
+        {
+            float naturalDuration =
+                _catalogPitchPlayer.GetPlaybackDurationSeconds(cents);
+            float maxDuration = Mathf.Max(0.1f, hintMaxNoteSeconds);
+            float playDuration = Mathf.Min(naturalDuration, maxDuration);
+            bool requiresEarlyStop = naturalDuration > maxDuration;
+            float releaseDuration = requiresEarlyStop
+                ? Mathf.Min(Mathf.Max(0f, hintReleaseSeconds), playDuration)
+                : 0f;
+            float sustainDuration = Mathf.Max(0f, playDuration - releaseDuration);
+
+            _catalogPitchPlayer.SetVolume(1f);
+            if (!_catalogPitchPlayer.Play(cents))
+                yield break;
+
+            if (sustainDuration > 0f)
+                yield return new WaitForSecondsRealtime(sustainDuration);
+
+            if (releaseDuration > 0f)
+            {
+                float elapsed = 0f;
+                while (elapsed < releaseDuration)
+                {
+                    elapsed += Time.unscaledDeltaTime;
+                    float t = Mathf.Clamp01(elapsed / releaseDuration);
+                    _catalogPitchPlayer.SetVolume(1f - Mathf.SmoothStep(0f, 1f, t));
+                    yield return null;
+                }
+            }
+
+            _catalogPitchPlayer.Stop();
+
+            float gap = Mathf.Max(0f, hintGapSeconds);
+            if (gap > 0f)
+                yield return new WaitForSecondsRealtime(gap);
+        }
+
+        private void PlayBasePitch(int cents)
+        {
+            if (_baseClip != null)
+            {
+                _catalogPitchPlayer?.Play(cents);
+                return;
+            }
+
+            _pitch?.Play(cents);
+        }
+
+        private void StopBasePitch()
+        {
+            _catalogPitchPlayer?.Stop();
+            _pitch?.Stop();
         }
 
         private void PresentQuestion()
@@ -625,10 +680,7 @@ namespace Geidai.Game3
                 wizardHintEdge.SetPlaying(false);
             }
             // 再生中の音を止める
-            if (_pitch != null)
-            {
-                _pitch.Stop();
-            }
+            StopBasePitch();
 
             // PitchItemを全部元の下段へ戻す
             foreach (PitchItemView item in pitchItems)
@@ -670,10 +722,7 @@ namespace Geidai.Game3
             }
 
             // 難易度選択画面なら、ゲーム選択画面へ戻る
-            if (_pitch != null)
-            {
-                _pitch.Stop();
-            }
+            StopBasePitch();
 
             if (_nav == null)
             {
@@ -687,6 +736,12 @@ namespace Geidai.Game3
             }
 
             _nav.GoTo(SceneId.GameSelect);
+        }
+
+        private void OnDestroy()
+        {
+            _catalogPitchPlayer?.Dispose();
+            _catalogPitchPlayer = null;
         }
     }
 }
