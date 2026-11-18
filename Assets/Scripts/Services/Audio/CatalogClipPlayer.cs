@@ -1,3 +1,4 @@
+using Geidai.Common.Audio;
 using UnityEngine;
 
 namespace Geidai.Services.Audio
@@ -27,7 +28,8 @@ namespace Geidai.Services.Audio
             if (_source == null || clip == null) return;
             _source.pitch = 1f;
             _source.PlayOneShot(clip);
-            _oneShotEndsAtUnscaled = Time.unscaledTime + Mathf.Max(0.01f, clip.length);
+            float gameplaySeconds = GameAudioTrim.EstimateGameplaySeconds(clip);
+            _oneShotEndsAtUnscaled = Time.unscaledTime + gameplaySeconds;
         }
 
         public void Stop()

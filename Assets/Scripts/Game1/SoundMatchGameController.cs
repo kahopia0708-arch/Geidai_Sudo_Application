@@ -43,7 +43,10 @@ namespace Geidai.Game1
         [SerializeField] private float gapBetweenMatchSoundsSeconds = 0.12f;
 
         [Tooltip("正解後、選択パネルを出すまでの待ち（秒）。成長カエルを見せる余白。")]
-        [SerializeField] private float delayBeforeCorrectChoiceSeconds = 1.35f;
+        [SerializeField] private float delayBeforeCorrectChoiceSeconds = 0.45f;
+
+        [Tooltip("答え合わせ再生の終了判定余白（秒）。無音テールを待たず次へ進む。")]
+        [SerializeField] private float matchPlaybackEndPaddingSeconds = 0.06f;
 
         [Tooltip("不正解メッセージを見せる時間（秒）。")]
         [SerializeField] private float delayAfterWrongSeconds = 0.85f;
@@ -83,6 +86,9 @@ namespace Geidai.Game1
         internal RectTransform ChoicePoolParent => _playArea;
 
         internal int ActiveChoiceCount => choiceViews != null ? choiceViews.Count : 0;
+
+        internal bool IsAnswerMatchInProgress =>
+            _matchCoroutine != null || _wrongAnswerCoroutine != null;
 
         internal void ApplyStoryboardReferences(
             FrogTargetView demoWizard,
@@ -451,7 +457,7 @@ namespace Geidai.Game1
         /// <summary>おたまタップ：口を開けてその選択肢の音。</summary>
         public void OnChoiceTapped(ChoiceItemView view)
         {
-            if (!CanPreviewSound() || view == null) return;
+            if (!CanPreviewSound() || view == null || view.IsHeldOnApprentice) return;
             StopAllPreviewDemos();
             var co = StartCoroutine(PlayChoiceDemo(view));
             _choiceDemoCoroutines[view] = co;
@@ -459,12 +465,13 @@ namespace Geidai.Game1
 
         private bool CanPreviewSound()
         {
+            if (IsAnswerMatchInProgress) return false;
             return _state == State.Playing || _state == State.AwaitingProgressChoice;
         }
 
         private bool CanSubmitAnswer()
         {
-            return _state == State.Playing && _session != null;
+            return _state == State.Playing && _session != null && !IsAnswerMatchInProgress;
         }
 
         private void StopAllPreviewDemos()
@@ -580,6 +587,7 @@ namespace Geidai.Game1
         public void OnChoiceDropped(ChoiceItemView view, Vector2 screenPos)
         {
             if (view == null) return;
+            if (IsAnswerMatchInProgress) return;
             if (!CanSubmitAnswer())
             {
                 view.ResetPosition();
@@ -612,6 +620,7 @@ namespace Geidai.Game1
                 _wrongAnswerCoroutine = null;
             }
 
+            SetAllChoicesInputLocked(true);
             _matchCoroutine = StartCoroutine(RunAnswerMatchAfterSnap(view));
         }
 
@@ -620,6 +629,7 @@ namespace Geidai.Game1
             var pad = answerPad;
             if (pad != null && pad.SnapAnchor != null)
                 yield return view.AnimateMagnetSnap(pad.SnapAnchor, 0.2f);
+
             yield return RunAnswerMatch(view);
         }
 
@@ -640,6 +650,7 @@ namespace Geidai.Game1
             if (q == null || _catalogClips == null)
             {
                 view.ResetPosition();
+                SetAllChoicesInputLocked(false);
                 _matchCoroutine = null;
                 yield break;
             }
@@ -689,6 +700,7 @@ namespace Geidai.Game1
                         OnCorrectReturnToMenu);
                 }
 
+                UnlockPoolChoicesExceptHeld(view);
                 _state = State.AwaitingProgressChoice;
                 _matchCoroutine = null;
                 yield break;
@@ -714,7 +726,31 @@ namespace Geidai.Game1
                 resultEffect.HideWrongMessage();
 
             yield return view.AnimateReturnHome(wrongReturnHomeDurationSeconds);
+            SetAllChoicesInputLocked(false);
             _wrongAnswerCoroutine = null;
+        }
+
+        private void SetAllChoicesInputLocked(bool locked)
+        {
+            if (choiceViews == null) return;
+            for (int i = 0; i < choiceViews.Count; i++)
+            {
+                var v = choiceViews[i];
+                if (v == null || !v.gameObject.activeInHierarchy) continue;
+                v.SetInputLocked(locked);
+            }
+        }
+
+        private void UnlockPoolChoicesExceptHeld(ChoiceItemView held)
+        {
+            if (choiceViews == null) return;
+            for (int i = 0; i < choiceViews.Count; i++)
+            {
+                var v = choiceViews[i];
+                if (v == null || !v.gameObject.activeInHierarchy) continue;
+                if (held != null && v == held) continue;
+                v.SetInputLocked(false);
+            }
         }
 
         private void OnCorrectNextQuestion()
@@ -749,9 +785,31 @@ namespace Geidai.Game1
 
         private IEnumerator WaitForCatalogClipPlayback()
         {
+            yield return WaitForCatalogClipPlayback(matchPlaybackEndPaddingSeconds);
+        }
+
+        private IEnumerator WaitForCatalogClipPlayback(float endPaddingSeconds)
+        {
             yield return null;
+            const float safetySeconds = 30f;
+            float elapsed = 0f;
+            float padding = Mathf.Max(0f, endPaddingSeconds);
             while (_catalogClips != null && _catalogClips.IsPlaying)
+            {
+                if (padding > 0f && _catalogClips.PlaybackSecondsRemaining <= padding)
+                    break;
+
+                elapsed += Time.unscaledDeltaTime;
+                if (elapsed >= safetySeconds)
+                {
+                    _catalogClips.Stop();
+                    break;
+                }
+
                 yield return null;
+            }
+
+            _catalogClips?.Stop();
         }
 
         private void StopMatchCoroutine()
