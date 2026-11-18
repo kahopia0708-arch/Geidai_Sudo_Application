@@ -1,10 +1,10 @@
-using Geidai.Services;
+ï»¿using Geidai.Services;
 using Geidai.Services.Audio;
 
 namespace Geidai.Game3
 {
     /// <summary>
-    /// Game3i‡B‰¹‚È‚ç‚×j‚Å•K—v‚ÈƒT[ƒrƒX‚Ì‰Šú‰»B
+    /// Game3ï¼ˆâ‘¢éŸ³ãªã‚‰ã¹ï¼‰ã§å¿…è¦ãªã‚µãƒ¼ãƒ“ã‚¹ã®åˆæœŸåŒ–ã€‚
     /// </summary>
     public static class Game3Bootstrap
     {

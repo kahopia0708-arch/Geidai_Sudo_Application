@@ -1444,3 +1444,102 @@ featureブランチを作成してから進める"
 **Context**: Designer tooling shipped
 
 ---
+
+## Issue #47 Cause Investigation
+**Timestamp**: 2026-11-17T16:57:15Z
+**User Input**: "これの原因わかりますか？"
+**AI Response**: "AI-DLC workflow resumed. Workspace and mandatory rules loaded; beginning read-only diagnosis of the Game3 audio transformation path."
+**Context**: INCEPTION — Workspace Detection / diagnostic investigation for Issue #47
+
+---
+
+## Issue #47 Cause Investigation — Findings
+**Timestamp**: 2026-11-17T16:57:15Z
+**User Input**: "(continuation of cause investigation)"
+**AI Response**: "Identified a confirmed sample-rate mismatch: catalog WAV files are 48000 Hz, while Game3 converts them into AudioBuffer without format metadata and PitchVariationService recreates them as 44100 Hz mono. This lowers pitch by about 146.7 cents and lengthens playback by about 8.8% even at a requested 0-cent shift. AudioSource.pitch then changes both pitch and playback speed for each question, explaining rhythm changes. GameAudioTrim also assumes 44100 Hz and truncates/fades the source before playback, which can contribute to unnatural timbre or tails."
+**Context**: Read-only diagnosis; no application code changed. Security rules N/A to offline audio-path diagnosis; resiliency change rules N/A because no fix was implemented; PBT noted for a future format-preservation regression test.
+
+---
+
+## Issue #47 Scope Correction and Policy Request
+**Timestamp**: 2026-11-17T17:02:11Z
+**User Input**: "githubをよく読みこんでください。僕の担当はgame3です。
+まだ実装せずに方針だけ示して。
+Hzの問題を48000にすることで解決する。
+変調の値は同意済み。commonは触っちゃいけないってgithubに書いてあるはず。よく見て。"
+**AI Response**: "Re-read GitHub Issue #47, PR #43, docs/Fさん向けガイド.md, onboarding requirements, and ownership notes. Corrected scope: shion55/Fujii owns Game3; existing agreed cents values remain unchanged; Geidai.Common and Geidai.Services public interfaces are outside the authorized change scope without prior agreement. Planning only, no implementation."
+**Context**: Requirements correction for Issue #47; Game3-local 48000 Hz playback approach only.
+
+---
+
+## Issue #47 Game3 48,000 Hz Fix — Implementation
+**Timestamp**: 2026-11-17T17:28:30Z
+**User Input**: "それでは修正し、修正箇所を明示してください。"
+**AI Response**: "Implemented a Game3-only catalog playback path that uses the original 48,000 Hz AudioClip directly, retaining agreed cents-based AudioSource.pitch behavior. Added a Game3-specific regression test. Common, Services, Game1, Game2, and Game3Config were not modified. Geidai.Game3 and Geidai.Tests builds completed with 0 errors; Unity EditMode execution could not start because another Unity instance held the project, so the test is compiled but not runtime-executed in batch mode."
+**Context**: CONSTRUCTION — Code Generation for Issue #47. Security baseline: N/A (offline local audio playback; no auth/network/data boundary change). Resiliency baseline: compliant for scoped change (fallback path retained and player disposed with scene). PBT: N/A for the Unity AudioClip integration regression; deterministic example test added.
+
+---
+
+## Issue #47 Fade-Out Policy Clarification
+**Timestamp**: 2026-11-17T17:43:45Z
+**User Input**: "フェードアウトは音合わせの修正で採用しなくなったと思うのですが"
+**AI Response**: "Confirmed from GitHub Issue #45 that the newer Game1 policy is direct original-clip playback, while the older fade implementation remains in current code. Issue #47 explicitly calls for reviewing TrimForGameplay side effects. Therefore the Game3 direct 48,000 Hz path intentionally bypassing trim/fade is aligned with the newer policy; the previous statement that the fix was incomplete was retracted."
+**Context**: Requirements clarification; no code change.
+
+---
+
+## Game3 Wizard Example Playback — Architecture Review
+**Timestamp**: 2026-11-17T17:46:34Z
+**User Input**: "今、魔法使いのお手本の再生のシステムはどのような構成か確認して。"
+**AI Response**: "Inspected the GeidaiGame3 scene binding, Game3Controller hint coroutine, pitch-order question model, Game3PitchPlayer/service fallback, and WizardHintEdgeVisual. Reported the current end-to-end playback sequence and timing without changing code."
+**Context**: Read-only Game3 architecture review.
+
+---
+
+## Game3 Wizard Hint — Abrupt Cut Improvement Options
+**Timestamp**: 2026-11-17T18:02:45Z
+**User Input**: "魔法使いのヒントの音がぶつ切りになっており違和感があります。改善策はありますか"
+**AI Response**: "Identified the hard cut as the fixed 1.5-second interval combined with AudioSource.Stop before every next note. Proposed a Game3-only playback envelope: preserve the native 48,000 Hz clip and agreed cents values, calculate pitch-adjusted clip duration, play for a configurable capped hint duration, apply a short release fade only when truncation is required, insert a small silent gap, and block item previews during the hint. No code change made."
+**Context**: Requirements/design advice for Issue #47 follow-up; no implementation.
+
+---
+
+## Game3 Wizard Hint Envelope — Implementation
+**Timestamp**: 2026-11-17T18:08:44Z
+**User Input**: "では実装してください。"
+**AI Response**: "Implemented a Game3-only wizard-hint release envelope. Catalog clips remain native 48,000 Hz and use agreed cents values. Notes longer than the configured 1.5-second hint cap fade over the final 0.15 seconds, followed by a 0.08-second gap. Natural short endings are not faded. Pitch-item previews are ignored during hint/result playback. Added pitch-adjusted duration regression assertions. Geidai.Game3 and Geidai.Tests builds passed with 0 errors; forbidden-scope diff was empty."
+**Context**: CONSTRUCTION — Code Generation follow-up for Issue #47. Security: N/A. Resiliency: compliant (safe stop/reset and interruption guard). PBT: N/A; deterministic duration assertions added.
+
+---
+
+## shion55 Game3 Encoding Investigation
+**Timestamp**: 2026-11-17T18:24:08Z
+**User Input**: "私の文字化けについて調べてください"
+**AI Response**: "Diagnosed Game3 source history at the raw-blob level. Game3Controller was Shift-JIS/non-UTF-8 from its initial commit d69c0b5 through 0f0afe7, so GitHub and UTF-8 readers displayed replacement characters. Commit d9dcf28 converted the file to valid UTF-8 with BOM. Current Game3 sources checked are valid UTF-8 with BOM and no mojibake patterns remain. No .gitattributes or .editorconfig currently enforces encoding, so recurrence remains possible. No source changes made."
+**Context**: Read-only encoding diagnosis.
+
+---
+
+## Codex Save Method and Encoding Check
+**Timestamp**: 2026-11-17T18:29:06Z
+**User Input**: "あなたは先ほどから何で修正し保存していますか"
+**AI Response**: "Explained that edits are applied with Codex apply_patch, not VS Code or Unity. Verified existing Game3Controller remains UTF-8 with BOM and CRLF, while newly created C# and plan files are UTF-8 without BOM and LF. No source encoding conversion was performed."
+**Context**: Tooling and encoding transparency.
+
+---
+
+## Encoding Check Acknowledgement
+**Timestamp**: 2026-11-17T18:31:13Z
+**User Input**: "OK。"
+**AI Response**: "Acknowledged."
+**Context**: User acknowledged the save-method and encoding explanation.
+
+---
+
+## Issue #47 Pull Request Request
+**Timestamp**: 2026-11-17T18:31:53Z
+**User Input**: "プルリクを作りたい。"
+**AI Response**: "Preparing a scoped commit and pull request from feature/fujii-game3-sound-ordering to main. The commit includes Game3 Issue #47 code, Game3 regression tests, and required AI-DLC records only; unrelated local settings changes are excluded. Noted that the branch also contains shion55 Game3 work created after merged PR #18."
+**Context**: GitHub delivery for Issue #47.
+
+---

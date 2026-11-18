@@ -229,15 +229,15 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1804812220}
-  - {fileID: 1718278140}
-  - {fileID: 43294215}
-  - {fileID: 2050285698}
+  - {fileID: 1083661654}
+  - {fileID: 712815425}
+  - {fileID: 112948618}
+  - {fileID: 994915751}
   m_Father: {fileID: 1723576322}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 0, y: -594}
+  m_AnchoredPosition: {x: 0, y: -370}
   m_SizeDelta: {x: 1126, y: 180}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &18336910
@@ -301,11 +301,11 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 18336909}
+  m_Father: {fileID: 112948618}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 813.08594, y: -90}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 170, y: 170}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &43294216
@@ -427,7 +427,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Geidai.Game3::Geidai.Game3.PitchItemDragHandler
   _dragRoot: {fileID: 618841635}
-  fallDuration: 0.25
+  placedYOffset: 95
+  landingDuration: 0.28
+  dropZoneAbove: 1
+  fallDuration: 0.5
   fallDistance: 120
 --- !u!114 &43294222
 MonoBehaviour:
@@ -532,6 +535,42 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 88641463}
   m_CullTransparentMesh: 1
+--- !u!1 &112948617
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 112948618}
+  m_Layer: 0
+  m_Name: ItemSlot3
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &112948618
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 112948617}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 43294215}
+  m_Father: {fileID: 18336909}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 170, y: 170}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &164927180
 GameObject:
   m_ObjectHideFlags: 0
@@ -731,7 +770,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &249375309
 RectTransform:
   m_ObjectHideFlags: 0
@@ -756,6 +795,96 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: -1206, y: -1488}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &299102404
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 299102405}
+  - component: {fileID: 299102407}
+  - component: {fileID: 299102406}
+  - component: {fileID: 299102408}
+  m_Layer: 0
+  m_Name: WizardEdgeEffect
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &299102405
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 299102404}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 571275774}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &299102406
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 299102404}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 2100000, guid: 5b191e631bb76704bb8ad4fe3c39d198, type: 2}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: -1057320140796711635, guid: 03ebda3e06d1fd74b9578a1242f507fe, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &299102407
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 299102404}
+  m_CullTransparentMesh: 1
+--- !u!114 &299102408
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 299102404}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 747b3f9b60dc0ef4e8a1243444201c12, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Geidai.Game3::Geidai.Game3.WizardHintEdgeVisual
+  wizardImage: {fileID: 571275775}
+  padding: 100
 --- !u!1 &437043527
 GameObject:
   m_ObjectHideFlags: 0
@@ -792,7 +921,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 300, y: 225}
-  m_SizeDelta: {x: 100, y: 100}
+  m_SizeDelta: {x: 120, y: 120}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &437043529
 MonoBehaviour:
@@ -844,6 +973,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09c0c3af78542414d86498766481031c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Geidai.Game3::Geidai.Game3.CloudSlotView
+  bounceDuration: 0.35
+  squashAmount: 0.18
+  stretchAmount: 0.12
 --- !u!1 &571275773
 GameObject:
   m_ObjectHideFlags: 0
@@ -856,6 +988,7 @@ GameObject:
   - component: {fileID: 571275776}
   - component: {fileID: 571275775}
   - component: {fileID: 571275777}
+  - component: {fileID: 571275778}
   m_Layer: 0
   m_Name: WizardImage
   m_TagString: Untagged
@@ -872,14 +1005,15 @@ RectTransform:
   m_GameObject: {fileID: 571275773}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.49619, y: 0.49619, z: 0.49619}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_LocalScale: {x: 0.48, y: 0.48, z: 0.48}
+  m_ConstrainProportionsScale: 1
+  m_Children:
+  - {fileID: 299102405}
   m_Father: {fileID: 1723576322}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 311, y: -101}
+  m_AnchoredPosition: {x: 334, y: -101}
   m_SizeDelta: {x: 500, y: 700}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &571275775
@@ -902,7 +1036,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -2158067713269323609, guid: 462453fd3ea9d42a18e144a8c3b2cfd9, type: 3}
+  m_Sprite: {fileID: -1057320140796711635, guid: 03ebda3e06d1fd74b9578a1242f507fe, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -976,6 +1110,34 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &571275778
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 571275773}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7370e960ec59a98439b63e9e011bf1dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Geidai.Game3::Geidai.Game3.WizardReactionEffect
+  noteSprite: {fileID: 1725956563018506516, guid: ec79b0582ef33e849905c1f9e0523c5c, type: 3}
+  wrongSprite: {fileID: 4084988428196820321, guid: 7d6ce839fea0d3643a20945cfc91e29a, type: 3}
+  noteMaterial: {fileID: 2100000, guid: 50d1c5fabece05a41a7ced13c235e1cb, type: 2}
+  wrongMaterial: {fileID: 2100000, guid: 0071fe173e91d284ab47621d07a102a3, type: 2}
+  effectLayer: {fileID: 0}
+  noteCount: 4
+  noteSize: 65
+  noteDuration: 1.12
+  noteInterval: 0.06
+  noteRise: 220.3
+  noteSpread: 107.8
+  wrongSize: 100
+  wrongDuration: 1
+  wrongRise: 59.9
+  wrongStartYOffset: 37.1
+  wrongRotationTurns: 0.68
 --- !u!1 &618841634
 GameObject:
   m_ObjectHideFlags: 0
@@ -1126,7 +1288,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 100, y: 75}
-  m_SizeDelta: {x: 100, y: 100}
+  m_SizeDelta: {x: 120, y: 120}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &681611338
 MonoBehaviour:
@@ -1178,6 +1340,45 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09c0c3af78542414d86498766481031c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Geidai.Game3::Geidai.Game3.CloudSlotView
+  bounceDuration: 0.35
+  squashAmount: 0.18
+  stretchAmount: 0.12
+--- !u!1 &712815424
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 712815425}
+  m_Layer: 0
+  m_Name: ItemSlot2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &712815425
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 712815424}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1718278140}
+  m_Father: {fileID: 18336909}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 170, y: 170}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &751940402
 GameObject:
   m_ObjectHideFlags: 0
@@ -1600,6 +1801,42 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 987849196}
   m_CullTransparentMesh: 1
+--- !u!1 &994915750
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 994915751}
+  m_Layer: 0
+  m_Name: ItemSlot4
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &994915751
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 994915750}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 2050285698}
+  m_Father: {fileID: 18336909}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 170, y: 170}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1005162226
 GameObject:
   m_ObjectHideFlags: 0
@@ -1683,6 +1920,42 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1005162226}
   m_CullTransparentMesh: 1
+--- !u!1 &1083661653
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1083661654}
+  m_Layer: 0
+  m_Name: ItemSlot1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1083661654
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1083661653}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1804812220}
+  m_Father: {fileID: 18336909}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 170, y: 170}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1163019174
 GameObject:
   m_ObjectHideFlags: 0
@@ -2501,11 +2774,11 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 18336909}
+  m_Father: {fileID: 712815425}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 613.08594, y: -90}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 170, y: 170}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1718278141
@@ -2627,7 +2900,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Geidai.Game3::Geidai.Game3.PitchItemDragHandler
   _dragRoot: {fileID: 618841635}
-  fallDuration: 0.25
+  placedYOffset: 95
+  landingDuration: 0.28
+  dropZoneAbove: 1
+  fallDuration: 0.5
   fallDistance: 120
 --- !u!114 &1718278147
 MonoBehaviour:
@@ -2664,7 +2940,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1723576322
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2704,7 +2980,6 @@ GameObject:
   - component: {fileID: 1804812223}
   - component: {fileID: 1804812222}
   - component: {fileID: 1804812221}
-  - component: {fileID: 1804812227}
   - component: {fileID: 1804812226}
   m_Layer: 0
   m_Name: PitchItem1
@@ -2725,11 +3000,11 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 18336909}
+  m_Father: {fileID: 1083661654}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 413.08594, y: -90}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 170, y: 170}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1804812221
@@ -2851,28 +3126,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Geidai.Game3::Geidai.Game3.PitchItemDragHandler
   _dragRoot: {fileID: 618841635}
-  fallDuration: 0.25
+  placedYOffset: 95
+  landingDuration: 0.28
+  dropZoneAbove: 1
+  fallDuration: 0.5
   fallDistance: 120
---- !u!114 &1804812227
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1804812219}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.LayoutElement
-  m_IgnoreLayout: 0
-  m_MinWidth: -1
-  m_MinHeight: -1
-  m_PreferredWidth: -1
-  m_PreferredHeight: -1
-  m_FlexibleWidth: -1
-  m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!1 &1828512345
 GameObject:
   m_ObjectHideFlags: 0
@@ -2988,7 +3246,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -300, y: -225}
-  m_SizeDelta: {x: 100, y: 100}
+  m_SizeDelta: {x: 120, y: 120}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1895963728
 MonoBehaviour:
@@ -3040,6 +3298,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09c0c3af78542414d86498766481031c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Geidai.Game3::Geidai.Game3.CloudSlotView
+  bounceDuration: 0.35
+  squashAmount: 0.18
+  stretchAmount: 0.12
 --- !u!1 &1989809769
 GameObject:
   m_ObjectHideFlags: 0
@@ -3195,7 +3456,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -100, y: -75}
-  m_SizeDelta: {x: 100, y: 100}
+  m_SizeDelta: {x: 120, y: 120}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2047046297
 MonoBehaviour:
@@ -3247,6 +3508,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09c0c3af78542414d86498766481031c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Geidai.Game3::Geidai.Game3.CloudSlotView
+  bounceDuration: 0.35
+  squashAmount: 0.18
+  stretchAmount: 0.12
 --- !u!1 &2050285690
 GameObject:
   m_ObjectHideFlags: 0
@@ -3295,7 +3559,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Geidai.Game3::Geidai.Game3.PitchItemDragHandler
   _dragRoot: {fileID: 618841635}
-  fallDuration: 0.25
+  placedYOffset: 95
+  landingDuration: 0.28
+  dropZoneAbove: 1
+  fallDuration: 0.5
   fallDistance: 120
 --- !u!114 &2050285693
 MonoBehaviour:
@@ -3423,11 +3690,11 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 18336909}
+  m_Father: {fileID: 994915751}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 1013.08594, y: -90}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 170, y: 170}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &2118467033
@@ -3494,14 +3761,21 @@ MonoBehaviour:
   - {fileID: 437043528}
   cloudStartPosition: {x: -300, y: -225}
   cloudEndPosition: {x: 300, y: 225}
+  homeSlots:
+  - {fileID: 1083661654}
+  - {fileID: 712815425}
+  - {fileID: 112948618}
+  - {fileID: 994915751}
   pitchItems:
   - {fileID: 1804812221}
   - {fileID: 1718278141}
   - {fileID: 43294216}
   - {fileID: 2050285691}
+  wizardHintEdge: {fileID: 299102408}
   resultText: {fileID: 1828512346}
   resultDisplaySeconds: 0.8
   clearDisplaySeconds: 1.2
+  wizardReaction: {fileID: 571275778}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

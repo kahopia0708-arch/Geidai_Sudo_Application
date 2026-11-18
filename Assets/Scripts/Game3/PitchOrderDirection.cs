@@ -1,8 +1,8 @@
-namespace Geidai.Game3
+ï»¿namespace Geidai.Game3
 {
     public enum PitchOrderDirection
     {
-        Ascending,   // ’á‚¢ ¨ ‚‚¢
-        Descending   // ‚‚¢ ¨ ’á‚¢
+        Ascending,   // ä½ã„ â†’ é«˜ã„
+        Descending   // é«˜ã„ â†’ ä½ã„
     }
 }

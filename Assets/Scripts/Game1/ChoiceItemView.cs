@@ -60,6 +60,7 @@ namespace Geidai.Game1
         public int Index => _index;
         public int Cents => _spec.cents;
         public Image ChoiceImage => choiceImage;
+        public bool IsHeldOnApprentice => _isHeldOnApprentice;
 
         private void Awake()
         {
@@ -105,6 +106,7 @@ namespace Geidai.Game1
             EndDragVisualImmediate();
             if (previewButton != null)
                 previewButton.gameObject.SetActive(false);
+            UpdateChoiceHitTarget();
         }
 
         /// <summary>池の初期配置へ戻し、<see cref="_originalPos"/> を更新する。</summary>
@@ -124,6 +126,7 @@ namespace Geidai.Game1
             _originalPos = _rt.anchoredPosition;
             CaptureBaseTransform();
             SetInstrumentShadowVisible(true);
+            UpdateChoiceHitTarget();
         }
 
         public void ApplyPoolHomeLayout(int slotIndex)
@@ -169,20 +172,38 @@ namespace Geidai.Game1
 
         public void ConfirmHeldMatch()
         {
+            EnterHeldOnApprentice();
+        }
+
+        /// <summary>弟子へ渡した直後〜次の問題まで、位置・入力を固定する。</summary>
+        public void EnterHeldOnApprentice()
+        {
             _isHeldOnApprentice = true;
             if (choiceImage != null && _tadpoleClosed != null)
                 Game1MouthVisual.SetClosed(choiceImage, _tadpoleClosed);
             SetInstrumentShadowVisible(false);
+            SetInputLocked(true);
         }
 
         public void SetInputLocked(bool locked)
         {
             _inputLocked = locked;
-            if (canvasGroup != null)
-            {
-                canvasGroup.blocksRaycasts = !locked;
-                canvasGroup.interactable = !locked;
-            }
+            ApplyInputLockToCanvasGroup();
+        }
+
+        private void ApplyInputLockToCanvasGroup()
+        {
+            if (canvasGroup == null) return;
+            canvasGroup.blocksRaycasts = !_inputLocked;
+            canvasGroup.interactable = !_inputLocked;
+            UpdateChoiceHitTarget();
+        }
+
+        private void UpdateChoiceHitTarget()
+        {
+            if (choiceImage == null) return;
+            bool blockPointer = _inputLocked || _isHeldOnApprentice || _magnetSnapPending;
+            choiceImage.raycastTarget = !blockPointer;
         }
 
         public void OpenMouth()
@@ -244,6 +265,7 @@ namespace Geidai.Game1
             if (generation != _returnHomeGeneration) yield break;
             _rt.anchoredPosition = end;
             SetInstrumentShadowVisible(true);
+            SetInputLocked(false);
         }
 
         private IEnumerator CelebratePulseRoutine()
@@ -290,7 +312,7 @@ namespace Geidai.Game1
 
         public void OnBeginDrag(PointerEventData eventData)
         {
-            if (_inputLocked) return;
+            if (IsPointerBlockedForDrag()) return;
             CancelReturnHomeAnimation();
             EndDragVisualImmediate();
             SetInstrumentShadowVisible(false);
@@ -313,7 +335,9 @@ namespace Geidai.Game1
 
         public void OnDrag(PointerEventData eventData)
         {
-            if (_inputLocked || _rt == null || _poolParent == null) return;
+            if (IsPointerBlockedForDrag() || _rt == null || _poolParent == null)
+                return;
+            if (_rt.parent != _poolParent) return;
             if (!_dragExceededSlop &&
                 Vector2.Distance(_pointerDownScreen, eventData.position) >= DragSlopPixels)
             {
@@ -334,6 +358,7 @@ namespace Geidai.Game1
         public void PrepareMagnetSnap()
         {
             _magnetSnapPending = true;
+            UpdateChoiceHitTarget();
         }
 
         public IEnumerator AnimateMagnetSnap(RectTransform anchor, float durationSeconds)
@@ -364,6 +389,7 @@ namespace Geidai.Game1
             finally
             {
                 _magnetSnapPending = false;
+                UpdateChoiceHitTarget();
             }
         }
 
@@ -381,25 +407,21 @@ namespace Geidai.Game1
             _rt.localScale = _baseScale;
             Game1StoryboardLayout.ApplyHeldInstrumentDisplaySize(_rt);
             SetInstrumentShadowVisible(false);
+            EnterHeldOnApprentice();
         }
 
         public void OnEndDrag(PointerEventData eventData)
         {
             EndDragVisualImmediate();
-            if (canvasGroup != null) canvasGroup.blocksRaycasts = true;
-            if (_inputLocked)
+            if (_magnetSnapPending || _isHeldOnApprentice || _inputLocked)
             {
-                ResetPosition();
+                ApplyInputLockToCanvasGroup();
                 return;
             }
+
+            if (canvasGroup != null) canvasGroup.blocksRaycasts = true;
 
             if (_controller == null)
-            {
-                ResetPosition();
-                return;
-            }
-
-            if (_isHeldOnApprentice)
             {
                 ResetPosition();
                 return;
@@ -472,7 +494,7 @@ namespace Geidai.Game1
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            if (_inputLocked || _controller == null) return;
+            if (_inputLocked || _isHeldOnApprentice || _controller == null) return;
             _controller.OnChoiceTapped(this);
         }
 
@@ -488,6 +510,7 @@ namespace Geidai.Game1
             RestoreCanvasGroupForInteraction();
             ReparentToPool();
             ApplyPoolAnchorSizing();
+            UpdateChoiceHitTarget();
         }
 
         /// <summary>全問終了時：池へ戻し、操作を止めて非表示。</summary>
@@ -502,6 +525,7 @@ namespace Geidai.Game1
         {
             _magnetSnapPending = false;
             _isHeldOnApprentice = false;
+            SetInputLocked(false);
             EndDragVisualImmediate();
             BindChoicePoolParent(_controller);
             ReparentToPool();
@@ -517,6 +541,7 @@ namespace Geidai.Game1
             }
 
             SetInstrumentShadowVisible(true);
+            UpdateChoiceHitTarget();
         }
 
         public void SnapOverAnchor(RectTransform anchor, RectTransform playArea, Camera eventCamera)
@@ -552,6 +577,7 @@ namespace Geidai.Game1
             canvasGroup.alpha = 1f;
             canvasGroup.blocksRaycasts = true;
             canvasGroup.interactable = true;
+            UpdateChoiceHitTarget();
         }
 
         private void SetInstrumentShadowVisible(bool visible)
@@ -598,6 +624,12 @@ namespace Geidai.Game1
             Camera cam = _canvas != null ? _canvas.worldCamera : null;
             return RectTransformUtility.ScreenPointToLocalPointInRectangle(
                 _poolParent, eventData.position, cam, out local);
+        }
+
+        private bool IsPointerBlockedForDrag()
+        {
+            if (_inputLocked || _isHeldOnApprentice || _magnetSnapPending) return true;
+            return _controller != null && _controller.IsAnswerMatchInProgress;
         }
     }
 }
