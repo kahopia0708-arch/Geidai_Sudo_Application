@@ -5,7 +5,7 @@ namespace Geidai.Common.Game
 {
     /// <summary>
     /// ①音合わせの出題生成（U6 / P2 / NFR-U6-03/04）。純粋関数（副作用なし・決定的）。
-    /// 音は作らず「ピッチのメタ」を返す（発音は再生時に PitchVariationService が適用 / 非保存）。
+    /// 音は作らず「ピッチのメタ」を返す（正解インデックス用。再生は図鑑 clip 原音＝Game1 CatalogClipPlayer）。
     /// 不変条件：正解ちょうど1つ・不正解は centsStep 以上離れる・選択肢は重複なし・同一 seed で決定的。
     /// </summary>
     public static class QuestionBuilder
