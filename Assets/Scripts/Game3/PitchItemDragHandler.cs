@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using System.Collections;
@@ -19,26 +19,41 @@ namespace Geidai.Game3
         private PitchItemView _itemView;
 
         [Header("Drag UI")]
-        // ƒhƒ‰ƒbƒO’†E‰_”z’u’†‚Ìe]
+        // ãƒ‰ãƒ©ãƒƒã‚°ä¸­ãƒ»é›²é…ç½®ä¸­ã®è¦ª]
         [SerializeField] private RectTransform _dragRoot;
 
-        // Å‰‚Ì‰º’i‚Ì’u‚«êŠ
+        // æœ€åˆã®ä¸‹æ®µã®ç½®ãå ´æ‰€
         private RectTransform _homeParent;
         private int _homeSiblingIndex;
-
+        private Vector3 _homeWorldPosition;
+        private bool _homePositionSaved;
         private Vector2 _homeAnchorMin;
         private Vector2 _homeAnchorMax;
         private Vector2 _homePivot;
         private Vector2 _homeSizeDelta;
         private Vector3 _homeLocalScale;
+        private Vector2 _homeAnchoredPosition;
 
-        // Œ»İ’u‚©‚ê‚Ä‚¢‚é‰_
+        // ç¾åœ¨ç½®ã‹ã‚Œã¦ã„ã‚‹é›²
         private CloudSlotView _currentSlot;
 
         private bool _placedSuccessfully;
 
+        //é›²ã®ä¸Šã®ç½®ãå ´æ‰€
+        [Header("Cloud Placement")]
+        [SerializeField] private float placedYOffset = 65f;
+
+        //é›²ç€åœ°
+        [Header("Cloud Landing")]
+        [SerializeField] private float landingDuration = 0.28f;
+        [SerializeField] private float dropZoneAbove = 1.0f;
+
+        private Coroutine _landingCoroutine;
+        private CloudSlotView _landingSlot;
+        private Vector3 _landingTarget;
+
         [Header("Wrong Answer Animation")]
-        [SerializeField] private float fallDuration = 0.25f;
+        [SerializeField] private float fallDuration = 0.7f;
         [SerializeField] private float fallDistance = 120f;
 
         private bool _returningHome;
@@ -49,7 +64,7 @@ namespace Geidai.Game3
             _canvas = GetComponentInParent<Canvas>();
             _canvasGroup = GetComponent<CanvasGroup>();
             _itemView = GetComponent<PitchItemView>();
-            // Å‰‚Ìu‰º‚ÌƒJ[ƒh’u‚«êv‚ğ•Û‘¶
+            // æœ€åˆã®ã€Œä¸‹ã®ã‚«ãƒ¼ãƒ‰ç½®ãå ´ã€ã‚’ä¿å­˜
             _homeParent = transform.parent as RectTransform;
             _homeSiblingIndex = transform.GetSiblingIndex();
 
@@ -58,17 +73,26 @@ namespace Geidai.Game3
             _homePivot = _rect.pivot;
             _homeSizeDelta = _rect.sizeDelta;
             _homeLocalScale = _rect.localScale;
+            _homeAnchoredPosition = _rect.anchoredPosition;
         }
+        public void CaptureHomePosition()
+        {
+            if (transform.parent != _homeParent ||
+                !gameObject.activeInHierarchy)
+                return;
 
+            _homeWorldPosition = _rect.position;
+            _homePositionSaved = true;
+        }
         // --------------------------------------------------
-        // ƒhƒ‰ƒbƒOŠJn
+        // ãƒ‰ãƒ©ãƒƒã‚°é–‹å§‹
         // --------------------------------------------------
         public void OnBeginDrag(PointerEventData eventData)
         {
             if (_dragRoot == null)
                 return;
 
-            // ƒhƒ‰ƒbƒOŠJn‚É‚à‰¹‚ğ–Â‚ç‚·
+            // ãƒ‰ãƒ©ãƒƒã‚°é–‹å§‹æ™‚ã«ã‚‚éŸ³ã‚’é³´ã‚‰ã™
             if (_itemView != null)
             {
                 _itemView.NotifyDragStarted();
@@ -76,8 +100,10 @@ namespace Geidai.Game3
 
             _placedSuccessfully = false;
 
-            // ‚·‚Å‚É‰_‚É’u‚©‚ê‚Ä‚¢‚½‚È‚çA
-            // ‚»‚Ì‰_‚ğ‹ó‚¯‚Ä‚©‚çƒhƒ‰ƒbƒOŠJn
+            _itemView?.SetShadowVisible(false);
+
+            // ã™ã§ã«é›²ã«ç½®ã‹ã‚Œã¦ã„ãŸãªã‚‰ã€
+            // ãã®é›²ã‚’ç©ºã‘ã¦ã‹ã‚‰ãƒ‰ãƒ©ãƒƒã‚°é–‹å§‹
             if (_currentSlot != null)
             {
                 _currentSlot.Release(_itemView);
@@ -86,12 +112,12 @@ namespace Geidai.Game3
 
             MoveToDragRootPreservingVisual();
 
-            // ƒhƒ‰ƒbƒO’†‚Í©•ª©g‚ªRaycast‚ğ×–‚‚µ‚È‚¢
+            // ãƒ‰ãƒ©ãƒƒã‚°ä¸­ã¯è‡ªåˆ†è‡ªèº«ãŒRaycastã‚’é‚ªé­”ã—ãªã„
             _canvasGroup.blocksRaycasts = false;
         }
 
         // --------------------------------------------------
-        // Œ©‚½–Ú‚Ì‘å‚«‚³‚ğˆÛ‚µ‚½‚Ü‚ÜCanvas’¼‰º‚ÖˆÚ‚·
+        // è¦‹ãŸç›®ã®å¤§ãã•ã‚’ç¶­æŒã—ãŸã¾ã¾Canvasç›´ä¸‹ã¸ç§»ã™
         // --------------------------------------------------
         private void MoveToDragRootPreservingVisual()
         {
@@ -125,7 +151,7 @@ namespace Geidai.Game3
         }
 
         // --------------------------------------------------
-        // ƒhƒ‰ƒbƒO’†
+        // ãƒ‰ãƒ©ãƒƒã‚°ä¸­
         // --------------------------------------------------
         public void OnDrag(PointerEventData eventData)
         {
@@ -143,15 +169,15 @@ namespace Geidai.Game3
         }
 
         // --------------------------------------------------
-        // CloudSlot‚Ö”z’u
+        // CloudSlotã¸é…ç½®
         // --------------------------------------------------
         public bool TryPlaceInSlot(CloudSlotView slot)
         {
             if (slot == null || _itemView == null)
                 return false;
 
-            // ‚»‚Ì‰_‚É‚·‚Å‚É•ÊƒJ[ƒh‚ª‚ ‚Á‚½‚çA
-            // Šù‘¶ƒJ[ƒh‚ğ‰º‚Ö–ß‚·
+            // ãã®é›²ã«ã™ã§ã«åˆ¥ã‚«ãƒ¼ãƒ‰ãŒã‚ã£ãŸã‚‰ã€
+            // æ—¢å­˜ã‚«ãƒ¼ãƒ‰ã‚’ä¸‹ã¸æˆ»ã™
             PitchItemView existingItem = slot.Occupant;
 
             if (existingItem != null &&
@@ -170,48 +196,50 @@ namespace Geidai.Game3
                 }
             }
 
-            // ”O‚Ì‚½‚ßˆÈ‘O‚Ì‰_‚ğ‹ó‚¯‚é
+            // å¿µã®ãŸã‚ä»¥å‰ã®é›²ã‚’ç©ºã‘ã‚‹
             if (_currentSlot != null &&
                 _currentSlot != slot)
             {
                 _currentSlot.Release(_itemView);
             }
 
-            slot.Accept(_itemView);
-            _currentSlot = slot;
-
-            // CloudSlot‚Ìq‚É‚Í‚µ‚È‚¢B
-            // Canvasã‚Ì‚Ü‚ÜCloudSlot‚Ì’†S‚ÖˆÚ“®‚·‚éB
-            RectTransform slotRect =
-                slot.GetComponent<RectTransform>();
+            // CloudSlotã®å­ã«ã¯ã—ãªã„ã€‚
+            // Canvasä¸Šã®ã¾ã¾CloudSlotã®ä¸­å¿ƒã¸ç§»å‹•ã™ã‚‹ã€‚
+            RectTransform slotRect = slot.GetComponent<RectTransform>();
 
             if (slotRect == null)
                 return false;
 
-            Vector3 slotCenter =
-                slotRect.TransformPoint(slotRect.rect.center);
+            // é›²ã¸ã®é…ç½®ã‚’äºˆç´„
+            slot.Accept(_itemView);
+            _currentSlot = slot;
+            _landingSlot = slot;
 
-            _rect.position = slotCenter;
-
-            transform.SetAsLastSibling();
+            // ç€åœ°ä½ç½®ã‚’è¨˜éŒ²ã™ã‚‹ã ã‘ã€‚ã¾ã ç§»å‹•ã—ãªã„
+            _landingTarget = slotRect.TransformPoint(
+                slotRect.rect.center + Vector2.up * placedYOffset
+            );
 
             _placedSuccessfully = true;
+
+            _itemView.SetShadowVisible(false);
+
 
             return true;
         }
 
         // --------------------------------------------------
-        // ­‚µd‚È‚Á‚Ä‚¢‚éCloudSlot‚ğ’T‚·
+        // å°‘ã—é‡ãªã£ã¦ã„ã‚‹CloudSlotã‚’æ¢ã™
         // --------------------------------------------------
         private CloudSlotView FindOverlappingSlot()
         {
-            CloudSlotView[] slots =
-                FindObjectsByType<CloudSlotView>();
-
-            CloudSlotView bestSlot = null;
-            float bestOverlap = 0f;
+            CloudSlotView[] slots = FindObjectsByType<CloudSlotView>();
 
             Rect itemRect = GetWorldRect(_rect);
+            Vector2 itemCenter = itemRect.center;
+
+            CloudSlotView bestSlot = null;
+            float bestDistance = float.MaxValue;
 
             foreach (CloudSlotView slot in slots)
             {
@@ -224,35 +252,39 @@ namespace Geidai.Game3
                 if (slotRect == null)
                     continue;
 
-                Rect cloudRect =
-                    GetWorldRect(slotRect);
+                Rect cloudRect = GetWorldRect(slotRect);
 
-                float overlap =
-                    CalculateOverlapArea(
-                        itemRect,
-                        cloudRect
-                    );
+                // å·¦å³ã®åˆ¤å®š
+                float horizontalMargin = itemRect.width * 0.2f;
 
-                if (overlap > bestOverlap)
+                if (itemCenter.x < cloudRect.xMin - horizontalMargin ||
+                    itemCenter.x > cloudRect.xMax + horizontalMargin)
+                    continue;
+
+                // é›²ã®ä¸Šæ–¹å‘ã¸åˆ¤å®šç¯„å›²ã‚’æ‹¡å¼µ
+                float minY = cloudRect.yMin;
+                float maxY = cloudRect.yMax
+                    + itemRect.height * dropZoneAbove;
+
+                if (itemCenter.y < minY || itemCenter.y > maxY)
+                    continue;
+
+                // æœ€ã‚‚è¿‘ã„é›²ã‚’é¸æŠ
+                float distance =
+                    Mathf.Abs(itemCenter.x - cloudRect.center.x) +
+                    Mathf.Abs(
+                        itemCenter.y -
+                        (cloudRect.center.y + placedYOffset)
+                    ) * 0.25f;
+
+                if (distance < bestDistance)
                 {
-                    bestOverlap = overlap;
+                    bestDistance = distance;
                     bestSlot = slot;
                 }
             }
 
-            float itemArea =
-                itemRect.width * itemRect.height;
-
-            if (itemArea <= 0f)
-                return null;
-
-            float overlapRatio =
-                bestOverlap / itemArea;
-
-            // 15%ˆÈãd‚È‚Á‚Ä‚¢‚ê‚Î‹z’…
-            return overlapRatio >= 0.15f
-                ? bestSlot
-                : null;
+            return bestSlot;
         }
 
         private static Rect GetWorldRect(
@@ -289,18 +321,18 @@ namespace Geidai.Game3
         }
 
         // --------------------------------------------------
-        // ƒhƒ‰ƒbƒOI—¹
+        // ãƒ‰ãƒ©ãƒƒã‚°çµ‚äº†
         // --------------------------------------------------
+
         public void OnEndDrag(PointerEventData eventData)
         {
             _canvasGroup.blocksRaycasts = true;
 
-            // OnDrop‚ª—ˆ‚È‚­‚Ä‚àA
-            // ‰_‚Æ15%ˆÈãd‚È‚Á‚Ä‚¢‚ê‚Î‹z’…
+            // OnDropã§é…ç½®ã•ã‚Œã¦ã„ãªã„å ´åˆã€
+            // é›²ã®ä¸Šå´ã‚‚å«ã‚ãŸåˆ¤å®šã‚’è¡Œã†
             if (!_placedSuccessfully)
             {
-                CloudSlotView overlappingSlot =
-                    FindOverlappingSlot();
+                CloudSlotView overlappingSlot = FindOverlappingSlot();
 
                 if (overlappingSlot != null)
                 {
@@ -308,25 +340,85 @@ namespace Geidai.Game3
                 }
             }
 
-            // ‚Ç‚Ì‰_‚É‚à’u‚©‚È‚©‚Á‚½
-            // ¨ ‰º‚ÌŒ³‚ÌˆÊ’u‚Ö–ß‚·
-            if (!_placedSuccessfully)
+            if (_placedSuccessfully)
             {
+                // é›¢ã—ãŸä½ç½®ã‹ã‚‰é›²ã«å‘ã‹ã£ã¦è½ä¸‹
+                _landingCoroutine = StartCoroutine(AnimateLanding());
+            }
+            else
+            {
+                // é›²ãŒè¦‹ã¤ã‹ã‚‰ãªã‘ã‚Œã°å…ƒã®ä½ç½®ã«æˆ»ã™
                 SendHome();
+
+                if (_itemView != null)
+                    _itemView.NotifyOrderChanged();
             }
 
             if (_itemView != null)
-            {
                 _itemView.NotifyDragFinished();
-                _itemView.NotifyOrderChanged();
-            }
         }
 
+        private IEnumerator AnimateLanding()
+        {
+            _canvasGroup.blocksRaycasts = false;
+
+            Vector3 start = _rect.position;
+            Vector3 target = _landingTarget;
+
+            float elapsed = 0f;
+            float duration = Mathf.Max(0.05f, landingDuration);
+
+            while (elapsed < duration)
+            {
+                elapsed += Time.unscaledDeltaTime;
+
+                float t = Mathf.Clamp01(elapsed / duration);
+
+                // æ¨ªæ–¹å‘ã¯æ»‘ã‚‰ã‹ã«ä½ç½®åˆã‚ã›
+                float smooth = t * t * (3f - 2f * t);
+
+                // ä¸Šã‹ã‚‰è½ã¡ã‚‹å ´åˆã¯é‡åŠ›ã®ã‚ˆã†ã«åŠ é€Ÿ
+                float vertical = start.y > target.y
+                    ? t * t
+                    : smooth;
+
+                _rect.position = new Vector3(
+                    Mathf.Lerp(start.x, target.x, smooth),
+                    Mathf.Lerp(start.y, target.y, vertical),
+                    Mathf.Lerp(start.z, target.z, smooth)
+                );
+
+                yield return null;
+            }
+
+            _rect.position = target;
+
+            // ç€åœ°å¾Œã«é›²ã®èƒŒé¢ã¸ç§»å‹•
+            transform.SetParent(_landingSlot.transform.parent, true);
+            transform.SetAsFirstSibling();
+
+            _canvasGroup.blocksRaycasts = true;
+
+            // ç€åœ°ã®è¡æ’ƒã§é›²ã‚’ã½ã‚ˆã‚“ã¨å‹•ã‹ã™
+            _landingSlot.PlayBounce();
+
+            _landingCoroutine = null;
+
+            // ç€åœ°ã—ã¦ã‹ã‚‰æ­£èª¤åˆ¤å®š
+            if (_itemView != null)
+                _itemView.NotifyOrderChanged();
+        }
         // --------------------------------------------------
-        // ‰º‚ÌƒJ[ƒh’u‚«ê‚Ö–ß‚·
+        // ä¸‹ã®ã‚«ãƒ¼ãƒ‰ç½®ãå ´ã¸æˆ»ã™
         // --------------------------------------------------
         public void SendHome()
         {
+            if (_landingCoroutine != null)
+            {
+                StopCoroutine(_landingCoroutine);
+                _landingCoroutine = null;
+                _canvasGroup.blocksRaycasts = true;
+            }
             if (_currentSlot != null)
             {
                 _currentSlot.Release(_itemView);
@@ -343,6 +435,7 @@ namespace Geidai.Game3
             _rect.pivot = _homePivot;
             _rect.sizeDelta = _homeSizeDelta;
             _rect.localScale = _homeLocalScale;
+            _rect.anchoredPosition = _homeAnchoredPosition;
 
             transform.SetSiblingIndex(_homeSiblingIndex);
 
@@ -351,6 +444,8 @@ namespace Geidai.Game3
             );
 
             _placedSuccessfully = false;
+
+            _itemView?.SetShadowVisible(true);
         }
 
         public void FallAndSendHome()
@@ -361,67 +456,69 @@ namespace Geidai.Game3
             StartCoroutine(FallAndSendHomeCoroutine());
         }
 
+
         private IEnumerator FallAndSendHomeCoroutine()
         {
             _returningHome = true;
             _canvasGroup.blocksRaycasts = false;
 
-            // ¡“ü‚Á‚Ä‚¢‚é‰_‚ğ‹ó‚¯‚é
+            if (_landingCoroutine != null)
+            {
+                StopCoroutine(_landingCoroutine);
+                _landingCoroutine = null;
+            }
+
+            // é›²ã®å æœ‰ã‚’è§£é™¤
             if (_currentSlot != null)
             {
                 _currentSlot.Release(_itemView);
                 _currentSlot = null;
             }
 
-            // Œ»İˆÊ’u
+            // åˆæœŸä½ç½®ãŒæœªè¨˜éŒ²ãªã‚‰å³åº§ã«æˆ»ã™
+            if (_homeParent == null || _dragRoot == null)
+            {
+                SendHome();
+                _canvasGroup.blocksRaycasts = true;
+                _returningHome = false;
+                yield break;
+            }
+
+            // å‰é¢ã®DragLayerã«ç§»å‹•
+            MoveToDragRootPreservingVisual();
+
             Vector3 startPosition = _rect.position;
-
-            // Œ³‚ÌPitchItemContainer‚Ìu‚‚³v‚¾‚¯æ“¾
-            Vector3 homeCenter =
-                _homeParent.TransformPoint(
-                    _homeParent.rect.center
-                );
-
-            // X‚ÍŒ»İˆÊ’u‚Ì‚Ü‚Ü
-            // Y‚¾‚¯‰º’i‚Ì‚‚³‚Ö
-            Vector3 targetPosition = new Vector3(
-                startPosition.x,
-                homeCenter.y,
-                startPosition.z
-            );
+            Vector3 targetPosition = _homePositionSaved
+                ? _homeWorldPosition
+                : _homeParent.TransformPoint(_homeParent.rect.center);
 
             float elapsed = 0f;
+            float duration = Mathf.Max(0.01f, fallDuration);
 
-            while (elapsed < fallDuration)
+            while (elapsed < duration)
             {
                 elapsed += Time.unscaledDeltaTime;
 
-                float t = Mathf.Clamp01(
-                    elapsed / fallDuration
+                float t = Mathf.Clamp01(elapsed / duration);
+
+                // ã‚†ã£ãã‚Šå‹•ãå§‹ã‚ã€ç€åœ°æ™‚ã«æ¸›é€Ÿ
+                float eased = t * t * (3f - 2f * t);
+
+                _rect.position = Vector3.Lerp(
+                    startPosition,
+                    targetPosition,
+                    eased
                 );
-
-                // d—Í‚Á‚Û‚­‰Á‘¬
-                float eased = t * t;
-
-                _rect.position =
-                    Vector3.LerpUnclamped(
-                        startPosition,
-                        targetPosition,
-                        eased
-                    );
 
                 yield return null;
             }
 
-            _rect.position = targetPosition;
-
-            // š‚±‚±‚Å‚Í SendHome() ‚µ‚È‚¢
-            // —‚¿‚½êŠ‚É‚»‚Ì‚Ü‚Üc‚·
-
-            _placedSuccessfully = false;
+            // å…ƒã®é…ç½®ã¸æˆ»ã™
+            SendHome();
 
             _canvasGroup.blocksRaycasts = true;
             _returningHome = false;
         }
+
     }
 }

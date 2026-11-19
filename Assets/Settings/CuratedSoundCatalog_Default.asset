@@ -41,38 +41,6 @@ MonoBehaviour:
   m_Name: CuratedSoundCatalog_Default
   m_EditorClassIdentifier: Geidai.Common::Geidai.Common.Library.CuratedSoundCatalog
   items:
-  - id: demo_bell
-    encyclopediaNumber: 200
-    displayName: "\u30D9\u30EB"
-    reading: 
-    description: "\u8A66\u8074\u7528\u306E\u30D9\u30EB\u97F3"
-    imageRef: {fileID: 21300000, guid: 59f5f1f2ff6e45c48cb97dfef3a1cde0, type: 3}
-    timbreTagId: bell
-    basePitchMidi: -1
-    loudnessBand: 0
-    durationBand: 0
-    pairKey: 
-    allowPitchShift: 1
-    difficultyTags: []
-    category: "\u30C6\u30B9\u30C8"
-    clipRef: {fileID: 8300000, guid: 7084a0aa1c82242e6b159ea85aa39d4d, type: 3}
-    initiallyUnlocked: 1
-  - id: demo_drum
-    encyclopediaNumber: 201
-    displayName: "\u30C9\u30E9\u30E0"
-    reading: 
-    description: "\u30DF\u30AD\u30B7\u30F3\u30B0\u8A66\u8074\u7528\u306E\u30C9\u30E9\u30E0\u97F3"
-    imageRef: {fileID: 21300000, guid: cd3d1849ef824e9c8ec908c3bd796d2d, type: 3}
-    timbreTagId: drum
-    basePitchMidi: -1
-    loudnessBand: 0
-    durationBand: 0
-    pairKey: 
-    allowPitchShift: 1
-    difficultyTags: []
-    category: "\u30C6\u30B9\u30C8"
-    clipRef: {fileID: 8300000, guid: eeeadc4f43e41479fa0152f46f8b26a1, type: 3}
-    initiallyUnlocked: 1
   - id: Bell_01
     encyclopediaNumber: 1
     displayName: "\u30C1\u30D9\u30C3\u30C8\u306E\u30D9\u30EB"
@@ -222,7 +190,7 @@ MonoBehaviour:
     displayName: "\u30DD\u30C3\u30D7\u30C1\u30E5\u30FC\u30D6"
     reading: 
     description: "\u30DD\u30C3\u30D7\u30C1\u30E5\u30FC\u30D6\u3092\u306E\u3070\u3057\u3066\u3001\u4E0A\u306B\u3080\u304B\u3063\u3066\u5186\u3092\u3048\u304C\u304F\u3088\u3046\u306B\u3075\u308A\u307E\u308F\u3059\u3068\u306A\u308B\u3002\u304A\u3082\u3061\u3083\u3084\u3055\u3093\u3084\u3001100\u5186\u30B7\u30E7\u30C3\u30D7\u3067\u3046\u3063\u3066\u3044\u308B\u3002"
-    imageRef: {fileID: 5912774808915128100, guid: 24c0adfe706c943cd8a91404b9175976, type: 3}
+    imageRef: {fileID: -2348122654100855529, guid: 88d17b52acd1c44bbb71f7f2c478efb8, type: 3}
     timbreTagId: jouet
     basePitchMidi: 76
     loudnessBand: 1
@@ -233,12 +201,12 @@ MonoBehaviour:
     category: "\u304A\u3082\u3061\u3083"
     clipRef: {fileID: 8300000, guid: 3dea8f0e291c44079859f73d5eef614f, type: 3}
     initiallyUnlocked: 1
-  - id: Poon_11
+  - id: Poon_01
     encyclopediaNumber: 11
     displayName: "\u3059\u3044\u306F\u3093\u304D\u306E\u304A\u304B\u307E"
     reading: 
     description: "\u3059\u3044\u306F\u3093\u304D\u306E\u304A\u304B\u307E\u3002\u305F\u305F\u304F\u3082\u306E\u3067\u97F3\u304C\u304B\u308F\u308B\u3002"
-    imageRef: {fileID: -301095153560930422, guid: 5c562f5bc63fd4fe68493211ca0232fa, type: 3}
+    imageRef: {fileID: 1355435411852721946, guid: 7f998919347f54d97aee2290afb576cf, type: 3}
     timbreTagId: environment
     basePitchMidi: 68
     loudnessBand: 1
@@ -247,14 +215,14 @@ MonoBehaviour:
     allowPitchShift: 1
     difficultyTags: []
     category: "\u91D1\u5C5E"
-    clipRef: {fileID: 8300000, guid: 2c0e2d167cefa408faa15ba47dcf717f, type: 3}
+    clipRef: {fileID: 8300000, guid: e3a30f5311ca742e6928fedfe7cdebc2, type: 3}
     initiallyUnlocked: 1
   - id: Clochette_04
     encyclopediaNumber: 12
     displayName: "\u30A2\u30CB\u30DE\u30EB\u30D9\u30EB"
     reading: 
     description: "\u30CD\u30D1\u30FC\u30EB\u3084\u30C1\u30D9\u30C3\u30C8\u3067\u3001\u3069\u3046\u3076\u3064\u306B\u3064\u3051\u3089\u308C\u3066\u3044\u308B\u3059\u305A\u3002"
-    imageRef: {fileID: 5912774808915128100, guid: 24c0adfe706c943cd8a91404b9175976, type: 3}
+    imageRef: {fileID: -6752148175463684573, guid: b85cebcbc593e4e56827ab6dd0519258, type: 3}
     timbreTagId: clochette
     basePitchMidi: -1
     loudnessBand: 2
@@ -286,7 +254,7 @@ MonoBehaviour:
     displayName: "\u30AF\u30EA\u30B9\u30BF\u30EB\u30D9\u30EB"
     reading: 
     description: "\u30AC\u30E9\u30B9\u3067\u3067\u304D\u305F\u30D9\u30EB\u3002"
-    imageRef: {fileID: 4376603877981877477, guid: 7947bd48e39cf47b6b642be253e2b99b, type: 3}
+    imageRef: {fileID: -5644259659149704864, guid: 20679ea965f514692b2230d32f81c8c2, type: 3}
     timbreTagId: bell
     basePitchMidi: -1
     loudnessBand: 1
@@ -302,7 +270,7 @@ MonoBehaviour:
     displayName: "\u3068\u3046\u304D\u306E\u30B9\u30D7\u30FC\u30F3"
     reading: 
     description: "\u3064\u3084\u3064\u3084\u3068\u3057\u305F\u3001\u30B3\u30C3\u30D7\u306E\u3088\u3046\u306A\u305D\u3056\u3044\u3067\u3067\u304D\u305F\u30B9\u30D7\u30FC\u30F3\u3002\u3072\u3082\u3067\u3064\u308B\u3057\u3066\u305F\u305F\u304F\u305F\u305F\u3044\u305F\u3068\u304D\u306E\u97F3\u3002"
-    imageRef: {fileID: 21300000, guid: a9360ad9d462045c5bd8eaafe29622a8, type: 3}
+    imageRef: {fileID: -3477502055535663324, guid: ab879bf55b2364d499756ce1fe61c5e2, type: 3}
     timbreTagId: environment
     basePitchMidi: 65
     loudnessBand: 2

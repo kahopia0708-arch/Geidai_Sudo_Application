@@ -1,5 +1,6 @@
 using System;
 using Geidai.Common.Models;
+using UnityEngine;
 
 namespace Geidai.Common.Audio
 {
@@ -97,6 +98,48 @@ namespace Geidai.Common.Audio
             var head = new float[count];
             Array.Copy(samples, head, count);
             return head;
+        }
+
+        /// <summary>
+        /// 図鑑 <see cref="AudioClip"/> のゲーム再生に相当する長さ（秒）。ファイル末尾の無音を除く。
+        /// </summary>
+        public static float EstimateGameplaySeconds(AudioClip clip)
+        {
+            if (clip == null) return 0.01f;
+
+            int sampleRate = clip.frequency;
+            if (sampleRate <= 0 || clip.samples <= 0)
+                return Mathf.Clamp(clip.length, 0.01f, DefaultMaxGameplaySeconds);
+
+            int channels = Math.Max(1, clip.channels);
+            int interleavedLength = clip.samples * channels;
+            var interleaved = new float[interleavedLength];
+            if (!clip.GetData(interleaved, 0))
+                return Mathf.Clamp(clip.length, 0.01f, DefaultMaxGameplaySeconds);
+
+            float[] mono;
+            if (channels == 1)
+            {
+                mono = interleaved;
+            }
+            else
+            {
+                mono = new float[clip.samples];
+                for (int i = 0; i < clip.samples; i++)
+                {
+                    float peak = 0f;
+                    int baseIndex = i * channels;
+                    for (int c = 0; c < channels; c++)
+                        peak = Math.Max(peak, Math.Abs(interleaved[baseIndex + c]));
+                    mono[i] = peak;
+                }
+            }
+
+            var trimmed = TrimForGameplay(mono, sampleRate);
+            if (trimmed == null || trimmed.Length == 0)
+                return Mathf.Clamp(clip.length, 0.01f, DefaultMaxGameplaySeconds);
+
+            return Mathf.Clamp(trimmed.Length / (float)sampleRate, 0.01f, DefaultMaxGameplaySeconds);
         }
     }
 }

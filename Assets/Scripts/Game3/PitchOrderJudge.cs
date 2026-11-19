@@ -1,11 +1,11 @@
-using System.Collections.Generic;
+ï»¿using System.Collections.Generic;
 
 namespace Geidai.Game3
 {
     public static class PitchOrderJudge
     {
         /// <summary>
-        /// ’á‚¢‰¹ ¨ ‚‚¢‰¹‚Ì‡‚É•À‚ñ‚Å‚¢‚é‚©”»’è‚·‚éB
+        /// ä½ã„éŸ³ â†’ é«˜ã„éŸ³ã®é †ã«ä¸¦ã‚“ã§ã„ã‚‹ã‹åˆ¤å®šã™ã‚‹ã€‚
         /// </summary>
         public static bool IsAscending(IReadOnlyList<int> cents)
         {
@@ -22,7 +22,7 @@ namespace Geidai.Game3
         }
 
         /// <summary>
-        /// ‚‚¢‰¹ ¨ ’á‚¢‰¹‚Ì‡‚É•À‚ñ‚Å‚¢‚é‚©”»’è‚·‚éB
+        /// é«˜ã„éŸ³ â†’ ä½ã„éŸ³ã®é †ã«ä¸¦ã‚“ã§ã„ã‚‹ã‹åˆ¤å®šã™ã‚‹ã€‚
         /// </summary>
         public static bool IsDescending(IReadOnlyList<int> cents)
         {

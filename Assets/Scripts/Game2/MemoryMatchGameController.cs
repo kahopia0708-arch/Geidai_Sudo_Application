@@ -6,6 +6,7 @@ using Geidai.Common.Models;
 using Geidai.Common.Results;
 using Geidai.Common.UI;
 using Geidai.Services;
+using Geidai.Services.Audio;
 using Geidai.Services.Navigation;
 using UnityEngine;
 using UnityEngine.UI;
@@ -40,7 +41,7 @@ namespace Geidai.Game2
         private readonly List<MemoryMatchCardSpec> _deck = new List<MemoryMatchCardSpec>();
 
         private INavigationService _nav;
-        private AudioSource _audioSource;
+        private CatalogClipPlayer _catalogClips;
         private MemoryMatchUiHandles _ui;
         private Phase _phase = Phase.Setup;
         private bool _hasStartedOnce;
@@ -170,12 +171,8 @@ namespace Geidai.Game2
         private void EnsureWired()
         {
             _nav = ServiceRegistry.Resolve<INavigationService>();
-            if (_audioSource == null)
-            {
-                _audioSource = gameObject.GetComponent<AudioSource>();
-                if (_audioSource == null) _audioSource = gameObject.AddComponent<AudioSource>();
-                _audioSource.playOnAwake = false;
-            }
+            if (_catalogClips == null)
+                _catalogClips = new CatalogClipPlayer(gameObject);
         }
 
         public void StartRound()
@@ -278,7 +275,7 @@ namespace Geidai.Game2
 
             card.SetFaceUp(true);
             card.PlayFlipReveal();
-            PlayClip(card.Spec.Clip);
+            PlayCatalogClip(card.Spec.Clip);
 
             if (!_firstPickIndex.HasValue)
             {
@@ -368,10 +365,11 @@ namespace Geidai.Game2
             _busy = false;
         }
 
-        private void PlayClip(AudioClip clip)
+        /// <summary>図鑑 clip をピッチ 1.0 で再生（#46）。</summary>
+        private void PlayCatalogClip(AudioClip clip)
         {
-            if (clip == null || _audioSource == null) return;
-            _audioSource.PlayOneShot(clip);
+            if (_catalogClips == null || !_catalogClips.IsReady) return;
+            _catalogClips.Play(clip);
         }
 
         private void ShowEmpty(string message)
@@ -411,7 +409,7 @@ namespace Geidai.Game2
 
         private void GoToGameSelectMenu()
         {
-            if (_audioSource != null) _audioSource.Stop();
+            _catalogClips?.Stop();
             if (_nav == null) _nav = ServiceRegistry.Resolve<INavigationService>();
             if (_nav == null)
             {
